@@ -1,4 +1,4 @@
-# Xiropt-Wallet-Gui
+# Xiropt-Wallet
 
 This is the official Xiropht Wallet Gui, this one is compatible with Netframework 4.6. 
 
