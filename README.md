@@ -29,3 +29,5 @@ Informations:
 For more informations about how work the network connection of wallet, please check the WhitePaper of Xiropht.
 
 **Be sure to compile in release mode those source for don't enable Log System of the wallet**
+
+**Xiropht-Connector-All Library is required for compile the gui wallet: https://github.com/XIROPHT/Xiropht-Connector-All**
