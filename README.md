@@ -41,3 +41,14 @@ For more informations about how work the network connection of wallet, please ch
 - Greek: Alpha
 
 - Hungarian: Maxy86
+
+**Official testers:**
+
+- DigitalTwister
+- Sniperviperman
+- AlpHA
+- Maxy86
+- Wolfierawr
+- Rashed
+- Sabrar
+- Xiropht
