@@ -31,3 +31,13 @@ For more informations about how work the network connection of wallet, please ch
 **Be sure to compile in release mode those source for don't enable Log System of the wallet**
 
 **Xiropht-Connector-All Library is required for compile the gui wallet: https://github.com/XIROPHT/Xiropht-Connector-All**
+
+**Language files contributors:**
+
+- English: Xiropht, DigitalTwister, AlpHA
+
+- French: Xiropht
+
+- Greek: Alpha
+
+- Hungarian: Maxy86
