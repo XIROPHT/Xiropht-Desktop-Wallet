@@ -27,3 +27,5 @@ Informations:
 -> Every information what you get on your transaction history cannot be read by another wallet
 
 For more informations about how work the network connection of wallet, please check the WhitePaper of Xiropht.
+
+**Be sure to compile in release mode those source for don't enable Log System of the wallet**
