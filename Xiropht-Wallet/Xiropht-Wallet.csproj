@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AC906F1F-C934-48E4-9CB8-8F8438237EE3}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Xiropht_Wallet</RootNamespace>
+    <AssemblyName>Xiropht-Wallet</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WINFORM</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;WINFORM</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Xiropht_Wallet.Program</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MetroFramework">
+      <HintPath>..\..\References\MetroFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Design">
+      <HintPath>..\..\References\MetroFramework.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Fonts">
+      <HintPath>..\..\References\MetroFramework.Fonts.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Xiropht-Connector-All, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Xiropht-Connector-All\Xiropht-Connector-All\bin\Debug\Xiropht-Connector-All.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ClassLog.cs" />
+    <Compile Include="ClassMemory.cs" />
+    <Compile Include="ClassTranslation.cs" />
+    <Compile Include="ClassWalletSetting.cs" />
+    <Compile Include="FormCustom\ClassListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FormCustom\ClassLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FormPhase\ClassFormPhase.cs" />
+    <Compile Include="FormPhase\ClassParallelForm.cs" />
+    <Compile Include="FormPhase\MainForm\BlockExplorer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\BlockExplorer.Designer.cs">
+      <DependentUpon>BlockExplorer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\CreateWallet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\CreateWallet.Designer.cs">
+      <DependentUpon>CreateWallet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\Overview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\Overview.Designer.cs">
+      <DependentUpon>Overview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\RestoreWallet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\RestoreWallet.Designer.cs">
+      <DependentUpon>RestoreWallet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\SendTransaction.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\SendTransaction.Designer.cs">
+      <DependentUpon>SendTransaction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\TransactionHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\TransactionHistory.Designer.cs">
+      <DependentUpon>TransactionHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\ChangeWalletPassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\ChangeWalletPassword.Designer.cs">
+      <DependentUpon>ChangeWalletPassword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\CreateWalletSuccessForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\CreateWalletSuccessForm.Designer.cs">
+      <DependentUpon>CreateWalletSuccessForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\OpenWallet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\OpenWallet.Designer.cs">
+      <DependentUpon>OpenWallet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\PinCodeSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\PinCodeSetting.Designer.cs">
+      <DependentUpon>PinCodeSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\PinForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\PinForm.Designer.cs">
+      <DependentUpon>PinForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\RemoteNodeSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\RemoteNodeSetting.Designer.cs">
+      <DependentUpon>RemoteNodeSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\WaitingFormReconnect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\WaitingFormReconnect.Designer.cs">
+      <DependentUpon>WaitingFormReconnect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\WaitingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\WaitingForm.Designer.cs">
+      <DependentUpon>WaitingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormCustom\ClassPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Settings.cs" />
+    <Compile Include="WaitingCreateWalletForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WaitingCreateWalletForm.Designer.cs">
+      <DependentUpon>WaitingCreateWalletForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wallet\ClassBlockCache.cs" />
+    <Compile Include="Wallet\ClassWalletTransactionAnonymityCache.cs" />
+    <Compile Include="Wallet\ClassWalletTransactionCache.cs" />
+    <Compile Include="Xiropht-Wallet-Interface.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Xiropht-Wallet-Interface.Designer.cs">
+      <DependentUpon>Xiropht-Wallet-Interface.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Wallet\ClassWalletObject.cs" />
+    <EmbeddedResource Include="FormPhase\MainForm\BlockExplorer.resx">
+      <DependentUpon>BlockExplorer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\MainForm\CreateWallet.resx">
+      <DependentUpon>CreateWallet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\MainForm\Overview.resx">
+      <DependentUpon>Overview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\MainForm\RestoreWallet.resx">
+      <DependentUpon>RestoreWallet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\MainForm\SendTransaction.resx">
+      <DependentUpon>SendTransaction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\MainForm\TransactionHistory.resx">
+      <DependentUpon>TransactionHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\ParallelForm\About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\ParallelForm\ChangeWalletPassword.resx">
+      <DependentUpon>ChangeWalletPassword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\ParallelForm\CreateWalletSuccessForm.resx">
+      <DependentUpon>CreateWalletSuccessForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\MainForm\Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\MainForm\OpenWallet.resx">
+      <DependentUpon>OpenWallet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\ParallelForm\PinCodeSetting.resx">
+      <DependentUpon>PinCodeSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\ParallelForm\PinForm.resx">
+      <DependentUpon>PinForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\ParallelForm\RemoteNodeSetting.resx">
+      <DependentUpon>RemoteNodeSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\ParallelForm\WaitingFormReconnect.resx">
+      <DependentUpon>WaitingFormReconnect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\ParallelForm\WaitingForm.resx">
+      <DependentUpon>WaitingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="WaitingCreateWalletForm.resx">
+      <DependentUpon>WaitingCreateWalletForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Xiropht-Wallet-Interface.resx">
+      <DependentUpon>Xiropht-Wallet-Interface.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
