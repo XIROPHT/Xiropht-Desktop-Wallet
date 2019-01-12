@@ -74,7 +74,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             int counter = 0;
             while (counter < 10)
             {
-                var randomButtonId = ClassUtils.GetRandomBetween(0, listButtonId.Count - 1);
+                var randomButtonId = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0, listButtonId.Count - 1);
                 if (Controls[listButtonId[randomButtonId]].Text == "" ||
                     Controls[listButtonId[randomButtonId]].Text == string.Empty)
                 {

@@ -38,7 +38,7 @@ namespace Xiropht_Wallet
             }
             if (Directory.Exists(Directory.GetCurrentDirectory() + LanguageFolderName))
             {
-                string[] languageFilesList = Directory.GetFiles(Directory.GetCurrentDirectory() + LanguageFolderName, "*.xirlang").Select(Path.GetFileName).ToArray();
+                string[] languageFilesList = Directory.GetFiles(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + LanguageFolderName), "*.xirlang").Select(Path.GetFileName).ToArray();
                 if (languageFilesList.Length == 0)
                 {
 #if DEBUG
@@ -61,7 +61,7 @@ namespace Xiropht_Wallet
 #if DEBUG
                                     Log.WriteLine("Read language file: "+languageFilesList[i]);
 #endif
-                                    using (FileStream fs = File.Open(Directory.GetCurrentDirectory() + LanguageFolderName + "/" + languageFilesList[i], FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                                    using (FileStream fs = File.Open(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + LanguageFolderName + "/" + languageFilesList[i]), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                                     using (BufferedStream bs = new BufferedStream(fs))
                                     using (StreamReader sr = new StreamReader(bs))
                                     {

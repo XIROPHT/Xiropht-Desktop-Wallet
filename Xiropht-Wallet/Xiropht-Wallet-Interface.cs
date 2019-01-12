@@ -946,7 +946,7 @@ namespace Xiropht_Wallet
         {
             try
             {
-                info = ClassUtils.GetTranslateHashrate(info, 2);
+                info = Xiropht_Connector_All.Utils.ClassUtils.GetTranslateHashrate(info, 2);
                 void MethodInvoker()
                 {
                     try

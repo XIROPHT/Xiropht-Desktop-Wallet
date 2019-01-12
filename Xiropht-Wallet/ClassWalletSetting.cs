@@ -35,12 +35,12 @@ namespace Xiropht_Wallet
                     break;
             }
 
-            if (!File.Exists(Directory.GetCurrentDirectory() + _walletSettingFile))
+            if (!File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + _walletSettingFile)))
             {
-                File.Create(Directory.GetCurrentDirectory() + _walletSettingFile).Close();
+                File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + _walletSettingFile)).Close();
             }
 
-            StreamWriter writer = new StreamWriter(Directory.GetCurrentDirectory() + _walletSettingFile, false);
+            StreamWriter writer = new StreamWriter(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + _walletSettingFile), false);
             writer.WriteLine(syncModeSetting);
             writer.WriteLine(syncModeManualHostSetting);
             writer.WriteLine("CURRENT-WALLET-LANGUAGE="+ClassTranslation.CurrentLanguage);
@@ -52,13 +52,13 @@ namespace Xiropht_Wallet
         /// </summary>
         public static void LoadSetting()
         {
-            if (!File.Exists(Directory.GetCurrentDirectory() + _walletSettingFile))
+            if (!File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + _walletSettingFile)))
             {
-                File.Create(Directory.GetCurrentDirectory() + _walletSettingFile).Close();
+                File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + _walletSettingFile)).Close();
             }
             else
             {
-                StreamReader reader = new StreamReader(Directory.GetCurrentDirectory() + _walletSettingFile);
+                StreamReader reader = new StreamReader(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + _walletSettingFile));
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {

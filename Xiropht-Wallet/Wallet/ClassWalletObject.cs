@@ -143,7 +143,7 @@ namespace Xiropht_Wallet.Wallet
             string phase)
         {
             WalletClosed = false;
-            Certificate = ClassUtils.GenerateCertificate();
+            Certificate = Xiropht_Connector_All.Utils.ClassUtils.GenerateCertificate();
             if (SeedNodeConnectorWallet == null) // First initialization
             {
                 SeedNodeConnectorWallet = new ClassSeedNodeConnector();
@@ -639,7 +639,7 @@ namespace Xiropht_Wallet.Wallet
                     ClassParallelForm.HideWaitingForm();
                     ClassParallelForm.HideWaitingCreateWalletForm();
 
-                    WalletDataCreation = ClassUtils.DecompressWallet(splitPacket[1]);
+                    WalletDataCreation = Xiropht_Connector_All.Utils.ClassUtils.DecompressWallet(splitPacket[1]);
 
                     if (splitPacket[1] == "WRONG")
                     {
@@ -708,7 +708,7 @@ namespace Xiropht_Wallet.Wallet
                     ClassParallelForm.HideWaitingForm();
                     ClassParallelForm.HideWaitingCreateWalletForm();
 
-                    WalletDataCreation = ClassUtils.DecompressWallet(splitPacket[1]);
+                    WalletDataCreation = Xiropht_Connector_All.Utils.ClassUtils.DecompressWallet(splitPacket[1]);
 
                     if (splitPacket[1] == "WRONG")
                     {
@@ -1063,6 +1063,7 @@ namespace Xiropht_Wallet.Wallet
                             {
                                 if (WalletSyncMode == 1)
                                 {
+                                    packet += "|127.0.0.1";
                                     foreach (var remoteNodeObj in packet.Split(new[] { "|" }, StringSplitOptions.None))
                                     {
                                         if (remoteNodeObj != null)
@@ -1072,6 +1073,7 @@ namespace Xiropht_Wallet.Wallet
                                                 if (remoteNodeObj != "WALLET-SEND-REMOTE-NODE")
                                                 {
                                                     var remoteNode = remoteNodeObj.Replace("WALLET-SEND-REMOTE-NODE", "");
+
                                                     remoteNode = remoteNode.Replace("|", "");
                                                     if (remoteNode != "NONE")
                                                     {
@@ -1145,6 +1147,7 @@ namespace Xiropht_Wallet.Wallet
                                         ClassRemoteNodeChecker.ListRemoteNodeChecked.Add(
                                             new Tuple<string, int>(ClassConnectorSetting.SeedNodeIp[i], 30));
 
+
                                 if (ListWalletConnectToRemoteNode == null)
                                 {
                                     ListWalletConnectToRemoteNode = new List<ClassWalletConnectToRemoteNode>();
@@ -1194,7 +1197,7 @@ namespace Xiropht_Wallet.Wallet
 
                                         if (WalletSyncMode == 0 || noPublicNode) // Seed node sync.
                                         {
-                                            var randomSeedNode = ClassUtils.GetRandomBetween(0,
+                                            var randomSeedNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             if (!await ListWalletConnectToRemoteNode[0]
                                                 .ConnectToRemoteNodeAsync(
@@ -1310,7 +1313,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .ListRemoteNodeChecked.Distinct().ToList();
 
                                             string previousNode;
-                                            var randomNode = ClassUtils.GetRandomBetween(0,
+                                            var randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1326,7 +1329,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = ClassUtils.GetRandomBetween(0,
+                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1342,7 +1345,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = ClassUtils.GetRandomBetween(0,
+                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1357,8 +1360,7 @@ namespace Xiropht_Wallet.Wallet
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
                                             }
-
-                                            randomNode = ClassUtils.GetRandomBetween(0,
+                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1374,7 +1376,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = ClassUtils.GetRandomBetween(0,
+                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1390,7 +1392,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = ClassUtils.GetRandomBetween(0,
+                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1406,7 +1408,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = ClassUtils.GetRandomBetween(0,
+                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1422,7 +1424,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = ClassUtils.GetRandomBetween(0,
+                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1438,7 +1440,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = ClassUtils.GetRandomBetween(0,
+                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1455,7 +1457,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = ClassUtils.GetRandomBetween(0,
+                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1473,7 +1475,7 @@ namespace Xiropht_Wallet.Wallet
                                             }
 
 
-                                            randomNode = ClassUtils.GetRandomBetween(0,
+                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1489,7 +1491,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = ClassUtils.GetRandomBetween(0,
+                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -4399,7 +4401,7 @@ namespace Xiropht_Wallet.Wallet
 
                                          if (!existTransaction)
                                          {
-                                             ClassWalletTransactionCache.ListTransaction.Add(new Tuple<string, string>(ClassUtils.ConvertStringtoSHA512(finalTransactionEncrypted), finalTransactionEncrypted));
+                                             ClassWalletTransactionCache.ListTransaction.Add(new Tuple<string, string>(Xiropht_Connector_All.Utils.ClassUtils.ConvertStringtoSHA512(finalTransactionEncrypted), finalTransactionEncrypted));
 
                                              await ClassWalletTransactionCache.SaveWalletCache(WalletConnect.WalletAddress, finalTransactionEncrypted);
 
@@ -4506,7 +4508,7 @@ namespace Xiropht_Wallet.Wallet
 
                                          if (!existAnonymity)
                                          {
-                                             ClassWalletTransactionAnonymityCache.ListTransaction.Add(new Tuple<string, string>(ClassUtils.ConvertStringtoSHA512(finalTransactionEncrypted), finalTransactionEncrypted));
+                                             ClassWalletTransactionAnonymityCache.ListTransaction.Add(new Tuple<string, string>(Xiropht_Connector_All.Utils.ClassUtils.ConvertStringtoSHA512(finalTransactionEncrypted), finalTransactionEncrypted));
                                              await ClassWalletTransactionAnonymityCache.SaveWalletCache(WalletConnect.WalletAddress, finalTransactionEncrypted);
 #if DEBUG
                                              Log.WriteLine("Total anonymity transactions downloaded: " +
