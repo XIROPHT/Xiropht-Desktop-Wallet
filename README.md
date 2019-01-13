@@ -15,9 +15,9 @@ Windows:
 
 Linux:
 
-For compile the project Mono is required, you can also compile the project with Visual Studio and make a Linux Binary.
+- For compile the project Mono is required, you can also compile the project with Visual Studio and make a Linux Binary.
 
--For make a binary linux file from executable windows file:
+For make a binary linux file from executable windows file:
 
 mkbundle Xiropht-Wallet.exe -o Xiropht-Wallet Xiropht-Connector-All.dll MetroFramework.Fonts.dll MetroFramework.dll MetroFramework.Design.dll --deps -z --static
 
