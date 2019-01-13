@@ -1,8 +1,26 @@
 # Xiropt-Wallet
 
-This is the official Xiropht Wallet Gui, this one is compatible with Netframework 4.6. 
+This is the official Xiropht Wallet Gui, this one is compatible with Netframework 4.6 and Mono. 
 
-If you want to use it with Linux, you have to install Mono-Complete for execute it or for compile it into a binary.
+**Be carefull , we are currently in phase of test , all versions released and uploaded are compiled in debug mode for permit everyone to get informations of possible issues from log files until to release the main phase network.**
+
+**Once the main phase network is released, all next update will are in release mode for disable log file and debug mode.**
+
+**We suggest to compile the wallet in Release Mode for disable log files.**
+
+
+Windows:
+
+- For compile the project Visual Studio or Mono is required.
+
+Linux:
+
+For compile the project Mono is required, you can also compile the project with Visual Studio and make a Linux Binary.
+
+-For make a binary linux file from executable windows file:
+
+mkbundle Xiropht-Wallet.exe -o Xiropht-Wallet Xiropht-Connector-All.dll MetroFramework.Fonts.dll MetroFramework.dll MetroFramework.Design.dll --deps -z --static
+
 
 Informations:
 
