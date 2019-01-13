@@ -2,10 +2,6 @@
 
 This is the official Xiropht Wallet Gui, this one is compatible with Netframework 4.6 and Mono. 
 
-**Be carefull , we are currently in phase of test , all versions released and uploaded are compiled in debug mode for permit everyone to get informations of possible issues from log files until to release the main phase network.**
-
-**Once the main phase network is released, all next update will are in release mode for disable log file and debug mode.**
-
 **We suggest to compile the wallet in Release Mode for disable log files.**
 
 
