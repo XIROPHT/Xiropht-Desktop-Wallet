@@ -855,7 +855,7 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                     Log.WriteLine("Actual Balance: " + WalletConnect.WalletAmount);
 #endif
-                    if (LastRemoteNodePacketReceived + 15 < DateTimeOffset.Now.ToUnixTimeSeconds())
+                    if (LastRemoteNodePacketReceived + 15 < DateTimeOffset.Now.ToUnixTimeSeconds() || !EnableReceivePacketRemoteNode)
                     {
                         LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
                         await DisconnectWholeRemoteNodeSync(true, false);
