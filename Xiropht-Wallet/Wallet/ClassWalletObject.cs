@@ -855,7 +855,7 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                     Log.WriteLine("Actual Balance: " + WalletConnect.WalletAmount);
 #endif
-                    if (LastRemoteNodePacketReceived + 15 < DateTimeOffset.Now.ToUnixTimeSeconds() || !EnableReceivePacketRemoteNode)
+                    if (LastRemoteNodePacketReceived + 15 < DateTimeOffset.Now.ToUnixTimeSeconds() || !EnableReceivePacketRemoteNode && !OnWaitingRemoteNodeList)
                     {
                         LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
                         await DisconnectWholeRemoteNodeSync(true, false);
@@ -4703,6 +4703,7 @@ namespace Xiropht_Wallet.Wallet
             InSyncBlock = false;
             WalletOnSendingPacketRemoteNode = false;
             WalletOnUseSync = false;
+            OnWaitingRemoteNodeList = false;
             WalletCheckMaxSupply = 1;
             WalletCheckCoinCirculating = 1;
             WalletCheckTotalTransactionFee = 1;
@@ -4717,7 +4718,6 @@ namespace Xiropht_Wallet.Wallet
                 {
                     if (SeedNodeConnectorWallet.GetStatusConnectToSeed())
                     {
-                        OnWaitingRemoteNodeList = true;
                         if (!await SeedNodeConnectorWallet
                             .SendPacketToSeedNodeAsync(
                                 ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletAskRemoteNode, Certificate, false,
