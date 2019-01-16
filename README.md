@@ -2,16 +2,18 @@
 
 This is the official Xiropht Wallet Gui, this one is compatible with Netframework 4.6 and Mono. 
 
+
 **In production, we suggest to compile the wallet in Release Mode for disable log files.**
 
 
 Windows:
 
 - For compile the project Visual Studio or Mono is required.
+- We suggest to use compilation flags: WINDOWS-DEBUG, WINDOWS-RELEASE (for production) or LINUX-DEBUG, LINUX-RELEASE (for production)
 
 Linux:
 
-- For compile the project Mono is required, you can also compile the project with Visual Studio and make a Linux Binary.
+- For compile the project Mono is required, you can also compile the project with Visual Studio and make a Linux Binary, remember to use LINUX-DEBUG or LINUX-RELEASE (for production) compilation flags.
 
 For make a binary linux file from executable windows file:
 
