@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+#if WINDOWS
 using MetroFramework;
-using Xiropht_Connector_All.Utils;
+#endif
 using Xiropht_Connector_All.Wallet;
 using Xiropht_Wallet.Wallet;
 
@@ -28,8 +29,13 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                 {
                     await ClassWalletObject.FullDisconnection(true);
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));
+#endif
                 }
 
                 textBoxPinCode.Text = string.Empty;
@@ -38,7 +44,11 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             }
             else
             {
+#if WINDOWS
                 MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_WARNING_TEXT"));
+#else
+                MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_WARNING_TEXT"));
+#endif
             }
         }
 
@@ -145,8 +155,13 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                 {
                     await ClassWalletObject.FullDisconnection(true);
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));
+#endif
                 }
 
                 textBoxPinCode.Text = string.Empty;

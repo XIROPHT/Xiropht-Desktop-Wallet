@@ -6,7 +6,9 @@ using System.Security.Permissions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+#if WINDOWS
 using MetroFramework;
+#endif
 using Xiropht_Connector.Remote;
 using Xiropht_Connector_All.Remote;
 using Xiropht_Connector_All.Seed;
@@ -189,9 +191,15 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                 Log.WriteLine("Can't read wallet cache, error: " + error.Message);
 #endif
+#if WINDOWS
                 MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                     ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_TRANSACTION_CACHE_ERROR_TEXT"));
                 ClassWalletTransactionCache.RemoveWalletCache(WalletConnect.WalletAddress);
+#else
+                MessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_TRANSACTION_CACHE_ERROR_TEXT"));
+                ClassWalletTransactionCache.RemoveWalletCache(WalletConnect.WalletAddress);
+#endif
 
             }
 
@@ -208,9 +216,15 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                 Log.WriteLine("Can't read wallet cache, error: " + error.Message);
 #endif
+#if WINDOWS
                 MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                     ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ANONYMITY_TRANSACTION_CACHE_ERROR_TEXT"));
                 ClassWalletTransactionAnonymityCache.RemoveWalletCache(WalletConnect.WalletAddress);
+#else
+                MessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ANONYMITY_TRANSACTION_CACHE_ERROR_TEXT"));
+                ClassWalletTransactionAnonymityCache.RemoveWalletCache(WalletConnect.WalletAddress);
+#endif
             }
 
             try
@@ -255,9 +269,9 @@ namespace Xiropht_Wallet.Wallet
             return true;
         }
 
-        #endregion
+#endregion
 
-        #region Disconnection functions.
+          #region Disconnection functions.
 
         /// <summary>
         ///     Disconnect wallet from remote nodes, seed nodes connections.
@@ -375,17 +389,29 @@ namespace Xiropht_Wallet.Wallet
 
                             ClassFormPhase.WalletXiropht.StopUpdateBlockHistory(true);
                             ClassConnectorSetting.NETWORK_GENESIS_KEY = ClassConnectorSetting.NETWORK_GENESIS_DEFAULT_KEY;
+#if WINDOWS
                             MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                                 ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_CONNECT_WALLET_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_CONNECT_WALLET_TITLE_TEXT"), MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
+#else
+                            MessageBox.Show(ClassFormPhase.WalletXiropht,
+                                ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_CONNECT_WALLET_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_CONNECT_WALLET_TITLE_TEXT"), MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+#endif
                             WalletInReconnect = false;
                         }
                         else
                         {
                             ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Overview);
+#if WINDOWS
                             MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                                 ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SUCCESS_CONNECT_WALLET_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SUCCESS_CONNECT_WALLET_TITLE_TEXT"), MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);
+#else
+                            MessageBox.Show(ClassFormPhase.WalletXiropht,
+                                ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SUCCESS_CONNECT_WALLET_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SUCCESS_CONNECT_WALLET_TITLE_TEXT"), MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+#endif
                             WalletInReconnect = false;
                         }
                     }).Start();
@@ -395,7 +421,7 @@ namespace Xiropht_Wallet.Wallet
             return true;
         }
 
-        #endregion
+#endregion
 
         #region Wallet Connection
 
@@ -621,18 +647,30 @@ namespace Xiropht_Wallet.Wallet
                     ClassParallelForm.HideWaitingForm();
                     ClassParallelForm.HideWaitingCreateWalletForm();
                     await FullDisconnection(true);
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR1_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR1_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR1_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR1_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
 
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletCreatePasswordNeedLetters:
                     ClassParallelForm.HideWaitingForm();
                     ClassParallelForm.HideWaitingCreateWalletForm();
                     await FullDisconnection(true);
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR2_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR2_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR2_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR2_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
 
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.CreatePhase:
@@ -645,9 +683,15 @@ namespace Xiropht_Wallet.Wallet
                     {
                         WalletNewPassword = string.Empty;
                         GC.SuppressFinalize(WalletDataCreation);
+#if WINDOWS
                         MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                             "Your wallet password need to be stronger , if he is try again later.",
                             "Password not strong enough or network error.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else
+                        MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            "Your wallet password need to be stronger , if he is try again later.",
+                            "Password not strong enough or network error.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
                         await FullDisconnection(true);
                     }
                     else
@@ -714,9 +758,15 @@ namespace Xiropht_Wallet.Wallet
                     {
                         WalletNewPassword = string.Empty;
                         GC.SuppressFinalize(WalletDataCreation);
+#if WINDOWS
                         MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                             "Your wallet password need to be stronger , if he is try again later.",
                             "Password not strong enough or network error.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else
+                        MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            "Your wallet password need to be stronger , if he is try again later.",
+                            "Password not strong enough or network error.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
                         await FullDisconnection(true);
                     }
                     else
@@ -889,9 +939,15 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.PinAcceptedPhase:
                     WalletConnect.SelectWalletPhase(ClassWalletPhase.Accepted);
 
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_ACCEPTED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_ACCEPTED_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+#endif
 #if DEBUG
                     Log.WriteLine("Pin code accepted, the blockchain will ask your pin code every 15 minutes.");
 #endif
@@ -900,48 +956,83 @@ namespace Xiropht_Wallet.Wallet
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.PinRefusedPhase:
                     WalletConnect.SelectWalletPhase(ClassWalletPhase.Pin);
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#endif
                     ClassParallelForm.ShowPinForm();
 
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletSendMessage:
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht, splitPacket[1], "Information",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht, splitPacket[1], "Information",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+#endif
                     break;
 
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.AmountNotValid:
                     ClassParallelForm.HideWaitingForm();
+
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_TITLE_TEXT"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
 #if DEBUG
                     Log.WriteLine("Transaction refused. You try input an invalid amount.");
 #endif
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.AmountInsufficient:
                     ClassParallelForm.HideWaitingForm();
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_TITLE_TEXT"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
 #if DEBUG
                     Log.WriteLine("Transaction refused. Your amount is insufficient.");
 #endif
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.FeeInsufficient:
                     ClassParallelForm.HideWaitingForm();
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
 #if DEBUG
                     Log.WriteLine("Transaction refused. Your fee is insufficient.");
 #endif
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletSendTransactionBusy:
                     ClassParallelForm.HideWaitingForm();
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#endif
 #if DEBUG
                     Log.WriteLine("Transaction refused. The blockchain currently control your wallet balance health.");
 #endif
@@ -951,18 +1042,30 @@ namespace Xiropht_Wallet.Wallet
                     var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
                     dateTime = dateTime.AddSeconds(int.Parse(splitPacket[1]));
                     dateTime = dateTime.ToLocalTime();
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_RECEIVE_CONTENT_TEXT").Replace(ClassTranslation.DateOrder, dateTime.ToString()),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_RECEIVE_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#endif
 #if DEBUG
                     Log.WriteLine("Transaction refused. Your fee is insufficient.");
 #endif
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.TransactionAccepted:
                     ClassParallelForm.HideWaitingForm();
+#if WINDOWS
                     new Thread(() => MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question)).Start();
+#else
+                    new Thread(() => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information)).Start();
+#endif
 #if DEBUG
                     Log.WriteLine(
                         "Transaction accepted on the blockchain side, your history will be updated has soon has possible by public remote nodes or manual node if you have select manual nodes.");
@@ -970,9 +1073,15 @@ namespace Xiropht_Wallet.Wallet
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.AddressNotValid:
                     ClassParallelForm.HideWaitingForm();
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_TITLE_TEXT"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#endif
 #if DEBUG
                     Log.WriteLine("The wallet address is not valid, please check it.");
 #endif
@@ -980,9 +1089,15 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletBanPhase:
                     DisconnectWalletFromSeedNode(true);
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_BANNED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_BANNED_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_BANNED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_BANNED_TITLE_TEXT"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
 #if DEBUG
                     Log.WriteLine("Your wallet is banned for approximatively one hour, try to reconnect later.");
 #endif
@@ -990,9 +1105,15 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletAlreadyConnected:
                     DisconnectWalletFromSeedNode(true);
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ALREADY_CONNECTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ALREADY_CONNECTED_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ALREADY_CONNECTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ALREADY_CONNECTED_TITLE_TEXT"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
 #if DEBUG
                     Log.WriteLine("Your wallet is already connected, try to reconnect later.");
 #endif
@@ -1020,31 +1141,60 @@ namespace Xiropht_Wallet.Wallet
                     writerWalletNew.Close();
 
                     WalletNewPassword = string.Empty;
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Question);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_TITLE_TEXT"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Question);
+#endif
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletChangePasswordRefused:
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_REFUSED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_REFUSED_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#endif
                     WalletNewPassword = string.Empty;
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletDisablePinCodeAccepted:
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_ACCEPTED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_ACCEPTED_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question);
+#endif
                     WalletPinDisabled = !WalletPinDisabled;
 
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletDisablePinCodeRefused:
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_REFUSED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_REFUSED_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#endif
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletWarningConnection:
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_WARNING_WALLET_CONNECTION_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_WARNING_WALLET_CONNECTION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_WARNING_WALLET_CONNECTION_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_WARNING_WALLET_CONNECTION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#endif
                     break;
 
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletSendTotalPendingTransactionOnReceive:
@@ -2033,8 +2183,13 @@ namespace Xiropht_Wallet.Wallet
             if (!await WalletConnect.SendPacketWallet(packet, Certificate, true))
             {
                 ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
+#if WINDOWS
                 MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                    ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_SEND_PACKET_TEXT"));
+#else
+                MessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_SEND_PACKET_TEXT"));
+#endif
 #if DEBUG
                 Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
 #endif
@@ -2044,9 +2199,9 @@ namespace Xiropht_Wallet.Wallet
             return true;
         }
 
-        #endregion
+#endregion
 
-        #region Remote node Sync
+    #region Remote node Sync
 
         public static void CheckRemoteNodeNetwork()
         {
@@ -4725,8 +4880,13 @@ namespace Xiropht_Wallet.Wallet
                         {
                             await FullDisconnection(false);
                             ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
+#if WINDOWS
                             MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                                 "Cannot send packet, your wallet has been disconnected.");
+#else
+                            MessageBox.Show(ClassFormPhase.WalletXiropht,
+                                "Cannot send packet, your wallet has been disconnected.");
+#endif
 #if DEBUG
                             Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
 #endif
@@ -4745,12 +4905,26 @@ namespace Xiropht_Wallet.Wallet
         /// </summary>
         private static void CleanUpObjectRemoteNode()
         {
-            ClassRemoteNodeChecker.CleanUpRemoteNodeHost();
+            try
+            {
+                ClassRemoteNodeChecker.CleanUpRemoteNodeHost();
+            }
+            catch
+            {
+
+            }
             EnableCheckRemoteNodeList = false;
-            ListWalletConnectToRemoteNode.Clear();
+            try
+            {
+                ListWalletConnectToRemoteNode.Clear();
+            }
+            catch
+            {
+
+            }
             ListWalletConnectToRemoteNode = null;
         }
 
-        #endregion
+#endregion
     }
 }

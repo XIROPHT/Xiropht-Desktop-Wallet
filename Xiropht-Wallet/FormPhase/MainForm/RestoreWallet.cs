@@ -1,4 +1,6 @@
-﻿using MetroFramework;
+﻿#if WINDOWS
+using MetroFramework;
+#endif
 using System;
 using System.Drawing;
 using System.IO;
@@ -76,14 +78,24 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             ClassWalletCommand.ClassWalletSendEnumeration.AskPhase + "|" +
                             walletKey + "|"+walletPassword))
                     {
+#if WINDOWS
                         MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                             ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"));
+#else
+                        MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"));
+#endif
                     }
                 }
                 else
                 {
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"));
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"));
+#endif
                 }
 
             }

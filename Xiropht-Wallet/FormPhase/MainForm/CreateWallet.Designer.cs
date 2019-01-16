@@ -30,12 +30,20 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         /// </summary>
         private void InitializeComponent()
         {
+#if WINDOWS
             this.textBoxPathWallet = new MetroFramework.Controls.MetroTextBox();
-            this.labelCreateSelectSavingPathWallet = new System.Windows.Forms.Label();
+            this.textBoxSelectWalletPassword = new MetroFramework.Controls.MetroTextBox();
             this.buttonSearchNewWalletFile = new MetroFramework.Controls.MetroButton();
             this.buttonCreateYourWallet = new MetroFramework.Controls.MetroButton();
+#else
+            this.textBoxPathWallet = new System.Windows.Forms.TextBox();
+            this.textBoxSelectWalletPassword = new System.Windows.Forms.TextBox();
+            this.buttonSearchNewWalletFile = new System.Windows.Forms.Button();
+            this.buttonCreateYourWallet = new System.Windows.Forms.Button();
+#endif
+            this.labelCreateSelectSavingPathWallet = new System.Windows.Forms.Label();
+
             this.labelCreateSelectWalletPassword = new System.Windows.Forms.Label();
-            this.textBoxSelectWalletPassword = new MetroFramework.Controls.MetroTextBox();
             this.labelCreateYourWallet = new System.Windows.Forms.Label();
             this.labelCreateNoticePasswordRequirement = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -45,6 +53,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             // 
             // 
+#if WINDOWS
             this.textBoxPathWallet.CustomButton.Image = null;
             this.textBoxPathWallet.CustomButton.Location = new System.Drawing.Point(225, 2);
             this.textBoxPathWallet.CustomButton.Name = "";
@@ -54,6 +63,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.textBoxPathWallet.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
             this.textBoxPathWallet.CustomButton.UseSelectable = true;
             this.textBoxPathWallet.CustomButton.Visible = false;
+#endif
             this.textBoxPathWallet.Lines = new string[0];
             this.textBoxPathWallet.Location = new System.Drawing.Point(261, 255);
             this.textBoxPathWallet.MaxLength = 32767;
@@ -67,9 +77,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.textBoxPathWallet.ShortcutsEnabled = true;
             this.textBoxPathWallet.Size = new System.Drawing.Size(243, 20);
             this.textBoxPathWallet.TabIndex = 22;
+#if WINDOWS
             this.textBoxPathWallet.UseSelectable = true;
             this.textBoxPathWallet.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.textBoxPathWallet.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+#endif
             // 
             // labelCreateSelectSavingPathWallet
             // 
@@ -87,7 +99,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.buttonSearchNewWalletFile.Size = new System.Drawing.Size(27, 22);
             this.buttonSearchNewWalletFile.TabIndex = 20;
             this.buttonSearchNewWalletFile.Text = "...";
+#if WINDOWS
             this.buttonSearchNewWalletFile.UseSelectable = true;
+#endif
             this.buttonSearchNewWalletFile.Click += new System.EventHandler(this.ButtonSearchNewWalletFile_Click);
             // 
             // buttonCreateYourWallet
@@ -97,7 +111,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.buttonCreateYourWallet.Size = new System.Drawing.Size(133, 49);
             this.buttonCreateYourWallet.TabIndex = 18;
             this.buttonCreateYourWallet.Text = "Create my Wallet";
+#if WINDOWS
             this.buttonCreateYourWallet.UseSelectable = true;
+#endif
             this.buttonCreateYourWallet.Click += new System.EventHandler(this.ButtonCreateYourWallet_Click);
             // 
             // labelCreateSelectWalletPassword
@@ -114,6 +130,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             // 
             // 
+#if WINDOWS
             this.textBoxSelectWalletPassword.CustomButton.Image = null;
             this.textBoxSelectWalletPassword.CustomButton.Location = new System.Drawing.Point(225, 2);
             this.textBoxSelectWalletPassword.CustomButton.Name = "";
@@ -123,6 +140,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.textBoxSelectWalletPassword.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
             this.textBoxSelectWalletPassword.CustomButton.UseSelectable = true;
             this.textBoxSelectWalletPassword.CustomButton.Visible = false;
+#endif
             this.textBoxSelectWalletPassword.Lines = new string[0];
             this.textBoxSelectWalletPassword.Location = new System.Drawing.Point(261, 318);
             this.textBoxSelectWalletPassword.MaxLength = 32767;
@@ -135,9 +153,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.textBoxSelectWalletPassword.ShortcutsEnabled = true;
             this.textBoxSelectWalletPassword.Size = new System.Drawing.Size(243, 20);
             this.textBoxSelectWalletPassword.TabIndex = 16;
+#if WINDOWS
             this.textBoxSelectWalletPassword.UseSelectable = true;
             this.textBoxSelectWalletPassword.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.textBoxSelectWalletPassword.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+#endif
             this.textBoxSelectWalletPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxSelectWalletPassword_KeyDownAsync);
             // 
             // labelCreateYourWallet
@@ -191,13 +211,23 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         }
 
-        #endregion
+#endregion
 
+#if WINDOWS
         private MetroFramework.Controls.MetroTextBox textBoxPathWallet;
         private MetroFramework.Controls.MetroTextBox textBoxSelectWalletPassword;
+#else
+        private System.Windows.Forms.TextBox textBoxPathWallet;
+        private System.Windows.Forms.TextBox textBoxSelectWalletPassword;
+#endif
         public Label labelCreateSelectSavingPathWallet;
+#if WINDOWS
         public MetroFramework.Controls.MetroButton buttonSearchNewWalletFile;
         public MetroFramework.Controls.MetroButton buttonCreateYourWallet;
+#else
+        public System.Windows.Forms.Button buttonSearchNewWalletFile;
+        public System.Windows.Forms.Button buttonCreateYourWallet;
+#endif
         public Label labelCreateSelectWalletPassword;
         public Label labelCreateYourWallet;
         public Label labelCreateNoticePasswordRequirement;

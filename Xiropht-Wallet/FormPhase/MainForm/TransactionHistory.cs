@@ -1,4 +1,6 @@
-﻿using MetroFramework;
+﻿#if WINDOWS
+using MetroFramework;
+#endif
 using System;
 using System.Drawing;
 using System.Reflection;
@@ -230,9 +232,15 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     {
                         found = true;
                         Clipboard.SetText(item.SubItems[ix].Text);
+#if WINDOWS
                         new Thread(() =>
                                 MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
                             .Start();
+#else
+                        new Thread(() =>
+                                MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
+                            .Start();
+#endif
                         return;
                     }
                 }
@@ -246,9 +254,15 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 if (item.SubItems[ix].Bounds.Contains(e.Location))
                 {
                     Clipboard.SetText(item.SubItems[ix].Text);
+#if WINDOWS
+                        new Thread(() =>
+                                MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
+                            .Start();
+#else
                     new Thread(() =>
-                            MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
+                            MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
                         .Start();
+#endif
                     return;
                 }
         }
@@ -261,9 +275,15 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 if (item.SubItems[ix].Bounds.Contains(e.Location))
                 {
                     Clipboard.SetText(item.SubItems[ix].Text);
+#if WINDOWS
+                        new Thread(() =>
+                                MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
+                            .Start();
+#else
                     new Thread(() =>
-                            MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
+                            MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
                         .Start();
+#endif
                     return;
                 }
         }
@@ -276,9 +296,15 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 if (item.SubItems[ix].Bounds.Contains(e.Location))
                 {
                     Clipboard.SetText(item.SubItems[ix].Text);
+#if WINDOWS
+                        new Thread(() =>
+                                MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
+                            .Start();
+#else
                     new Thread(() =>
-                            MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
+                            MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
                         .Start();
+#endif
                     return;
                 }
         }
@@ -291,14 +317,20 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 if (item.SubItems[ix].Bounds.Contains(e.Location))
                 {
                     Clipboard.SetText(item.SubItems[ix].Text);
+#if WINDOWS
+                        new Thread(() =>
+                                MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
+                            .Start();
+#else
                     new Thread(() =>
-                            MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " "+ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
+                            MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
                         .Start();
+#endif
                     return;
                 }
         }
 
-        #region Ordering events.
+#region Ordering events.
 
         private ColumnHeader SortingColumn = null;
 
@@ -505,7 +537,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             listViewBlockRewardTransactionHistory.Sort();
         }
 
-        #endregion
+#endregion
 
         private void Transaction_Resize(object sender, EventArgs e)
         {

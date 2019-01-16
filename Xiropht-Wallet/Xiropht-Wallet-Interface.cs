@@ -1,14 +1,19 @@
-﻿using MetroFramework.Forms;
+﻿#if WINDOWS
+using MetroFramework.Forms;
+#endif
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+#if WINDOWS
 using MetroFramework;
 using MetroFramework.Controls;
+#endif
 using Xiropht_Connector_All.Setting;
 using Xiropht_Connector_All.Utils;
 using Xiropht_Connector_All.Wallet;
@@ -21,7 +26,11 @@ namespace Xiropht_Wallet
 {
 
 
+#if WINDOWS
     public sealed partial class WalletXiropht : MetroForm
+#else
+    public sealed partial class WalletXiropht : Form
+#endif
     {
         /// <summary>
         /// Form objects
@@ -129,7 +138,7 @@ namespace Xiropht_Wallet
         }
 
 
-        #region About Form Phase
+#region About Form Phase
 
         /// <summary>
         /// Change form from actual Form Phase.
@@ -393,9 +402,9 @@ namespace Xiropht_Wallet
             _threadUpdateNetworkStats.Start();
         }
 
-        #endregion
+#endregion
 
-        #region Event
+#region Event
 
         /// <summary>
         /// Event activated on load.
@@ -404,7 +413,9 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void WalletXiropht_Load(object sender, EventArgs e)
         {
-
+#if LINUX
+            Text += Assembly.GetExecutingAssembly().GetName().Version;
+#endif
 
             // Initialize form size.
             CurrentInterfaceWidth = Width;
@@ -438,7 +449,11 @@ namespace Xiropht_Wallet
                 languageToolStripMenuItem.DropDownItems.Add(ClassTranslation.UppercaseFirst(key), null, LanguageSubMenuItem_Click);
             }
             UpdateGraphicLanguageText();
+#if WINDOWS
             MetroMessageBox.Show(this, ClassConnectorSetting.CoinName + " is currently in private test, we suggest to not invest your money on it, invest your time only because we are in private test and we need something stable, usefull, secure for provide a real trust on this coin before. Thank you for your understanding.", "Important information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+#else
+            MessageBox.Show(this, ClassConnectorSetting.CoinName + " is currently in private test, we suggest to not invest your money on it, invest your time only because we are in private test and we need something stable, usefull, secure for provide a real trust on this coin before. Thank you for your understanding.", "Important information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+#endif
         }
 
         /// <summary>
@@ -828,9 +843,9 @@ namespace Xiropht_Wallet
 
 
 
-        #endregion
+#endregion
 
-        #region About Wallet Sync
+#region About Wallet Sync
 
         /// <summary>
         /// Update overview label coin max supply
@@ -1117,7 +1132,7 @@ namespace Xiropht_Wallet
                                             }
                                         }
 
-                                        #region show transaction received/sent by the normal unique wallet id of the wallet
+#region show transaction received/sent by the normal unique wallet id of the wallet
                                         if (TotalTransactionRead != ListTransactionHashShowed.Count)
                                         {
 
@@ -1175,7 +1190,7 @@ namespace Xiropht_Wallet
                                                             dateTimeRecv.AddSeconds(long.Parse(timestampRecv));
                                                         dateTimeRecv = dateTimeRecv.ToLocalTime();
 
-                                                        #region show anonymous transaction received
+#region show anonymous transaction received
                                                         if (wallet == "ANONYMOUS")
                                                         {
 
@@ -1277,8 +1292,8 @@ namespace Xiropht_Wallet
 
                                                             TotalTransactionAnonymousReceived++;
                                                         }
-                                                        #endregion
-                                                        #region Show block reward transaction.
+#endregion
+#region Show block reward transaction.
                                                         else if (wallet.Contains("BLOCKCHAIN["))
                                                         {
                                                             int minShow = (CurrentTransactionHistoryPageBlockReward - 1) * MaxTransactionPerPage;
@@ -1378,10 +1393,10 @@ namespace Xiropht_Wallet
 
                                                             TotalTransactionBlockReward++;
                                                         }
-                                                        #endregion
+#endregion
                                                         else
                                                         {
-                                                            #region show normal transaction sent
+#region show normal transaction sent
                                                             if (type == "SEND")
                                                             {
                                                                 int minShow = (CurrentTransactionHistoryPageNormalSend - 1) * MaxTransactionPerPage;
@@ -1480,8 +1495,8 @@ namespace Xiropht_Wallet
 
                                                                 TotalTransactionNormalSend++;
                                                             }
-                                                            #endregion
-                                                            #region Show normal transaction received.
+#endregion
+#region Show normal transaction received.
                                                             else if (type == "RECV")
                                                             {
                                                                 int minShow = (CurrentTransactionHistoryPageNormalReceive - 1) * MaxTransactionPerPage;
@@ -1578,7 +1593,7 @@ namespace Xiropht_Wallet
 
                                                                 TotalTransactionNormalReceived++;
                                                             }
-                                                            #endregion
+#endregion
                                                         }
                                                     }
                                                     catch (Exception error)
@@ -1595,9 +1610,9 @@ namespace Xiropht_Wallet
                                             _normalTransactionLoaded = true;
 
                                         }
-                                        #endregion
+#endregion
 
-                                        #region Update transaction normal send color
+#region Update transaction normal send color
 
                                         for (int i = 0;
                                         i < TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items
@@ -1663,9 +1678,9 @@ namespace Xiropht_Wallet
                                             BeginInvoke((MethodInvoker)MethodInvoker);
                                         }
 
-                                        #endregion
+#endregion
 
-                                        #region Update transaction anonymity received color
+#region Update transaction anonymity received color
 
                                         for (int i = 0;
                                             i < TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory
@@ -1754,9 +1769,9 @@ namespace Xiropht_Wallet
                                             BeginInvoke((MethodInvoker)MethodInvoker);
                                         }
 
-                                        #endregion
+#endregion
 
-                                        #region Update transaction block reward color
+#region Update transaction block reward color
 
                                         for (int i = 0;
                                             i < TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items
@@ -1842,9 +1857,9 @@ namespace Xiropht_Wallet
                                             BeginInvoke((MethodInvoker)MethodInvoker);
                                         }
 
-                                        #endregion
+#endregion
 
-                                        #region Update normal transaction received color.
+#region Update normal transaction received color.
 
                                         for (int i = 0;
                                             i < TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items
@@ -1933,10 +1948,10 @@ namespace Xiropht_Wallet
                                             BeginInvoke((MethodInvoker)MethodInvoker);
                                         }
 
-                                        #endregion
+#endregion
 
 
-                                        #region Update transaction anonymity sent color
+#region Update transaction anonymity sent color
 
                                         for (int i = 0;
                                             i < TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory
@@ -2025,7 +2040,7 @@ namespace Xiropht_Wallet
                                             BeginInvoke((MethodInvoker)MethodInvoker);
                                         }
 
-                                        #endregion
+#endregion
                                     }
                                     else
                                     {
@@ -2055,7 +2070,7 @@ namespace Xiropht_Wallet
                                         }
 
 
-                                        #region Show transaction anonymity sent with the unique wallet anonymity id of the wallet
+#region Show transaction anonymity sent with the unique wallet anonymity id of the wallet
                                         if (TotalAnonymityTransactionRead != ListTransactionAnonymityHashShowed.Count)
                                         {
 
@@ -2223,7 +2238,7 @@ namespace Xiropht_Wallet
 
                                         }
 
-                                        #region Update transaction anonymity send color.
+#region Update transaction anonymity send color.
 
                                         for (int i = 0;
                                         i < TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items
@@ -2310,9 +2325,9 @@ namespace Xiropht_Wallet
                                             BeginInvoke((MethodInvoker)MethodInvoker);
                                         }
 
-                                        #endregion
+#endregion
 
-                                        #endregion
+#endregion
                                     }
                                     else
                                     {
@@ -2883,7 +2898,7 @@ namespace Xiropht_Wallet
 
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Refresh automaticaly the interface.
@@ -2967,9 +2982,16 @@ namespace Xiropht_Wallet
                 {
                     if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
                     {
+
+#if WINDOWS
                         if (MetroMessageBox.Show(this, ClassTranslation.GetLanguageTextFromOrder("RESYNC_TRANSACTION_HISTORY_CONTENT_TEXT"),
                                 ClassTranslation.GetLanguageTextFromOrder("RESYNC_TRANSACTION_HISTORY_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Information) ==
                             DialogResult.Yes)
+#else
+                        if (MessageBox.Show(this, ClassTranslation.GetLanguageTextFromOrder("RESYNC_TRANSACTION_HISTORY_CONTENT_TEXT"),
+                                ClassTranslation.GetLanguageTextFromOrder("RESYNC_TRANSACTION_HISTORY_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Information) ==
+                            DialogResult.Yes)
+#endif
                         {
                             TransactionHistoryWalletForm.ResyncTransaction();
                         }
@@ -2992,7 +3014,7 @@ namespace Xiropht_Wallet
             }
         }
 
-        #region  Wallet Resize Interface Functions.
+#region  Wallet Resize Interface Functions.
 
         /// <summary>
         /// Resize interface and each controls inside automaticaly.
@@ -3010,47 +3032,421 @@ namespace Xiropht_Wallet
                             if ((CurrentInterfaceWidth != Width && Width >= BaseInterfaceWidth) ||
                                 (CurrentInterfaceHeight != Height && Height >= BaseInterfaceHeight))
                             {
-                                #region Update Width
 
-                                for (int i = 0; i < ListControlSizeBase.Count; i++)
-                                {
-                                    if (i < ListControlSizeBase.Count)
-                                    {
-                                        if (i < Controls.Count)
+#region Update Width
+
+                                        for (int i = 0; i < ListControlSizeBase.Count; i++)
                                         {
-                                            var i1 = i;
-                                            var currentWidth = BaseInterfaceWidth;
-
-                                            float ratioWidth = ((float) Width / currentWidth);
-                                            float controlWitdh = ListControlSizeBase[i1].Item1.Width * ratioWidth;
-                                            float controlLocationX = ListControlSizeBase[i1].Item2.X * ratioWidth;
-                                            float controlLocationY = Controls[i1].Location.Y;
-                                            bool ignore =
-                                                Controls[i1] is DataGridView || Controls[i1] is ListView ||
-                                                Controls[i1] is TabPage;
-
-                                            if (!ignore)
+                                            if (i < ListControlSizeBase.Count)
                                             {
-                                                if (Controls[i1] is Label || Controls[i1] is MetroLabel)
+                                                if (i < Controls.Count)
                                                 {
-                                                    Controls[i1].Font = new Font(Controls[i1].Font.FontFamily,
-                                                        ((float) (Width * 1.000003f) / 100), Controls[i1].Font.Style);
-                                                    Controls[i1].Location = new Point((int)controlLocationX,
-                                                        (int)controlLocationY);
-                                                }
-                                                else
-                                                {
-                                                    Controls[i1].Width = (int) controlWitdh;
-                                                    Controls[i1].Location = new Point((int) controlLocationX,
-                                                        (int) controlLocationY);
+                                                    var i1 = i;
+                                                    var currentWidth = BaseInterfaceWidth;
+
+                                                    float ratioWidth = ((float) Width / currentWidth);
+                                                    float controlWitdh = ListControlSizeBase[i1].Item1.Width * ratioWidth;
+                                                    float controlLocationX = ListControlSizeBase[i1].Item2.X * ratioWidth;
+                                                    float controlLocationY = Controls[i1].Location.Y;
+                                                    bool ignore =
+                                                        Controls[i1] is DataGridView || Controls[i1] is ListView ||
+                                                        Controls[i1] is TabPage;
+
+                                                    if (!ignore)
+                                                    {
+                                                        if (Controls[i1] is Label 
+#if WINDOWS
+                                                            || Controls[i1] is MetroLabel
+#endif
+                                                            )
+                                                        {
+                                                            Controls[i1].Font = new Font(Controls[i1].Font.FontFamily,
+                                                                ((float) (Width * 1.000003f) / 100), Controls[i1].Font.Style);
+                                                            Controls[i1].Location = new Point((int)controlLocationX,
+                                                                (int)controlLocationY);
+                                                        }
+                                                        else
+                                                        {
+                                                            Controls[i1].Width = (int) controlWitdh;
+                                                            Controls[i1].Location = new Point((int) controlLocationX,
+                                                                (int) controlLocationY);
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                }
 
-                                if (ListControlSizeMain.Count > 0)
-                                {
+                                        if (ListControlSizeMain.Count > 0)
+                                        {
+                                            for (int i = 0; i < ListControlSizeMain.Count; i++)
+                                            {
+                                                if (i < ListControlSizeMain.Count)
+                                                {
+                                                    if (i < MainWalletForm.Controls.Count)
+                                                    {
+                                                        var i1 = i;
+                                                        var currentWidth = BaseInterfaceWidth;
+
+                                                        float ratioWidth = ((float) Width / currentWidth);
+                                                        float controlWitdh = ListControlSizeMain[i1].Item1.Width * ratioWidth;
+                                                        float controlLocationX = ListControlSizeMain[i1].Item2.X * ratioWidth;
+                                                        float controlLocationY = MainWalletForm.Controls[i1].Location.Y;
+                                                        if (MainWalletForm.Controls[i1] is Label
+#if WINDOWS
+                                                            ||
+                                                            MainWalletForm.Controls[i1] is MetroLabel
+#endif
+                                                        )
+                                                        {
+                                                            MainWalletForm.Controls[i1].Font =
+                                                                new Font(MainWalletForm.Controls[i1].Font.FontFamily,
+                                                                    (((float) MainWalletForm.Width * 1.0014f) / 100),
+                                                                    MainWalletForm.Controls[i1].Font.Style);
+                                                            MainWalletForm.Controls[i1].Location =
+                                                                new Point((int) controlLocationX, (int) controlLocationY);
+                                                        }
+                                                        else
+                                                        {
+                                                            MainWalletForm.Controls[i1].Width = (int) controlWitdh;
+                                                            MainWalletForm.Controls[i1].Location =
+                                                                new Point((int) controlLocationX, (int) controlLocationY);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        if (ListControlSizeOpenWallet.Count > 0)
+                                        {
+                                            for (int i = 0; i < ListControlSizeOpenWallet.Count; i++)
+                                            {
+                                                if (i < ListControlSizeOpenWallet.Count)
+                                                {
+                                                    if (i < OpenWalletForm.Controls.Count)
+                                                    {
+                                                        var i1 = i;
+                                                        var currentWidth = BaseInterfaceWidth;
+
+                                                        float ratioWidth = ((float) Width / currentWidth);
+                                                        float controlWitdh =
+                                                            ListControlSizeOpenWallet[i1].Item1.Width * ratioWidth;
+                                                        float controlLocationX =
+                                                            ListControlSizeOpenWallet[i1].Item2.X * ratioWidth;
+                                                        float controlLocationY = OpenWalletForm.Controls[i1].Location.Y;
+                                                        if (OpenWalletForm.Controls[i1] is Label
+#if WINDOWS
+                                                             ||
+                                                            OpenWalletForm.Controls[i1] is MetroLabel
+#endif
+                                                            )
+                                                        {
+                                                            OpenWalletForm.Controls[i1].Font =
+                                                                new Font(OpenWalletForm.Controls[i1].Font.FontFamily,
+                                                                    (((float) OpenWalletForm.Width * 1.0014f) / 100),
+                                                                    OpenWalletForm.Controls[i1].Font.Style);
+                                                            OpenWalletForm.Controls[i1].Location =
+                                                                new Point((int) controlLocationX, (int) controlLocationY);
+                                                        }
+                                                        else
+                                                        {
+                                                            OpenWalletForm.Controls[i1].Width = (int) controlWitdh;
+                                                            OpenWalletForm.Controls[i1].Location =
+                                                                new Point((int) controlLocationX, (int) controlLocationY);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        if (ListControlSizeOverview.Count > 0)
+                                        {
+                                            for (int i = 0; i < ListControlSizeOverview.Count; i++)
+                                            {
+                                                if (i < ListControlSizeOverview.Count)
+                                                {
+                                                    if (i < OverviewWalletForm.Controls.Count)
+                                                    {
+                                                        var i1 = i;
+                                                        var currentWidth = BaseInterfaceWidth;
+
+                                                        float ratioWidth = ((float) Width / currentWidth);
+                                                        float controlWitdh =
+                                                            ListControlSizeOverview[i1].Item1.Width * ratioWidth;
+                                                        float controlLocationX =
+                                                            ListControlSizeOverview[i1].Item2.X * ratioWidth;
+                                                        float controlLocationY = OverviewWalletForm.Controls[i1].Location.Y;
+
+                                                        if (OverviewWalletForm.Controls[i1] is Label 
+#if WINDOWS
+                                                             ||
+                                                            OverviewWalletForm.Controls[i1] is MetroLabel 
+#endif
+                                                            )
+                                                        {
+                                                            OverviewWalletForm.Controls[i1].Font =
+                                                                new Font(OverviewWalletForm.Controls[i1].Font.FontFamily,
+                                                                    (((float) OverviewWalletForm.Width * 1.0014f) / 100),
+                                                                    OverviewWalletForm.Controls[i1].Font.Style);
+                                                            OverviewWalletForm.Controls[i1].Location =
+                                                                new Point((int) controlLocationX, (int) controlLocationY);
+                                                        }
+                                                        else
+                                                        {
+                                                            OverviewWalletForm.Controls[i1].Width = (int) controlWitdh;
+                                                            OverviewWalletForm.Controls[i1].Location =
+                                                                new Point((int) controlLocationX, (int) controlLocationY);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        if (ListControlSizeTransaction.Count > 0)
+                                        {
+                                            for (int i = 0; i < ListControlSizeTransaction.Count; i++)
+                                            {
+                                                if (i < ListControlSizeTransaction.Count)
+                                                {
+                                                    if (i < TransactionHistoryWalletForm.Controls.Count)
+                                                    {
+                                                        var i1 = i;
+
+                                                        bool ignore =
+                                                            TransactionHistoryWalletForm.Controls[i1] is DataGridView ||
+                                                            TransactionHistoryWalletForm.Controls[i1] is ListView ||
+                                                            TransactionHistoryWalletForm.Controls[i1] is TabPage ||
+                                                            TransactionHistoryWalletForm.Controls[i1] is Panel;
+
+                                                        if (!ignore)
+                                                        {
+                                                            var currentWidth = BaseInterfaceWidth;
+
+                                                            float ratioWidth = ((float) Width / currentWidth);
+                                                            float controlWitdh =
+                                                                ListControlSizeTransaction[i1].Item1.Width * ratioWidth;
+                                                            float controlLocationX =
+                                                                ListControlSizeTransaction[i1].Item2.X * ratioWidth;
+                                                            float controlLocationY = TransactionHistoryWalletForm.Controls[i1]
+                                                                .Location.Y;
+
+                                                            if (TransactionHistoryWalletForm.Controls[i1] is Label
+#if WINDOWS
+                                                                ||
+                                                                TransactionHistoryWalletForm.Controls[i1] is MetroLabel
+#endif
+                                                                )
+                                                            {
+                                                                TransactionHistoryWalletForm.Controls[i1].Font = new Font(
+                                                                    TransactionHistoryWalletForm.Controls[i1].Font.FontFamily,
+                                                                    (((float) TransactionHistoryWalletForm.Width * 1.0014f) /
+                                                                     100),
+                                                                    TransactionHistoryWalletForm.Controls[i1].Font.Style);
+                                                                TransactionHistoryWalletForm.Controls[i1].Location =
+                                                                    new Point((int) controlLocationX, (int) controlLocationY);
+                                                            }
+                                                            else
+                                                            {
+                                                                TransactionHistoryWalletForm.Controls[i1].Width =
+                                                                    (int) controlWitdh;
+                                                                TransactionHistoryWalletForm.Controls[i1].Location =
+                                                                    new Point((int) controlLocationX, (int) controlLocationY);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+
+                                        if (ListControlSizeSendTransaction.Count > 0)
+                                        {
+                                            for (int i = 0; i < ListControlSizeSendTransaction.Count; i++)
+                                            {
+                                                if (i < ListControlSizeSendTransaction.Count)
+                                                {
+                                                    if (i < SendTransactionWalletForm.Controls.Count)
+                                                    {
+                                                        var i1 = i;
+                                                        var currentWidth = BaseInterfaceWidth;
+
+                                                        float ratioWidth = ((float) Width / currentWidth);
+                                                        float controlWitdh =
+                                                            ListControlSizeSendTransaction[i1].Item1.Width * ratioWidth;
+                                                        float controlLocationX =
+                                                            ListControlSizeSendTransaction[i1].Item2.X * ratioWidth;
+                                                        float controlLocationY =
+                                                            SendTransactionWalletForm.Controls[i1].Location.Y;
+                                                        if (SendTransactionWalletForm.Controls[i1] is Label
+#if WINDOWS
+                                                            ||
+                                                            SendTransactionWalletForm.Controls[i1] is MetroLabel
+#endif
+                                                            )
+                                                        {
+                                                            SendTransactionWalletForm.Controls[i1].Font = new Font(
+                                                                SendTransactionWalletForm.Controls[i1].Font.FontFamily,
+                                                                (((float) SendTransactionWalletForm.Width * 1.0014f) / 100),
+                                                                SendTransactionWalletForm.Controls[i1].Font.Style);
+                                                            SendTransactionWalletForm.Controls[i1].Location =
+                                                                new Point((int) controlLocationX, (int) controlLocationY);
+                                                        }
+                                                        else
+                                                        {
+                                                            SendTransactionWalletForm.Controls[i1].Font = new Font(
+                                                                SendTransactionWalletForm.Controls[i1].Font.FontFamily,
+                                                                (((float) SendTransactionWalletForm.Width * 1.0014f) / 100),
+                                                                SendTransactionWalletForm.Controls[i1].Font.Style);
+                                                            SendTransactionWalletForm.Controls[i1].Width = (int) controlWitdh;
+                                                            SendTransactionWalletForm.Controls[i1].Location =
+                                                                new Point((int) controlLocationX, (int) controlLocationY);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        if (ListControlSizeCreateWallet.Count > 0)
+                                        {
+                                            for (int i = 0; i < ListControlSizeCreateWallet.Count; i++)
+                                            {
+                                                if (i < ListControlSizeCreateWallet.Count)
+                                                {
+                                                    if (i < CreateWalletForm.Controls.Count)
+                                                    {
+                                                        var i1 = i;
+                                                        var currentWidth = BaseInterfaceWidth;
+
+                                                        float ratioWidth = ((float) Width / currentWidth);
+                                                        float controlWitdh =
+                                                            ListControlSizeCreateWallet[i1].Item1.Width * ratioWidth;
+                                                        float controlLocationX =
+                                                            ListControlSizeCreateWallet[i1].Item2.X * ratioWidth;
+                                                        float controlLocationY = CreateWalletForm.Controls[i1].Location.Y;
+                                                        if (CreateWalletForm.Controls[i1] is Label
+#if WINDOWS
+                                                            ||
+                                                            CreateWalletForm.Controls[i1] is MetroLabel
+#endif
+                                                            )
+                                                        {
+                                                            CreateWalletForm.Controls[i1].Font =
+                                                                new Font(CreateWalletForm.Controls[i1].Font.FontFamily,
+                                                                    (((float) CreateWalletForm.Width * 1.0014f) / 100),
+                                                                    CreateWalletForm.Controls[i1].Font.Style);
+                                                            CreateWalletForm.Controls[i1].Location =
+                                                                new Point((int) controlLocationX, (int) controlLocationY);
+                                                        }
+                                                        else
+                                                        {
+                                                            CreateWalletForm.Controls[i1].Width = (int) controlWitdh;
+                                                            CreateWalletForm.Controls[i1].Location =
+                                                                new Point((int) controlLocationX, (int) controlLocationY);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        if (ListControlSizeRestoreWallet.Count > 0)
+                                        {
+                                            for (int i = 0; i < ListControlSizeRestoreWallet.Count; i++)
+                                            {
+                                                if (i < ListControlSizeRestoreWallet.Count)
+                                                {
+                                                    if (i < RestoreWalletForm.Controls.Count)
+                                                    {
+                                                        var i1 = i;
+                                                        var currentWidth = BaseInterfaceWidth;
+
+                                                        float ratioWidth = ((float)Width / currentWidth);
+                                                        float controlWitdh =
+                                                            ListControlSizeRestoreWallet[i1].Item1.Width * ratioWidth;
+                                                        float controlLocationX =
+                                                            ListControlSizeRestoreWallet[i1].Item2.X * ratioWidth;
+                                                        float controlLocationY = RestoreWalletForm.Controls[i1].Location.Y;
+                                                        if (RestoreWalletForm.Controls[i1] is Label
+#if WINDOWS
+                                                            ||
+                                                            RestoreWalletForm.Controls[i1] is MetroLabel
+#endif
+                                                            )
+                                                        {
+                                                            RestoreWalletForm.Controls[i1].Font =
+                                                                new Font(RestoreWalletForm.Controls[i1].Font.FontFamily,
+                                                                    (((float)RestoreWalletForm.Width * 1.0014f) / 100),
+                                                                    RestoreWalletForm.Controls[i1].Font.Style);
+                                                            RestoreWalletForm.Controls[i1].Location =
+                                                                new Point((int)controlLocationX, (int)controlLocationY);
+                                                        }
+                                                        else
+                                                        {
+                                                            RestoreWalletForm.Controls[i1].Width = (int)controlWitdh;
+                                                            RestoreWalletForm.Controls[i1].Location =
+                                                                new Point((int)controlLocationX, (int)controlLocationY);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        if (ListControlSizeBlock.Count > 0)
+                                        {
+                                            for (int i = 0; i < ListControlSizeBlock.Count; i++)
+                                            {
+                                                if (i < ListControlSizeBlock.Count)
+                                                {
+                                                    if (i < BlockWalletForm.Controls.Count)
+                                                    {
+                                                        var i1 = i;
+
+                                                        bool ignore =
+                                                            BlockWalletForm.Controls[i1] is DataGridView ||
+                                                            BlockWalletForm.Controls[i1] is ListView ||
+                                                            BlockWalletForm.Controls[i1] is TabPage;
+                                                        if (!ignore)
+                                                        {
+                                                            var currentWidth = BaseInterfaceWidth;
+
+                                                            float ratioWidth = ((float) Width / currentWidth);
+                                                            float controlWitdh =
+                                                                ListControlSizeBlock[i1].Item1.Width * ratioWidth;
+                                                            float controlLocationX =
+                                                                ListControlSizeBlock[i1].Item2.X * ratioWidth;
+                                                            float controlLocationY = BlockWalletForm.Controls[i1].Location.Y;
+                                                            BlockWalletForm.Controls[i1].Width = (int) controlWitdh;
+                                                            BlockWalletForm.Controls[i1].Location =
+                                                                new Point((int) controlLocationX, (int) controlLocationY);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+#endregion
+
+
+#region Update Height
+
+                                    for (int i = 0; i < ListControlSizeBase.Count; i++)
+                                    {
+                                        if (i < ListControlSizeBase.Count)
+                                        {
+                                            if (i < Controls.Count)
+                                            {
+                                                var i1 = i;
+                                                var currentHeight = BaseInterfaceHeight;
+
+                                                float ratioHeight = ((float) Height / currentHeight);
+                                                float controlWitdh = ListControlSizeBase[i1].Item1.Height * ratioHeight;
+                                                float controlLocationX = Controls[i1].Location.X;
+                                                float controlLocationY = ListControlSizeBase[i1].Item2.Y * ratioHeight;
+                                                Controls[i1].Height = (int) controlWitdh;
+                                                Controls[i1].Location = new Point((int) controlLocationX,
+                                                    (int) controlLocationY);
+                                            }
+                                        }
+                                    }
+
                                     for (int i = 0; i < ListControlSizeMain.Count; i++)
                                     {
                                         if (i < ListControlSizeMain.Count)
@@ -3058,35 +3454,19 @@ namespace Xiropht_Wallet
                                             if (i < MainWalletForm.Controls.Count)
                                             {
                                                 var i1 = i;
-                                                var currentWidth = BaseInterfaceWidth;
+                                                var currentHeight = BaseInterfaceHeight;
 
-                                                float ratioWidth = ((float) Width / currentWidth);
-                                                float controlWitdh = ListControlSizeMain[i1].Item1.Width * ratioWidth;
-                                                float controlLocationX = ListControlSizeMain[i1].Item2.X * ratioWidth;
-                                                float controlLocationY = MainWalletForm.Controls[i1].Location.Y;
-                                                if (MainWalletForm.Controls[i1] is Label ||
-                                                    MainWalletForm.Controls[i1] is MetroLabel)
-                                                {
-                                                    MainWalletForm.Controls[i1].Font =
-                                                        new Font(MainWalletForm.Controls[i1].Font.FontFamily,
-                                                            (((float) MainWalletForm.Width * 1.0014f) / 100),
-                                                            MainWalletForm.Controls[i1].Font.Style);
-                                                    MainWalletForm.Controls[i1].Location =
-                                                        new Point((int) controlLocationX, (int) controlLocationY);
-                                                }
-                                                else
-                                                {
-                                                    MainWalletForm.Controls[i1].Width = (int) controlWitdh;
-                                                    MainWalletForm.Controls[i1].Location =
-                                                        new Point((int) controlLocationX, (int) controlLocationY);
-                                                }
+                                                float ratioHeight = ((float) Height / currentHeight);
+                                                float controlWitdh = ListControlSizeMain[i1].Item1.Height * ratioHeight;
+                                                float controlLocationX = MainWalletForm.Controls[i1].Location.X;
+                                                float controlLocationY = ListControlSizeMain[i1].Item2.Y * ratioHeight;
+                                                MainWalletForm.Controls[i1].Height = (int) controlWitdh;
+                                                MainWalletForm.Controls[i1].Location = new Point((int) controlLocationX,
+                                                    (int) controlLocationY);
                                             }
                                         }
                                     }
-                                }
 
-                                if (ListControlSizeOpenWallet.Count > 0)
-                                {
                                     for (int i = 0; i < ListControlSizeOpenWallet.Count; i++)
                                     {
                                         if (i < ListControlSizeOpenWallet.Count)
@@ -3094,37 +3474,21 @@ namespace Xiropht_Wallet
                                             if (i < OpenWalletForm.Controls.Count)
                                             {
                                                 var i1 = i;
-                                                var currentWidth = BaseInterfaceWidth;
+                                                var currentHeight = BaseInterfaceHeight;
 
-                                                float ratioWidth = ((float) Width / currentWidth);
+                                                float ratioHeight = ((float) Height / currentHeight);
                                                 float controlWitdh =
-                                                    ListControlSizeOpenWallet[i1].Item1.Width * ratioWidth;
-                                                float controlLocationX =
-                                                    ListControlSizeOpenWallet[i1].Item2.X * ratioWidth;
-                                                float controlLocationY = OpenWalletForm.Controls[i1].Location.Y;
-                                                if (OpenWalletForm.Controls[i1] is Label ||
-                                                    OpenWalletForm.Controls[i1] is MetroLabel)
-                                                {
-                                                    OpenWalletForm.Controls[i1].Font =
-                                                        new Font(OpenWalletForm.Controls[i1].Font.FontFamily,
-                                                            (((float) OpenWalletForm.Width * 1.0014f) / 100),
-                                                            OpenWalletForm.Controls[i1].Font.Style);
-                                                    OpenWalletForm.Controls[i1].Location =
-                                                        new Point((int) controlLocationX, (int) controlLocationY);
-                                                }
-                                                else
-                                                {
-                                                    OpenWalletForm.Controls[i1].Width = (int) controlWitdh;
-                                                    OpenWalletForm.Controls[i1].Location =
-                                                        new Point((int) controlLocationX, (int) controlLocationY);
-                                                }
+                                                    ListControlSizeOpenWallet[i1].Item1.Height * ratioHeight;
+                                                float controlLocationX = OpenWalletForm.Controls[i1].Location.X;
+                                                float controlLocationY =
+                                                    ListControlSizeOpenWallet[i1].Item2.Y * ratioHeight;
+                                                OpenWalletForm.Controls[i1].Height = (int) controlWitdh;
+                                                OpenWalletForm.Controls[i1].Location = new Point((int) controlLocationX,
+                                                    (int) controlLocationY);
                                             }
                                         }
                                     }
-                                }
 
-                                if (ListControlSizeOverview.Count > 0)
-                                {
                                     for (int i = 0; i < ListControlSizeOverview.Count; i++)
                                     {
                                         if (i < ListControlSizeOverview.Count)
@@ -3132,38 +3496,19 @@ namespace Xiropht_Wallet
                                             if (i < OverviewWalletForm.Controls.Count)
                                             {
                                                 var i1 = i;
-                                                var currentWidth = BaseInterfaceWidth;
+                                                var currentHeight = BaseInterfaceHeight;
 
-                                                float ratioWidth = ((float) Width / currentWidth);
-                                                float controlWitdh =
-                                                    ListControlSizeOverview[i1].Item1.Width * ratioWidth;
-                                                float controlLocationX =
-                                                    ListControlSizeOverview[i1].Item2.X * ratioWidth;
-                                                float controlLocationY = OverviewWalletForm.Controls[i1].Location.Y;
-
-                                                if (OverviewWalletForm.Controls[i1] is Label ||
-                                                    OverviewWalletForm.Controls[i1] is MetroLabel)
-                                                {
-                                                    OverviewWalletForm.Controls[i1].Font =
-                                                        new Font(OverviewWalletForm.Controls[i1].Font.FontFamily,
-                                                            (((float) OverviewWalletForm.Width * 1.0014f) / 100),
-                                                            OverviewWalletForm.Controls[i1].Font.Style);
-                                                    OverviewWalletForm.Controls[i1].Location =
-                                                        new Point((int) controlLocationX, (int) controlLocationY);
-                                                }
-                                                else
-                                                {
-                                                    OverviewWalletForm.Controls[i1].Width = (int) controlWitdh;
-                                                    OverviewWalletForm.Controls[i1].Location =
-                                                        new Point((int) controlLocationX, (int) controlLocationY);
-                                                }
+                                                float ratioHeight = ((float) Height / currentHeight);
+                                                float controlWitdh = ListControlSizeOverview[i1].Item1.Height * ratioHeight;
+                                                float controlLocationX = OverviewWalletForm.Controls[i1].Location.X;
+                                                float controlLocationY = ListControlSizeOverview[i1].Item2.Y * ratioHeight;
+                                                OverviewWalletForm.Controls[i1].Height = (int) controlWitdh;
+                                                OverviewWalletForm.Controls[i1].Location = new Point((int) controlLocationX,
+                                                    (int) controlLocationY);
                                             }
                                         }
                                     }
-                                }
 
-                                if (ListControlSizeTransaction.Count > 0)
-                                {
                                     for (int i = 0; i < ListControlSizeTransaction.Count; i++)
                                     {
                                         if (i < ListControlSizeTransaction.Count)
@@ -3171,52 +3516,30 @@ namespace Xiropht_Wallet
                                             if (i < TransactionHistoryWalletForm.Controls.Count)
                                             {
                                                 var i1 = i;
-
-                                                bool ignore =
-                                                    TransactionHistoryWalletForm.Controls[i1] is DataGridView ||
-                                                    TransactionHistoryWalletForm.Controls[i1] is ListView ||
-                                                    TransactionHistoryWalletForm.Controls[i1] is TabPage ||
-                                                    TransactionHistoryWalletForm.Controls[i1] is Panel;
-
+                                                bool ignore = TransactionHistoryWalletForm.Controls[i1] is DataGridView ||
+                                                              TransactionHistoryWalletForm.Controls[i1] is ListView ||
+                                                              TransactionHistoryWalletForm.Controls[i1] is TabPage ||
+                                                              TransactionHistoryWalletForm.Controls[i1] is Panel;
                                                 if (!ignore)
                                                 {
-                                                    var currentWidth = BaseInterfaceWidth;
+                                                    var currentHeight = BaseInterfaceHeight;
 
-                                                    float ratioWidth = ((float) Width / currentWidth);
+                                                    float ratioHeight = ((float) Height / currentHeight);
                                                     float controlWitdh =
-                                                        ListControlSizeTransaction[i1].Item1.Width * ratioWidth;
+                                                        ListControlSizeTransaction[i1].Item1.Height * ratioHeight;
                                                     float controlLocationX =
-                                                        ListControlSizeTransaction[i1].Item2.X * ratioWidth;
-                                                    float controlLocationY = TransactionHistoryWalletForm.Controls[i1]
-                                                        .Location.Y;
-
-                                                    if (TransactionHistoryWalletForm.Controls[i1] is Label ||
-                                                        TransactionHistoryWalletForm.Controls[i1] is MetroLabel)
-                                                    {
-                                                        TransactionHistoryWalletForm.Controls[i1].Font = new Font(
-                                                            TransactionHistoryWalletForm.Controls[i1].Font.FontFamily,
-                                                            (((float) TransactionHistoryWalletForm.Width * 1.0014f) /
-                                                             100),
-                                                            TransactionHistoryWalletForm.Controls[i1].Font.Style);
-                                                        TransactionHistoryWalletForm.Controls[i1].Location =
-                                                            new Point((int) controlLocationX, (int) controlLocationY);
-                                                    }
-                                                    else
-                                                    {
-                                                        TransactionHistoryWalletForm.Controls[i1].Width =
-                                                            (int) controlWitdh;
-                                                        TransactionHistoryWalletForm.Controls[i1].Location =
-                                                            new Point((int) controlLocationX, (int) controlLocationY);
-                                                    }
+                                                        TransactionHistoryWalletForm.Controls[i1].Location.X;
+                                                    float controlLocationY =
+                                                        ListControlSizeTransaction[i1].Item2.Y * ratioHeight;
+                                                    TransactionHistoryWalletForm.Controls[i1].Height = (int) controlWitdh;
+                                                    TransactionHistoryWalletForm.Controls[i1].Location =
+                                                        new Point((int) controlLocationX, (int) controlLocationY);
                                                 }
                                             }
                                         }
                                     }
-                                }
 
 
-                                if (ListControlSizeSendTransaction.Count > 0)
-                                {
                                     for (int i = 0; i < ListControlSizeSendTransaction.Count; i++)
                                     {
                                         if (i < ListControlSizeSendTransaction.Count)
@@ -3224,42 +3547,22 @@ namespace Xiropht_Wallet
                                             if (i < SendTransactionWalletForm.Controls.Count)
                                             {
                                                 var i1 = i;
-                                                var currentWidth = BaseInterfaceWidth;
 
-                                                float ratioWidth = ((float) Width / currentWidth);
+                                                var currentHeight = BaseInterfaceHeight;
+
+                                                float ratioHeight = ((float) Height / currentHeight);
                                                 float controlWitdh =
-                                                    ListControlSizeSendTransaction[i1].Item1.Width * ratioWidth;
-                                                float controlLocationX =
-                                                    ListControlSizeSendTransaction[i1].Item2.X * ratioWidth;
+                                                    ListControlSizeSendTransaction[i1].Item1.Height * ratioHeight;
+                                                float controlLocationX = SendTransactionWalletForm.Controls[i1].Location.X;
                                                 float controlLocationY =
-                                                    SendTransactionWalletForm.Controls[i1].Location.Y;
-                                                if (SendTransactionWalletForm.Controls[i1] is Label ||
-                                                    SendTransactionWalletForm.Controls[i1] is MetroLabel)
-                                                {
-                                                    SendTransactionWalletForm.Controls[i1].Font = new Font(
-                                                        SendTransactionWalletForm.Controls[i1].Font.FontFamily,
-                                                        (((float) SendTransactionWalletForm.Width * 1.0014f) / 100),
-                                                        SendTransactionWalletForm.Controls[i1].Font.Style);
-                                                    SendTransactionWalletForm.Controls[i1].Location =
-                                                        new Point((int) controlLocationX, (int) controlLocationY);
-                                                }
-                                                else
-                                                {
-                                                    SendTransactionWalletForm.Controls[i1].Font = new Font(
-                                                        SendTransactionWalletForm.Controls[i1].Font.FontFamily,
-                                                        (((float) SendTransactionWalletForm.Width * 1.0014f) / 100),
-                                                        SendTransactionWalletForm.Controls[i1].Font.Style);
-                                                    SendTransactionWalletForm.Controls[i1].Width = (int) controlWitdh;
-                                                    SendTransactionWalletForm.Controls[i1].Location =
-                                                        new Point((int) controlLocationX, (int) controlLocationY);
-                                                }
+                                                    ListControlSizeSendTransaction[i1].Item2.Y * ratioHeight;
+                                                SendTransactionWalletForm.Controls[i1].Height = (int) controlWitdh;
+                                                SendTransactionWalletForm.Controls[i1].Location =
+                                                    new Point((int) controlLocationX, (int) controlLocationY);
                                             }
                                         }
                                     }
-                                }
 
-                                if (ListControlSizeCreateWallet.Count > 0)
-                                {
                                     for (int i = 0; i < ListControlSizeCreateWallet.Count; i++)
                                     {
                                         if (i < ListControlSizeCreateWallet.Count)
@@ -3267,37 +3570,21 @@ namespace Xiropht_Wallet
                                             if (i < CreateWalletForm.Controls.Count)
                                             {
                                                 var i1 = i;
-                                                var currentWidth = BaseInterfaceWidth;
+                                                var currentHeight = BaseInterfaceHeight;
 
-                                                float ratioWidth = ((float) Width / currentWidth);
+                                                float ratioHeight = ((float) Height / currentHeight);
                                                 float controlWitdh =
-                                                    ListControlSizeCreateWallet[i1].Item1.Width * ratioWidth;
-                                                float controlLocationX =
-                                                    ListControlSizeCreateWallet[i1].Item2.X * ratioWidth;
-                                                float controlLocationY = CreateWalletForm.Controls[i1].Location.Y;
-                                                if (CreateWalletForm.Controls[i1] is Label ||
-                                                    CreateWalletForm.Controls[i1] is MetroLabel)
-                                                {
-                                                    CreateWalletForm.Controls[i1].Font =
-                                                        new Font(CreateWalletForm.Controls[i1].Font.FontFamily,
-                                                            (((float) CreateWalletForm.Width * 1.0014f) / 100),
-                                                            CreateWalletForm.Controls[i1].Font.Style);
-                                                    CreateWalletForm.Controls[i1].Location =
-                                                        new Point((int) controlLocationX, (int) controlLocationY);
-                                                }
-                                                else
-                                                {
-                                                    CreateWalletForm.Controls[i1].Width = (int) controlWitdh;
-                                                    CreateWalletForm.Controls[i1].Location =
-                                                        new Point((int) controlLocationX, (int) controlLocationY);
-                                                }
+                                                    ListControlSizeCreateWallet[i1].Item1.Height * ratioHeight;
+                                                float controlLocationX = CreateWalletForm.Controls[i1].Location.X;
+                                                float controlLocationY =
+                                                    ListControlSizeCreateWallet[i1].Item2.Y * ratioHeight;
+                                                CreateWalletForm.Controls[i1].Height = (int) controlWitdh;
+                                                CreateWalletForm.Controls[i1].Location = new Point((int) controlLocationX,
+                                                    (int) controlLocationY);
                                             }
                                         }
                                     }
-                                }
 
-                                if (ListControlSizeRestoreWallet.Count > 0)
-                                {
                                     for (int i = 0; i < ListControlSizeRestoreWallet.Count; i++)
                                     {
                                         if (i < ListControlSizeRestoreWallet.Count)
@@ -3305,37 +3592,21 @@ namespace Xiropht_Wallet
                                             if (i < RestoreWalletForm.Controls.Count)
                                             {
                                                 var i1 = i;
-                                                var currentWidth = BaseInterfaceWidth;
+                                                var currentHeight = BaseInterfaceHeight;
 
-                                                float ratioWidth = ((float)Width / currentWidth);
+                                                float ratioHeight = ((float)Height / currentHeight);
                                                 float controlWitdh =
-                                                    ListControlSizeRestoreWallet[i1].Item1.Width * ratioWidth;
-                                                float controlLocationX =
-                                                    ListControlSizeRestoreWallet[i1].Item2.X * ratioWidth;
-                                                float controlLocationY = RestoreWalletForm.Controls[i1].Location.Y;
-                                                if (RestoreWalletForm.Controls[i1] is Label ||
-                                                    RestoreWalletForm.Controls[i1] is MetroLabel)
-                                                {
-                                                    RestoreWalletForm.Controls[i1].Font =
-                                                        new Font(RestoreWalletForm.Controls[i1].Font.FontFamily,
-                                                            (((float)RestoreWalletForm.Width * 1.0014f) / 100),
-                                                            RestoreWalletForm.Controls[i1].Font.Style);
-                                                    RestoreWalletForm.Controls[i1].Location =
-                                                        new Point((int)controlLocationX, (int)controlLocationY);
-                                                }
-                                                else
-                                                {
-                                                    RestoreWalletForm.Controls[i1].Width = (int)controlWitdh;
-                                                    RestoreWalletForm.Controls[i1].Location =
-                                                        new Point((int)controlLocationX, (int)controlLocationY);
-                                                }
+                                                    ListControlSizeRestoreWallet[i1].Item1.Height * ratioHeight;
+                                                float controlLocationX = RestoreWalletForm.Controls[i1].Location.X;
+                                                float controlLocationY =
+                                                    ListControlSizeRestoreWallet[i1].Item2.Y * ratioHeight;
+                                                RestoreWalletForm.Controls[i1].Height = (int)controlWitdh;
+                                                RestoreWalletForm.Controls[i1].Location = new Point((int)controlLocationX,
+                                                    (int)controlLocationY);
                                             }
                                         }
                                     }
-                                }
 
-                                if (ListControlSizeBlock.Count > 0)
-                                {
                                     for (int i = 0; i < ListControlSizeBlock.Count; i++)
                                     {
                                         if (i < ListControlSizeBlock.Count)
@@ -3343,245 +3614,29 @@ namespace Xiropht_Wallet
                                             if (i < BlockWalletForm.Controls.Count)
                                             {
                                                 var i1 = i;
-
                                                 bool ignore =
                                                     BlockWalletForm.Controls[i1] is DataGridView ||
                                                     BlockWalletForm.Controls[i1] is ListView ||
                                                     BlockWalletForm.Controls[i1] is TabPage;
+
                                                 if (!ignore)
                                                 {
-                                                    var currentWidth = BaseInterfaceWidth;
+                                                    var currentHeight = BaseInterfaceHeight;
 
-                                                    float ratioWidth = ((float) Width / currentWidth);
+                                                    float ratioHeight = ((float) Height / currentHeight);
                                                     float controlWitdh =
-                                                        ListControlSizeBlock[i1].Item1.Width * ratioWidth;
-                                                    float controlLocationX =
-                                                        ListControlSizeBlock[i1].Item2.X * ratioWidth;
-                                                    float controlLocationY = BlockWalletForm.Controls[i1].Location.Y;
-                                                    BlockWalletForm.Controls[i1].Width = (int) controlWitdh;
+                                                        ListControlSizeBlock[i1].Item1.Height * ratioHeight;
+                                                    float controlLocationX = BlockWalletForm.Controls[i1].Location.X;
+                                                    float controlLocationY = ListControlSizeBlock[i1].Item2.Y * ratioHeight;
+                                                    BlockWalletForm.Controls[i1].Height = (int) controlWitdh;
                                                     BlockWalletForm.Controls[i1].Location =
                                                         new Point((int) controlLocationX, (int) controlLocationY);
                                                 }
                                             }
                                         }
                                     }
-                                }
 
-                                #endregion
-
-
-                                #region Update Height
-
-                                for (int i = 0; i < ListControlSizeBase.Count; i++)
-                                {
-                                    if (i < ListControlSizeBase.Count)
-                                    {
-                                        if (i < Controls.Count)
-                                        {
-                                            var i1 = i;
-                                            var currentHeight = BaseInterfaceHeight;
-
-                                            float ratioHeight = ((float) Height / currentHeight);
-                                            float controlWitdh = ListControlSizeBase[i1].Item1.Height * ratioHeight;
-                                            float controlLocationX = Controls[i1].Location.X;
-                                            float controlLocationY = ListControlSizeBase[i1].Item2.Y * ratioHeight;
-                                            Controls[i1].Height = (int) controlWitdh;
-                                            Controls[i1].Location = new Point((int) controlLocationX,
-                                                (int) controlLocationY);
-                                        }
-                                    }
-                                }
-
-                                for (int i = 0; i < ListControlSizeMain.Count; i++)
-                                {
-                                    if (i < ListControlSizeMain.Count)
-                                    {
-                                        if (i < MainWalletForm.Controls.Count)
-                                        {
-                                            var i1 = i;
-                                            var currentHeight = BaseInterfaceHeight;
-
-                                            float ratioHeight = ((float) Height / currentHeight);
-                                            float controlWitdh = ListControlSizeMain[i1].Item1.Height * ratioHeight;
-                                            float controlLocationX = MainWalletForm.Controls[i1].Location.X;
-                                            float controlLocationY = ListControlSizeMain[i1].Item2.Y * ratioHeight;
-                                            MainWalletForm.Controls[i1].Height = (int) controlWitdh;
-                                            MainWalletForm.Controls[i1].Location = new Point((int) controlLocationX,
-                                                (int) controlLocationY);
-                                        }
-                                    }
-                                }
-
-                                for (int i = 0; i < ListControlSizeOpenWallet.Count; i++)
-                                {
-                                    if (i < ListControlSizeOpenWallet.Count)
-                                    {
-                                        if (i < OpenWalletForm.Controls.Count)
-                                        {
-                                            var i1 = i;
-                                            var currentHeight = BaseInterfaceHeight;
-
-                                            float ratioHeight = ((float) Height / currentHeight);
-                                            float controlWitdh =
-                                                ListControlSizeOpenWallet[i1].Item1.Height * ratioHeight;
-                                            float controlLocationX = OpenWalletForm.Controls[i1].Location.X;
-                                            float controlLocationY =
-                                                ListControlSizeOpenWallet[i1].Item2.Y * ratioHeight;
-                                            OpenWalletForm.Controls[i1].Height = (int) controlWitdh;
-                                            OpenWalletForm.Controls[i1].Location = new Point((int) controlLocationX,
-                                                (int) controlLocationY);
-                                        }
-                                    }
-                                }
-
-                                for (int i = 0; i < ListControlSizeOverview.Count; i++)
-                                {
-                                    if (i < ListControlSizeOverview.Count)
-                                    {
-                                        if (i < OverviewWalletForm.Controls.Count)
-                                        {
-                                            var i1 = i;
-                                            var currentHeight = BaseInterfaceHeight;
-
-                                            float ratioHeight = ((float) Height / currentHeight);
-                                            float controlWitdh = ListControlSizeOverview[i1].Item1.Height * ratioHeight;
-                                            float controlLocationX = OverviewWalletForm.Controls[i1].Location.X;
-                                            float controlLocationY = ListControlSizeOverview[i1].Item2.Y * ratioHeight;
-                                            OverviewWalletForm.Controls[i1].Height = (int) controlWitdh;
-                                            OverviewWalletForm.Controls[i1].Location = new Point((int) controlLocationX,
-                                                (int) controlLocationY);
-                                        }
-                                    }
-                                }
-
-                                for (int i = 0; i < ListControlSizeTransaction.Count; i++)
-                                {
-                                    if (i < ListControlSizeTransaction.Count)
-                                    {
-                                        if (i < TransactionHistoryWalletForm.Controls.Count)
-                                        {
-                                            var i1 = i;
-                                            bool ignore = TransactionHistoryWalletForm.Controls[i1] is DataGridView ||
-                                                          TransactionHistoryWalletForm.Controls[i1] is ListView ||
-                                                          TransactionHistoryWalletForm.Controls[i1] is TabPage ||
-                                                          TransactionHistoryWalletForm.Controls[i1] is Panel;
-                                            if (!ignore)
-                                            {
-                                                var currentHeight = BaseInterfaceHeight;
-
-                                                float ratioHeight = ((float) Height / currentHeight);
-                                                float controlWitdh =
-                                                    ListControlSizeTransaction[i1].Item1.Height * ratioHeight;
-                                                float controlLocationX =
-                                                    TransactionHistoryWalletForm.Controls[i1].Location.X;
-                                                float controlLocationY =
-                                                    ListControlSizeTransaction[i1].Item2.Y * ratioHeight;
-                                                TransactionHistoryWalletForm.Controls[i1].Height = (int) controlWitdh;
-                                                TransactionHistoryWalletForm.Controls[i1].Location =
-                                                    new Point((int) controlLocationX, (int) controlLocationY);
-                                            }
-                                        }
-                                    }
-                                }
-
-
-                                for (int i = 0; i < ListControlSizeSendTransaction.Count; i++)
-                                {
-                                    if (i < ListControlSizeSendTransaction.Count)
-                                    {
-                                        if (i < SendTransactionWalletForm.Controls.Count)
-                                        {
-                                            var i1 = i;
-
-                                            var currentHeight = BaseInterfaceHeight;
-
-                                            float ratioHeight = ((float) Height / currentHeight);
-                                            float controlWitdh =
-                                                ListControlSizeSendTransaction[i1].Item1.Height * ratioHeight;
-                                            float controlLocationX = SendTransactionWalletForm.Controls[i1].Location.X;
-                                            float controlLocationY =
-                                                ListControlSizeSendTransaction[i1].Item2.Y * ratioHeight;
-                                            SendTransactionWalletForm.Controls[i1].Height = (int) controlWitdh;
-                                            SendTransactionWalletForm.Controls[i1].Location =
-                                                new Point((int) controlLocationX, (int) controlLocationY);
-                                        }
-                                    }
-                                }
-
-                                for (int i = 0; i < ListControlSizeCreateWallet.Count; i++)
-                                {
-                                    if (i < ListControlSizeCreateWallet.Count)
-                                    {
-                                        if (i < CreateWalletForm.Controls.Count)
-                                        {
-                                            var i1 = i;
-                                            var currentHeight = BaseInterfaceHeight;
-
-                                            float ratioHeight = ((float) Height / currentHeight);
-                                            float controlWitdh =
-                                                ListControlSizeCreateWallet[i1].Item1.Height * ratioHeight;
-                                            float controlLocationX = CreateWalletForm.Controls[i1].Location.X;
-                                            float controlLocationY =
-                                                ListControlSizeCreateWallet[i1].Item2.Y * ratioHeight;
-                                            CreateWalletForm.Controls[i1].Height = (int) controlWitdh;
-                                            CreateWalletForm.Controls[i1].Location = new Point((int) controlLocationX,
-                                                (int) controlLocationY);
-                                        }
-                                    }
-                                }
-
-                                for (int i = 0; i < ListControlSizeRestoreWallet.Count; i++)
-                                {
-                                    if (i < ListControlSizeRestoreWallet.Count)
-                                    {
-                                        if (i < RestoreWalletForm.Controls.Count)
-                                        {
-                                            var i1 = i;
-                                            var currentHeight = BaseInterfaceHeight;
-
-                                            float ratioHeight = ((float)Height / currentHeight);
-                                            float controlWitdh =
-                                                ListControlSizeRestoreWallet[i1].Item1.Height * ratioHeight;
-                                            float controlLocationX = RestoreWalletForm.Controls[i1].Location.X;
-                                            float controlLocationY =
-                                                ListControlSizeRestoreWallet[i1].Item2.Y * ratioHeight;
-                                            RestoreWalletForm.Controls[i1].Height = (int)controlWitdh;
-                                            RestoreWalletForm.Controls[i1].Location = new Point((int)controlLocationX,
-                                                (int)controlLocationY);
-                                        }
-                                    }
-                                }
-
-                                for (int i = 0; i < ListControlSizeBlock.Count; i++)
-                                {
-                                    if (i < ListControlSizeBlock.Count)
-                                    {
-                                        if (i < BlockWalletForm.Controls.Count)
-                                        {
-                                            var i1 = i;
-                                            bool ignore =
-                                                BlockWalletForm.Controls[i1] is DataGridView ||
-                                                BlockWalletForm.Controls[i1] is ListView ||
-                                                BlockWalletForm.Controls[i1] is TabPage;
-
-                                            if (!ignore)
-                                            {
-                                                var currentHeight = BaseInterfaceHeight;
-
-                                                float ratioHeight = ((float) Height / currentHeight);
-                                                float controlWitdh =
-                                                    ListControlSizeBlock[i1].Item1.Height * ratioHeight;
-                                                float controlLocationX = BlockWalletForm.Controls[i1].Location.X;
-                                                float controlLocationY = ListControlSizeBlock[i1].Item2.Y * ratioHeight;
-                                                BlockWalletForm.Controls[i1].Height = (int) controlWitdh;
-                                                BlockWalletForm.Controls[i1].Location =
-                                                    new Point((int) controlLocationX, (int) controlLocationY);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                #endregion
+#endregion
 
                                 CurrentInterfaceHeight = Height;
                                 OpenWalletForm.Size = panelMainForm.Size;
@@ -3621,7 +3676,11 @@ namespace Xiropht_Wallet
                                         {
                                             Controls[i].Size = ListControlSizeBase[i].Item1;
                                             Controls[i].Location = ListControlSizeBase[i].Item2;
-                                            if (Controls[i] is Label || Controls[i] is MetroLabel)
+                                            if (Controls[i] is Label
+#if WINDOWS
+                                                ||  Controls[i] is MetroLabel
+#endif
+                                                )
                                             {
                                                 Controls[i].Font = new Font(Controls[i].Font.FontFamily,
                                                     ((float) (Width * 1.000003f) / 100), Controls[i].Font.Style);
@@ -3641,8 +3700,11 @@ namespace Xiropht_Wallet
                                         {
                                             MainWalletForm.Controls[i].Size = ListControlSizeMain[i].Item1;
                                             MainWalletForm.Controls[i].Location = ListControlSizeMain[i].Item2;
-                                            if (MainWalletForm.Controls[i] is Label ||
-                                                MainWalletForm.Controls[i] is MetroLabel)
+                                            if (MainWalletForm.Controls[i] is Label 
+#if WINDOWS
+                                               || MainWalletForm.Controls[i] is MetroLabel 
+#endif
+                                                )
                                             {
                                                 MainWalletForm.Controls[i].Font =
                                                     new Font(MainWalletForm.Controls[i].Font.FontFamily,
@@ -3664,8 +3726,11 @@ namespace Xiropht_Wallet
                                         {
                                             OpenWalletForm.Controls[i].Size = ListControlSizeOpenWallet[i].Item1;
                                             OpenWalletForm.Controls[i].Location = ListControlSizeOpenWallet[i].Item2;
-                                            if (OpenWalletForm.Controls[i] is Label ||
-                                                OpenWalletForm.Controls[i] is MetroLabel)
+                                            if (OpenWalletForm.Controls[i] is Label
+#if WINDOWS
+                                                    || OpenWalletForm.Controls[i] is MetroLabel
+#endif
+                                                )
                                             {
                                                 OpenWalletForm.Controls[i].Font =
                                                     new Font(OpenWalletForm.Controls[i].Font.FontFamily,
@@ -3687,8 +3752,11 @@ namespace Xiropht_Wallet
                                         {
                                             OverviewWalletForm.Controls[i].Size = ListControlSizeOverview[i].Item1;
                                             OverviewWalletForm.Controls[i].Location = ListControlSizeOverview[i].Item2;
-                                            if (OverviewWalletForm.Controls[i] is Label ||
-                                                OverviewWalletForm.Controls[i] is MetroLabel)
+                                            if (OverviewWalletForm.Controls[i] is Label
+#if WINDOWS
+                                                || OverviewWalletForm.Controls[i] is MetroLabel
+#endif
+                                                )
                                             {
                                                 OverviewWalletForm.Controls[i].Font =
                                                     new Font(OverviewWalletForm.Controls[i].Font.FontFamily,
@@ -3712,8 +3780,11 @@ namespace Xiropht_Wallet
                                                 ListControlSizeTransaction[i].Item1;
                                             TransactionHistoryWalletForm.Controls[i].Location =
                                                 ListControlSizeTransaction[i].Item2;
-                                            if (TransactionHistoryWalletForm.Controls[i] is Label ||
-                                                TransactionHistoryWalletForm.Controls[i] is MetroLabel)
+                                            if (TransactionHistoryWalletForm.Controls[i] is Label
+#if WINDOWS
+                                                || TransactionHistoryWalletForm.Controls[i] is MetroLabel
+#endif
+                                                )
                                             {
                                                 TransactionHistoryWalletForm.Controls[i].Font = new Font(
                                                     TransactionHistoryWalletForm.Controls[i].Font.FontFamily,
@@ -3738,8 +3809,11 @@ namespace Xiropht_Wallet
                                                 ListControlSizeSendTransaction[i].Item1;
                                             SendTransactionWalletForm.Controls[i].Location =
                                                 ListControlSizeSendTransaction[i].Item2;
-                                            if (SendTransactionWalletForm.Controls[i] is Label ||
-                                                SendTransactionWalletForm.Controls[i] is MetroLabel)
+                                            if (SendTransactionWalletForm.Controls[i] is Label
+#if WINDOWS
+                                                || SendTransactionWalletForm.Controls[i] is MetroLabel
+#endif
+                                                )
                                             {
                                                 SendTransactionWalletForm.Controls[i].Font = new Font(
                                                     SendTransactionWalletForm.Controls[i].Font.FontFamily,
@@ -3762,8 +3836,11 @@ namespace Xiropht_Wallet
                                             CreateWalletForm.Controls[i].Size = ListControlSizeCreateWallet[i].Item1;
                                             CreateWalletForm.Controls[i].Location =
                                                 ListControlSizeCreateWallet[i].Item2;
-                                            if (CreateWalletForm.Controls[i] is Label ||
-                                                CreateWalletForm.Controls[i] is MetroLabel)
+                                            if (CreateWalletForm.Controls[i] is Label
+#if WINDOWS
+                                                || CreateWalletForm.Controls[i] is MetroLabel
+#endif
+                                                )
                                             {
                                                 CreateWalletForm.Controls[i].Font =
                                                     new Font(CreateWalletForm.Controls[i].Font.FontFamily,
@@ -3785,8 +3862,11 @@ namespace Xiropht_Wallet
                                         {
                                             BlockWalletForm.Controls[i].Size = ListControlSizeBlock[i].Item1;
                                             BlockWalletForm.Controls[i].Location = ListControlSizeBlock[i].Item2;
-                                            if (BlockWalletForm.Controls[i] is Label ||
-                                                BlockWalletForm.Controls[i] is MetroLabel)
+                                            if (BlockWalletForm.Controls[i] is Label
+#if WINDOWS
+                                                || BlockWalletForm.Controls[i] is MetroLabel
+#endif
+                                                )
                                             {
                                                 BlockWalletForm.Controls[i].Font =
                                                     new Font(BlockWalletForm.Controls[i].Font.FontFamily,
@@ -3809,8 +3889,11 @@ namespace Xiropht_Wallet
                                             RestoreWalletForm.Controls[i].Size = ListControlSizeRestoreWallet[i].Item1;
                                             RestoreWalletForm.Controls[i].Location =
                                                 ListControlSizeRestoreWallet[i].Item2;
-                                            if (RestoreWalletForm.Controls[i] is Label ||
-                                                RestoreWalletForm.Controls[i] is MetroLabel)
+                                            if (RestoreWalletForm.Controls[i] is Label
+#if WINDOWS
+                                                || RestoreWalletForm.Controls[i] is MetroLabel
+#endif
+                                                )
                                             {
                                                 RestoreWalletForm.Controls[i].Font =
                                                     new Font(RestoreWalletForm.Controls[i].Font.FontFamily,
@@ -3840,7 +3923,7 @@ namespace Xiropht_Wallet
             }
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Detect when the size of the interface change.
@@ -3885,9 +3968,15 @@ namespace Xiropht_Wallet
                 {
                     if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
                     {
+#if WINDOWS
                         if (MetroMessageBox.Show(this, ClassTranslation.GetLanguageTextFromOrder("RESYNC_BLOCK_EXPLORER_CONTENT_TEXT"),
                                 ClassTranslation.GetLanguageTextFromOrder("RESYNC_BLOCK_EXPLORER_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Information) ==
                             DialogResult.Yes)
+#else
+                        if (MessageBox.Show(this, ClassTranslation.GetLanguageTextFromOrder("RESYNC_BLOCK_EXPLORER_CONTENT_TEXT"),
+                                ClassTranslation.GetLanguageTextFromOrder("RESYNC_BLOCK_EXPLORER_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Information) ==
+                            DialogResult.Yes)
+#endif
                         {
                             BlockWalletForm.ResyncBlock();
                         }

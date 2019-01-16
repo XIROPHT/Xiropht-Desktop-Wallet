@@ -15,7 +15,7 @@ namespace Xiropht_Wallet
         /// <returns></returns>
         public static string ConvertPath(string path)
         {
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
             {
                 path = path.Replace("\\", "/");
             }

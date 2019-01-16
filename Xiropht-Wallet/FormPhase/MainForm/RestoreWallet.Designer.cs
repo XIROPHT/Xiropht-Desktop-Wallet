@@ -28,10 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.labelTextRestore = new System.Windows.Forms.Label();
+#if WINDOWS
             this.textBoxPathWallet = new MetroFramework.Controls.MetroTextBox();
-            this.labelCreateSelectSavingPathWallet = new System.Windows.Forms.Label();
             this.buttonSearchNewWalletFile = new MetroFramework.Controls.MetroButton();
+#else
+            this.textBoxPathWallet = new System.Windows.Forms.TextBox();
+            this.buttonSearchNewWalletFile = new System.Windows.Forms.Button();
+#endif
+            this.labelTextRestore = new System.Windows.Forms.Label();
+            this.labelCreateSelectSavingPathWallet = new System.Windows.Forms.Label();
             this.textBoxPrivateKey = new System.Windows.Forms.TextBox();
             this.labelPrivateKey = new System.Windows.Forms.Label();
             this.labelPassword = new System.Windows.Forms.Label();
@@ -54,6 +59,7 @@
             // 
             // 
             // 
+#if WINDOWS
             this.textBoxPathWallet.CustomButton.Image = null;
             this.textBoxPathWallet.CustomButton.Location = new System.Drawing.Point(225, 2);
             this.textBoxPathWallet.CustomButton.Name = "";
@@ -63,6 +69,7 @@
             this.textBoxPathWallet.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
             this.textBoxPathWallet.CustomButton.UseSelectable = true;
             this.textBoxPathWallet.CustomButton.Visible = false;
+#endif
             this.textBoxPathWallet.Lines = new string[0];
             this.textBoxPathWallet.Location = new System.Drawing.Point(247, 169);
             this.textBoxPathWallet.MaxLength = 32767;
@@ -76,9 +83,11 @@
             this.textBoxPathWallet.ShortcutsEnabled = true;
             this.textBoxPathWallet.Size = new System.Drawing.Size(243, 20);
             this.textBoxPathWallet.TabIndex = 25;
+#if WINDOWS
             this.textBoxPathWallet.UseSelectable = true;
             this.textBoxPathWallet.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.textBoxPathWallet.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+#endif
             // 
             // labelCreateSelectSavingPathWallet
             // 
@@ -96,7 +105,9 @@
             this.buttonSearchNewWalletFile.Size = new System.Drawing.Size(27, 22);
             this.buttonSearchNewWalletFile.TabIndex = 23;
             this.buttonSearchNewWalletFile.Text = "...";
+#if WINDOWS
             this.buttonSearchNewWalletFile.UseSelectable = true;
+#endif
             this.buttonSearchNewWalletFile.Click += new System.EventHandler(this.buttonSearchNewWalletFile_Click);
             // 
             // textBoxPrivateKey
@@ -172,10 +183,16 @@
 
         }
 
-        #endregion
+#endregion
+
+#if WINDOWS
         private MetroFramework.Controls.MetroTextBox textBoxPathWallet;
-        public System.Windows.Forms.Label labelCreateSelectSavingPathWallet;
         public MetroFramework.Controls.MetroButton buttonSearchNewWalletFile;
+#else
+        private System.Windows.Forms.TextBox textBoxPathWallet;
+        public System.Windows.Forms.Button buttonSearchNewWalletFile;
+#endif
+        public System.Windows.Forms.Label labelCreateSelectSavingPathWallet;
         private System.Windows.Forms.TextBox textBoxPrivateKey;
         public System.Windows.Forms.Label labelPrivateKey;
         public System.Windows.Forms.Label labelPassword;

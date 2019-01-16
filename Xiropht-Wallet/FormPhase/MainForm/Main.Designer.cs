@@ -29,8 +29,13 @@
         private void InitializeComponent()
         {
             this.labelNoticeWelcomeWallet = new System.Windows.Forms.Label();
+#if WINDOWS
             this.buttonMainOpenMenuWallet = new MetroFramework.Controls.MetroButton();
             this.buttonMainCreateWallet = new MetroFramework.Controls.MetroButton();
+#else
+            this.buttonMainOpenMenuWallet = new System.Windows.Forms.Button();
+            this.buttonMainCreateWallet = new System.Windows.Forms.Button();
+#endif
             this.labelNoticeLanguageAndIssue = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -51,10 +56,14 @@
             this.buttonMainOpenMenuWallet.Location = new System.Drawing.Point(301, 145);
             this.buttonMainOpenMenuWallet.Name = "buttonMainOpenMenuWallet";
             this.buttonMainOpenMenuWallet.Size = new System.Drawing.Size(140, 50);
+#if WINDOWS
             this.buttonMainOpenMenuWallet.Style = MetroFramework.MetroColorStyle.Blue;
+#endif
             this.buttonMainOpenMenuWallet.TabIndex = 1;
             this.buttonMainOpenMenuWallet.Text = "Open a wallet";
+#if WINDOWS
             this.buttonMainOpenMenuWallet.UseSelectable = true;
+#endif
             this.buttonMainOpenMenuWallet.Click += new System.EventHandler(this.ButtonMainOpenMenuWallet_Click);
             // 
             // buttonMainCreateWallet
@@ -62,10 +71,14 @@
             this.buttonMainCreateWallet.Location = new System.Drawing.Point(301, 247);
             this.buttonMainCreateWallet.Name = "buttonMainCreateWallet";
             this.buttonMainCreateWallet.Size = new System.Drawing.Size(140, 50);
+#if WINDOWS
             this.buttonMainCreateWallet.Style = MetroFramework.MetroColorStyle.Red;
+#endif
             this.buttonMainCreateWallet.TabIndex = 2;
             this.buttonMainCreateWallet.Text = "Create a Wallet";
+#if WINDOWS
             this.buttonMainCreateWallet.UseSelectable = true;
+#endif
             this.buttonMainCreateWallet.Click += new System.EventHandler(this.ButtonMainCreateWallet_Click);
             // 
             // labelNoticeLanguageAndIssue
@@ -104,11 +117,16 @@
 
         }
 
-        #endregion
+#endregion
 
         public System.Windows.Forms.Label labelNoticeWelcomeWallet;
+#if WINDOWS
         public MetroFramework.Controls.MetroButton buttonMainOpenMenuWallet;
         public MetroFramework.Controls.MetroButton buttonMainCreateWallet;
+#else
+        public System.Windows.Forms.Button buttonMainOpenMenuWallet;
+        public System.Windows.Forms.Button buttonMainCreateWallet;
+#endif
         public System.Windows.Forms.Label labelNoticeLanguageAndIssue;
     }
 }

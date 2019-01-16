@@ -1,4 +1,6 @@
-﻿using MetroFramework;
+﻿#if WINDOWS
+using MetroFramework;
+#endif
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -59,9 +61,15 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void buttonFeeInformationAccumulated_Click(object sender, EventArgs e)
         {
+#if WINDOWS
             MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                 ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_BUTTON_MESSAGE_TRANSACTION_FEE_ACCUMULATED_CONTENT_TEXT"),
                 ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_BUTTON_MESSAGE_TRANSACTION_FEE_ACCUMULATED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+#else
+            MessageBox.Show(ClassFormPhase.WalletXiropht,
+                ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_BUTTON_MESSAGE_TRANSACTION_FEE_ACCUMULATED_CONTENT_TEXT"),
+                ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_BUTTON_MESSAGE_TRANSACTION_FEE_ACCUMULATED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+#endif
         }
     }
 }

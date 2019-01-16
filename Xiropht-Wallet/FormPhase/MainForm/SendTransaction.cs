@@ -1,4 +1,6 @@
-﻿using MetroFramework;
+﻿#if WINDOWS
+using MetroFramework;
+#endif
 using System;
 using System.Drawing;
 using System.Globalization;
@@ -52,9 +54,15 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 textBoxWalletDestination.Text,
                                 "[a-z0-9]+", RegexOptions.IgnoreCase))
                         {
+#if WINDOWS
                             if (MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_SUBMIT_CONTENT_TEXT").Replace(ClassTranslation.AmountSendOrder, ""+amountSend).Replace(ClassTranslation.TargetAddressOrder, textBoxWalletDestination.Text),
                                     ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_SUBMIT_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) ==
                                 DialogResult.Yes)
+#else
+                            if (MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_SUBMIT_CONTENT_TEXT").Replace(ClassTranslation.AmountSendOrder, "" + amountSend).Replace(ClassTranslation.TargetAddressOrder, textBoxWalletDestination.Text),
+                                    ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_SUBMIT_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) ==
+                                DialogResult.Yes)
+#endif
                             {
                                 new Thread(ClassParallelForm.ShowWaitingForm).Start();
                                 if (checkBoxHideWalletAddress.Checked)
@@ -78,18 +86,30 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         }
                         else
                         {
+#if WINDOWS
                             MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_TARGET_CONTENT_TEXT"));
+#else
+                            MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_TARGET_CONTENT_TEXT"));
+#endif
                         }
                     }
                 }
                 else
                 {
+#if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_FEE_CONTENT_TEXT"));
+#else
+                    MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_FEE_CONTENT_TEXT"));
+#endif
                 }
             }
             else
             {
+#if WINDOWS
                 MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_AMOUNT_CONTENT_TEXT"));
+#else
+                MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_AMOUNT_CONTENT_TEXT"));
+#endif
             }
         }
 
@@ -236,9 +256,15 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             if (checkBoxHideWalletAddress.Checked)
             {
+#if WINDOWS
                 if (MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_OPTION_ANONYMITY_CONTENT1_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_OPTION_ANONYMITY_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No)
+#else
+                if (MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_OPTION_ANONYMITY_CONTENT1_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_OPTION_ANONYMITY_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No)
+#endif
                 {
                     checkBoxHideWalletAddress.Checked = false;
                 }
@@ -268,9 +294,15 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void buttonFeeInformation_Click(object sender, EventArgs e)
         {
+#if WINDOWS
             MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                 ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_FEE_INFORMATION_CONTENT_TEXT"),
                 ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_FEE_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+#else
+            MessageBox.Show(ClassFormPhase.WalletXiropht,
+                ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_FEE_INFORMATION_CONTENT_TEXT"),
+                ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_FEE_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+#endif
         }
 
         private void buttonEstimatedTimeInformation_MouseHover(object sender, EventArgs e)
@@ -282,9 +314,15 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void buttonEstimatedTimeInformation_Click(object sender, EventArgs e)
         {
+#if WINDOWS
             MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                 ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_TIME_RECEIVE_INFORMATION_CONTENT_TEXT"),
                 ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_TIME_RECEIVE_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+#else
+            MessageBox.Show(ClassFormPhase.WalletXiropht,
+                ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_TIME_RECEIVE_INFORMATION_CONTENT_TEXT"),
+                ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_TIME_RECEIVE_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+#endif
         }
     }
 }
