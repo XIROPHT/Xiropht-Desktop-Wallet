@@ -15,7 +15,9 @@ Linux:
 
 For make a binary linux file from executable windows file:
 
-mkbundle Xiropht-Wallet.exe -o Xiropht-Wallet Xiropht-Connector-All.dll MetroFramework.Fonts.dll MetroFramework.dll MetroFramework.Design.dll --deps -z --static
+Target: 4.6.1-linux-libc2.12-amd64
+
+mkbundle --cross 4.6.1-linux-libc2.12-amd64 Xiropht-Wallet.exe -o Xiropht-Wallet Xiropht-Connector-All.dll MetroFramework.Fonts.dll MetroFramework.dll MetroFramework.Design.dll --deps -z --static
 
 
 Informations:
