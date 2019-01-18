@@ -228,7 +228,7 @@ namespace Xiropht_Wallet
             // 
             // metroButtonBlockExplorerWallet
             // 
-            this.metroButtonBlockExplorerWallet.Location = new System.Drawing.Point(20, 327);
+            this.metroButtonBlockExplorerWallet.Location = new System.Drawing.Point(20, 357);
             this.metroButtonBlockExplorerWallet.Name = "metroButtonBlockExplorerWallet";
             this.metroButtonBlockExplorerWallet.Size = new System.Drawing.Size(194, 54);
             this.metroButtonBlockExplorerWallet.TabIndex = 3;
@@ -237,7 +237,7 @@ namespace Xiropht_Wallet
             // 
             // metroButtonTransactionWallet
             // 
-            this.metroButtonTransactionWallet.Location = new System.Drawing.Point(20, 267);
+            this.metroButtonTransactionWallet.Location = new System.Drawing.Point(20, 297);
             this.metroButtonTransactionWallet.Name = "metroButtonTransactionWallet";
             this.metroButtonTransactionWallet.Size = new System.Drawing.Size(194, 54);
             this.metroButtonTransactionWallet.TabIndex = 2;
@@ -246,7 +246,7 @@ namespace Xiropht_Wallet
             // 
             // metroButtonSendTransactionWallet
             // 
-            this.metroButtonSendTransactionWallet.Location = new System.Drawing.Point(20, 207);
+            this.metroButtonSendTransactionWallet.Location = new System.Drawing.Point(20, 237);
             this.metroButtonSendTransactionWallet.Name = "metroButtonSendTransactionWallet";
             this.metroButtonSendTransactionWallet.Size = new System.Drawing.Size(194, 54);
             this.metroButtonSendTransactionWallet.TabIndex = 1;
@@ -255,7 +255,7 @@ namespace Xiropht_Wallet
             // 
             // buttonOverviewWallet
             // 
-            this.buttonOverviewWallet.Location = new System.Drawing.Point(20, 147);
+            this.buttonOverviewWallet.Location = new System.Drawing.Point(20, 177);
             this.buttonOverviewWallet.Name = "buttonOverviewWallet";
             this.buttonOverviewWallet.Size = new System.Drawing.Size(194, 54);
             this.buttonOverviewWallet.TabIndex = 0;
@@ -266,7 +266,7 @@ namespace Xiropht_Wallet
             // 
             this.labelSyncInformation.AutoSize = true;
             this.labelSyncInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSyncInformation.Location = new System.Drawing.Point(5, 675);
+            this.labelSyncInformation.Location = new System.Drawing.Point(5, 710);
             this.labelSyncInformation.Name = "labelSyncInformation";
             this.labelSyncInformation.Size = new System.Drawing.Size(103, 15);
             this.labelSyncInformation.TabIndex = 3;
@@ -281,7 +281,7 @@ namespace Xiropht_Wallet
             // 
             this.labelNetworkPhase.AutoSize = true;
             this.labelNetworkPhase.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelNetworkPhase.Location = new System.Drawing.Point(5, 627);
+            this.labelNetworkPhase.Location = new System.Drawing.Point(5, 657);
             this.labelNetworkPhase.Name = "labelNetworkPhase";
             this.labelNetworkPhase.Size = new System.Drawing.Size(204, 16);
             this.labelNetworkPhase.TabIndex = 5;
@@ -291,7 +291,7 @@ namespace Xiropht_Wallet
             // 
             this.labelCoinName.AutoSize = true;
             this.labelCoinName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelCoinName.Location = new System.Drawing.Point(5, 602);
+            this.labelCoinName.Location = new System.Drawing.Point(5, 632);
             this.labelCoinName.Name = "labelCoinName";
             this.labelCoinName.Size = new System.Drawing.Size(140, 16);
             this.labelCoinName.TabIndex = 4;
@@ -300,7 +300,7 @@ namespace Xiropht_Wallet
             // buttonPreviousPage
             // 
             this.buttonPreviousPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonPreviousPage.Location = new System.Drawing.Point(525, 649);
+            this.buttonPreviousPage.Location = new System.Drawing.Point(519, 679);
             this.buttonPreviousPage.Name = "buttonPreviousPage";
             this.buttonPreviousPage.Size = new System.Drawing.Size(75, 23);
             this.buttonPreviousPage.TabIndex = 8;
@@ -311,7 +311,7 @@ namespace Xiropht_Wallet
             // labelNoticeCurrentPage
             // 
             this.labelNoticeCurrentPage.AutoSize = true;
-            this.labelNoticeCurrentPage.Location = new System.Drawing.Point(616, 653);
+            this.labelNoticeCurrentPage.Location = new System.Drawing.Point(610, 683);
             this.labelNoticeCurrentPage.Name = "labelNoticeCurrentPage";
             this.labelNoticeCurrentPage.Size = new System.Drawing.Size(13, 13);
             this.labelNoticeCurrentPage.TabIndex = 9;
@@ -321,7 +321,7 @@ namespace Xiropht_Wallet
             // buttonNextPage
             // 
             this.buttonNextPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonNextPage.Location = new System.Drawing.Point(646, 649);
+            this.buttonNextPage.Location = new System.Drawing.Point(640, 679);
             this.buttonNextPage.Name = "buttonNextPage";
             this.buttonNextPage.Size = new System.Drawing.Size(75, 23);
             this.buttonNextPage.TabIndex = 7;
@@ -332,7 +332,7 @@ namespace Xiropht_Wallet
             // buttonLastPage
             // 
             this.buttonLastPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonLastPage.Location = new System.Drawing.Point(727, 649);
+            this.buttonLastPage.Location = new System.Drawing.Point(721, 679);
             this.buttonLastPage.Name = "buttonLastPage";
             this.buttonLastPage.Size = new System.Drawing.Size(75, 23);
             this.buttonLastPage.TabIndex = 10;
@@ -343,7 +343,7 @@ namespace Xiropht_Wallet
             // buttonFirstPage
             // 
             this.buttonFirstPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonFirstPage.Location = new System.Drawing.Point(444, 649);
+            this.buttonFirstPage.Location = new System.Drawing.Point(438, 679);
             this.buttonFirstPage.Name = "buttonFirstPage";
             this.buttonFirstPage.Size = new System.Drawing.Size(75, 23);
             this.buttonFirstPage.TabIndex = 11;
@@ -355,7 +355,7 @@ namespace Xiropht_Wallet
             // 
             this.labelCopyright.AutoSize = true;
             this.labelCopyright.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelCopyright.Location = new System.Drawing.Point(5, 701);
+            this.labelCopyright.Location = new System.Drawing.Point(5, 736);
             this.labelCopyright.Name = "labelCopyright";
             this.labelCopyright.Size = new System.Drawing.Size(238, 15);
             this.labelCopyright.TabIndex = 12;
@@ -366,7 +366,7 @@ namespace Xiropht_Wallet
             // 
             this.linkLabelWebsite.AutoSize = true;
             this.linkLabelWebsite.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabelWebsite.Location = new System.Drawing.Point(880, 701);
+            this.linkLabelWebsite.Location = new System.Drawing.Point(880, 736);
             this.linkLabelWebsite.Name = "linkLabelWebsite";
             this.linkLabelWebsite.Size = new System.Drawing.Size(129, 15);
             this.linkLabelWebsite.TabIndex = 13;
@@ -376,7 +376,7 @@ namespace Xiropht_Wallet
             // 
             // panelMainForm
             // 
-            this.panelMainForm.Location = new System.Drawing.Point(220, 147);
+            this.panelMainForm.Location = new System.Drawing.Point(220, 177);
             this.panelMainForm.Name = "panelMainForm";
             this.panelMainForm.Size = new System.Drawing.Size(792, 496);
             this.panelMainForm.TabIndex = 6;
@@ -387,7 +387,7 @@ namespace Xiropht_Wallet
             this.panelControlWallet.Controls.Add(this.labelNoticeTotalPendingTransactionOnReceive);
             this.panelControlWallet.Controls.Add(this.labelNoticeWalletBalance);
             this.panelControlWallet.Controls.Add(this.labelNoticeWalletAddress);
-            this.panelControlWallet.Location = new System.Drawing.Point(20, 57);
+            this.panelControlWallet.Location = new System.Drawing.Point(20, 87);
             this.panelControlWallet.Name = "panelControlWallet";
             this.panelControlWallet.Size = new System.Drawing.Size(992, 84);
             this.panelControlWallet.TabIndex = 1;
@@ -428,7 +428,10 @@ namespace Xiropht_Wallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1032, 722);
+#if WINDOWS
+            this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
+#endif
+            this.ClientSize = new System.Drawing.Size(1032, 754);
             this.Controls.Add(this.linkLabelWebsite);
             this.Controls.Add(this.labelCopyright);
             this.Controls.Add(this.buttonFirstPage);
@@ -448,14 +451,17 @@ namespace Xiropht_Wallet
             this.Controls.Add(this.metroButtonBlockExplorerWallet);
             this.MainMenuStrip = this.menuStripMenu;
             this.Name = "WalletXiropht";
-#if LINUX
             this.Text = "Xiropht Wallet Gui - v";
-#endif
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WalletXiropht_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.WalletXiropht_FormClosed);
             this.Load += new System.EventHandler(this.WalletXiropht_Load);
+#if LINUX
+            this.BackColor = System.Drawing.Color.White;
+#endif
+#if WINDOWS
             this.SizeChanged += new System.EventHandler(this.WalletXiropht_SizeChanged);
             this.Resize += new System.EventHandler(this.WalletXiropht_Resize);
+#endif
             this.menuStripMenu.ResumeLayout(false);
             this.menuStripMenu.PerformLayout();
             this.panelControlWallet.ResumeLayout(false);

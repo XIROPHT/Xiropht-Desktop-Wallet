@@ -32,11 +32,11 @@ namespace Xiropht_Wallet.Wallet
             }
 
             if (Directory.Exists(
-                ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "/")))
+                ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\")))
             {
-                if (File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "/" + WalletTransactionCacheFileExtension)))
+                if (File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension)))
                 {
-                    using (FileStream fs = File.Open(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "/" + WalletTransactionCacheFileExtension), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    using (FileStream fs = File.Open(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     using (BufferedStream bs = new BufferedStream(fs))
                     using (StreamReader sr = new StreamReader(bs))
                     {
@@ -49,7 +49,7 @@ namespace Xiropht_Wallet.Wallet
                 }
                 else
                 {
-                    File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "/" + WalletTransactionCacheFileExtension)).Close();
+                    File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension)).Close();
                 }
 
             }
@@ -88,9 +88,9 @@ namespace Xiropht_Wallet.Wallet
 
                 if (!File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory +
                                 walletAddress +
-                                "/" + WalletTransactionCacheFileExtension)))
+                                "\\" + WalletTransactionCacheFileExtension)))
                 {
-                    File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "/" + WalletTransactionCacheFileExtension)).Close();
+                    File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension)).Close();
                 }
                 try
                 {
@@ -98,7 +98,7 @@ namespace Xiropht_Wallet.Wallet
                     using (var transactionFile = new StreamWriter(ClassUtils.ConvertPath(
                         Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory +
                         walletAddress +
-                        "/" + WalletTransactionCacheFileExtension), true))
+                        "\\" + WalletTransactionCacheFileExtension), true))
                     {
                         await transactionFile.WriteAsync(transaction + "\n").ConfigureAwait(false);
                     }
@@ -119,15 +119,15 @@ namespace Xiropht_Wallet.Wallet
         {
             _inClearCache = true;
             if (Directory.Exists(
-                ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "/")))
+                ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\")))
             {
-                if (File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "/" + WalletTransactionCacheFileExtension)))
+                if (File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension)))
                 {
-                    File.Delete(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "/" + WalletTransactionCacheFileExtension));
+                    File.Delete(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension));
                 }
 
                 Directory.Delete(
-                    ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "/"), true);
+                    ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\"), true);
                 Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory +
                                           walletAddress));
             }

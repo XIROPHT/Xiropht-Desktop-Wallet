@@ -43,13 +43,17 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void Overview_Load(object sender, EventArgs e)
         {
+#if WINDOWS
             UpdateStyles();
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
+#endif
         }
 
         private void Overview_Resize(object sender, EventArgs e)
         {
+#if WINDOWS
             Refresh();
+#endif
         }
 
         private void buttonFeeInformationAccumulated_MouseHover(object sender, EventArgs e)

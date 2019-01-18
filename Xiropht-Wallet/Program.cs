@@ -42,6 +42,9 @@ namespace Xiropht_Wallet
                 Environment.Exit(1);
             };
 #endif
+#if WINDOWS
+            ClassMemory.CleanMemory();
+#endif
             ClassWalletSetting.LoadSetting(); // Load the setting file.
             ClassTranslation.InitializationLanguage(); // Initialization of language system.
             Application.EnableVisualStyles();

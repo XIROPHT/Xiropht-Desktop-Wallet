@@ -271,7 +271,7 @@ namespace Xiropht_Wallet.Wallet
 
 #endregion
 
-          #region Disconnection functions.
+        #region Disconnection functions.
 
         /// <summary>
         ///     Disconnect wallet from remote nodes, seed nodes connections.
@@ -2201,7 +2201,7 @@ namespace Xiropht_Wallet.Wallet
 
 #endregion
 
-    #region Remote node Sync
+        #region Remote node Sync
 
         public static void CheckRemoteNodeNetwork()
         {

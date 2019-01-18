@@ -178,8 +178,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void SendTransaction_Load(object sender, EventArgs e)
         {
+#if WINDOWS
             UpdateStyles();
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
+#endif
             if (!AutoUpdateTimeReceived)
             {
                 AutoUpdateTimeReceived = true;
@@ -273,7 +275,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void SendTransaction_Resize(object sender, EventArgs e)
         {
+#if WINDOWS
             UpdateStyles();
+#endif
         }
 
         private void checkBoxHideWalletAddress_CheckedChanged(object sender, EventArgs e)

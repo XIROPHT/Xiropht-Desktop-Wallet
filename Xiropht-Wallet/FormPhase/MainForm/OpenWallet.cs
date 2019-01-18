@@ -194,13 +194,17 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void OpenWallet_Load(object sender, EventArgs e)
         {
+#if WINDOWS
             UpdateStyles();
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
+#endif
         }
 
         private void OpenWallet_Resize(object sender, EventArgs e)
         {
+#if WINDOWS
             UpdateStyles();
+#endif
         }
 
         private async void textBoxPasswordWallet_KeyDownAsync(object sender, KeyEventArgs e)

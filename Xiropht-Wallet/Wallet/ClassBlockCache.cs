@@ -25,7 +25,7 @@ namespace Xiropht_Wallet.Wallet
                 ListBlock = new List<string>();
             }
 
-            if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory + "/")))
+            if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory + "\\")))
             {
                 if (
                     File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory +
@@ -111,11 +111,11 @@ namespace Xiropht_Wallet.Wallet
         {
             try
             {
-                if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory + "/")))
+                if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory + "\\")))
                 {
                     File.Delete(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory +
                                 "/blockchain." + WalletBlockCacheFileExtension));
-                    Directory.Delete(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory + "/"), true);
+                    Directory.Delete(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory + "\\"), true);
                     Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory));
                 }
             }

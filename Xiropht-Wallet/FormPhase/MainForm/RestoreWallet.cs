@@ -76,7 +76,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     if (!await ClassWalletObject
                         .SendPacketWalletToSeedNodeNetwork(
                             ClassWalletCommand.ClassWalletSendEnumeration.AskPhase + "|" +
-                            walletKey + "|"+walletPassword))
+                            walletKey + "|" + walletPassword))
                     {
 #if WINDOWS
                         MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
@@ -103,13 +103,17 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void textBoxPassword_Resize(object sender, EventArgs e)
         {
+#if WINDOWS
             UpdateStyles();
+#endif
         }
 
         private void RestoreWallet_Load(object sender, EventArgs e)
         {
+#if WINDOWS
             UpdateStyles();
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
+#endif
         }
     }
 }

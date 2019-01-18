@@ -111,7 +111,7 @@ namespace Xiropht_Wallet
         /// </summary>
         public WalletXiropht()
         {
-            ClassMemory.CleanMemory();
+
             ClassFormPhase.WalletXiropht = this;
             MainWalletForm = new Main();
             OpenWalletForm = new OpenWallet();
@@ -413,9 +413,7 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void WalletXiropht_Load(object sender, EventArgs e)
         {
-#if LINUX
             Text += Assembly.GetExecutingAssembly().GetName().Version;
-#endif
 
             // Initialize form size.
             CurrentInterfaceWidth = Width;
@@ -511,8 +509,9 @@ namespace Xiropht_Wallet
             metroButtonSendTransactionWallet.Text = ClassTranslation.GetLanguageTextFromOrder("BUTTON_WALLET_SEND_TRANSACTION_TEXT");
             metroButtonTransactionWallet.Text = ClassTranslation.GetLanguageTextFromOrder("BUTTON_WALLET_TRANSACTION_HISTORY_TEXT");
             metroButtonBlockExplorerWallet.Text = ClassTranslation.GetLanguageTextFromOrder("BUTTON_WALLET_BLOCK_EXPLORER_TEXT");
+#if WINDOWS
             Refresh();
-
+#endif
             // Block explorer menu.
             BlockWalletForm.listViewBlockExplorer.Columns[0].Text = ClassTranslation.GetLanguageTextFromOrder("GRID_BLOCK_EXPLORER_COLUMN_ID_TEXT");
             BlockWalletForm.listViewBlockExplorer.Columns[1].Text = ClassTranslation.GetLanguageTextFromOrder("GRID_BLOCK_EXPLORER_COLUMN_HASH_TEXT");
@@ -521,23 +520,26 @@ namespace Xiropht_Wallet
             BlockWalletForm.listViewBlockExplorer.Columns[4].Text = ClassTranslation.GetLanguageTextFromOrder("GRID_BLOCK_EXPLORER_COLUMN_DATE_CREATE_TEXT");
             BlockWalletForm.listViewBlockExplorer.Columns[5].Text = ClassTranslation.GetLanguageTextFromOrder("GRID_BLOCK_EXPLORER_COLUMN_DATE_FOUND_TEXT");
             BlockWalletForm.listViewBlockExplorer.Columns[6].Text = ClassTranslation.GetLanguageTextFromOrder("GRID_BLOCK_EXPLORER_COLUMN_TRANSACTION_HASH_TEXT");
+#if WINDOWS
             BlockWalletForm.Refresh();
-
+#endif
             // Create wallet menu.
             CreateWalletForm.labelCreateYourWallet.Text = ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_LABEL_TITLE_TEXT");
             CreateWalletForm.labelCreateNoticePasswordRequirement.Text = ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_LABEL_PASSWORD_REQUIREMENT_TEXT");
             CreateWalletForm.labelCreateSelectSavingPathWallet.Text = ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_LABEL_SELECT_WALLET_FILE_TEXT");
             CreateWalletForm.labelCreateSelectWalletPassword.Text = ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_LABEL_INPUT_WALLET_PASSWORD_TEXT");
             CreateWalletForm.buttonCreateYourWallet.Text = ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_BUTTON_SUBMIT_CREATE_TEXT");
+#if WINDOWS
             CreateWalletForm.Refresh();
-
+#endif
             // Main wallet menu.
             MainWalletForm.labelNoticeWelcomeWallet.Text = ClassTranslation.GetLanguageTextFromOrder("MAIN_WALLET_LABEL_WELCOME_INFORMATION_TEXT");
             MainWalletForm.labelNoticeLanguageAndIssue.Text = ClassTranslation.GetLanguageTextFromOrder("MAIN_WALLET_LABEL_HELP_INFORMATION_TEXT");
             MainWalletForm.buttonMainOpenMenuWallet.Text = ClassTranslation.GetLanguageTextFromOrder("MAIN_WALLET_BUTTON_OPEN_WALLET_MENU_TEXT");
             MainWalletForm.buttonMainCreateWallet.Text = ClassTranslation.GetLanguageTextFromOrder("MAIN_WALLET_BUTTON_CREATE_WALLET_MENU_TEXT");
+#if WINDOWS
             MainWalletForm.Refresh();
-
+#endif
             // Open wallet menu.
             OpenWalletForm.labelOpenYourWallet.Text = ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_LABEL_TITLE_TEXT");
             //OpenWalletForm.labelOpenFileSelected.Text = ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_LABEL_FILE_SELECTED_TEXT");
@@ -546,8 +548,9 @@ namespace Xiropht_Wallet
             OpenWalletForm.labelWriteYourWalletPassword.Text = ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_LABEL_YOUR_PASSWORD_TEXT");
             OpenWalletForm.buttonSearchWalletFile.Text = ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_BUTTON_SEARCH_WALLET_FILE_TEXT");
             OpenWalletForm.buttonOpenYourWallet.Text = ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_BUTTON_SUBMIT_WALLET_FILE_TEXT");
+#if WINDOWS
             OpenWalletForm.Refresh();
-
+#endif
 
             OverviewWalletForm.labelTextNetworkStats.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TITLE_TEXT");
             try
@@ -581,7 +584,9 @@ namespace Xiropht_Wallet
             {
 
             }
+#if WINDOWS
             OverviewWalletForm.Refresh();
+#endif
 
             // Send transaction wallet menu.
             SendTransactionWalletForm.labelSendTransaction.Text = ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_LABEL_TITLE_TEXT");
@@ -591,7 +596,9 @@ namespace Xiropht_Wallet
             SendTransactionWalletForm.metroLabelEstimatedTimeReceived.Text = ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_LABEL_ESTIMATED_RECEIVE_TIME_TEXT");
             SendTransactionWalletForm.checkBoxHideWalletAddress.Text = ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_CHECKBOX_OPTION_ANONYMITY_TEXT");
             SendTransactionWalletForm.buttonSendTransaction.Text = ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_BUTTON_SUBMIT_TRANSACTION_TEXT");
+#if WINDOWS
             SendTransactionWalletForm.Refresh();
+#endif
 
             // Transaction history wallet menu.
             TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Columns[0].Text = ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COLUMN_ID");
@@ -644,15 +651,18 @@ namespace Xiropht_Wallet
             TransactionHistoryWalletForm.tabPageNormalTransactionReceived.Text = ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_TAB_NORMAL_RECEIVED_TRANSACTION_LIST_TEXT");
             TransactionHistoryWalletForm.tabPageAnonymityTransactionReceived.Text = ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_TAB_ANONYMOUS_RECEIVE_TRANSACTION_LIST_TEXT");
             TransactionHistoryWalletForm.tabPageBlockRewardTransaction.Text = ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_TAB_BLOCK_REWARD_RECEIVED_LIST_TEXT");
+#if WINDOWS
             TransactionHistoryWalletForm.Refresh();
-
+#endif
             // Restore wallet menu.
             RestoreWalletForm.labelTextRestore.Text = ClassTranslation.GetLanguageTextFromOrder("RESTORE_WALLET_LABEL_TITLE_TEXT");
             RestoreWalletForm.labelCreateSelectSavingPathWallet.Text = ClassTranslation.GetLanguageTextFromOrder("RESTORE_WALLET_LABEL_SELECT_PATH_FILE_TEXT");
             RestoreWalletForm.labelPrivateKey.Text = ClassTranslation.GetLanguageTextFromOrder("RESTORE_WALLET_LABEL_PRIVATE_KEY_TEXT");
             RestoreWalletForm.labelPassword.Text = ClassTranslation.GetLanguageTextFromOrder("RESTORE_WALLET_LABEL_PASSWORD_TEXT");
             RestoreWalletForm.buttonRestoreYourWallet.Text = ClassTranslation.GetLanguageTextFromOrder("RESTORE_WALLET_BUTTON_SUBMIT_RESTORE_TEXT");
+#if WINDOWS
             RestoreWalletForm.Refresh();
+#endif
         }
 
         /// <summary>
@@ -2907,6 +2917,7 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void TimerRefresh_Tick(object sender, EventArgs e)
         {
+#if WINDOWS
             UpdateStyles();
             if (Width < BaseInterfaceWidth)
             {
@@ -2925,7 +2936,7 @@ namespace Xiropht_Wallet
             {
                 Height += 10;
             }
-
+#endif
 
             if (ClassFormPhase.WalletXiropht != null) // Get list of all controls of each menu.
             {
@@ -3014,6 +3025,7 @@ namespace Xiropht_Wallet
             }
         }
 
+#if WINDOWS
 #region  Wallet Resize Interface Functions.
 
         /// <summary>
@@ -3924,7 +3936,7 @@ namespace Xiropht_Wallet
         }
 
 #endregion
-
+#endif
         /// <summary>
         /// Detect when the size of the interface change.
         /// </summary>
@@ -3951,7 +3963,9 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void WalletXiropht_Resize(object sender, EventArgs e)
         {
+#if WINDOWS
             ResizeWalletInterface();
+#endif
             //Refresh();
         }
 

@@ -131,7 +131,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             listViewAnonymityReceivedTransactionHistory.Hide();
             listViewAnonymitySendTransactionHistory.Hide();
             listViewNormalReceivedTransactionHistory.Hide();
+#if WINDOWS
             UpdateStyles();
+#endif
         }
 
         public void ShowWaitingSyncTransactionPanel()
@@ -215,11 +217,13 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 }
             }
 
+#if WINDOWS
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
+#endif
         }
 
 
-        private void listViewNormalSendTransactionHistory_MouseClick(object sender, MouseEventArgs e)
+            private void listViewNormalSendTransactionHistory_MouseClick(object sender, MouseEventArgs e)
         {
             ListViewItem item = listViewNormalSendTransactionHistory.GetItemAt(0, e.Y);
 
@@ -541,7 +545,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void Transaction_Resize(object sender, EventArgs e)
         {
+#if WINDOWS
             UpdateStyles();
+#endif
         }
 
 
@@ -728,7 +734,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
 
                 // this.OnMouseClick(e);
+#if WINDOWS
                 UpdateStyles();
+#endif
             }
 
             base.WndProc(ref m);
