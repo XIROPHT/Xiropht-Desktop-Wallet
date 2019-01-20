@@ -54,6 +54,10 @@ For more informations about how work the network connection of wallet, please ch
 
 **Xiropht-Connector-All Library is required for compile the gui wallet: https://github.com/XIROPHT/Xiropht-Connector-All**
 
+**Developers:**
+
+- Xiropht
+
 **Language files contributors:**
 
 - English: Xiropht, DigitalTwister, AlpHA
