@@ -1,6 +1,6 @@
 # Xiropht-Wallet
 
-This is the official Xiropht Wallet Gui, this one is compatible with Netframework 4.6 and Mono. 
+This is the official Xiropht Wallet Gui, this one is compatible with Netframework 4.6 and with Mono. 
 
 
 **In production, we suggest to compile the wallet in Release Mode for disable log files.**
@@ -17,7 +17,11 @@ Linux:
 
 For make a binary linux file from executable windows file:
 
+mkbundle --list-targets // Give the list of all target runtime
+
 Target: 4.6.1-linux-libc2.12-amd64
+
+mkbundle --fetch-target 4.6.1-linux-libc2.12-amd64
 
 mkbundle --cross 4.6.1-linux-libc2.12-amd64 Xiropht-Wallet.exe -o Xiropht-Wallet Xiropht-Connector-All.dll MetroFramework.Fonts.dll MetroFramework.dll MetroFramework.Design.dll --deps -z --static
 
