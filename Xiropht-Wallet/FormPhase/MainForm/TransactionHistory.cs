@@ -3,7 +3,6 @@ using MetroFramework;
 #endif
 using System;
 using System.Drawing;
-using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using Xiropht_Wallet.FormCustom;
@@ -59,21 +58,6 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void Transaction_Load(object sender, EventArgs e)
         {
-            typeof(ListViewEx).InvokeMember("DoubleBuffered",
-                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null,
-                listViewAnonymityReceivedTransactionHistory, new object[] {true});
-            typeof(ListViewEx).InvokeMember("DoubleBuffered",
-                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null,
-                listViewAnonymitySendTransactionHistory, new object[] {true});
-            typeof(ListViewEx).InvokeMember("DoubleBuffered",
-                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null,
-                listViewBlockRewardTransactionHistory, new object[] {true});
-            typeof(ListViewEx).InvokeMember("DoubleBuffered",
-                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null,
-                listViewNormalReceivedTransactionHistory, new object[] {true});
-            typeof(ListViewEx).InvokeMember("DoubleBuffered",
-                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null,
-                listViewNormalSendTransactionHistory, new object[] {true});
 
             listViewAnonymityReceivedTransactionHistory.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             listViewAnonymityReceivedTransactionHistory.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
@@ -97,10 +81,6 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             listViewNormalReceivedTransactionHistory.MultiSelect = true;
             listViewNormalSendTransactionHistory.MultiSelect = true;
 
-
-            typeof(TabControl).InvokeMember("DoubleBuffered",
-                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null,
-                tabPageTransactionHistory, new object[] {true});
 
             _panelWaitingSync = new ClassPanel
             {
@@ -131,9 +111,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             listViewAnonymityReceivedTransactionHistory.Hide();
             listViewAnonymitySendTransactionHistory.Hide();
             listViewNormalReceivedTransactionHistory.Hide();
-#if WINDOWS
             UpdateStyles();
-#endif
         }
 
         public void ShowWaitingSyncTransactionPanel()
@@ -241,9 +219,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
                             .Start();
 #else
-                        new Thread(() =>
-                                MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
-                            .Start();
+                        new Thread(delegate ()
+                        {
+                            MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                            BeginInvoke(invoker);
+                        }).Start();
 #endif
                         return;
                     }
@@ -263,9 +243,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
                             .Start();
 #else
-                    new Thread(() =>
-                            MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
-                        .Start();
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                        BeginInvoke(invoker);
+                    }).Start();
 #endif
                     return;
                 }
@@ -284,9 +266,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
                             .Start();
 #else
-                    new Thread(() =>
-                            MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
-                        .Start();
+                    new Thread(delegate()
+                    {
+                        MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                        BeginInvoke(invoker);
+                    }).Start();
 #endif
                     return;
                 }
@@ -305,9 +289,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
                             .Start();
 #else
-                    new Thread(() =>
-                            MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
-                        .Start();
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                        BeginInvoke(invoker);
+                    }).Start();
 #endif
                     return;
                 }
@@ -326,9 +312,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
                             .Start();
 #else
-                    new Thread(() =>
-                            MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
-                        .Start();
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                        BeginInvoke(invoker);
+                    }).Start();
 #endif
                     return;
                 }

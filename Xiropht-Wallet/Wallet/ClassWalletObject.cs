@@ -166,7 +166,7 @@ namespace Xiropht_Wallet.Wallet
                 await DisconnectWholeRemoteNodeSync(true, false); // Disconnect and renew objects.
 
 
-            if (!await SeedNodeConnectorWallet.StartConnectToSeedAsync(string.Empty))
+            if (!await SeedNodeConnectorWallet.StartConnectToSeedAsync(string.Empty, ClassConnectorSetting.SeedNodePort, Program.IsLinux))
             {
 #if DEBUG
                 Log.WriteLine("Connection error with seed node network.");
@@ -196,9 +196,12 @@ namespace Xiropht_Wallet.Wallet
                     ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_TRANSACTION_CACHE_ERROR_TEXT"));
                 ClassWalletTransactionCache.RemoveWalletCache(WalletConnect.WalletAddress);
 #else
-                MessageBox.Show(ClassFormPhase.WalletXiropht,
-                    ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_TRANSACTION_CACHE_ERROR_TEXT"));
-                ClassWalletTransactionCache.RemoveWalletCache(WalletConnect.WalletAddress);
+               new Thread(delegate()
+               {
+                   MessageBox.Show(ClassFormPhase.WalletXiropht,
+                      ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_TRANSACTION_CACHE_ERROR_TEXT"));
+                   ClassWalletTransactionCache.RemoveWalletCache(WalletConnect.WalletAddress);
+               }).Start();
 #endif
 
             }
@@ -221,9 +224,12 @@ namespace Xiropht_Wallet.Wallet
                     ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ANONYMITY_TRANSACTION_CACHE_ERROR_TEXT"));
                 ClassWalletTransactionAnonymityCache.RemoveWalletCache(WalletConnect.WalletAddress);
 #else
-                MessageBox.Show(ClassFormPhase.WalletXiropht,
+                new Thread(delegate ()
+                {
+                    MessageBox.Show(ClassFormPhase.WalletXiropht,
                     ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ANONYMITY_TRANSACTION_CACHE_ERROR_TEXT"));
-                ClassWalletTransactionAnonymityCache.RemoveWalletCache(WalletConnect.WalletAddress);
+                    ClassWalletTransactionAnonymityCache.RemoveWalletCache(WalletConnect.WalletAddress);
+                }).Start();
 #endif
             }
 
@@ -252,13 +258,13 @@ namespace Xiropht_Wallet.Wallet
                     Thread.Sleep(100);
                 }
 
-                while (!SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                while (!SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                 {
                     Thread.Sleep(100);
                 }
 
                 int totalTimeConnected = 0;
-                while (SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                while (SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                 {
                     Thread.Sleep(1000);
                     totalTimeConnected++;
@@ -279,12 +285,21 @@ namespace Xiropht_Wallet.Wallet
         public static async Task<bool> FullDisconnection(bool manualDisconnection)
         {
             
-            if (!WalletClosed && !WalletInReconnect)
+            if (!WalletClosed && !WalletInReconnect || manualDisconnection)
             {
                 if (manualDisconnection || WalletConnect.WalletPhase == ClassWalletPhase.Create) 
                 {
-                    ClassParallelForm.HidePinForm();
-                    ClassFormPhase.HideWalletMenu();
+                    try
+                    {
+                        ClassParallelForm.HidePinForm();
+                        ClassFormPhase.HideWalletMenu();
+                        ClassParallelForm.HideWaitingCreateWalletForm();
+
+                    }
+                    catch
+                    {
+
+                    }
                     BlockTransactionSync = false;
                     WalletDataDecrypted = string.Empty;
                     WalletClosed = true;
@@ -306,6 +321,7 @@ namespace Xiropht_Wallet.Wallet
                 }
                 else // Try to reconnect.
                 {
+                    ClassParallelForm.HideWaitingCreateWalletForm();
                     new Thread(() => ClassParallelForm.ShowWaitingReconnectForm()).Start();
                     int maxRetry = 5;
 
@@ -374,7 +390,6 @@ namespace Xiropht_Wallet.Wallet
                             }
                         }
 
-
                         ClassParallelForm.HideWaitingReconnectForm();
                         if (maxRetry <= 0)
                         {
@@ -394,9 +409,13 @@ namespace Xiropht_Wallet.Wallet
                                 ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_CONNECT_WALLET_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_CONNECT_WALLET_TITLE_TEXT"), MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
 #else
-                            MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            new Thread(delegate ()
+                            {
+                                MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
                                 ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_CONNECT_WALLET_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_CONNECT_WALLET_TITLE_TEXT"), MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
+                                ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                            }).Start();
 #endif
                             WalletInReconnect = false;
                         }
@@ -408,9 +427,13 @@ namespace Xiropht_Wallet.Wallet
                                 ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SUCCESS_CONNECT_WALLET_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SUCCESS_CONNECT_WALLET_TITLE_TEXT"), MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);
 #else
-                            MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            new Thread(delegate ()
+                            {
+                                MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
                                 ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SUCCESS_CONNECT_WALLET_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SUCCESS_CONNECT_WALLET_TITLE_TEXT"), MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);
+                                ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                            }).Start();
 #endif
                             WalletInReconnect = false;
                         }
@@ -572,7 +595,7 @@ namespace Xiropht_Wallet.Wallet
                     }
                 }
 
-                await FullDisconnection(false);
+                new Thread(async() => await FullDisconnection(false)).Start();
             });
             _threadListenSeedNodeNetwork.Start();
         }
@@ -646,30 +669,40 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletCreatePasswordNeedMoreCharacters:
                     ClassParallelForm.HideWaitingForm();
                     ClassParallelForm.HideWaitingCreateWalletForm();
-                    await FullDisconnection(true);
+                    new Thread(async () => await FullDisconnection(true)).Start();
+
 #if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR1_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR1_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR1_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR1_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR1_CONTENT_TEXT"),
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR1_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
 #endif
 
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletCreatePasswordNeedLetters:
                     ClassParallelForm.HideWaitingForm();
                     ClassParallelForm.HideWaitingCreateWalletForm();
-                    await FullDisconnection(true);
+                    new Thread(async () => await FullDisconnection(true)).Start();
 #if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR2_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR2_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR2_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR2_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR2_CONTENT_TEXT"),
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR2_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
+
 #endif
 
                     break;
@@ -688,11 +721,16 @@ namespace Xiropht_Wallet.Wallet
                             "Your wallet password need to be stronger , if he is try again later.",
                             "Password not strong enough or network error.", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                        MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        new Thread(delegate ()
+                        {
+                            MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
                             "Your wallet password need to be stronger , if he is try again later.",
                             "Password not strong enough or network error.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                        }).Start();
+
 #endif
-                        await FullDisconnection(true);
+                        new Thread(async () => await FullDisconnection(true)).Start();
                     }
                     else
                     {
@@ -731,7 +769,7 @@ namespace Xiropht_Wallet.Wallet
                         var key = publicKey;
                         var key1 = privateKey;
                         var pin1 = pin;
-                        ClassFormPhase.WalletXiropht.Invoke((Action) delegate
+                        ClassFormPhase.WalletXiropht.BeginInvoke((MethodInvoker)delegate
                         {
                             var createWalletSuccessForm = new CreateWalletSuccessForm
                             {
@@ -763,11 +801,16 @@ namespace Xiropht_Wallet.Wallet
                             "Your wallet password need to be stronger , if he is try again later.",
                             "Password not strong enough or network error.", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                        MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        new Thread(delegate ()
+                        {
+                            MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
                             "Your wallet password need to be stronger , if he is try again later.",
                             "Password not strong enough or network error.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                        }).Start();
+
 #endif
-                        await FullDisconnection(true);
+                        new Thread(async () => await FullDisconnection(true)).Start();
                     }
                     else
                     {
@@ -806,7 +849,7 @@ namespace Xiropht_Wallet.Wallet
                         var key = publicKey;
                         var key1 = privateKey;
                         var pin1 = pin;
-                        ClassFormPhase.WalletXiropht.Invoke((Action)delegate
+                        ClassFormPhase.WalletXiropht.BeginInvoke((MethodInvoker)delegate
                         {
                             var createWalletSuccessForm = new CreateWalletSuccessForm
                             {
@@ -830,7 +873,7 @@ namespace Xiropht_Wallet.Wallet
                         ClassWalletCommand.ClassWalletSendEnumeration.LoginPhase + "|" + WalletConnect.WalletAddress,
                         Certificate, true))
                     {
-                        await FullDisconnection(true);
+                        new Thread(async () => await FullDisconnection(true)).Start();
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if DEBUG
                         Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
@@ -849,7 +892,7 @@ namespace Xiropht_Wallet.Wallet
                         ClassWalletCommand.ClassWalletSendEnumeration.PasswordPhase + "|" +
                         WalletConnect.WalletPassword, Certificate, true))
                     {
-                        await FullDisconnection(true);
+                        new Thread(async () => await FullDisconnection(true)).Start();
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if DEBUG
                         Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
@@ -876,7 +919,7 @@ namespace Xiropht_Wallet.Wallet
                         ClassWalletCommand.ClassWalletSendEnumeration.KeyPhase + "|" + WalletConnect.WalletKey,
                         Certificate, true))
                     {
-                        await FullDisconnection(true);
+                        new Thread(async () => await FullDisconnection(true)).Start();
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if DEBUG
                         Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
@@ -900,7 +943,7 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.StatsPhase:
                     WalletConnect.SelectWalletPhase(ClassWalletPhase.Accepted);
                     WalletConnect.WalletAmount = splitPacket[1];
-                    ClassFormPhase.ShowWalletInformationInMenu(WalletConnect.WalletAddress, WalletConnect.WalletAmount);
+                    new Thread(() => ClassFormPhase.ShowWalletInformationInMenu(WalletConnect.WalletAddress, WalletConnect.WalletAmount)).Start();
 
 #if DEBUG
                     Log.WriteLine("Actual Balance: " + WalletConnect.WalletAmount);
@@ -916,7 +959,7 @@ namespace Xiropht_Wallet.Wallet
                                 ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletAskRemoteNode, Certificate, false,
                                 true))
                         {
-                            await FullDisconnection(false);
+                            new Thread(async () => await FullDisconnection(false)).Start();
                             ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if DEBUG
                             Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
@@ -938,15 +981,18 @@ namespace Xiropht_Wallet.Wallet
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.PinAcceptedPhase:
                     WalletConnect.SelectWalletPhase(ClassWalletPhase.Accepted);
-
 #if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_ACCEPTED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_ACCEPTED_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_ACCEPTED_CONTENT_TEXT"),
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
 #endif
 #if DEBUG
                     Log.WriteLine("Pin code accepted, the blockchain will ask your pin code every 15 minutes.");
@@ -956,14 +1002,20 @@ namespace Xiropht_Wallet.Wallet
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.PinRefusedPhase:
                     WalletConnect.SelectWalletPhase(ClassWalletPhase.Pin);
+
 #if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    new Thread(delegate ()
+                    {
+                       MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_CONTENT_TEXT"),
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
+
 #endif
                     ClassParallelForm.ShowPinForm();
 
@@ -973,8 +1025,13 @@ namespace Xiropht_Wallet.Wallet
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht, splitPacket[1], "Information",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht, splitPacket[1], "Information",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht, splitPacket[1], "Information",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
+
 #endif
                     break;
 
@@ -986,9 +1043,14 @@ namespace Xiropht_Wallet.Wallet
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_TITLE_TEXT"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_TITLE_TEXT"),
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
+
 #endif
 #if DEBUG
                     Log.WriteLine("Transaction refused. You try input an invalid amount.");
@@ -1001,9 +1063,14 @@ namespace Xiropht_Wallet.Wallet
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_TITLE_TEXT"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    new Thread(delegate ()
+                    {
+                       MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_TITLE_TEXT"),
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
+
 #endif
 #if DEBUG
                     Log.WriteLine("Transaction refused. Your amount is insufficient.");
@@ -1015,8 +1082,13 @@ namespace Xiropht_Wallet.Wallet
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_CONTENT_TEXT"),
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
+
 #endif
 #if DEBUG
                     Log.WriteLine("Transaction refused. Your fee is insufficient.");
@@ -1029,9 +1101,13 @@ namespace Xiropht_Wallet.Wallet
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
 #endif
 #if DEBUG
                     Log.WriteLine("Transaction refused. The blockchain currently control your wallet balance health.");
@@ -1047,9 +1123,14 @@ namespace Xiropht_Wallet.Wallet
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
+
 #endif
 #if DEBUG
                     Log.WriteLine("Transaction refused. Your fee is insufficient.");
@@ -1062,9 +1143,11 @@ namespace Xiropht_Wallet.Wallet
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question)).Start();
 #else
-                    new Thread(() => MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information)).Start();
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
 #endif
 #if DEBUG
                     Log.WriteLine(
@@ -1078,9 +1161,14 @@ namespace Xiropht_Wallet.Wallet
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_TITLE_TEXT"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_TITLE_TEXT"),
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
+
 #endif
 #if DEBUG
                     Log.WriteLine("The wallet address is not valid, please check it.");
@@ -1094,25 +1182,34 @@ namespace Xiropht_Wallet.Wallet
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_BANNED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_BANNED_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_BANNED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_BANNED_TITLE_TEXT"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_BANNED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_BANNED_TITLE_TEXT"),
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
+
 #endif
 #if DEBUG
                     Log.WriteLine("Your wallet is banned for approximatively one hour, try to reconnect later.");
 #endif
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletAlreadyConnected:
-                    DisconnectWalletFromSeedNode(true);
+                    await FullDisconnection(true);
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ALREADY_CONNECTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ALREADY_CONNECTED_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ALREADY_CONNECTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ALREADY_CONNECTED_TITLE_TEXT"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ALREADY_CONNECTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ALREADY_CONNECTED_TITLE_TEXT"),
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
 #endif
 #if DEBUG
                     Log.WriteLine("Your wallet is already connected, try to reconnect later.");
@@ -1146,9 +1243,14 @@ namespace Xiropht_Wallet.Wallet
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Question);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Question);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
+
 #endif
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletChangePasswordRefused:
@@ -1157,9 +1259,14 @@ namespace Xiropht_Wallet.Wallet
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_REFUSED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_REFUSED_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_REFUSED_CONTENT_TEXT"),
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
+
 #endif
                     WalletNewPassword = string.Empty;
                     break;
@@ -1168,8 +1275,13 @@ namespace Xiropht_Wallet.Wallet
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_ACCEPTED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_ACCEPTED_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question);
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_ACCEPTED_CONTENT_TEXT"),
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
+
 #endif
                     WalletPinDisabled = !WalletPinDisabled;
 
@@ -1180,9 +1292,13 @@ namespace Xiropht_Wallet.Wallet
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_REFUSED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_REFUSED_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    new Thread(delegate ()
+                    {
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_REFUSED_CONTENT_TEXT"),
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
 #endif
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletWarningConnection:
@@ -1191,9 +1307,14 @@ namespace Xiropht_Wallet.Wallet
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_WARNING_WALLET_CONNECTION_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_WARNING_WALLET_CONNECTION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_WARNING_WALLET_CONNECTION_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_WARNING_WALLET_CONNECTION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    new Thread(delegate ()
+                    {
+                       MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_WARNING_WALLET_CONNECTION_CONTENT_TEXT"),
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_WARNING_WALLET_CONNECTION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                    }).Start();
+
 #endif
                     break;
 
@@ -1352,7 +1473,7 @@ namespace Xiropht_Wallet.Wallet
                                             if (!await ListWalletConnectToRemoteNode[0]
                                                 .ConnectToRemoteNodeAsync(
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1361,7 +1482,7 @@ namespace Xiropht_Wallet.Wallet
                                             if (!await ListWalletConnectToRemoteNode[1]
                                                 .ConnectToRemoteNodeAsync(
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1370,7 +1491,7 @@ namespace Xiropht_Wallet.Wallet
                                             if (!await ListWalletConnectToRemoteNode[2]
                                                 .ConnectToRemoteNodeAsync(
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1379,7 +1500,7 @@ namespace Xiropht_Wallet.Wallet
                                             if (!await ListWalletConnectToRemoteNode[3]
                                                 .ConnectToRemoteNodeAsync(
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1388,7 +1509,7 @@ namespace Xiropht_Wallet.Wallet
                                             if (!await ListWalletConnectToRemoteNode[4]
                                                 .ConnectToRemoteNodeAsync(
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1397,7 +1518,7 @@ namespace Xiropht_Wallet.Wallet
                                             if (!await ListWalletConnectToRemoteNode[5]
                                                 .ConnectToRemoteNodeAsync(
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1406,7 +1527,7 @@ namespace Xiropht_Wallet.Wallet
                                             if (!await ListWalletConnectToRemoteNode[6]
                                                 .ConnectToRemoteNodeAsync(
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1415,7 +1536,7 @@ namespace Xiropht_Wallet.Wallet
                                             if (!await ListWalletConnectToRemoteNode[7]
                                                 .ConnectToRemoteNodeAsync(
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1424,7 +1545,7 @@ namespace Xiropht_Wallet.Wallet
                                             if (!await ListWalletConnectToRemoteNode[8]
                                                 .ConnectToRemoteNodeAsync(
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1433,7 +1554,7 @@ namespace Xiropht_Wallet.Wallet
                                             if (!await ListWalletConnectToRemoteNode[9]
                                                 .ConnectToRemoteNodeAsync(
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1442,7 +1563,7 @@ namespace Xiropht_Wallet.Wallet
                                             if (!await ListWalletConnectToRemoteNode[10]
                                                 .ConnectToRemoteNodeAsync(
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1451,7 +1572,7 @@ namespace Xiropht_Wallet.Wallet
                                             if (!await ListWalletConnectToRemoteNode[11]
                                                 .ConnectToRemoteNodeAsync(
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1469,7 +1590,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .Item1;
                                             if (!await ListWalletConnectToRemoteNode[0]
                                                 .ConnectToRemoteNodeAsync(previousNode,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
@@ -1485,7 +1606,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .Item1;
                                             if (!await ListWalletConnectToRemoteNode[1]
                                                 .ConnectToRemoteNodeAsync(previousNode,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
@@ -1501,7 +1622,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .Item1;
                                             if (!await ListWalletConnectToRemoteNode[2]
                                                 .ConnectToRemoteNodeAsync(previousNode,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
@@ -1516,7 +1637,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .Item1;
                                             if (!await ListWalletConnectToRemoteNode[3]
                                                 .ConnectToRemoteNodeAsync(previousNode,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
@@ -1532,7 +1653,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .Item1;
                                             if (!await ListWalletConnectToRemoteNode[4]
                                                 .ConnectToRemoteNodeAsync(previousNode,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
@@ -1548,7 +1669,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .Item1;
                                             if (!await ListWalletConnectToRemoteNode[5]
                                                 .ConnectToRemoteNodeAsync(previousNode,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
@@ -1564,7 +1685,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .Item1;
                                             if (!await ListWalletConnectToRemoteNode[6]
                                                 .ConnectToRemoteNodeAsync(previousNode,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
@@ -1580,7 +1701,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .Item1;
                                             if (!await ListWalletConnectToRemoteNode[7]
                                                 .ConnectToRemoteNodeAsync(previousNode,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
@@ -1597,7 +1718,7 @@ namespace Xiropht_Wallet.Wallet
                                             // Take the same remote node host who give the number of transactions owned by the wallet, for be sure to sync at the accurate number of transactions.
                                             if (!await ListWalletConnectToRemoteNode[8]
                                                 .ConnectToRemoteNodeAsync(previousNode,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
@@ -1614,7 +1735,7 @@ namespace Xiropht_Wallet.Wallet
                                             // Take the same remote node host who give the number of blocks mined, for be sure to sync at the accurate number of blocks.
                                             if (!await ListWalletConnectToRemoteNode[9]
                                                 .ConnectToRemoteNodeAsync(previousNode,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
@@ -1631,7 +1752,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .Item1;
                                             if (!await ListWalletConnectToRemoteNode[10]
                                                 .ConnectToRemoteNodeAsync(previousNode,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
@@ -1647,7 +1768,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .Item1;
                                             if (!await ListWalletConnectToRemoteNode[11]
                                                 .ConnectToRemoteNodeAsync(previousNode,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
@@ -1661,7 +1782,7 @@ namespace Xiropht_Wallet.Wallet
                                         {
                                             if (!await ListWalletConnectToRemoteNode[0]
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1669,7 +1790,7 @@ namespace Xiropht_Wallet.Wallet
 
                                             if (!await ListWalletConnectToRemoteNode[1]
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1677,7 +1798,7 @@ namespace Xiropht_Wallet.Wallet
 
                                             if (!await ListWalletConnectToRemoteNode[2]
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1685,7 +1806,7 @@ namespace Xiropht_Wallet.Wallet
 
                                             if (!await ListWalletConnectToRemoteNode[3]
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1693,7 +1814,7 @@ namespace Xiropht_Wallet.Wallet
 
                                             if (!await ListWalletConnectToRemoteNode[4]
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1701,7 +1822,7 @@ namespace Xiropht_Wallet.Wallet
 
                                             if (!await ListWalletConnectToRemoteNode[5]
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1709,7 +1830,7 @@ namespace Xiropht_Wallet.Wallet
 
                                             if (!await ListWalletConnectToRemoteNode[6]
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1717,7 +1838,7 @@ namespace Xiropht_Wallet.Wallet
 
                                             if (!await ListWalletConnectToRemoteNode[7]
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1725,7 +1846,7 @@ namespace Xiropht_Wallet.Wallet
 
                                             if (!await ListWalletConnectToRemoteNode[8]
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1733,7 +1854,7 @@ namespace Xiropht_Wallet.Wallet
 
                                             if (!await ListWalletConnectToRemoteNode[9]
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1741,7 +1862,7 @@ namespace Xiropht_Wallet.Wallet
 
                                             if (!await ListWalletConnectToRemoteNode[10]
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -1749,7 +1870,7 @@ namespace Xiropht_Wallet.Wallet
 
                                             if (!await ListWalletConnectToRemoteNode[11]
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                    ClassConnectorSetting.RemoteNodePort))
+                                                    ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
                                             {
                                                 await DisconnectWholeRemoteNodeSync(true, true);
                                                 return;
@@ -2187,8 +2308,13 @@ namespace Xiropht_Wallet.Wallet
                 MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                    ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_SEND_PACKET_TEXT"));
 #else
-                MessageBox.Show(ClassFormPhase.WalletXiropht,
+                new Thread(delegate() 
+                {
+                    MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
                     ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_SEND_PACKET_TEXT"));
+                    ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                }).Start();
+
 #endif
 #if DEBUG
                 Log.WriteLine("Cannot send packet, your wallet has been disconnected.");

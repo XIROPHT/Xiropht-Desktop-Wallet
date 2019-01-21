@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.labelLoadingNetwork = new System.Windows.Forms.Label();
+            this.buttonClose = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // labelLoadingNetwork
@@ -41,6 +42,16 @@
             this.labelLoadingNetwork.TabIndex = 0;
             this.labelLoadingNetwork.Text = "Please wait a little moment.";
             // 
+            // buttonClose
+            // 
+            this.buttonClose.Location = new System.Drawing.Point(380, 12);
+            this.buttonClose.Name = "buttonClose";
+            this.buttonClose.Size = new System.Drawing.Size(27, 23);
+            this.buttonClose.TabIndex = 1;
+            this.buttonClose.Text = "X";
+            this.buttonClose.UseVisualStyleBackColor = true;
+            this.buttonClose.Click += new System.EventHandler(this.buttonClose_ClickAsync);
+            // 
             // WaitingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -48,6 +59,7 @@
             this.BackColor = System.Drawing.Color.LightBlue;
             this.ClientSize = new System.Drawing.Size(419, 150);
             this.ControlBox = false;
+            this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.labelLoadingNetwork);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
@@ -67,5 +79,6 @@
         #endregion
 
         public System.Windows.Forms.Label labelLoadingNetwork;
+        private System.Windows.Forms.Button buttonClose;
     }
 }

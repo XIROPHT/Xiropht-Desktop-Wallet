@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CreateWalletSuccessForm));
-            this.buttonAcceptAndCloseWalletInformation = new MetroFramework.Controls.MetroButton();
+            this.buttonAcceptAndCloseWalletInformation = new System.Windows.Forms.Button();
             this.labelYourPublicKey = new System.Windows.Forms.Label();
             this.labelYourPrivateKey = new System.Windows.Forms.Label();
             this.labelYourPinCode = new System.Windows.Forms.Label();
@@ -39,13 +39,11 @@
             // 
             // buttonAcceptAndCloseWalletInformation
             // 
-            this.buttonAcceptAndCloseWalletInformation.FontSize = MetroFramework.MetroButtonSize.Medium;
             this.buttonAcceptAndCloseWalletInformation.Location = new System.Drawing.Point(150, 372);
             this.buttonAcceptAndCloseWalletInformation.Name = "buttonAcceptAndCloseWalletInformation";
             this.buttonAcceptAndCloseWalletInformation.Size = new System.Drawing.Size(511, 74);
             this.buttonAcceptAndCloseWalletInformation.TabIndex = 3;
             this.buttonAcceptAndCloseWalletInformation.Text = "I have copy/past my wallet informations before to close this window.";
-            this.buttonAcceptAndCloseWalletInformation.UseSelectable = true;
             this.buttonAcceptAndCloseWalletInformation.Click += new System.EventHandler(this.ButtonAcceptAndCloseWalletInformation_Click);
             // 
             // labelYourPublicKey
@@ -129,7 +127,7 @@
         }
 
         #endregion
-        private MetroFramework.Controls.MetroButton buttonAcceptAndCloseWalletInformation;
+        private System.Windows.Forms.Button buttonAcceptAndCloseWalletInformation;
         private System.Windows.Forms.Label labelYourPublicKey;
         private System.Windows.Forms.Label labelYourPrivateKey;
         private System.Windows.Forms.Label labelYourPinCode;

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Xiropht_Connector_All.Setting;
 #if WINDOWS
 using MetroFramework;
 #endif
@@ -68,16 +70,16 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             }
         }
 
-        private async void ButtonOpenYourWallet_Click(object sender, EventArgs e)
+        private void ButtonOpenYourWallet_Click(object sender, EventArgs e)
         {
-            await OpenAndConnectWallet();
+             OpenAndConnectWallet();
         }
-        
+
         /// <summary>
         /// Open and connect the wallet.
         /// </summary>
         /// <returns></returns>
-        private async Task OpenAndConnectWallet()
+        private void OpenAndConnectWallet()
         {
             if (textBoxPasswordWallet.Text == "")
             {
@@ -129,36 +131,48 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     ClassWalletObject.WalletDataDecrypted.Split(new[] { "\n" }, StringSplitOptions.None);
                 string walletAddress = splitWalletFileDecrypted[0];
                 string walletKey = splitWalletFileDecrypted[1];
-                if (!await ClassWalletObject.InitializationWalletConnection(walletAddress, textBoxPasswordWallet.Text,
-                    walletKey, ClassWalletPhase.Login))
+                new Thread(async delegate ()
                 {
-                    textBoxPasswordWallet.Text = "";
+                    if (!await ClassWalletObject.InitializationWalletConnection(walletAddress, textBoxPasswordWallet.Text,
+                    walletKey, ClassWalletPhase.Login))
+                    {
+                        MethodInvoker invoker = () => textBoxPasswordWallet.Text = "";
+                        BeginInvoke(invoker);
 #if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_TITLE_TEXT"), MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_TITLE_TEXT"), MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                        MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_TITLE_TEXT"), MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
 #endif
-                    return;
-                }
+                        return;
+                    }
 
-                textBoxPasswordWallet.Text = "";
+                    MethodInvoker invoke = () => textBoxPasswordWallet.Text = "";
+                    BeginInvoke(invoke);
 
+                    ClassWalletObject.ListenSeedNodeNetworkForWallet();
 
-                ClassWalletObject.ListenSeedNodeNetworkForWallet();
-                if (await ClassWalletObject.WalletConnect.SendPacketWallet(ClassWalletObject.Certificate, string.Empty, false))
-                {
-                    await Task.Delay(1000);
-                    await ClassWalletObject.WalletConnect.SendPacketWallet(
-                        "WALLET|" + ClassWalletObject.WalletConnect.WalletAddress, ClassWalletObject.Certificate, true);
-                    _walletFileData = string.Empty;
-                    _fileSelectedPath = string.Empty;
-                    labelOpenFileSelected.Text = ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_LABEL_FILE_SELECTED_TEXT");
+                    Stopwatch packetSpeedCalculator = new Stopwatch();
+                    packetSpeedCalculator.Start();
+                    if (await ClassWalletObject.WalletConnect.SendPacketWallet(ClassWalletObject.Certificate, string.Empty, false))
+                    {
 
-                }
+                        packetSpeedCalculator.Stop();
+                        if (packetSpeedCalculator.ElapsedMilliseconds > 0)
+                        {
+                            Thread.Sleep((int)packetSpeedCalculator.ElapsedMilliseconds);
+                        }
+                        await ClassWalletObject.WalletConnect.SendPacketWallet(
+                            "WALLET|" + ClassWalletObject.WalletConnect.WalletAddress, ClassWalletObject.Certificate, true);
+                        _walletFileData = string.Empty;
+                        _fileSelectedPath = string.Empty;
+                        invoke = () => labelOpenFileSelected.Text = ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_LABEL_FILE_SELECTED_TEXT");
+                        BeginInvoke(invoke);
+                    }
+                }).Start();
             }
             catch
             {
@@ -194,8 +208,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void OpenWallet_Load(object sender, EventArgs e)
         {
-#if WINDOWS
             UpdateStyles();
+#if WINDOWS
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
 #endif
         }
@@ -207,11 +221,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 #endif
         }
 
-        private async void textBoxPasswordWallet_KeyDownAsync(object sender, KeyEventArgs e)
+        private void TextBoxPasswordWallet_KeyDownAsync(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter) // Open wallet on press enter key.
             {
-                await OpenAndConnectWallet();
+                OpenAndConnectWallet();
             }
         }
     }

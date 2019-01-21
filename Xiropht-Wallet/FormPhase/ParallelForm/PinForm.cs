@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 #if WINDOWS
 using MetroFramework;
@@ -18,29 +19,33 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             InitializeComponent();
         }
 
-        private async void ButtonSendPinCode_Click(object sender, EventArgs e)
+        private void ButtonSendPinCode_ClickAsync(object sender, EventArgs e)
         {
-            if (textBoxPinCode.Text.Length > 0)
+            if (textBoxPinCode.Text.Length >= 4)
             {
-                if (!await ClassWalletObject.WalletConnect
-                    .SendPacketWallet(
-                        ClassWalletCommand.ClassWalletSendEnumeration.PinPhase + "|" + textBoxPinCode.Text,
-                        ClassWalletObject.Certificate, true).ConfigureAwait(false))
+                new Thread(async delegate ()
                 {
-                    await ClassWalletObject.FullDisconnection(true);
-                    ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
+                    if (!await ClassWalletObject.WalletConnect
+                        .SendPacketWallet(
+                            ClassWalletCommand.ClassWalletSendEnumeration.PinPhase + "|" + textBoxPinCode.Text,
+                            ClassWalletObject.Certificate, true))
+                    {
+                        await ClassWalletObject.FullDisconnection(true);
+                        ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));
+                        MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));
 #endif
-                }
-
-                textBoxPinCode.Text = string.Empty;
-                ClassParallelForm.PinFormShowed = false;
-                Hide();
+                    }
+                    MethodInvoker invoke = () => textBoxPinCode.Text = string.Empty;
+                    BeginInvoke(invoke);
+                    ClassParallelForm.PinFormShowed = false;
+                    invoke = () => Hide();
+                    BeginInvoke(invoke);
+                }).Start();
             }
             else
             {
@@ -67,7 +72,6 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             buttonNumberNine.Text = string.Empty;
             buttonNumberTen.Text = string.Empty;
             buttonNumberEleven.Text = string.Empty;
-            textBoxPinCode.Focus();
             textBoxPinCode.Text = string.Empty;
             var listButtonId = new List<int>();
             for (int i = 0; i < Controls.Count; i++)
@@ -144,30 +148,35 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             if (sender is Button buttonWhoClick) textBoxPinCode.Text += buttonWhoClick.Text;
         }
 
-        private async void textBoxPinCode_TextChangedAsync(object sender, EventArgs e)
+        private void textBoxPinCode_TextChangedAsync(object sender, EventArgs e)
         {
             if (textBoxPinCode.Text.Length >= 4)
             {
-                if (!await ClassWalletObject.WalletConnect
-                    .SendPacketWallet(
-                        ClassWalletCommand.ClassWalletSendEnumeration.PinPhase + "|" + textBoxPinCode.Text,
-                        ClassWalletObject.Certificate, true).ConfigureAwait(false))
+                new Thread(async delegate()
                 {
-                    await ClassWalletObject.FullDisconnection(true);
-                    ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
+                    if (!await ClassWalletObject.WalletConnect
+                        .SendPacketWallet(
+                            ClassWalletCommand.ClassWalletSendEnumeration.PinPhase + "|" + textBoxPinCode.Text,
+                            ClassWalletObject.Certificate, true))
+                    {
+                        await ClassWalletObject.FullDisconnection(true);
+                        ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS
                     MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));
+                        MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));
 #endif
-                }
-
-                textBoxPinCode.Text = string.Empty;
-                ClassParallelForm.PinFormShowed = false;
-                Hide();
+                    }
+                    MethodInvoker invoke = () => textBoxPinCode.Text = string.Empty;
+                    BeginInvoke(invoke);
+                    ClassParallelForm.PinFormShowed = false;
+                    invoke = () => Hide();
+                    BeginInvoke(invoke);
+                }).Start();
             }
+
         }
 
         private void buttonNumberTen_Click(object sender, EventArgs e)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Forms;
 using Xiropht_Wallet.FormPhase.ParallelForm;
 
@@ -25,38 +26,53 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void ShowPinForm()
         {
-            try
+            new Thread(delegate ()
             {
-                if (!PinFormShowed)
+                try
                 {
-                    PinFormShowed = true;
-                    ClassFormPhase.WalletXiropht.Invoke((Action) delegate()
+                    if (!PinFormShowed)
                     {
-                        PinForm.StartPosition = FormStartPosition.CenterParent;
-                        PinForm.TopMost = false;
-                        PinForm.ShowDialog(ClassFormPhase.WalletXiropht);
-                    });
+                        PinFormShowed = true;
+#if WINDOWS
+                        ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                        {
+                            PinForm.StartPosition = FormStartPosition.CenterParent;
+                            PinForm.TopMost = false;
+                            PinForm.ShowDialog(ClassFormPhase.WalletXiropht);
+                        });
+#else
+                        ClassFormPhase.WalletXiropht.BeginInvoke((MethodInvoker)delegate ()
+                       {
+                           PinForm.StartPosition = FormStartPosition.CenterParent;
+                           PinForm.TopMost = true;
+                           PinForm.Show(ClassFormPhase.WalletXiropht);
+                       });
+#endif
+                    }
                 }
-            }
-            catch
-            {
-                PinFormShowed = false;
-            }
+                catch
+                {
+                    PinFormShowed = false;
+                }
+            }).Start();
         }
 
         public static void HidePinForm()
         {
-            try
+            new Thread(delegate ()
             {
-                if (PinFormShowed)
+                try
                 {
-                    PinForm.Invoke((Action) delegate { PinForm.Hide(); });
-                    PinFormShowed = false;
+                    if (PinFormShowed)
+                    {
+                        ClassFormPhase.WalletXiropht.BeginInvoke((MethodInvoker)delegate { PinForm.Hide(); });
+                        PinFormShowed = false;
+                    }
                 }
-            }
-            catch
-            {
-            }
+                catch
+                {
+                }
+            }).Start();
         }
 
         /// <summary>
@@ -64,16 +80,29 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void ShowWaitingForm()
         {
-            if (!WaitingFormShowed)
+            new Thread(delegate ()
             {
-                WaitingFormShowed = true;
-                ClassFormPhase.WalletXiropht.Invoke((Action) delegate()
+                if (!WaitingFormShowed)
                 {
-                    WaitingForm.StartPosition = FormStartPosition.CenterParent;
-                    WaitingForm.TopMost = false;
-                    WaitingForm.ShowDialog(ClassFormPhase.WalletXiropht);
-                });
-            }
+                    WaitingFormShowed = true;
+#if WINDOWS
+                    ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                    {
+                        WaitingForm.StartPosition = FormStartPosition.CenterParent;
+                        WaitingForm.TopMost = false;
+                        WaitingForm.ShowDialog(ClassFormPhase.WalletXiropht);
+                    });
+#else
+                    MethodInvoker invoke = () =>
+                    {
+                        WaitingForm.StartPosition = FormStartPosition.CenterParent;
+                        WaitingForm.TopMost = true;
+                        WaitingForm.Show(ClassFormPhase.WalletXiropht);
+                    };
+                    ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+#endif
+                }
+            }).Start();
         }
 
         /// <summary>
@@ -81,18 +110,22 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void HideWaitingForm()
         {
-            if (WaitingFormShowed)
+            new Thread(delegate ()
             {
-                WaitingFormShowed = false;
-                if (WaitingForm.InvokeRequired)
+                if (WaitingFormShowed)
                 {
-                    WaitingForm.Invoke((Action) delegate { WaitingForm.Hide(); });
+                    WaitingFormShowed = false;
+
+                    try
+                    {
+                        WaitingForm.Invoke((MethodInvoker)delegate { WaitingForm.Hide(); });
+                    }
+                    catch
+                    {
+
+                    }
                 }
-                else
-                {
-                    WaitingForm.Hide();
-                }
-            }
+            }).Start();
         }
 
 
@@ -101,16 +134,28 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void ShowWaitingReconnectForm()
         {
-            if (!WaitingFormReconnectShowed)
+            new Thread(delegate ()
             {
-                WaitingFormReconnectShowed = true;
-                ClassFormPhase.WalletXiropht.Invoke((Action)delegate ()
+                if (!WaitingFormReconnectShowed)
                 {
-                    WaitingFormReconnect.StartPosition = FormStartPosition.CenterParent;
-                    WaitingFormReconnect.TopMost = false;
-                    WaitingFormReconnect.ShowDialog(ClassFormPhase.WalletXiropht);
-                });
-            }
+                    WaitingFormReconnectShowed = true;
+#if WINDOWS
+                    ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                    {
+                        WaitingFormReconnect.StartPosition = FormStartPosition.CenterParent;
+                        WaitingFormReconnect.TopMost = false;
+                        WaitingFormReconnect.ShowDialog(ClassFormPhase.WalletXiropht);
+                    });
+#else
+                    ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                    {
+                        WaitingFormReconnect.StartPosition = FormStartPosition.CenterParent;
+                        WaitingFormReconnect.TopMost = true;
+                        WaitingFormReconnect.Show(ClassFormPhase.WalletXiropht);
+                    });
+#endif
+                }
+            }).Start();
         }
 
         /// <summary>
@@ -118,18 +163,16 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void HideWaitingReconnectForm()
         {
-            if (WaitingFormReconnectShowed)
+            new Thread(delegate ()
             {
-                WaitingFormReconnectShowed = false;
-                if (WaitingFormReconnect.InvokeRequired)
+                if (WaitingFormReconnectShowed)
                 {
-                    WaitingFormReconnect.Invoke((Action)delegate { WaitingFormReconnect.Hide(); });
+                    WaitingFormReconnectShowed = false;
+
+                    WaitingFormReconnect.Invoke((MethodInvoker)delegate { WaitingFormReconnect.Hide(); });
+
                 }
-                else
-                {
-                    WaitingFormReconnect.Hide();
-                }
-            }
+            }).Start();
         }
 
 
@@ -138,16 +181,28 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void ShowWaitingForm2()
         {
-            if (!WaitingForm2Showed)
+            new Thread(delegate ()
             {
-                WaitingForm2Showed = true;
-                ClassFormPhase.WalletXiropht.Invoke((Action) delegate()
+                if (!WaitingForm2Showed)
                 {
-                    WaitingForm2.StartPosition = FormStartPosition.CenterParent;
-                    WaitingForm2.TopMost = false;
-                    WaitingForm2.ShowDialog(ClassFormPhase.WalletXiropht);
-                });
-            }
+                    WaitingForm2Showed = true;
+#if WINDOWS
+                    ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                    {
+                        WaitingForm2.StartPosition = FormStartPosition.CenterParent;
+                        WaitingForm2.TopMost = false;
+                        WaitingForm2.ShowDialog(ClassFormPhase.WalletXiropht);
+                    });
+#else
+                    ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                   {
+                       WaitingForm2.StartPosition = FormStartPosition.CenterParent;
+                       WaitingForm2.TopMost = true;
+                       WaitingForm2.Show(ClassFormPhase.WalletXiropht);
+                   });
+#endif
+                }
+            }).Start();
         }
 
         /// <summary>
@@ -155,11 +210,14 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void HideWaitingForm2()
         {
-            if (WaitingForm2Showed)
+            new Thread(delegate ()
             {
-                WaitingForm2Showed = false;
-                ClassFormPhase.WalletXiropht.Invoke((Action) delegate() { WaitingForm2.Hide(); });
-            }
+                if (WaitingForm2Showed)
+                {
+                    WaitingForm2Showed = false;
+                    WaitingForm2.Invoke((MethodInvoker)delegate () { WaitingForm2.Hide(); });
+                }
+            }).Start();
         }
 
 
@@ -168,16 +226,28 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void ShowWaitingCreateWalletForm()
         {
-            if (!WaitingCreateWalletFormShowed)
+            new Thread(delegate ()
             {
-                WaitingCreateWalletFormShowed = true;
-                ClassFormPhase.WalletXiropht.Invoke((Action) delegate()
+                if (!WaitingCreateWalletFormShowed)
                 {
-                    WaitingCreateWalletForm.StartPosition = FormStartPosition.CenterParent;
-                    WaitingCreateWalletForm.TopMost = false;
-                    WaitingCreateWalletForm.ShowDialog(ClassFormPhase.WalletXiropht);
-                });
-            }
+                    WaitingCreateWalletFormShowed = true;
+#if WINDOWS
+                    ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                    {
+                        WaitingCreateWalletForm.StartPosition = FormStartPosition.CenterParent;
+                        WaitingCreateWalletForm.TopMost = false;
+                        WaitingCreateWalletForm.ShowDialog(ClassFormPhase.WalletXiropht);
+                    });
+#else
+                    ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                   {
+                       WaitingCreateWalletForm.StartPosition = FormStartPosition.CenterParent;
+                       WaitingCreateWalletForm.TopMost = true;
+                       WaitingCreateWalletForm.Show(ClassFormPhase.WalletXiropht);
+                   });
+#endif
+                }
+            }).Start();
         }
 
         /// <summary>
@@ -185,18 +255,16 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void HideWaitingCreateWalletForm()
         {
-            if (WaitingCreateWalletFormShowed)
+            new Thread(delegate ()
             {
-                WaitingCreateWalletFormShowed = false;
-                if (WaitingCreateWalletForm.InvokeRequired)
+                if (WaitingCreateWalletFormShowed)
                 {
-                    WaitingCreateWalletForm.Invoke((Action) delegate { WaitingCreateWalletForm.Hide(); });
+                    WaitingCreateWalletFormShowed = false;
+
+                    WaitingCreateWalletForm.Invoke((MethodInvoker)delegate { WaitingCreateWalletForm.Hide(); });
+
                 }
-                else
-                {
-                    WaitingCreateWalletForm.Hide();
-                }
-            }
+            }).Start();
         }
     }
 }

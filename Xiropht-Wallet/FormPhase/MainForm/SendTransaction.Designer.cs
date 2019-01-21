@@ -149,7 +149,6 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.checkBoxHideWalletAddress.TabIndex = 20;
             this.checkBoxHideWalletAddress.Text = "Option - Hide Your Wallet Address on receiver side.";
             this.checkBoxHideWalletAddress.UseVisualStyleBackColor = true;
-            this.checkBoxHideWalletAddress.CheckedChanged += new System.EventHandler(this.checkBoxHideWalletAddress_CheckedChanged);
             this.checkBoxHideWalletAddress.Click += new System.EventHandler(this.CheckBoxHideWalletAddress_Click);
             // 
             // buttonFeeInformation

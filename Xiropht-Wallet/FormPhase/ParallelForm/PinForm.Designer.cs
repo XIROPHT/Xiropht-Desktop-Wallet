@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.textBoxPinCode = new System.Windows.Forms.TextBox();
-            this.buttonSendPinCode = new MetroFramework.Controls.MetroButton();
+            this.buttonSendPinCode = new System.Windows.Forms.Button();
             this.labelNoticePinCode = new System.Windows.Forms.Label();
             this.buttonNumberZero = new System.Windows.Forms.Button();
             this.buttonNumberOne = new System.Windows.Forms.Button();
@@ -63,8 +63,7 @@
             this.buttonSendPinCode.Size = new System.Drawing.Size(114, 25);
             this.buttonSendPinCode.TabIndex = 1;
             this.buttonSendPinCode.Text = "OK";
-            this.buttonSendPinCode.UseSelectable = true;
-            this.buttonSendPinCode.Click += new System.EventHandler(this.ButtonSendPinCode_Click);
+            this.buttonSendPinCode.Click += new System.EventHandler(this.ButtonSendPinCode_ClickAsync);
             // 
             // labelNoticePinCode
             // 
@@ -263,7 +262,7 @@
         #endregion
 
         private System.Windows.Forms.TextBox textBoxPinCode;
-        private MetroFramework.Controls.MetroButton buttonSendPinCode;
+        private System.Windows.Forms.Button buttonSendPinCode;
         public System.Windows.Forms.Label labelNoticePinCode;
         private System.Windows.Forms.Button buttonNumberZero;
         private System.Windows.Forms.Button buttonNumberOne;

@@ -71,7 +71,7 @@
             this.textBoxPasswordWallet.PasswordChar = '*';
             this.textBoxPasswordWallet.Size = new System.Drawing.Size(416, 20);
             this.textBoxPasswordWallet.TabIndex = 8;
-            this.textBoxPasswordWallet.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxPasswordWallet_KeyDownAsync);
+            this.textBoxPasswordWallet.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPasswordWallet_KeyDownAsync);
             // 
             // labelWriteYourWalletPassword
             // 

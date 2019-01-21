@@ -55,7 +55,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 "[a-z0-9]+", RegexOptions.IgnoreCase))
                         {
 #if WINDOWS
-                            if (MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_SUBMIT_CONTENT_TEXT").Replace(ClassTranslation.AmountSendOrder, ""+amountSend).Replace(ClassTranslation.TargetAddressOrder, textBoxWalletDestination.Text),
+                            if (MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_SUBMIT_CONTENT_TEXT").Replace(ClassTranslation.AmountSendOrder, "" + amountSend).Replace(ClassTranslation.TargetAddressOrder, textBoxWalletDestination.Text),
                                     ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_SUBMIT_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) ==
                                 DialogResult.Yes)
 #else
@@ -65,18 +65,22 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 #endif
                             {
                                 new Thread(ClassParallelForm.ShowWaitingForm).Start();
+
                                 if (checkBoxHideWalletAddress.Checked)
                                 {
-                                    await ClassWalletObject.SendPacketWalletToSeedNodeNetwork(
-                                        ClassWalletCommand.ClassWalletSendEnumeration.SendTransaction + "|" +
-                                        textBoxWalletDestination.Text + "|" + amountSend + "|" + feeSend + "|1");
+                                    await ClassWalletObject.WalletConnect.SendPacketWallet(
+                                                ClassWalletCommand.ClassWalletSendEnumeration.SendTransaction + "|" +
+                                                textBoxWalletDestination.Text + "|" + amountSend + "|" + feeSend + "|1", ClassWalletObject.Certificate, true);
+
+
                                 }
                                 else
                                 {
-                                    await ClassWalletObject.SendPacketWalletToSeedNodeNetwork(
+                                    await ClassWalletObject.WalletConnect.SendPacketWallet(
                                         ClassWalletCommand.ClassWalletSendEnumeration.SendTransaction + "|" +
-                                        textBoxWalletDestination.Text + "|" + amountSend + "|" + feeSend + "|0");
+                                        textBoxWalletDestination.Text + "|" + amountSend + "|" + feeSend + "|0", ClassWalletObject.Certificate, true);
                                 }
+
 
                                 checkBoxHideWalletAddress.Checked = false;
                                 textBoxAmount.Text = "0.00000000";
@@ -178,8 +182,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void SendTransaction_Load(object sender, EventArgs e)
         {
-#if WINDOWS
             UpdateStyles();
+#if WINDOWS
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
 #endif
             if (!AutoUpdateTimeReceived)
@@ -198,7 +202,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     await Task.Delay(100);
                     if (ClassWalletObject.SeedNodeConnectorWallet != null)
                     {
-                        if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                        if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                         {
                             MethodInvoker invoke;
                             if (!string.IsNullOrEmpty(textBoxFee.Text))
@@ -275,17 +279,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void SendTransaction_Resize(object sender, EventArgs e)
         {
-#if WINDOWS
             UpdateStyles();
-#endif
-        }
-
-        private void checkBoxHideWalletAddress_CheckedChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void labelFeeInformation_MouseHover(object sender, EventArgs e)
-        {
         }
 
 

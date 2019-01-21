@@ -361,13 +361,13 @@ namespace Xiropht_Wallet
 
             _threadUpdateNetworkStats = new Thread(delegate ()
             {
-                while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                 {
                     if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.Overview)
                     {
                         if (ClassWalletObject.SeedNodeConnectorWallet != null)
                         {
-                            if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                            if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                             {
                                 if (!string.IsNullOrEmpty(ClassWalletObject.TotalBlockMined) &&
                                     !string.IsNullOrEmpty(ClassWalletObject.CoinCirculating) &&
@@ -447,11 +447,16 @@ namespace Xiropht_Wallet
                 languageToolStripMenuItem.DropDownItems.Add(ClassTranslation.UppercaseFirst(key), null, LanguageSubMenuItem_Click);
             }
             UpdateGraphicLanguageText();
+            new Thread(delegate()
+            {
 #if WINDOWS
-            MetroMessageBox.Show(this, ClassConnectorSetting.CoinName + " is currently in private test, we suggest to not invest your money on it, invest your time only because we are in private test and we need something stable, usefull, secure for provide a real trust on this coin before. Thank you for your understanding.", "Important information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MethodInvoker invoke = () => MetroMessageBox.Show(this, ClassConnectorSetting.CoinName + " is currently in private test, we suggest to not invest your money on it, invest your time only because we are in private test and we need something stable, usefull, secure for provide a real trust on this coin before. Thank you for your understanding.", "Important information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                BeginInvoke(invoke);
 #else
-            MessageBox.Show(this, ClassConnectorSetting.CoinName + " is currently in private test, we suggest to not invest your money on it, invest your time only because we are in private test and we need something stable, usefull, secure for provide a real trust on this coin before. Thank you for your understanding.", "Important information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+               MethodInvoker invoke = () => MessageBox.Show(this, ClassConnectorSetting.CoinName + " is currently in private test, we suggest to not invest your money on it, invest your time only because we are in private test and we need something stable, usefull, secure for provide a real trust on this coin before. Thank you for your understanding.", "Important information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+               BeginInvoke(invoke);
 #endif
+            }).Start();
         }
 
         /// <summary>
@@ -678,7 +683,7 @@ namespace Xiropht_Wallet
                 {
                     if (ClassWalletObject.SeedNodeConnectorWallet != null)
                     {
-                        if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                        if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                         {
                             await ClassWalletObject.FullDisconnection(true);
                         }
@@ -702,7 +707,7 @@ namespace Xiropht_Wallet
                 {
                     if (ClassWalletObject.SeedNodeConnectorWallet != null)
                     {
-                        if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                        if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                         {
                             await ClassWalletObject.FullDisconnection(true);
                         }
@@ -725,7 +730,7 @@ namespace Xiropht_Wallet
                 {
                     if (ClassWalletObject.SeedNodeConnectorWallet != null)
                     {
-                        if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                        if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                         {
                             await ClassWalletObject.FullDisconnection(true);
                         }
@@ -775,7 +780,7 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.SeedNodeConnectorWallet != null)
             {
-                if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                 {
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Overview);
                 }
@@ -793,7 +798,7 @@ namespace Xiropht_Wallet
             {
                 if (ClassWalletObject.SeedNodeConnectorWallet != null)
                 {
-                    if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                    if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                     {
                         await ClassWalletObject.FullDisconnection(true).ConfigureAwait(false);
                     }
@@ -811,7 +816,7 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.SeedNodeConnectorWallet != null)
             {
-                if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                 {
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.SendTransaction);
                 }
@@ -827,7 +832,7 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.SeedNodeConnectorWallet != null)
             {
-                if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                 {
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.TransactionHistory);
                 }
@@ -843,7 +848,7 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.SeedNodeConnectorWallet != null)
             {
-                if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                 {
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.BlockExplorer);
                 }
@@ -1102,7 +1107,7 @@ namespace Xiropht_Wallet
                     _threadUpdateTransactionWalletShowed = new Thread(delegate ()
                     {
 
-                        while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                        while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                         {
                             try
                             {
@@ -2344,7 +2349,7 @@ namespace Xiropht_Wallet
                                         TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
                                     }
 
-                                    if (!ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                                    if (!ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                                     {
                                         break;
                                     }
@@ -2395,7 +2400,7 @@ namespace Xiropht_Wallet
                     // Decrypt transaction from cache.
                     _threadUpdateTransactionWallet = new Thread(async delegate ()
                     {
-                        while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                        while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                         {
                             if (ClassWalletObject.BlockTransactionSync)
                             {
@@ -2585,7 +2590,7 @@ namespace Xiropht_Wallet
                                 await Task.Run(() => StopUpdateTransactionHistory(false, false)).ConfigureAwait(false);
                             }
 
-                            if (!ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                            if (!ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                             {
                                 break;
                             }
@@ -2626,7 +2631,7 @@ namespace Xiropht_Wallet
 
                 _threadUpdateBlockWallet = new Thread(async delegate ()
                 {
-                    while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                    while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                     {
 
                         if (ListBlockHashShowed.Count != ClassBlockCache.ListBlock.Count && TotalBlockRead != ClassBlockCache.ListBlock.Count)
@@ -2917,8 +2922,8 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void TimerRefresh_Tick(object sender, EventArgs e)
         {
-#if WINDOWS
             UpdateStyles();
+#if WINDOWS
             if (Width < BaseInterfaceWidth)
             {
                 Width = BaseInterfaceWidth;
@@ -2991,7 +2996,7 @@ namespace Xiropht_Wallet
             {
                 if (ClassWalletObject.SeedNodeConnectorWallet != null)
                 {
-                    if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                    if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                     {
 
 #if WINDOWS
@@ -3980,7 +3985,7 @@ namespace Xiropht_Wallet
             {
                 if (ClassWalletObject.SeedNodeConnectorWallet != null)
                 {
-                    if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                    if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                     {
 #if WINDOWS
                         if (MetroMessageBox.Show(this, ClassTranslation.GetLanguageTextFromOrder("RESYNC_BLOCK_EXPLORER_CONTENT_TEXT"),
@@ -4307,7 +4312,7 @@ namespace Xiropht_Wallet
             {
                 if (ClassWalletObject.SeedNodeConnectorWallet != null)
                 {
-                    if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                    if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                     {
                         await ClassWalletObject.FullDisconnection(true).ConfigureAwait(false);
                     }

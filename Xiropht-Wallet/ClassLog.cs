@@ -9,7 +9,7 @@ namespace Xiropht_Wallet
     {
         private static StreamWriter _writerLog; // StreamWriter for write logs.
         public static List<string> ListLog = new List<string>(); // List of log lines.
-        private static int maxLogList = 100; // Minimum lines required for write them to the log file.
+        private static int maxLogList = 10; // Minimum lines required for write them to the log file.
 
         /// <summary>
         /// Initialization of StreamWriter for the log file.
@@ -28,6 +28,7 @@ namespace Xiropht_Wallet
         /// <param name="log"></param>
         public static void WriteLine(string log)
         {
+
             Console.WriteLine(DateTime.Now + @" - " + log);
             try
             {

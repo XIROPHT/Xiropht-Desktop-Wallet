@@ -66,15 +66,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void Block_Load(object sender, EventArgs e)
         {
-            typeof(ListViewEx).InvokeMember(
-                "DoubleBuffered",
-                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
-                null,
-                listViewBlockExplorer,
-                new object[] {true});
             IsShowed = true;
-#if WINDOWS
             UpdateStyles();
+
+#if WINDOWS
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
 #endif
         }
