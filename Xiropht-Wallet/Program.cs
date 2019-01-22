@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Xiropht_Wallet
@@ -16,6 +17,8 @@ namespace Xiropht_Wallet
         [STAThread]
         static void Main()
         {
+            Thread.CurrentThread.Name = Path.GetFileName(Environment.GetCommandLineArgs()[0]);
+
 #if DEBUG
             Log.InitializeLog(); // Initialization of log system.
             Log.AutoWriteLog(); // Start the automatic write of log lines.
