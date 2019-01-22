@@ -54,10 +54,10 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(12, 110);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(144, 200);
+            this.label2.Size = new System.Drawing.Size(144, 220);
             this.label2.TabIndex = 1;
             this.label2.Text = "Official testers: \r\n\r\n- DigitalTwister\r\n- Sniperviperman\r\n- AlpHA\r\n- Maxy86\r\n- Wo" +
-    "lfierawr\r\n- Rashed\r\n- Sabrar\r\n- Xiropht";
+    "lfierawr\r\n- Rashed\r\n- Sabrar\r\n- Xiropht\r\n- PhelanConail";
             // 
             // panelLanguageContributor
             // 
