@@ -46,7 +46,7 @@
             this.labelWalletGuiVersion.Name = "labelWalletGuiVersion";
             this.labelWalletGuiVersion.Size = new System.Drawing.Size(296, 60);
             this.labelWalletGuiVersion.TabIndex = 0;
-            this.labelWalletGuiVersion.Text = "GUI Wallet Xiropht v0.4.3.4b\r\n\r\nCopyright © 2018 Xiropht Developer\r\n";
+            this.labelWalletGuiVersion.Text = "GUI Wallet Xiropht\r\n\r\nCopyright © 2019 Xiropht Developer\r\n";
             // 
             // label2
             // 

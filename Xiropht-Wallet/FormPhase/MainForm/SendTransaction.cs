@@ -209,15 +209,27 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             {
                                 if (Decimal.TryParse(textBoxFee.Text.Replace(".", ","), out var feeAmount))
                                 {
-                                    Decimal timePendingFromFee = (1000 - (1000 * feeAmount)) *
-                                                                 ClassWalletObject
-                                                                     .RemoteNodeTotalPendingTransactionInNetwork;
+                                    Decimal timePendingFromFee = ClassWalletObject.RemoteNodeTotalPendingTransactionInNetwork;
+
+
+
                                     if (timePendingFromFee <= 0)
                                     {
-                                        timePendingFromFee = 1000;
+                                        timePendingFromFee = 1;
+                                    }
+                                    else
+                                    {
+                                        Decimal decreaseTime = ((feeAmount * 1000) / timePendingFromFee) * 100;
+                                        if (decreaseTime > 0)
+                                        {
+                                            timePendingFromFee = timePendingFromFee - decreaseTime;
+                                            if (timePendingFromFee <= 0)
+                                            {
+                                                timePendingFromFee = 1;
+                                            }
+                                        }
                                     }
 
-                                    timePendingFromFee = timePendingFromFee / 1000;
                                     if (timePendingFromFee < 60)
                                     {
                                         timePendingFromFee = Math.Round(timePendingFromFee, 0);
