@@ -84,7 +84,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
                                 checkBoxHideWalletAddress.Checked = false;
                                 textBoxAmount.Text = "0.00000000";
-                                textBoxFee.Text = "0.00100000";
+                                textBoxFee.Text = "0.00001000";
                                 textBoxWalletDestination.Text = string.Empty;
                             }
                         }
@@ -219,7 +219,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                     }
                                     else
                                     {
-                                        Decimal decreaseTime = ((feeAmount * 1000) / timePendingFromFee) * 100;
+                                        Decimal decreaseTime = ((feeAmount * 100000) / timePendingFromFee) * 100;
                                         if (decreaseTime > 0)
                                         {
                                             timePendingFromFee = timePendingFromFee - decreaseTime;

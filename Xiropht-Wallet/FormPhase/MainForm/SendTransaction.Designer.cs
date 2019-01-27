@@ -116,7 +116,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.textBoxFee.Name = "textBoxFee";
             this.textBoxFee.Size = new System.Drawing.Size(264, 20);
             this.textBoxFee.TabIndex = 9;
-            this.textBoxFee.Text = "0.00100000";
+            this.textBoxFee.Text = "0.00001000";
             // 
             // textBoxTransactionTime
             // 

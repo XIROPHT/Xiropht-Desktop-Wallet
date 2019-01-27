@@ -455,13 +455,8 @@ namespace Xiropht_Wallet
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WalletXiropht_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.WalletXiropht_FormClosed);
             this.Load += new System.EventHandler(this.WalletXiropht_Load);
-#if LINUX
-            this.BackColor = System.Drawing.Color.White;
-#endif
-#if WINDOWS
             this.SizeChanged += new System.EventHandler(this.WalletXiropht_SizeChanged);
             this.Resize += new System.EventHandler(this.WalletXiropht_Resize);
-#endif
             this.menuStripMenu.ResumeLayout(false);
             this.menuStripMenu.PerformLayout();
             this.panelControlWallet.ResumeLayout(false);

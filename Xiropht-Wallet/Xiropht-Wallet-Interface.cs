@@ -497,8 +497,8 @@ namespace Xiropht_Wallet
             aboutToolStripMenuItem.Text = ClassTranslation.GetLanguageTextFromOrder("SUBMENU_HELP_ABOUT_TEXT");
             if (ClassWalletObject.WalletConnect != null)
             {
-                labelNoticeWalletBalance.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT") + " " + ClassWalletObject.WalletConnect.WalletAmount + " " + ClassConnectorSetting.CoinNameMin;
-                labelNoticeWalletAddress.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_ADDRESS_TEXT") + " "+ ClassWalletObject.WalletConnect.WalletAddress;
+                labelNoticeWalletBalance.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT") + " " + ClassWalletObject.WalletConnect.WalletAmount + " " + ClassConnectorSetting.CoinNameMin + " | " + ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT") + " " + ClassWalletObject.TotalTransactionPendingOnReceive + " " + ClassConnectorSetting.CoinNameMin;
+                labelNoticeWalletAddress.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_ADDRESS_TEXT") + " " + ClassWalletObject.WalletConnect.WalletAddress;
                 labelNoticeTotalPendingTransactionOnReceive.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_TOTAL_PENDING_TRANSACTION_ON_RECEIVE_TEXT") + " " + ClassWalletObject.TotalTransactionPendingOnReceive;
             }
             else

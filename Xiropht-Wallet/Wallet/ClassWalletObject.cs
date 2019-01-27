@@ -133,6 +133,7 @@ namespace Xiropht_Wallet.Wallet
         private static bool WalletInReconnect;
         public static bool SettingManualRemoteNode;
         public static long LastRemoteNodePacketReceived;
+        public static string WalletAmountInPending;
 
         #region Initialization
 
@@ -469,6 +470,7 @@ namespace Xiropht_Wallet.Wallet
 
             WalletPinDisabled = true;
             InCreateWallet = false;
+            WalletAmountInPending = string.Empty;
             TotalTransactionPendingOnReceive = 0;
             GC.SuppressFinalize(SeedNodeConnectorWallet);
             SeedNodeConnectorWallet = new ClassSeedNodeConnector();
@@ -943,10 +945,16 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.StatsPhase:
                     WalletConnect.SelectWalletPhase(ClassWalletPhase.Accepted);
                     WalletConnect.WalletAmount = splitPacket[1];
+                    if (splitPacket.Length > 2)
+                    {
+                        WalletAmountInPending = splitPacket[2];
+                    }
                     new Thread(() => ClassFormPhase.ShowWalletInformationInMenu(WalletConnect.WalletAddress, WalletConnect.WalletAmount)).Start();
 
 #if DEBUG
                     Log.WriteLine("Actual Balance: " + WalletConnect.WalletAmount);
+                    Log.WriteLine("Pending amount in pending to receive: " + WalletAmountInPending);
+
 #endif
                     if (LastRemoteNodePacketReceived + 15 < DateTimeOffset.Now.ToUnixTimeSeconds() || !EnableReceivePacketRemoteNode && !OnWaitingRemoteNodeList)
                     {
