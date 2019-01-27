@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Xiropht_Connector_All.Setting;
+using Xiropht_Wallet.Wallet;
 
 namespace Xiropht_Wallet.FormPhase
 {
@@ -58,11 +59,32 @@ namespace Xiropht_Wallet.FormPhase
         {
 
             WalletXiropht.BeginInvoke((MethodInvoker)delegate { WalletXiropht.labelNoticeWalletAddress.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_ADDRESS_TEXT") + " " + walletAddress; });
-            WalletXiropht.BeginInvoke((MethodInvoker)delegate
-            {
-               WalletXiropht.labelNoticeWalletBalance.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT") + " " + walletAmount + " " + ClassConnectorSetting.CoinNameMin;
 
-            });
+
+            bool showPendingAmount = false;
+            if (ClassWalletObject.WalletAmountInPending != null)
+            {
+                if (!string.IsNullOrEmpty(ClassWalletObject.WalletAmountInPending))
+                {
+                    showPendingAmount = true;
+                }
+            }
+            if (!showPendingAmount)
+            {
+                WalletXiropht.BeginInvoke((MethodInvoker)delegate
+                {
+                    WalletXiropht.labelNoticeWalletBalance.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT") + " " + walletAmount + " " + ClassConnectorSetting.CoinNameMin;
+
+                });
+            }
+            else
+            {
+                WalletXiropht.BeginInvoke((MethodInvoker)delegate
+                {
+                    WalletXiropht.labelNoticeWalletBalance.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT") + " " + ClassWalletObject.WalletConnect.WalletAmount + " " + ClassConnectorSetting.CoinNameMin + " | " + ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_PENDING_BALANCE_TEXT") + " " + ClassWalletObject.WalletAmountInPending + " " + ClassConnectorSetting.CoinNameMin;
+
+                });
+            }
 
         }
 

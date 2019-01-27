@@ -497,7 +497,22 @@ namespace Xiropht_Wallet
             aboutToolStripMenuItem.Text = ClassTranslation.GetLanguageTextFromOrder("SUBMENU_HELP_ABOUT_TEXT");
             if (ClassWalletObject.WalletConnect != null)
             {
-                labelNoticeWalletBalance.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT") + " " + ClassWalletObject.WalletConnect.WalletAmount + " " + ClassConnectorSetting.CoinNameMin + " | " + ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT") + " " + ClassWalletObject.TotalTransactionPendingOnReceive + " " + ClassConnectorSetting.CoinNameMin;
+                bool showPendingAmount = false;
+                if (ClassWalletObject.WalletAmountInPending != null)
+                {
+                    if (!string.IsNullOrEmpty(ClassWalletObject.WalletAmountInPending))
+                    {
+                        showPendingAmount = true;
+                    }
+                }
+                if (!showPendingAmount)
+                {
+                    labelNoticeWalletBalance.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT") + " " + ClassWalletObject.WalletConnect.WalletAmount + " " + ClassConnectorSetting.CoinNameMin;
+                }
+                else
+                {
+                    labelNoticeWalletBalance.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT") + " " + ClassWalletObject.WalletConnect.WalletAmount + " " + ClassConnectorSetting.CoinNameMin + " | " + ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_PENDING_BALANCE_TEXT") + " " + ClassWalletObject.WalletAmountInPending + " " + ClassConnectorSetting.CoinNameMin;
+                }
                 labelNoticeWalletAddress.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_ADDRESS_TEXT") + " " + ClassWalletObject.WalletConnect.WalletAddress;
                 labelNoticeTotalPendingTransactionOnReceive.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_TOTAL_PENDING_TRANSACTION_ON_RECEIVE_TEXT") + " " + ClassWalletObject.TotalTransactionPendingOnReceive;
             }

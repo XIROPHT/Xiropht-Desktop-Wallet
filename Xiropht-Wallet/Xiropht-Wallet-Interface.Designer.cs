@@ -431,6 +431,9 @@ namespace Xiropht_Wallet
 #if WINDOWS
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
 #endif
+#if LINUX
+            this.BackColor = System.Drawing.Color.White;
+#endif
             this.ClientSize = new System.Drawing.Size(1032, 754);
             this.Controls.Add(this.linkLabelWebsite);
             this.Controls.Add(this.labelCopyright);
