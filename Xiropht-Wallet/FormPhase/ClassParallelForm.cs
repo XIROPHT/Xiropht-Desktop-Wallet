@@ -168,9 +168,14 @@ namespace Xiropht_Wallet.FormPhase
                 if (WaitingFormReconnectShowed)
                 {
                     WaitingFormReconnectShowed = false;
+                    try
+                    {
+                        WaitingFormReconnect.Invoke((MethodInvoker)delegate { WaitingFormReconnect.Hide(); });
+                    }
+                    catch
+                    {
 
-                    WaitingFormReconnect.Invoke((MethodInvoker)delegate { WaitingFormReconnect.Hide(); });
-
+                    }
                 }
             }).Start();
         }

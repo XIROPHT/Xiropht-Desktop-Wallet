@@ -363,37 +363,34 @@ namespace Xiropht_Wallet
             {
                 while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                 {
-                    if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.Overview)
+
+                    if (ClassWalletObject.SeedNodeConnectorWallet != null)
                     {
-                        if (ClassWalletObject.SeedNodeConnectorWallet != null)
+                        if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
                         {
-                            if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                            if (!string.IsNullOrEmpty(ClassWalletObject.TotalBlockMined) &&
+                                !string.IsNullOrEmpty(ClassWalletObject.CoinCirculating) &&
+                                !string.IsNullOrEmpty(ClassWalletObject.CoinMaxSupply) &&
+                                !string.IsNullOrEmpty(ClassWalletObject.NetworkDifficulty) &&
+                                !string.IsNullOrEmpty(ClassWalletObject.NetworkHashrate) &&
+                                !string.IsNullOrEmpty(ClassWalletObject.TotalFee) &&
+                                !string.IsNullOrEmpty(ClassWalletObject.LastBlockFound))
                             {
-                                if (!string.IsNullOrEmpty(ClassWalletObject.TotalBlockMined) &&
-                                    !string.IsNullOrEmpty(ClassWalletObject.CoinCirculating) &&
-                                    !string.IsNullOrEmpty(ClassWalletObject.CoinMaxSupply) &&
-                                    !string.IsNullOrEmpty(ClassWalletObject.NetworkDifficulty) &&
-                                    !string.IsNullOrEmpty(ClassWalletObject.NetworkHashrate) &&
-                                    !string.IsNullOrEmpty(ClassWalletObject.TotalFee) &&
-                                    !string.IsNullOrEmpty(ClassWalletObject.LastBlockFound))
-                                {
 
-                                    UpdateOverviewLabelBlockMined(ClassWalletObject.TotalBlockMined);
-                                    UpdateOverviewLabelCoinCirculating(ClassWalletObject.CoinCirculating);
-                                    UpdateOverviewLabelCoinMaxSupply(ClassWalletObject.CoinMaxSupply);
-                                    UpdateOverviewLabelNetworkDifficulty(ClassWalletObject.NetworkDifficulty);
-                                    UpdateOverviewLabelNetworkHashrate(ClassWalletObject.NetworkHashrate);
-                                    UpdateOverviewLabelTransactionFee(ClassWalletObject.TotalFee);
-                                    UpdateOverviewLabelLastBlockFound(ClassWalletObject.LastBlockFound);
+                                UpdateOverviewLabelBlockMined(ClassWalletObject.TotalBlockMined);
+                                UpdateOverviewLabelCoinCirculating(ClassWalletObject.CoinCirculating);
+                                UpdateOverviewLabelCoinMaxSupply(ClassWalletObject.CoinMaxSupply);
+                                UpdateOverviewLabelNetworkDifficulty(ClassWalletObject.NetworkDifficulty);
+                                UpdateOverviewLabelNetworkHashrate(ClassWalletObject.NetworkHashrate);
+                                UpdateOverviewLabelTransactionFee(ClassWalletObject.TotalFee);
+                                UpdateOverviewLabelLastBlockFound(ClassWalletObject.LastBlockFound);
 
-                                    MethodInvoker invoke = () => labelNoticeTotalPendingTransactionOnReceive.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_TOTAL_PENDING_TRANSACTION_ON_RECEIVE_TEXT") + " " + ClassWalletObject.TotalTransactionPendingOnReceive;
-                                    BeginInvoke(invoke);
-
-
-                                }
+                                MethodInvoker invoke = () => labelNoticeTotalPendingTransactionOnReceive.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_TOTAL_PENDING_TRANSACTION_ON_RECEIVE_TEXT") + " " + ClassWalletObject.TotalTransactionPendingOnReceive;
+                                BeginInvoke(invoke);
                             }
                         }
                     }
+                    
 
                     Thread.Sleep(ThreadUpdateNetworkStatsInterval);
                 }
@@ -583,6 +580,7 @@ namespace Xiropht_Wallet
                     OverviewWalletForm.labelTextNetworkDifficulty.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_NETWORK_DIFFICULTY_TEXT");
                     OverviewWalletForm.labelTextNetworkHashrate.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_NETWORK_HASHRATE_TEXT");
                     OverviewWalletForm.labelTextLastBlockFound.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_LAST_BLOCK_FOUND_TEXT");
+                    OverviewWalletForm.labelTextTotalCoinInPending.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_COIN_PENDING");
                 }
             }
             catch
@@ -924,15 +922,19 @@ namespace Xiropht_Wallet
                 var totalBlockLeft =
                     Math.Round(
                         (Decimal.Parse(ClassWalletObject.CoinMaxSupply.Replace(".", ","), NumberStyles.Any,
-                             Program.GlobalCultureInfo) / 10) - int.Parse(info), 0);
-                int totalCoinMined = int.Parse(info) * 10;
+                             Program.GlobalCultureInfo) / 10) - Decimal.Parse(info), 0);
+                Decimal totalCoinMined = Decimal.Parse(info) * 10;
+                Decimal totalInPending = totalCoinMined - (Decimal.Parse(ClassWalletObject.CoinCirculating.Replace(".", ","), NumberStyles.Any, Program.GlobalCultureInfo) + Decimal.Parse(ClassWalletObject.TotalFee.Replace(".", ","), NumberStyles.Any, Program.GlobalCultureInfo));
                 int blockchainHeight = (int.Parse(info) + 1);
+
+
                 MethodInvoker invoke = () =>
                 {
                     OverviewWalletForm.labelTextCoinMined.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_COIN_MINED_TEXT") + " " + totalCoinMined.ToString(Program.GlobalCultureInfo) + " " + ClassConnectorSetting.CoinNameMin;
                     OverviewWalletForm.labelTextBlockchainHeight.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_BLOCKCHAIN_HEIGHT_TEXT") + " " + blockchainHeight;
                     OverviewWalletForm.labelTextTotalBlockMined.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_BLOCK_MINED_TEXT") + " " + info;
                     OverviewWalletForm.labelTextTotalBlockLeft.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_BLOCK_LEFT_TEXT") + " " + totalBlockLeft;
+                    OverviewWalletForm.labelTextTotalCoinInPending.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_COIN_PENDING") + " " + totalInPending.ToString(Program.GlobalCultureInfo) + " " + ClassConnectorSetting.CoinNameMin;
                 };
                 BeginInvoke(invoke);
             }
@@ -942,6 +944,7 @@ namespace Xiropht_Wallet
                 OverviewWalletForm.labelTextBlockchainHeight.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_BLOCKCHAIN_HEIGHT_TEXT");
                 OverviewWalletForm.labelTextTotalBlockMined.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_BLOCK_MINED_TEXT");
                 OverviewWalletForm.labelTextTotalBlockLeft.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_BLOCK_LEFT_TEXT");
+                OverviewWalletForm.labelTextTotalCoinInPending.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_COIN_PENDING");
             }
 
         }

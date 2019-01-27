@@ -42,6 +42,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.labelTextBlockchainHeight = new System.Windows.Forms.Label();
             this.labelTextLastBlockFound = new System.Windows.Forms.Label();
             this.buttonFeeInformationAccumulated = new System.Windows.Forms.Button();
+            this.labelTextTotalCoinInPending = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelTextNetworkStats
@@ -58,7 +59,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             this.labelTextCoinMaxSupply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextCoinMaxSupply.AutoSize = true;
-            this.labelTextCoinMaxSupply.Location = new System.Drawing.Point(165, 97);
+            this.labelTextCoinMaxSupply.Location = new System.Drawing.Point(181, 86);
             this.labelTextCoinMaxSupply.Name = "labelTextCoinMaxSupply";
             this.labelTextCoinMaxSupply.Size = new System.Drawing.Size(89, 13);
             this.labelTextCoinMaxSupply.TabIndex = 1;
@@ -69,7 +70,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             this.labelTextCoinCirculating.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextCoinCirculating.AutoSize = true;
-            this.labelTextCoinCirculating.Location = new System.Drawing.Point(165, 139);
+            this.labelTextCoinCirculating.Location = new System.Drawing.Point(181, 119);
             this.labelTextCoinCirculating.Name = "labelTextCoinCirculating";
             this.labelTextCoinCirculating.Size = new System.Drawing.Size(83, 13);
             this.labelTextCoinCirculating.TabIndex = 2;
@@ -80,7 +81,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             this.labelTextCoinMined.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextCoinMined.AutoSize = true;
-            this.labelTextCoinMined.Location = new System.Drawing.Point(165, 213);
+            this.labelTextCoinMined.Location = new System.Drawing.Point(181, 228);
             this.labelTextCoinMined.Name = "labelTextCoinMined";
             this.labelTextCoinMined.Size = new System.Drawing.Size(90, 13);
             this.labelTextCoinMined.TabIndex = 3;
@@ -91,7 +92,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             this.labelTextTransactionFee.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextTransactionFee.AutoSize = true;
-            this.labelTextTransactionFee.Location = new System.Drawing.Point(165, 177);
+            this.labelTextTransactionFee.Location = new System.Drawing.Point(181, 192);
             this.labelTextTransactionFee.Name = "labelTextTransactionFee";
             this.labelTextTransactionFee.Size = new System.Drawing.Size(163, 13);
             this.labelTextTransactionFee.TabIndex = 4;
@@ -102,7 +103,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             this.labelTextTotalBlockMined.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextTotalBlockMined.AutoSize = true;
-            this.labelTextTotalBlockMined.Location = new System.Drawing.Point(165, 290);
+            this.labelTextTotalBlockMined.Location = new System.Drawing.Point(181, 305);
             this.labelTextTotalBlockMined.Name = "labelTextTotalBlockMined";
             this.labelTextTotalBlockMined.Size = new System.Drawing.Size(96, 13);
             this.labelTextTotalBlockMined.TabIndex = 5;
@@ -113,7 +114,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             this.labelTextNetworkDifficulty.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextNetworkDifficulty.AutoSize = true;
-            this.labelTextNetworkDifficulty.Location = new System.Drawing.Point(165, 363);
+            this.labelTextNetworkDifficulty.Location = new System.Drawing.Point(181, 378);
             this.labelTextNetworkDifficulty.Name = "labelTextNetworkDifficulty";
             this.labelTextNetworkDifficulty.Size = new System.Drawing.Size(93, 13);
             this.labelTextNetworkDifficulty.TabIndex = 6;
@@ -124,7 +125,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             this.labelTextTotalBlockLeft.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextTotalBlockLeft.AutoSize = true;
-            this.labelTextTotalBlockLeft.Location = new System.Drawing.Point(165, 326);
+            this.labelTextTotalBlockLeft.Location = new System.Drawing.Point(181, 341);
             this.labelTextTotalBlockLeft.Name = "labelTextTotalBlockLeft";
             this.labelTextTotalBlockLeft.Size = new System.Drawing.Size(85, 13);
             this.labelTextTotalBlockLeft.TabIndex = 7;
@@ -135,7 +136,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             this.labelTextNetworkHashrate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextNetworkHashrate.AutoSize = true;
-            this.labelTextNetworkHashrate.Location = new System.Drawing.Point(165, 402);
+            this.labelTextNetworkHashrate.Location = new System.Drawing.Point(181, 417);
             this.labelTextNetworkHashrate.Name = "labelTextNetworkHashrate";
             this.labelTextNetworkHashrate.Size = new System.Drawing.Size(96, 13);
             this.labelTextNetworkHashrate.TabIndex = 8;
@@ -146,7 +147,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             this.labelTextBlockchainHeight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextBlockchainHeight.AutoSize = true;
-            this.labelTextBlockchainHeight.Location = new System.Drawing.Point(165, 250);
+            this.labelTextBlockchainHeight.Location = new System.Drawing.Point(181, 265);
             this.labelTextBlockchainHeight.Name = "labelTextBlockchainHeight";
             this.labelTextBlockchainHeight.Size = new System.Drawing.Size(97, 13);
             this.labelTextBlockchainHeight.TabIndex = 9;
@@ -157,7 +158,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             this.labelTextLastBlockFound.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextLastBlockFound.AutoSize = true;
-            this.labelTextLastBlockFound.Location = new System.Drawing.Point(165, 443);
+            this.labelTextLastBlockFound.Location = new System.Drawing.Point(181, 458);
             this.labelTextLastBlockFound.Name = "labelTextLastBlockFound";
             this.labelTextLastBlockFound.Size = new System.Drawing.Size(93, 13);
             this.labelTextLastBlockFound.TabIndex = 10;
@@ -168,7 +169,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             this.buttonFeeInformationAccumulated.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonFeeInformationAccumulated.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonFeeInformationAccumulated.Location = new System.Drawing.Point(137, 168);
+            this.buttonFeeInformationAccumulated.Location = new System.Drawing.Point(153, 183);
             this.buttonFeeInformationAccumulated.Name = "buttonFeeInformationAccumulated";
             this.buttonFeeInformationAccumulated.Size = new System.Drawing.Size(22, 22);
             this.buttonFeeInformationAccumulated.TabIndex = 25;
@@ -177,6 +178,17 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.buttonFeeInformationAccumulated.Click += new System.EventHandler(this.buttonFeeInformationAccumulated_Click);
             this.buttonFeeInformationAccumulated.MouseHover += new System.EventHandler(this.buttonFeeInformationAccumulated_MouseHover);
             // 
+            // labelTextTotalCoinInPending
+            // 
+            this.labelTextTotalCoinInPending.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTextTotalCoinInPending.AutoSize = true;
+            this.labelTextTotalCoinInPending.Location = new System.Drawing.Point(181, 155);
+            this.labelTextTotalCoinInPending.Name = "labelTextTotalCoinInPending";
+            this.labelTextTotalCoinInPending.Size = new System.Drawing.Size(112, 13);
+            this.labelTextTotalCoinInPending.TabIndex = 26;
+            this.labelTextTotalCoinInPending.Text = "Total Coin In Pending:";
+            this.labelTextTotalCoinInPending.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // Overview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -184,6 +196,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(784, 496);
             this.ControlBox = false;
+            this.Controls.Add(this.labelTextTotalCoinInPending);
             this.Controls.Add(this.buttonFeeInformationAccumulated);
             this.Controls.Add(this.labelTextLastBlockFound);
             this.Controls.Add(this.labelTextBlockchainHeight);
@@ -224,5 +237,6 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         public Label labelTextLastBlockFound;
         public Label labelTextNetworkStats;
         public Button buttonFeeInformationAccumulated;
+        public Label labelTextTotalCoinInPending;
     }
 }
