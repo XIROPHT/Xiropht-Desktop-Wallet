@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Permissions;
@@ -134,6 +135,7 @@ namespace Xiropht_Wallet.Wallet
         public static bool SettingManualRemoteNode;
         public static long LastRemoteNodePacketReceived;
         public static string WalletAmountInPending;
+        public static int WalletPacketSpeedTime;
 
         #region Initialization
 
@@ -2309,6 +2311,7 @@ namespace Xiropht_Wallet.Wallet
         /// <param name="packet"></param>
         public static async Task<bool> SendPacketWalletToSeedNodeNetwork(string packet)
         {
+
             if (!await WalletConnect.SendPacketWallet(packet, Certificate, true))
             {
                 ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
@@ -2359,14 +2362,22 @@ namespace Xiropht_Wallet.Wallet
                                 {
                                     if (!ListWalletConnectToRemoteNode[i].RemoteNodeStatus)
                                     {
+#if DEBUG
+                                        Log.WriteLine("Remote node " + ListWalletConnectToRemoteNode[i].RemoteNodeHost + " id:" + i + " connection dead or stuck.");
+#endif
                                         dead = true;
                                         break;
                                     }
+#if LINUX
                                     if (!ListWalletConnectToRemoteNode[i].CheckRemoteNode())
                                     {
+#if DEBUG
+                                        Log.WriteLine("Remote node " + ListWalletConnectToRemoteNode[i].RemoteNodeHost + " id:" + i + " connection dead or stuck.");
+#endif
                                         dead = true;
                                         break;
                                     }
+#endif
                                 }
                     }
                     catch
@@ -4259,7 +4270,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                         while (InReceiveTransaction)
                                                         {
-                                                            if (!InSyncTransaction || BlockTransactionSync || dateRequestTransaction + 2 < DateTimeOffset.Now.ToUnixTimeSeconds()) break;
+                                                            if (!InSyncTransaction || BlockTransactionSync || dateRequestTransaction + 5 < DateTimeOffset.Now.ToUnixTimeSeconds()) break;
 
                                                             Thread.Sleep(100);
                                                         }
@@ -4419,7 +4430,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                         while (InReceiveTransactionAnonymity)
                                                         {
-                                                            if (!InSyncTransactionAnonymity || BlockTransactionSync || dateRequestTransaction + 2 < DateTimeOffset.Now.ToUnixTimeSeconds()) break;
+                                                            if (!InSyncTransactionAnonymity || BlockTransactionSync || dateRequestTransaction + 5 < DateTimeOffset.Now.ToUnixTimeSeconds()) break;
 
                                                             Thread.Sleep(100);
                                                         }

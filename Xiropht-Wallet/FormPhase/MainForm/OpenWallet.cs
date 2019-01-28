@@ -43,7 +43,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 InitialDirectory = Directory.GetCurrentDirectory(),
                 Filter = "Xiropht Wallet (*.xir) | *.xir",
                 FilterIndex = 2,
-                RestoreDirectory = true
+                DereferenceLinks = false
             };
             if (openWalletFile.ShowDialog() == DialogResult.OK)
             {

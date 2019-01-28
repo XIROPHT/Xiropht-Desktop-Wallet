@@ -139,13 +139,15 @@ namespace Xiropht_Wallet.FormPhase
                 if (!WaitingFormReconnectShowed)
                 {
                     WaitingFormReconnectShowed = true;
-#if WINDOWS
-                    ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                    try
                     {
-                        WaitingFormReconnect.StartPosition = FormStartPosition.CenterParent;
-                        WaitingFormReconnect.TopMost = false;
-                        WaitingFormReconnect.ShowDialog(ClassFormPhase.WalletXiropht);
-                    });
+#if WINDOWS
+                        ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                        {
+                            WaitingFormReconnect.StartPosition = FormStartPosition.CenterParent;
+                            WaitingFormReconnect.TopMost = false;
+                            WaitingFormReconnect.ShowDialog(ClassFormPhase.WalletXiropht);
+                        });
 #else
                     ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
                     {
@@ -154,6 +156,11 @@ namespace Xiropht_Wallet.FormPhase
                         WaitingFormReconnect.Show(ClassFormPhase.WalletXiropht);
                     });
 #endif
+                    }
+                    catch
+                    {
+                        WaitingFormReconnectShowed = false;
+                    }
                 }
             }).Start();
         }
