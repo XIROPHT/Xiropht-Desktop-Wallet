@@ -2103,7 +2103,7 @@ namespace Xiropht_Wallet
                                         }
 
 
-#region Show transaction anonymity sent with the unique wallet anonymity id of the wallet
+                                        #region Show transaction anonymity sent with the unique wallet anonymity id of the wallet
                                         if (TotalAnonymityTransactionRead != ListTransactionAnonymityHashShowed.Count)
                                         {
 

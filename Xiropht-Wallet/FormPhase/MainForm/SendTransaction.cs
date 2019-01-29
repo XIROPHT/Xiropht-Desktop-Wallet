@@ -227,6 +227,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                             {
                                                 timePendingFromFee = 1;
                                             }
+                                            else
+                                            {
+                                                timePendingFromFee = (timePendingFromFee * 1) / 100;
+                                            }
                                         }
                                     }
 
