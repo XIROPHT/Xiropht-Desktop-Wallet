@@ -12,10 +12,8 @@ namespace Xiropht_Wallet.Wallet
     {
         private const string WalletTransMethodInvokerCacheDirectory = "/Cache/";
         private const string WalletTransMethodInvokerCacheFileExtension = "transaction.xirtra";
-        private const string WalletTransMethodInvokerCacheTmpFileExtension = "transaction_tmp.xirtra";
         private static bool _inClearCache;
         public static List<Tuple<string, string>> ListTransaction; // hash, transaction
-        public static List<Tuple<long, string>> ListTransactionTmp; // date expiration, transaction
 
         /// <summary>
         /// Load transMethodInvoker in cache.
@@ -27,12 +25,10 @@ namespace Xiropht_Wallet.Wallet
             if (ListTransaction != null)
             {
                 ListTransaction.Clear();
-                ListTransactionTmp.Clear();
             }
             else
             {
                 ListTransaction = new List<Tuple<string, string>>();
-                ListTransactionTmp = new List<Tuple<long, string>>();
             }
 
             if (Directory.Exists(
@@ -69,49 +65,6 @@ namespace Xiropht_Wallet.Wallet
             }
 
 
-            if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\")))
-            {
-                if (File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheTmpFileExtension)))
-                {
-                    using (FileStream fs = File.Open(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheTmpFileExtension), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                    using (BufferedStream bs = new BufferedStream(fs))
-                    using (StreamReader sr = new StreamReader(bs))
-                    {
-                        string line;
-                        while ((line = sr.ReadLine()) != null)
-                        {
-                            long expiredTime = long.Parse(line.Split(new[] { "*" }, StringSplitOptions.None)[0]);
-
-                            bool alreadyExist = false;
-                            for (int i = 0; i < ListTransaction.Count; i++)
-                            {
-                                if (ListTransaction[i].Item2 == line)
-                                {
-                                    alreadyExist = true;
-                                }
-                            }
-                            if (!alreadyExist)
-                            {
-                                ListTransactionTmp.Add(new Tuple<long, string>(expiredTime, line));
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheTmpFileExtension)).Close();
-                }
-
-            }
-            else
-            {
-                if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory)) == false)
-                {
-                    Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory));
-                }
-
-                Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress));
-            }
         }
 
         /// <summary>
@@ -161,47 +114,6 @@ namespace Xiropht_Wallet.Wallet
 
                 }
             }
-            else
-            {
-
-                if (ListTransactionTmp.Count > 0 && _inClearCache == false)
-                {
-                    if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory)) == false)
-                    {
-                        Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory));
-                    }
-
-                    if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory +
-                                         walletAddress)) == false)
-                    {
-                        Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory +
-                                                  walletAddress));
-                    }
-
-
-                    if (!File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory +
-                                    walletAddress +
-                                    "\\" + WalletTransMethodInvokerCacheFileExtension)))
-                    {
-                        File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheTmpFileExtension)).Close();
-                    }
-                    try
-                    {
-
-                        using (var transMethodInvokerFile = new StreamWriter(ClassUtils.ConvertPath(
-                            Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory +
-                            walletAddress +
-                            "\\" + WalletTransMethodInvokerCacheTmpFileExtension), true))
-                        {
-                            await transMethodInvokerFile.WriteAsync(transMethodInvoker + "\n").ConfigureAwait(false);
-                        }
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -227,18 +139,6 @@ namespace Xiropht_Wallet.Wallet
 
             ListTransaction.Clear();
 
-            if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\")))
-            {
-                if (File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheTmpFileExtension)))
-                {
-                    File.Delete(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheTmpFileExtension));
-                }
-
-                Directory.Delete(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\"), true);
-                Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress));
-            }
-
-            ListTransactionTmp.Clear();
             _inClearCache = false;
 
 
@@ -320,64 +220,20 @@ namespace Xiropht_Wallet.Wallet
 
                             if (!existTransaction)
                             {
-                                bool transactionTmpExist = false;
-                                int idTransactionTmp = 0;
-                                int counter = 0;
-                                foreach (var transactionTmp in ListTransactionTmp)
-                                {
-                                    if (transactionTmp != null)
-                                    {
-                                        if (transactionTmp.Item2 == finalTransactionEncrypted)
-                                        {
-                                            transactionTmpExist = true;
-                                            idTransactionTmp = counter;
-                                        }
-                                    }
-                                    counter++;
-                                }
-                                if (transactionTmpExist)
-                                {
-                                    ListTransactionTmp[idTransactionTmp] = null;
-                                }
 
                                 var tupleTransaction = new Tuple<string, string>(Xiropht_Connector_All.Utils.ClassUtils.ConvertStringtoSHA512(finalTransactionEncrypted), finalTransactionEncrypted);
-                                if (!ListTransaction.Contains(tupleTransaction))
-                                {
-                                    ListTransaction.Add(tupleTransaction);
 
-                                    if (ListTransaction.Count >= ClassWalletObject.TotalTransactionInSync)
-                                    {
-                                        await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted, false);
-                                    }
-#if DEBUG
-                                    Log.WriteLine("Total transactions downloaded: " +
-                                                       ListTransaction.Count + "/" +
-                                                       ClassWalletObject.TotalTransactionInSync + ".");
-#endif
-                                }
-                            }
-                        }
-                        else
-                        {
-                            var existTransaction = false;
-                            for (var i = 0; i < ListTransactionTmp.Count; i++)
-                                if (i < ListTransactionTmp.Count)
-                                    if (ListTransactionTmp[i].Item2 == finalTransactionEncrypted)
-                                        existTransaction = true;
-
-                            if (!existTransaction)
-                            {
-
-                                ListTransactionTmp.Add(new Tuple<long, string>(DateTimeOffset.Now.ToUnixTimeSeconds() + 84600, finalTransactionEncrypted)); // Save in temporaly list for 24hours 
+                                ListTransaction.Add(tupleTransaction);
 
 
-                                await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted, true);
+                                await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted, false);
 
 #if DEBUG
                                 Log.WriteLine("Total transactions downloaded: " +
                                                    ListTransaction.Count + "/" +
                                                    ClassWalletObject.TotalTransactionInSync + ".");
 #endif
+
                             }
                         }
                     }

@@ -215,21 +215,19 @@ namespace Xiropht_Wallet.Wallet
                         {
 
                             var tupleTransaction = new Tuple<string, string>(Xiropht_Connector_All.Utils.ClassUtils.ConvertStringtoSHA512(finalTransactionEncrypted), finalTransactionEncrypted);
-                            if (!ListTransaction.Contains(tupleTransaction))
-                            {
-                                ListTransaction.Add(tupleTransaction);
 
-                                if (ListTransaction.Count >= ClassWalletObject.TotalTransactionInSyncAnonymity)
-                                {
-                                    await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted);
-                                }
+                            ListTransaction.Add(tupleTransaction);
+
+
+                            await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted);
+
 #if DEBUG
-                                Log.WriteLine("Total transactions downloaded: " +
-                                                   ListTransaction.Count + "/" +
-                                                   ClassWalletObject.TotalTransactionInSync + ".");
+                            Log.WriteLine("Total transactions downloaded: " +
+                                               ListTransaction.Count + "/" +
+                                               ClassWalletObject.TotalTransactionInSync + ".");
 #endif
-                            }
                         }
+
                     }
                 }
 #if DEBUG
