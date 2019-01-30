@@ -231,6 +231,8 @@ namespace Xiropht_Wallet.Wallet
                               amountAndFeeDecrypted);
             }
 #endif
+            ClassWalletObject.InReceiveTransactionAnonymity = false;
+
         }
     }
 }

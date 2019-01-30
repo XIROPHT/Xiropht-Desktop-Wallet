@@ -380,6 +380,7 @@ namespace Xiropht_Wallet.Wallet
                               amountAndFeeDecrypted);
             }
 #endif
+            ClassWalletObject.InReceiveTransaction = false;
         }
     }
 }

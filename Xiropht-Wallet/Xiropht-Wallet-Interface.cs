@@ -2605,7 +2605,7 @@ namespace Xiropht_Wallet
                             catch (Exception error)
                             {
                                 Log.WriteLine("Error on transactions update: " + error.Message);
-                                await Task.Run(() => StopUpdateTransactionHistory(false, false)).ConfigureAwait(false);
+                                new Thread(() => StopUpdateTransactionHistory(false, false)).Start();
                             }
 
                             if (!ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))

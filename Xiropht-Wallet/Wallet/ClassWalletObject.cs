@@ -3462,7 +3462,7 @@ namespace Xiropht_Wallet.Wallet
                                             WalletCheckMaxSupply = 0;
 
                                             await Task.Delay(100);
-                                            if (await SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletCheckMaxSupply + "|" + splitPacket[1] +"|"+ ListWalletConnectToRemoteNode[1].RemoteNodeHost, Certificate, false, true))
+                                            if (await SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletCheckMaxSupply + "|" + splitPacket[1] + "|" + ListWalletConnectToRemoteNode[1].RemoteNodeHost, Certificate, false, true))
                                             {
                                                 var dateSend = DateTimeOffset.Now.ToUnixTimeSeconds();
                                                 while (WalletCheckMaxSupply == 0)
@@ -4094,7 +4094,7 @@ namespace Xiropht_Wallet.Wallet
                             {
                                 if (WalletCheckTotalPendingTransaction != 0)
                                 {
-                                    if ((ListWalletConnectToRemoteNode[7].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassConnectorSetting.SeedNodeIp.Contains(ListWalletConnectToRemoteNode[7].RemoteNodeHost)) || ""+RemoteNodeTotalPendingTransactionInNetwork != splitPacket[1])
+                                    if ((ListWalletConnectToRemoteNode[7].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassConnectorSetting.SeedNodeIp.Contains(ListWalletConnectToRemoteNode[7].RemoteNodeHost)) || "" + RemoteNodeTotalPendingTransactionInNetwork != splitPacket[1])
                                     {
                                         WalletCheckTotalPendingTransaction = 0;
                                         await Task.Delay(100);
@@ -4512,140 +4512,137 @@ namespace Xiropht_Wallet.Wallet
                         case ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeBlockPerId:
                             LastRemoteNodePacketReceived =
                                 DateTimeOffset.Now.ToUnixTimeSeconds();
-                             await Task.Run(async delegate
-                             {
+                            ThreadPool.QueueUserWorkItem(async delegate
+                            {
 #if DEBUG
-                                 Log.WriteLine("Block received: " + splitPacket[1].Replace(ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeBlockPerId, ""));
+                                Log.WriteLine("Block received: " + splitPacket[1].Replace(ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeBlockPerId, ""));
 #endif
-                                 if (WalletSyncMode == 1)
-                                 {
-                                     if (WalletCheckBlockPerId != 0)
-                                     {
-                                         if ((ListWalletConnectToRemoteNode[9].LastTrustDate + 5 < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassConnectorSetting.SeedNodeIp.Contains(ListWalletConnectToRemoteNode[9].RemoteNodeHost)))
-                                         {
-                                             WalletCheckBlockPerId = 0;
-                                             await Task.Delay(100);
-                                             if (await SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletCheckBlockPerId + "|" + splitPacket[1] + "|" + ListWalletConnectToRemoteNode[9].RemoteNodeHost, Certificate, false, true))
-                                             {
-                                                 var dateSend = DateTimeOffset.Now.ToUnixTimeSeconds();
-                                                 while (WalletCheckBlockPerId == 0)
-                                                 {
-                                                     if (dateSend + 5 < DateTimeOffset.Now.ToUnixTimeSeconds())
-                                                     {
-                                                         WalletCheckBlockPerId = -1;
-                                                         break;
-                                                     }
-                                                     await Task.Delay(100);
-                                                 }
-                                                 if (WalletCheckBlockPerId == 1)
-                                                 {
-                                                     LastRemoteNodePacketReceived =
-                                                         DateTimeOffset.Now.ToUnixTimeSeconds();
-                                                     ListWalletConnectToRemoteNode[9].LastTrustDate = DateTimeOffset.Now.ToUnixTimeSeconds();
-                                                     var exist = false;
-                                                     for (var i = 0; i < ClassBlockCache.ListBlock.Count; i++)
-                                                         if (i < ClassBlockCache.ListBlock.Count)
-                                                             if (ClassBlockCache.ListBlock[i] == splitPacket[1]
-                                                                     .Replace(
-                                                                         ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
-                                                                             .SendRemoteNodeBlockPerId, ""))
-                                                                 exist = true;
+                                if (WalletSyncMode == 1)
+                                {
+                                    if (WalletCheckBlockPerId != 0)
+                                    {
+                                        if ((ListWalletConnectToRemoteNode[9].LastTrustDate + 5 < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassConnectorSetting.SeedNodeIp.Contains(ListWalletConnectToRemoteNode[9].RemoteNodeHost)))
+                                        {
+                                            WalletCheckBlockPerId = 0;
+                                            await Task.Delay(100);
+                                            if (await SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletCheckBlockPerId + "|" + splitPacket[1] + "|" + ListWalletConnectToRemoteNode[9].RemoteNodeHost, Certificate, false, true))
+                                            {
+                                                var dateSend = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                while (WalletCheckBlockPerId == 0)
+                                                {
+                                                    if (dateSend + 5 < DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                    {
+                                                        WalletCheckBlockPerId = -1;
+                                                        break;
+                                                    }
+                                                    await Task.Delay(100);
+                                                }
+                                                if (WalletCheckBlockPerId == 1)
+                                                {
+                                                    LastRemoteNodePacketReceived =
+                                                        DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    ListWalletConnectToRemoteNode[9].LastTrustDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    var exist = false;
+                                                    for (var i = 0; i < ClassBlockCache.ListBlock.Count; i++)
+                                                        if (i < ClassBlockCache.ListBlock.Count)
+                                                            if (ClassBlockCache.ListBlock[i] == splitPacket[1]
+                                                                    .Replace(
+                                                                        ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
+                                                                            .SendRemoteNodeBlockPerId, ""))
+                                                                exist = true;
 
-                                                     if (!exist)
-                                                     {
-                                                         ClassBlockCache.ListBlock.Add(
-                                                             splitPacket[1]
-                                                                 .Replace(
-                                                                     ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
-                                                                         .SendRemoteNodeBlockPerId, ""));
-                                                         await ClassBlockCache
-                                                             .SaveWalletBlockCache(splitPacket[1]
-                                                                 .Replace(
-                                                                     ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
-                                                                         .SendRemoteNodeBlockPerId, ""));
-                                                     }
+                                                    if (!exist)
+                                                    {
+                                                        ClassBlockCache.ListBlock.Add(
+                                                            splitPacket[1]
+                                                                .Replace(
+                                                                    ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
+                                                                        .SendRemoteNodeBlockPerId, ""));
+                                                        await ClassBlockCache
+                                                            .SaveWalletBlockCache(splitPacket[1]
+                                                                .Replace(
+                                                                    ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
+                                                                        .SendRemoteNodeBlockPerId, ""));
+                                                    }
 
-                                                     _lastBlockReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
-                                                     InReceiveBlock = false;
-                                                 }
-                                                 else
-                                                 {
-                                                     InReceiveBlock = false;
-                                                 }
-                                             }
-                                         }
-                                         else
-                                         {
-                                             LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
-                                             var exist = false;
-                                             for (var i = 0; i < ClassBlockCache.ListBlock.Count; i++)
-                                                 if (i < ClassBlockCache.ListBlock.Count)
-                                                     if (ClassBlockCache.ListBlock[i] == splitPacket[1]
-                                                             .Replace(
-                                                                 ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
-                                                                     .SendRemoteNodeBlockPerId, ""))
-                                                         exist = true;
+                                                    _lastBlockReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    InReceiveBlock = false;
+                                                }
+                                                else
+                                                {
+                                                    InReceiveBlock = false;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                            var exist = false;
+                                            for (var i = 0; i < ClassBlockCache.ListBlock.Count; i++)
+                                                if (i < ClassBlockCache.ListBlock.Count)
+                                                    if (ClassBlockCache.ListBlock[i] == splitPacket[1]
+                                                            .Replace(
+                                                                ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
+                                                                    .SendRemoteNodeBlockPerId, ""))
+                                                        exist = true;
 
-                                             if (!exist)
-                                             {
-                                                 ClassBlockCache.ListBlock.Add(
-                                                     splitPacket[1]
-                                                         .Replace(
-                                                             ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
-                                                                 .SendRemoteNodeBlockPerId, ""));
-                                                 await ClassBlockCache
-                                                     .SaveWalletBlockCache(splitPacket[1]
-                                                         .Replace(
-                                                             ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
-                                                                 .SendRemoteNodeBlockPerId, ""));
-                                             }
+                                            if (!exist)
+                                            {
+                                                ClassBlockCache.ListBlock.Add(
+                                                    splitPacket[1]
+                                                        .Replace(
+                                                            ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
+                                                                .SendRemoteNodeBlockPerId, ""));
+                                                await ClassBlockCache
+                                                    .SaveWalletBlockCache(splitPacket[1]
+                                                        .Replace(
+                                                            ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
+                                                                .SendRemoteNodeBlockPerId, ""));
+                                            }
 
-                                             _lastBlockReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
-                                             InReceiveBlock = false;
-                                         }
-                                     }
-                                 }
-                                 else
-                                 {
-                                     var exist = false;
-                                     for (var i = 0; i < ClassBlockCache.ListBlock.Count; i++)
-                                         if (i < ClassBlockCache.ListBlock.Count)
-                                             if (ClassBlockCache.ListBlock[i] == splitPacket[1]
-                                                     .Replace(
-                                                         ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
-                                                             .SendRemoteNodeBlockPerId, ""))
-                                                 exist = true;
+                                            _lastBlockReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                            InReceiveBlock = false;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    var exist = false;
+                                    for (var i = 0; i < ClassBlockCache.ListBlock.Count; i++)
+                                        if (i < ClassBlockCache.ListBlock.Count)
+                                            if (ClassBlockCache.ListBlock[i] == splitPacket[1]
+                                                    .Replace(
+                                                        ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
+                                                            .SendRemoteNodeBlockPerId, ""))
+                                                exist = true;
 
-                                     if (!exist)
-                                     {
-                                         ClassBlockCache.ListBlock.Add(
-                                             splitPacket[1]
-                                                 .Replace(
-                                                     ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
-                                                         .SendRemoteNodeBlockPerId, ""));
-                                         await ClassBlockCache
-                                             .SaveWalletBlockCache(splitPacket[1]
-                                                 .Replace(
-                                                     ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
-                                                         .SendRemoteNodeBlockPerId, ""));
-                                     }
+                                    if (!exist)
+                                    {
+                                        ClassBlockCache.ListBlock.Add(
+                                            splitPacket[1]
+                                                .Replace(
+                                                    ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
+                                                        .SendRemoteNodeBlockPerId, ""));
+                                        await ClassBlockCache
+                                            .SaveWalletBlockCache(splitPacket[1]
+                                                .Replace(
+                                                    ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
+                                                        .SendRemoteNodeBlockPerId, ""));
+                                    }
 
-                                     _lastBlockReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
-                                     InReceiveBlock = false;
-                                 }
-                             }).ConfigureAwait(false);
+                                    _lastBlockReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                    InReceiveBlock = false;
+                                }
+                            });
                             break;
                         case ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletTransactionPerId:
                             LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
-                            await ClassWalletTransactionCache.AddWalletTransactionAsync(splitPacket[1], false);
-                            InReceiveTransaction = false;
+                            ThreadPool.QueueUserWorkItem(async delegate { await ClassWalletTransactionCache.AddWalletTransactionAsync(splitPacket[1], false); });
                             break;
 
                         case ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletAnonymityTransactionPerId:
-                            LastRemoteNodePacketReceived =
-                                DateTimeOffset.Now.ToUnixTimeSeconds();
-                            await ClassWalletTransactionAnonymityCache.AddWalletTransactionAsync(splitPacket[1]);
-                              InReceiveTransactionAnonymity = false;
+                            LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                            ThreadPool.QueueUserWorkItem(async delegate { await ClassWalletTransactionAnonymityCache.AddWalletTransactionAsync(splitPacket[1]); });
                             break;
                         case ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeKeepAlive:
                             //LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
