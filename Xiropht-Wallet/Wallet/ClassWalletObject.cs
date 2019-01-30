@@ -4644,12 +4644,12 @@ namespace Xiropht_Wallet.Wallet
                             break;
                         case ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletTransactionPerId:
                             LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
-                            ThreadPool.QueueUserWorkItem(async delegate { await ClassWalletTransactionCache.AddWalletTransactionAsync(splitPacket[1], false); });
+                            await ClassWalletTransactionCache.AddWalletTransactionAsync(splitPacket[1], false);
                             break;
 
                         case ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletAnonymityTransactionPerId:
                             LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
-                            ThreadPool.QueueUserWorkItem(async delegate { await ClassWalletTransactionAnonymityCache.AddWalletTransactionAsync(splitPacket[1]); });
+                            await ClassWalletTransactionAnonymityCache.AddWalletTransactionAsync(splitPacket[1]);
                             break;
                         case ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeKeepAlive:
                             //LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();

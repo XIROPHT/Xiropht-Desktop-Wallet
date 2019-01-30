@@ -340,15 +340,21 @@ namespace Xiropht_Wallet.Wallet
                                     ListTransactionTmp[idTransactionTmp] = null;
                                 }
 
-                                ListTransaction.Add(new Tuple<string, string>(Xiropht_Connector_All.Utils.ClassUtils.ConvertStringtoSHA512(finalTransactionEncrypted), finalTransactionEncrypted));
+                                var tupleTransaction = new Tuple<string, string>(Xiropht_Connector_All.Utils.ClassUtils.ConvertStringtoSHA512(finalTransactionEncrypted), finalTransactionEncrypted);
+                                if (!ListTransaction.Contains(tupleTransaction))
+                                {
+                                    ListTransaction.Add(tupleTransaction);
 
-                                await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted, false);
-
+                                    if (ListTransaction.Count >= ClassWalletObject.TotalTransactionInSync)
+                                    {
+                                        await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted, false);
+                                    }
 #if DEBUG
-                                Log.WriteLine("Total transactions downloaded: " +
-                                                   ListTransaction.Count + "/" +
-                                                   ClassWalletObject.TotalTransactionInSync + ".");
+                                    Log.WriteLine("Total transactions downloaded: " +
+                                                       ListTransaction.Count + "/" +
+                                                       ClassWalletObject.TotalTransactionInSync + ".");
 #endif
+                                }
                             }
                         }
                         else
@@ -363,6 +369,7 @@ namespace Xiropht_Wallet.Wallet
                             {
 
                                 ListTransactionTmp.Add(new Tuple<long, string>(DateTimeOffset.Now.ToUnixTimeSeconds() + 84600, finalTransactionEncrypted)); // Save in temporaly list for 24hours 
+
 
                                 await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted, true);
 
