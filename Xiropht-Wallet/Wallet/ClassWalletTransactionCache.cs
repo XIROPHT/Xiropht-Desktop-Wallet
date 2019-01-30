@@ -250,136 +250,143 @@ namespace Xiropht_Wallet.Wallet
         /// <param name="transaction"></param>
         public static async Task AddWalletTransactionAsync(string transaction, bool temporaly)
         {
-#if DEBUG
-            Log.WriteLine("Wallet transaction history received: " + transaction
-                                   .Replace(
-                                       ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
-                                           .WalletTransactionPerId, ""));
-#endif
-            var splitTransaction = transaction.Replace(
-                         ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletTransactionPerId,
-                         "").Split(new[] { "#" }, StringSplitOptions.None);
-            var type = splitTransaction[0];
-            var timestamp = splitTransaction[3]; // Timestamp Send CEST.
-            var hashTransaction = splitTransaction[4]; // Transaction Hash.
-            var realFeeAmountSend = splitTransaction[7]; // Real fee and amount crypted for sender.
-            var realFeeAmountRecv = splitTransaction[8]; // Real fee and amount crypted for sender.
-
-
-            var decryptKey =
-                     ClassWalletObject.WalletConnect.WalletAddress + ClassWalletObject.WalletConnect.WalletKey; // Wallet Address + Wallet Public Key
-
-            var amountAndFeeDecrypted = "NULL";
-            if (type == "SEND")
-                amountAndFeeDecrypted = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
-                        realFeeAmountSend, decryptKey, ClassWalletNetworkSetting.KeySize); // AES
-            else if (type == "RECV")
-                amountAndFeeDecrypted = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
-                        realFeeAmountRecv, decryptKey, ClassWalletNetworkSetting.KeySize); // AES
-
-            if (amountAndFeeDecrypted != "NULL" && amountAndFeeDecrypted != "WRONG")
+            try
             {
-                var splitDecryptedAmountAndFee =
-                    amountAndFeeDecrypted.Split(new[] { "-" }, StringSplitOptions.None);
-                var amountDecrypted = splitDecryptedAmountAndFee[0];
-                var feeDecrypted = splitDecryptedAmountAndFee[1];
-                var walletDstOrSrc = splitDecryptedAmountAndFee[2];
-
-
-                var timestampRecv = splitTransaction[5]; // Timestamp Recv CEST.
-                var blockchainHeight = splitTransaction[6]; // Blockchain height.
-
-                var finalTransaction = type + "#" + hashTransaction + "#" + walletDstOrSrc + "#" +
-                                            amountDecrypted + "#" + feeDecrypted + "#" + timestamp + "#" +
-                                            timestampRecv + "#" + blockchainHeight;
-
-                var finalTransactionEncrypted =
-                     ClassAlgo.GetEncryptedResult(ClassAlgoEnumeration.Rijndael, finalTransaction,
-                        ClassWalletObject.WalletConnect.WalletAddress + ClassWalletObject.WalletConnect.WalletKey,
-                        ClassWalletNetworkSetting.KeySize); // AES
-
-                if (finalTransactionEncrypted == ClassAlgoErrorEnumeration.AlgoError) // Ban bad remote node.
-                {
-                    if (!temporaly)
-                    {
-                        ClassWalletObject.ListRemoteNodeBanned.Add(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost);
-                    }
-                }
-                else
-                {
-
-                    if (!temporaly)
-                    {
-                        var existTransaction = false;
-                        for (var i = 0; i < ListTransaction.Count; i++)
-                            if (i < ListTransaction.Count)
-                                if (ListTransaction[i].Item2 == finalTransactionEncrypted)
-                                    existTransaction = true;
-
-                        if (!existTransaction)
-                        {
-                            bool transactionTmpExist = false;
-                            int idTransactionTmp = 0;
-                            int counter = 0;
-                            foreach (var transactionTmp in ListTransactionTmp)
-                            {
-                                if (transactionTmp != null)
-                                {
-                                    if (transactionTmp.Item2 == finalTransactionEncrypted)
-                                    {
-                                        transactionTmpExist = true;
-                                        idTransactionTmp = counter;
-                                    }
-                                }
-                                counter++;
-                            }
-                            if (transactionTmpExist)
-                            {
-                                ListTransactionTmp[idTransactionTmp] = null;
-                            }
-
-                            ListTransaction.Add(new Tuple<string, string>(Xiropht_Connector_All.Utils.ClassUtils.ConvertStringtoSHA512(finalTransactionEncrypted), finalTransactionEncrypted));
-
-                            await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted, false);
-
 #if DEBUG
-                            Log.WriteLine("Total transactions downloaded: " +
-                                               ListTransaction.Count + "/" +
-                                               ClassWalletObject.TotalTransactionInSync + ".");
+                Log.WriteLine("Wallet transaction history received: " + transaction
+                                       .Replace(
+                                           ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
+                                               .WalletTransactionPerId, ""));
 #endif
+                var splitTransaction = transaction.Replace(
+                             ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletTransactionPerId,
+                             "").Split(new[] { "#" }, StringSplitOptions.None);
+                var type = splitTransaction[0];
+                var timestamp = splitTransaction[3]; // Timestamp Send CEST.
+                var hashTransaction = splitTransaction[4]; // Transaction Hash.
+                var realFeeAmountSend = splitTransaction[7]; // Real fee and amount crypted for sender.
+                var realFeeAmountRecv = splitTransaction[8]; // Real fee and amount crypted for sender.
+
+
+                var decryptKey =
+                         ClassWalletObject.WalletConnect.WalletAddress + ClassWalletObject.WalletConnect.WalletKey; // Wallet Address + Wallet Public Key
+
+                var amountAndFeeDecrypted = "NULL";
+                if (type == "SEND")
+                    amountAndFeeDecrypted = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
+                            realFeeAmountSend, decryptKey, ClassWalletNetworkSetting.KeySize); // AES
+                else if (type == "RECV")
+                    amountAndFeeDecrypted = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
+                            realFeeAmountRecv, decryptKey, ClassWalletNetworkSetting.KeySize); // AES
+
+                if (amountAndFeeDecrypted != "NULL" && amountAndFeeDecrypted != "WRONG")
+                {
+                    var splitDecryptedAmountAndFee =
+                        amountAndFeeDecrypted.Split(new[] { "-" }, StringSplitOptions.None);
+                    var amountDecrypted = splitDecryptedAmountAndFee[0];
+                    var feeDecrypted = splitDecryptedAmountAndFee[1];
+                    var walletDstOrSrc = splitDecryptedAmountAndFee[2];
+
+
+                    var timestampRecv = splitTransaction[5]; // Timestamp Recv CEST.
+                    var blockchainHeight = splitTransaction[6]; // Blockchain height.
+
+                    var finalTransaction = type + "#" + hashTransaction + "#" + walletDstOrSrc + "#" +
+                                                amountDecrypted + "#" + feeDecrypted + "#" + timestamp + "#" +
+                                                timestampRecv + "#" + blockchainHeight;
+
+                    var finalTransactionEncrypted =
+                         ClassAlgo.GetEncryptedResult(ClassAlgoEnumeration.Rijndael, finalTransaction,
+                            ClassWalletObject.WalletConnect.WalletAddress + ClassWalletObject.WalletConnect.WalletKey,
+                            ClassWalletNetworkSetting.KeySize); // AES
+
+                    if (finalTransactionEncrypted == ClassAlgoErrorEnumeration.AlgoError) // Ban bad remote node.
+                    {
+                        if (!temporaly)
+                        {
+                            ClassWalletObject.ListRemoteNodeBanned.Add(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost);
                         }
                     }
                     else
                     {
-                        var existTransaction = false;
-                        for (var i = 0; i < ListTransactionTmp.Count; i++)
-                            if (i < ListTransactionTmp.Count)
-                                if (ListTransactionTmp[i].Item2 == finalTransactionEncrypted)
-                                    existTransaction = true;
 
-                        if (!existTransaction)
+                        if (!temporaly)
                         {
+                            var existTransaction = false;
+                            for (var i = 0; i < ListTransaction.Count; i++)
+                                if (i < ListTransaction.Count)
+                                    if (ListTransaction[i].Item2 == finalTransactionEncrypted)
+                                        existTransaction = true;
 
-                            ListTransactionTmp.Add(new Tuple<long, string>(DateTimeOffset.Now.ToUnixTimeSeconds()+84600, finalTransactionEncrypted)); // Save in temporaly list for 24hours 
+                            if (!existTransaction)
+                            {
+                                bool transactionTmpExist = false;
+                                int idTransactionTmp = 0;
+                                int counter = 0;
+                                foreach (var transactionTmp in ListTransactionTmp)
+                                {
+                                    if (transactionTmp != null)
+                                    {
+                                        if (transactionTmp.Item2 == finalTransactionEncrypted)
+                                        {
+                                            transactionTmpExist = true;
+                                            idTransactionTmp = counter;
+                                        }
+                                    }
+                                    counter++;
+                                }
+                                if (transactionTmpExist)
+                                {
+                                    ListTransactionTmp[idTransactionTmp] = null;
+                                }
 
-                            await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted, true);
+                                ListTransaction.Add(new Tuple<string, string>(Xiropht_Connector_All.Utils.ClassUtils.ConvertStringtoSHA512(finalTransactionEncrypted), finalTransactionEncrypted));
+
+                                await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted, false);
 
 #if DEBUG
-                            Log.WriteLine("Total transactions downloaded: " +
-                                               ListTransaction.Count + "/" +
-                                               ClassWalletObject.TotalTransactionInSync + ".");
+                                Log.WriteLine("Total transactions downloaded: " +
+                                                   ListTransaction.Count + "/" +
+                                                   ClassWalletObject.TotalTransactionInSync + ".");
 #endif
+                            }
+                        }
+                        else
+                        {
+                            var existTransaction = false;
+                            for (var i = 0; i < ListTransactionTmp.Count; i++)
+                                if (i < ListTransactionTmp.Count)
+                                    if (ListTransactionTmp[i].Item2 == finalTransactionEncrypted)
+                                        existTransaction = true;
+
+                            if (!existTransaction)
+                            {
+
+                                ListTransactionTmp.Add(new Tuple<long, string>(DateTimeOffset.Now.ToUnixTimeSeconds() + 84600, finalTransactionEncrypted)); // Save in temporaly list for 24hours 
+
+                                await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted, true);
+
+#if DEBUG
+                                Log.WriteLine("Total transactions downloaded: " +
+                                                   ListTransaction.Count + "/" +
+                                                   ClassWalletObject.TotalTransactionInSync + ".");
+#endif
+                            }
                         }
                     }
                 }
-            }
 #if DEBUG
-            else
-            {
-                Log.WriteLine("Impossible to decrypt transaction: " + transaction + " result: " +
-                              amountAndFeeDecrypted);
-            }
+                else
+                {
+                    Log.WriteLine("Impossible to decrypt transaction: " + transaction + " result: " +
+                                  amountAndFeeDecrypted);
+                }
 #endif
+            }
+            catch
+            {
+
+            }
             ClassWalletObject.InReceiveTransaction = false;
         }
     }
