@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Xiropht_Connector_All.Remote;
+using Xiropht_Connector_All.Setting;
 using Xiropht_Connector_All.Utils;
 using Xiropht_Connector_All.Wallet;
 
@@ -148,7 +149,7 @@ namespace Xiropht_Wallet.Wallet
         /// Add transaction to the list.
         /// </summary>
         /// <param name="transaction"></param>
-        public static async Task AddWalletTransactionAsync(string transaction, bool temporaly)
+        public static async Task AddWalletTransactionAsync(string transaction)
         {
             try
             {
@@ -202,7 +203,7 @@ namespace Xiropht_Wallet.Wallet
 
                     if (finalTransactionEncrypted == ClassAlgoErrorEnumeration.AlgoError) // Ban bad remote node.
                     {
-                        if (!temporaly)
+                        if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
                         {
                             ClassWalletObject.ListRemoteNodeBanned.Add(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost);
                         }
@@ -210,31 +211,28 @@ namespace Xiropht_Wallet.Wallet
                     else
                     {
 
-                        if (!temporaly)
+                        var existTransaction = false;
+                        for (var i = 0; i < ListTransaction.Count; i++)
+                            if (i < ListTransaction.Count)
+                                if (ListTransaction[i].Item2 == finalTransactionEncrypted)
+                                    existTransaction = true;
+
+                        if (!existTransaction)
                         {
-                            var existTransaction = false;
-                            for (var i = 0; i < ListTransaction.Count; i++)
-                                if (i < ListTransaction.Count)
-                                    if (ListTransaction[i].Item2 == finalTransactionEncrypted)
-                                        existTransaction = true;
 
-                            if (!existTransaction)
-                            {
+                            var tupleTransaction = new Tuple<string, string>(Xiropht_Connector_All.Utils.ClassUtils.ConvertStringtoSHA512(finalTransactionEncrypted), finalTransactionEncrypted);
 
-                                var tupleTransaction = new Tuple<string, string>(Xiropht_Connector_All.Utils.ClassUtils.ConvertStringtoSHA512(finalTransactionEncrypted), finalTransactionEncrypted);
-
-                                ListTransaction.Add(tupleTransaction);
+                            ListTransaction.Add(tupleTransaction);
 
 
-                                await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted, false);
+                            await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted, false);
 
 #if DEBUG
-                                Log.WriteLine("Total transactions downloaded: " +
-                                                   ListTransaction.Count + "/" +
-                                                   ClassWalletObject.TotalTransactionInSync + ".");
+                            Log.WriteLine("Total transactions downloaded: " +
+                                               ListTransaction.Count + "/" +
+                                               ClassWalletObject.TotalTransactionInSync + ".");
 #endif
 
-                            }
                         }
                     }
                 }

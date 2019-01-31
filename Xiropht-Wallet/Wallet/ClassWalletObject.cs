@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Permissions;
@@ -195,8 +194,8 @@ namespace Xiropht_Wallet.Wallet
                 Log.WriteLine("Can't read wallet cache, error: " + error.Message);
 #endif
 #if WINDOWS
-                MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
-                    ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_TRANSACTION_CACHE_ERROR_TEXT"));
+                ClassFormPhase.MessageBoxInterface(
+                    ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_TRANSACTION_CACHE_ERROR_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 ClassWalletTransactionCache.RemoveWalletCache(WalletConnect.WalletAddress);
 #else
                new Thread(delegate()
@@ -223,8 +222,8 @@ namespace Xiropht_Wallet.Wallet
                 Log.WriteLine("Can't read wallet cache, error: " + error.Message);
 #endif
 #if WINDOWS
-                MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
-                    ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ANONYMITY_TRANSACTION_CACHE_ERROR_TEXT"));
+                ClassFormPhase.MessageBoxInterface(
+                    ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ANONYMITY_TRANSACTION_CACHE_ERROR_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 ClassWalletTransactionAnonymityCache.RemoveWalletCache(WalletConnect.WalletAddress);
 #else
                 new Thread(delegate ()
@@ -408,7 +407,7 @@ namespace Xiropht_Wallet.Wallet
                             ClassFormPhase.WalletXiropht.StopUpdateBlockHistory(true);
                             ClassConnectorSetting.NETWORK_GENESIS_KEY = ClassConnectorSetting.NETWORK_GENESIS_DEFAULT_KEY;
 #if WINDOWS
-                            MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassFormPhase.MessageBoxInterface(
                                 ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_CONNECT_WALLET_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_CONNECT_WALLET_TITLE_TEXT"), MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
 #else
@@ -426,7 +425,7 @@ namespace Xiropht_Wallet.Wallet
                         {
                             ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Overview);
 #if WINDOWS
-                            MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassFormPhase.MessageBoxInterface(
                                 ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SUCCESS_CONNECT_WALLET_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SUCCESS_CONNECT_WALLET_TITLE_TEXT"), MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);
 #else
@@ -525,9 +524,9 @@ namespace Xiropht_Wallet.Wallet
                 var packetError = 10;
                 var packetNoneMax = 100;
                 var packetErrorMax = 1;
-                while (SeedNodeConnectorWallet.GetStatusConnectToSeed())
+                while (SeedNodeConnectorWallet.GetStatusConnectToSeed(true))
                 {
-                    var packetWallet = await WalletConnect.ListenPacketWalletAsync(Certificate, true);
+                    var packetWallet = await WalletConnect.ListenPacketWalletAsync(Certificate, true).ConfigureAwait(false);
 
                     if (packetWallet == ClassAlgoErrorEnumeration.AlgoError)
                     {
@@ -572,9 +571,7 @@ namespace Xiropht_Wallet.Wallet
                                             break;
                                         }
 
-                                        new Thread(async () =>
-                                                await HandleWalletPacket(packetEach.Replace("*", "")))
-                                            .Start();
+                                        ThreadPool.QueueUserWorkItem(async delegate { await HandleWalletPacket(packetEach.Replace("*", "")).ConfigureAwait(false); });
 #if DEBUG
                                         Log.WriteLine("Packet wallet received: " + packetEach.Replace("*", ""));
 #endif
@@ -592,14 +589,15 @@ namespace Xiropht_Wallet.Wallet
                             break;
                         }
 
-                        new Thread(async () => await HandleWalletPacket(packetWallet)).Start();
+                        ThreadPool.QueueUserWorkItem(async delegate { await HandleWalletPacket(packetWallet).ConfigureAwait(false); });
+
 #if DEBUG
                         Log.WriteLine("Packet wallet received: " + packetWallet);
 #endif
                     }
                 }
 
-                new Thread(async() => await FullDisconnection(false)).Start();
+                ThreadPool.QueueUserWorkItem(async delegate { await FullDisconnection(false); });
             });
             _threadListenSeedNodeNetwork.Start();
         }
@@ -614,7 +612,7 @@ namespace Xiropht_Wallet.Wallet
                 Thread.Sleep(2000);
                 while (true)
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(2000);
                     if (!await SeedNodeConnectorWallet
                         .SendPacketToSeedNodeAsync(ClassWalletCommand.ClassWalletSendEnumeration.KeepAlive, Certificate,
                             false, true))
@@ -673,10 +671,10 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletCreatePasswordNeedMoreCharacters:
                     ClassParallelForm.HideWaitingForm();
                     ClassParallelForm.HideWaitingCreateWalletForm();
-                    new Thread(async () => await FullDisconnection(true)).Start();
+                    ThreadPool.QueueUserWorkItem(async delegate { await FullDisconnection(true); });
 
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR1_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR1_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
@@ -693,9 +691,10 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletCreatePasswordNeedLetters:
                     ClassParallelForm.HideWaitingForm();
                     ClassParallelForm.HideWaitingCreateWalletForm();
-                    new Thread(async () => await FullDisconnection(true)).Start();
+                    ThreadPool.QueueUserWorkItem(async delegate { await FullDisconnection(true); });
+
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR2_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR2_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
@@ -721,7 +720,7 @@ namespace Xiropht_Wallet.Wallet
                         WalletNewPassword = string.Empty;
                         GC.SuppressFinalize(WalletDataCreation);
 #if WINDOWS
-                        MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassFormPhase.MessageBoxInterface(
                             "Your wallet password need to be stronger , if he is try again later.",
                             "Password not strong enough or network error.", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
@@ -734,7 +733,7 @@ namespace Xiropht_Wallet.Wallet
                         }).Start();
 
 #endif
-                        new Thread(async () => await FullDisconnection(true)).Start();
+                        ThreadPool.QueueUserWorkItem(async delegate { await FullDisconnection(true); });
                     }
                     else
                     {
@@ -801,7 +800,7 @@ namespace Xiropht_Wallet.Wallet
                         WalletNewPassword = string.Empty;
                         GC.SuppressFinalize(WalletDataCreation);
 #if WINDOWS
-                        MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                        ClassFormPhase.MessageBoxInterface(
                             "Your wallet password need to be stronger , if he is try again later.",
                             "Password not strong enough or network error.", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
@@ -814,7 +813,7 @@ namespace Xiropht_Wallet.Wallet
                         }).Start();
 
 #endif
-                        new Thread(async () => await FullDisconnection(true)).Start();
+                        ThreadPool.QueueUserWorkItem(async delegate { await FullDisconnection(true); });
                     }
                     else
                     {
@@ -877,7 +876,7 @@ namespace Xiropht_Wallet.Wallet
                         ClassWalletCommand.ClassWalletSendEnumeration.LoginPhase + "|" + WalletConnect.WalletAddress,
                         Certificate, true))
                     {
-                        new Thread(async () => await FullDisconnection(true)).Start();
+                        ThreadPool.QueueUserWorkItem(async delegate { await FullDisconnection(false); });
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if DEBUG
                         Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
@@ -896,7 +895,7 @@ namespace Xiropht_Wallet.Wallet
                         ClassWalletCommand.ClassWalletSendEnumeration.PasswordPhase + "|" +
                         WalletConnect.WalletPassword, Certificate, true))
                     {
-                        new Thread(async () => await FullDisconnection(true)).Start();
+                        ThreadPool.QueueUserWorkItem(async delegate { await FullDisconnection(false); });
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if DEBUG
                         Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
@@ -923,7 +922,7 @@ namespace Xiropht_Wallet.Wallet
                         ClassWalletCommand.ClassWalletSendEnumeration.KeyPhase + "|" + WalletConnect.WalletKey,
                         Certificate, true))
                     {
-                        new Thread(async () => await FullDisconnection(true)).Start();
+                        ThreadPool.QueueUserWorkItem(async delegate { await FullDisconnection(true); });
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if DEBUG
                         Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
@@ -951,7 +950,7 @@ namespace Xiropht_Wallet.Wallet
                     {
                         WalletAmountInPending = splitPacket[2];
                     }
-                    new Thread(() => ClassFormPhase.ShowWalletInformationInMenu(WalletConnect.WalletAddress, WalletConnect.WalletAmount)).Start();
+                    ThreadPool.QueueUserWorkItem(delegate { ClassFormPhase.ShowWalletInformationInMenu(WalletConnect.WalletAddress, WalletConnect.WalletAmount); });
 
 #if DEBUG
                     Log.WriteLine("Actual Balance: " + WalletConnect.WalletAmount);
@@ -969,7 +968,7 @@ namespace Xiropht_Wallet.Wallet
                                 ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletAskRemoteNode, Certificate, false,
                                 true))
                         {
-                            new Thread(async () => await FullDisconnection(false)).Start();
+                            ThreadPool.QueueUserWorkItem(async delegate { await FullDisconnection(false); });
                             ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if DEBUG
                             Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
@@ -992,7 +991,7 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.PinAcceptedPhase:
                     WalletConnect.SelectWalletPhase(ClassWalletPhase.Accepted);
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_ACCEPTED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 #else
@@ -1014,7 +1013,7 @@ namespace Xiropht_Wallet.Wallet
                     WalletConnect.SelectWalletPhase(ClassWalletPhase.Pin);
 
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
@@ -1032,7 +1031,7 @@ namespace Xiropht_Wallet.Wallet
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletSendMessage:
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht, splitPacket[1], "Information",
+                    ClassFormPhase.MessageBoxInterface( splitPacket[1], "Information",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
 #else
                     new Thread(delegate ()
@@ -1049,7 +1048,7 @@ namespace Xiropht_Wallet.Wallet
                     ClassParallelForm.HideWaitingForm();
 
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
@@ -1069,7 +1068,7 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.AmountInsufficient:
                     ClassParallelForm.HideWaitingForm();
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
@@ -1089,7 +1088,7 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.FeeInsufficient:
                     ClassParallelForm.HideWaitingForm();
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_CONTENT_TEXT"),
+                    ClassFormPhase.MessageBoxInterface( ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                     new Thread(delegate ()
@@ -1107,7 +1106,7 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletSendTransactionBusy:
                     ClassParallelForm.HideWaitingForm();
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
@@ -1129,7 +1128,7 @@ namespace Xiropht_Wallet.Wallet
                     dateTime = dateTime.AddSeconds(int.Parse(splitPacket[1]));
                     dateTime = dateTime.ToLocalTime();
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
@@ -1149,9 +1148,9 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.TransactionAccepted:
                     ClassParallelForm.HideWaitingForm();
 #if WINDOWS
-                    new Thread(() => MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question)).Start();
+                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question);
 #else
                     new Thread(delegate ()
                     {
@@ -1167,7 +1166,7 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.AddressNotValid:
                     ClassParallelForm.HideWaitingForm();
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
@@ -1188,7 +1187,7 @@ namespace Xiropht_Wallet.Wallet
                     DisconnectWalletFromSeedNode(true);
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_BANNED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_BANNED_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
@@ -1209,7 +1208,7 @@ namespace Xiropht_Wallet.Wallet
                     await FullDisconnection(true);
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ALREADY_CONNECTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_ALREADY_CONNECTED_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
@@ -1249,7 +1248,7 @@ namespace Xiropht_Wallet.Wallet
 
                     WalletNewPassword = string.Empty;
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Question);
 #else
@@ -1265,7 +1264,7 @@ namespace Xiropht_Wallet.Wallet
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletChangePasswordRefused:
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_REFUSED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
@@ -1282,7 +1281,7 @@ namespace Xiropht_Wallet.Wallet
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletDisablePinCodeAccepted:
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_ACCEPTED_CONTENT_TEXT"),
+                    ClassFormPhase.MessageBoxInterface( ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_ACCEPTED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question);
 #else
                     new Thread(delegate ()
@@ -1298,7 +1297,7 @@ namespace Xiropht_Wallet.Wallet
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletDisablePinCodeRefused:
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_REFUSED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PIN_CODE_STATUS_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
@@ -1313,7 +1312,7 @@ namespace Xiropht_Wallet.Wallet
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletWarningConnection:
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_WARNING_WALLET_CONNECTION_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_WARNING_WALLET_CONNECTION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
@@ -1943,7 +1942,8 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                             Log.WriteLine("Exception error on connect to public remote node: " + error.Message);
 #endif
-                            new Thread(async () => await DisconnectWholeRemoteNodeSync(true, true)).Start();
+                            ThreadPool.QueueUserWorkItem(async delegate { await DisconnectWholeRemoteNodeSync(true, true); });
+
                         }
                     }
                     break;
@@ -2319,8 +2319,8 @@ namespace Xiropht_Wallet.Wallet
             {
                 ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS
-                MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
-                   ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_SEND_PACKET_TEXT"));
+                ClassFormPhase.MessageBoxInterface(
+                   ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CANNOT_SEND_PACKET_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                 new Thread(delegate() 
                 {
@@ -2388,7 +2388,7 @@ namespace Xiropht_Wallet.Wallet
                         dead = true;
                         break;
                     }
-                    if (LastRemoteNodePacketReceived + 10 < DateTimeOffset.Now.ToUnixTimeSeconds() || !EnableReceivePacketRemoteNode || !WalletOnUseSync)
+                    if (LastRemoteNodePacketReceived + 10 < DateTimeOffset.Now.ToUnixTimeSeconds() || !EnableReceivePacketRemoteNode)
                     {
                         dead = true;
                         break;
@@ -2396,7 +2396,7 @@ namespace Xiropht_Wallet.Wallet
 
                     if (dead) break;
 
-                    Thread.Sleep(2000);
+                    Thread.Sleep(5000);
                 }
 
                 if (dead)
@@ -2404,10 +2404,10 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                     Log.WriteLine("Remote node connection dead or stuck.");
 #endif
-                    new Thread(async () =>
+                    ThreadPool.QueueUserWorkItem(async delegate
                     {
                         await DisconnectWholeRemoteNodeSync(true, true);
-                    }).Start();
+                    });
                 }
             });
             _threadCheckRemoteNodePacketNetwork.Start();
@@ -2448,7 +2448,7 @@ namespace Xiropht_Wallet.Wallet
                                                     if (WalletCheckMaxSupply != 0)
                                                     {
                                                         if (!await ListWalletConnectToRemoteNode[i]
-                                                            .SendPacketTypeRemoteNode(WalletConnect.WalletId))
+                                                            .SendPacketTypeRemoteNode(WalletConnect.WalletId).ConfigureAwait(false))
                                                         {
 
                                                             EnableReceivePacketRemoteNode = false;
@@ -2460,7 +2460,7 @@ namespace Xiropht_Wallet.Wallet
                                                     if (WalletCheckCoinCirculating != 0)
                                                     {
                                                         if (!await ListWalletConnectToRemoteNode[i]
-                                                            .SendPacketTypeRemoteNode(WalletConnect.WalletId))
+                                                            .SendPacketTypeRemoteNode(WalletConnect.WalletId).ConfigureAwait(false))
                                                         {
 
                                                             EnableReceivePacketRemoteNode = false;
@@ -2472,7 +2472,7 @@ namespace Xiropht_Wallet.Wallet
                                                     if (WalletCheckTotalTransactionFee != 0)
                                                     {
                                                         if (!await ListWalletConnectToRemoteNode[i]
-                                                            .SendPacketTypeRemoteNode(WalletConnect.WalletId))
+                                                            .SendPacketTypeRemoteNode(WalletConnect.WalletId).ConfigureAwait(false))
                                                         {
 
                                                             EnableReceivePacketRemoteNode = false;
@@ -2484,7 +2484,7 @@ namespace Xiropht_Wallet.Wallet
                                                     if (WalletCheckTotalBlockMined != 0)
                                                     {
                                                         if (!await ListWalletConnectToRemoteNode[i]
-                                                            .SendPacketTypeRemoteNode(WalletConnect.WalletId))
+                                                            .SendPacketTypeRemoteNode(WalletConnect.WalletId).ConfigureAwait(false))
                                                         {
 
                                                             EnableReceivePacketRemoteNode = false;
@@ -2496,7 +2496,7 @@ namespace Xiropht_Wallet.Wallet
                                                     if (WalletCheckNetworkDifficulty != 0)
                                                     {
                                                         if (!await ListWalletConnectToRemoteNode[i]
-                                                            .SendPacketTypeRemoteNode(WalletConnect.WalletId))
+                                                            .SendPacketTypeRemoteNode(WalletConnect.WalletId).ConfigureAwait(false))
                                                         {
 
                                                             EnableReceivePacketRemoteNode = false;
@@ -2508,7 +2508,7 @@ namespace Xiropht_Wallet.Wallet
                                                     if (WalletCheckNetworkHashrate != 0)
                                                     {
                                                         if (!await ListWalletConnectToRemoteNode[i]
-                                                            .SendPacketTypeRemoteNode(WalletConnect.WalletId))
+                                                            .SendPacketTypeRemoteNode(WalletConnect.WalletId).ConfigureAwait(false))
                                                         {
 
                                                             EnableReceivePacketRemoteNode = false;
@@ -2519,8 +2519,7 @@ namespace Xiropht_Wallet.Wallet
                                                 case 7: // total pending transaction
                                                     if (WalletCheckTotalPendingTransaction != 0)
                                                     {
-                                                        if (!await ListWalletConnectToRemoteNode[i]
-                                                            .SendPacketTypeRemoteNode(WalletConnect.WalletId))
+                                                        if (!await ListWalletConnectToRemoteNode[i].SendPacketTypeRemoteNode(WalletConnect.WalletId).ConfigureAwait(false))
                                                         {
 
                                                             EnableReceivePacketRemoteNode = false;
@@ -2531,8 +2530,7 @@ namespace Xiropht_Wallet.Wallet
                                                 case 9: // block per id
                                                     if (WalletCheckBlockPerId != 0)
                                                     {
-                                                        if (!await ListWalletConnectToRemoteNode[i]
-                                                            .SendPacketTypeRemoteNode(WalletConnect.WalletId))
+                                                        if (!await ListWalletConnectToRemoteNode[i].SendPacketTypeRemoteNode(WalletConnect.WalletId).ConfigureAwait(false))
                                                         {
 
                                                             EnableReceivePacketRemoteNode = false;
@@ -2541,8 +2539,7 @@ namespace Xiropht_Wallet.Wallet
                                                     }
                                                     break;
                                                 default:
-                                                    if (!await ListWalletConnectToRemoteNode[i]
-                                                        .SendPacketTypeRemoteNode(WalletConnect.WalletId))
+                                                    if (!await ListWalletConnectToRemoteNode[i].SendPacketTypeRemoteNode(WalletConnect.WalletId).ConfigureAwait(false))
                                                     {
 
                                                         EnableReceivePacketRemoteNode = false;
@@ -2554,8 +2551,7 @@ namespace Xiropht_Wallet.Wallet
                                         }
                                         else
                                         {
-                                            if (!await ListWalletConnectToRemoteNode[i]
-                                                .SendPacketTypeRemoteNode(WalletConnect.WalletIdAnonymity))
+                                            if (!await ListWalletConnectToRemoteNode[i].SendPacketTypeRemoteNode(WalletConnect.WalletIdAnonymity).ConfigureAwait(false))
                                             {
                                                 EnableReceivePacketRemoteNode = false;
                                                 break;
@@ -2593,7 +2589,7 @@ namespace Xiropht_Wallet.Wallet
                     {
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[0].ListenRemoteNodeNetworkAsync();
+                            var packet = await ListWalletConnectToRemoteNode[0].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -2665,7 +2661,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync)
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[1].ListenRemoteNodeNetworkAsync();
+                            var packet = await ListWalletConnectToRemoteNode[1].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -2736,7 +2732,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync)
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[2].ListenRemoteNodeNetworkAsync();
+                            var packet = await ListWalletConnectToRemoteNode[2].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -2807,7 +2803,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync)
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[3].ListenRemoteNodeNetworkAsync();
+                            var packet = await ListWalletConnectToRemoteNode[3].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
 
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
@@ -2878,7 +2874,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync)
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[4].ListenRemoteNodeNetworkAsync();
+                            var packet = await ListWalletConnectToRemoteNode[4].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -2946,7 +2942,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync)
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[5].ListenRemoteNodeNetworkAsync();
+                            var packet = await ListWalletConnectToRemoteNode[5].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -3014,7 +3010,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync)
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[6].ListenRemoteNodeNetworkAsync();
+                            var packet = await ListWalletConnectToRemoteNode[6].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -3085,7 +3081,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync)
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[7].ListenRemoteNodeNetworkAsync();
+                            var packet = await ListWalletConnectToRemoteNode[7].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -3156,7 +3152,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync)
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[8].ListenRemoteNodeNetworkAsync();
+                            var packet = await ListWalletConnectToRemoteNode[8].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -3228,7 +3224,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync)
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[9].ListenRemoteNodeNetworkAsync();
+                            var packet = await ListWalletConnectToRemoteNode[9].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -3300,7 +3296,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync)
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[10].ListenRemoteNodeNetworkAsync();
+                            var packet = await ListWalletConnectToRemoteNode[10].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -3369,7 +3365,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync)
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[11].ListenRemoteNodeNetworkAsync();
+                            var packet = await ListWalletConnectToRemoteNode[11].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -4637,13 +4633,14 @@ namespace Xiropht_Wallet.Wallet
                             break;
                         case ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletTransactionPerId:
                             LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
-                            await ClassWalletTransactionCache.AddWalletTransactionAsync(splitPacket[1], false);
+                            await Task.Run(async () => await ClassWalletTransactionCache.AddWalletTransactionAsync(splitPacket[1])).ConfigureAwait(false);
                             //InReceiveTransaction = false;
                             break;
 
                         case ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletAnonymityTransactionPerId:
                             LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
-                            await ClassWalletTransactionAnonymityCache.AddWalletTransactionAsync(splitPacket[1]);
+                            await Task.Run(async () => await ClassWalletTransactionAnonymityCache.AddWalletTransactionAsync(splitPacket[1])).ConfigureAwait(false);
+
                             //InReceiveTransactionAnonymity = false;
                             break;
                         case ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeKeepAlive:
@@ -4839,8 +4836,8 @@ namespace Xiropht_Wallet.Wallet
                             await FullDisconnection(false);
                             ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS
-                            MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
-                                "Cannot send packet, your wallet has been disconnected.");
+                            ClassFormPhase.MessageBoxInterface(
+                                "Cannot send packet, your wallet has been disconnected.", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                             MessageBox.Show(ClassFormPhase.WalletXiropht,
                                 "Cannot send packet, your wallet has been disconnected.");

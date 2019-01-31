@@ -33,8 +33,8 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                         await ClassWalletObject.FullDisconnection(true);
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));
+                    ClassFormPhase.MessageBoxInterface(
+                        ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                         MessageBox.Show(ClassFormPhase.WalletXiropht,
                             ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));
@@ -50,7 +50,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             else
             {
 #if WINDOWS
-                MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_WARNING_TEXT"));
+                ClassFormPhase.MessageBoxInterface( ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_WARNING_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                 MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_WARNING_TEXT"));
 #endif
@@ -162,8 +162,8 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                         await ClassWalletObject.FullDisconnection(true);
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));
+                    ClassFormPhase.MessageBoxInterface(
+                        ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                         MessageBox.Show(ClassFormPhase.WalletXiropht,
                             ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));

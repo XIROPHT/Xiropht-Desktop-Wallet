@@ -84,7 +84,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             if (textBoxPasswordWallet.Text == "")
             {
 #if WINDOWS
-                MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NO_PASSWORD_WRITTED_CONTENT_TEXT"),
+                ClassFormPhase.MessageBoxInterface( ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NO_PASSWORD_WRITTED_CONTENT_TEXT"),
                     ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NO_PASSWORD_WRITTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
                 MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NO_PASSWORD_WRITTED_CONTENT_TEXT"),
@@ -116,7 +116,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 if (ClassWalletObject.WalletDataDecrypted == "WRONG")
                 {
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_WRONG_PASSWORD_WRITTED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_WRONG_PASSWORD_WRITTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
@@ -139,7 +139,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         MethodInvoker invoker = () => textBoxPasswordWallet.Text = "";
                         BeginInvoke(invoker);
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                    ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_TITLE_TEXT"), MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
 #else
@@ -177,7 +177,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             catch
             {
 #if WINDOWS
-                MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                ClassFormPhase.MessageBoxInterface(
                     ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_WRONG_PASSWORD_WRITTED_CONTENT_TEXT"),
                     ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_WRONG_PASSWORD_WRITTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else

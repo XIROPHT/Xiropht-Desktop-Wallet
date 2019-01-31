@@ -131,8 +131,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                         textBoxSelectWalletPassword.Text))
                                 {
 #if WINDOWS
-                                MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
-                                    ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"));
+                                ClassFormPhase.MessageBoxInterface(
+                                    ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                                    MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
                                         ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"));
@@ -146,8 +146,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             else
                             {
 #if WINDOWS
-                            MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
-                               ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"));
+                            ClassFormPhase.MessageBoxInterface(
+                               ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                                 MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
                                     ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"));

@@ -216,7 +216,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
                         new Thread(() =>
-                                MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
+                                ClassFormPhase.MessageBoxInterface( item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
                             .Start();
 #else
                         new Thread(delegate ()
@@ -240,7 +240,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
                         new Thread(() =>
-                                MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
+                                ClassFormPhase.MessageBoxInterface( item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
                             .Start();
 #else
                     new Thread(delegate ()
@@ -263,7 +263,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
                         new Thread(() =>
-                                MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
+                                ClassFormPhase.MessageBoxInterface( item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
                             .Start();
 #else
                     new Thread(delegate()
@@ -286,7 +286,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
                         new Thread(() =>
-                                MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
+                                ClassFormPhase.MessageBoxInterface( item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
                             .Start();
 #else
                     new Thread(delegate ()
@@ -309,7 +309,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
                         new Thread(() =>
-                                MetroMessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT")))
+                                ClassFormPhase.MessageBoxInterface( item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error))
                             .Start();
 #else
                     new Thread(delegate ()

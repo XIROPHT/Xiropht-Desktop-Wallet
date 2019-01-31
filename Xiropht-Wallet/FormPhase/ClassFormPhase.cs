@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MetroFramework;
+using System;
 using System.Windows.Forms;
 using Xiropht_Connector_All.Setting;
 using Xiropht_Wallet.Wallet;
@@ -100,5 +101,21 @@ namespace Xiropht_Wallet.FormPhase
             ClassParallelForm.HideWaitingForm();
             ClassParallelForm.HideWaitingCreateWalletForm();
         }
+
+#if WINDOWS
+
+        /// <summary>
+        /// Show a message in front of the main interface.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="title"></param>
+        /// <param name="button"></param>
+        /// <param name="icon"></param>
+        public static DialogResult MessageBoxInterface(string text, string title, MessageBoxButtons button, MessageBoxIcon icon)
+        {
+            return MetroMessageBox.Show(WalletXiropht, text, title, button, icon);
+        }
+
+#endif
     }
 }

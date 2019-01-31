@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Xiropht_Connector_All.Remote;
+using Xiropht_Connector_All.Setting;
 using Xiropht_Connector_All.Utils;
 using Xiropht_Connector_All.Wallet;
 
@@ -197,9 +198,10 @@ namespace Xiropht_Wallet.Wallet
 
                     if (finalTransactionEncrypted == ClassAlgoErrorEnumeration.AlgoError) // Ban bad remote node.
                     {
-
-                        ClassWalletObject.ListRemoteNodeBanned.Add(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost);
-
+                        if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
+                        {
+                            ClassWalletObject.ListRemoteNodeBanned.Add(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost);
+                        }
                     }
                     else
                     {

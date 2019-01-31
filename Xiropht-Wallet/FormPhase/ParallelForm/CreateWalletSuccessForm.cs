@@ -20,7 +20,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         private void ButtonAcceptAndCloseWalletInformation_Click(object sender, EventArgs e)
         {
 #if WINDOWS
-            if (MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+            if (ClassFormPhase.MessageBoxInterface(
                     ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_CONTENT_TEXT"),
                     ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
 #else
@@ -40,8 +40,8 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             else
             {
 #if WINDOWS
-                MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
-                    ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_SAFE_CONTENT_TEXT"));
+                ClassFormPhase.MessageBoxInterface(
+                    ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_SAFE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                 MessageBox.Show(ClassFormPhase.WalletXiropht,
                     ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_SAFE_CONTENT_TEXT"));
@@ -55,7 +55,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                              labelYourPrivateKey.Text + " " + Environment.NewLine +
                              labelYourPinCode.Text);
 #if WINDOWS
-            MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+            ClassFormPhase.MessageBoxInterface(
                 ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_COPY_WALLET_INFORMATION_CONTENT_TEXT"),
                 ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_COPY_WALLET_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question);
 #else

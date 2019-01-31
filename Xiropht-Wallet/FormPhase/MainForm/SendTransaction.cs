@@ -55,7 +55,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 "[a-z0-9]+", RegexOptions.IgnoreCase))
                         {
 #if WINDOWS
-                            if (MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_SUBMIT_CONTENT_TEXT").Replace(ClassTranslation.AmountSendOrder, "" + amountSend).Replace(ClassTranslation.TargetAddressOrder, textBoxWalletDestination.Text),
+                            if (ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_SUBMIT_CONTENT_TEXT").Replace(ClassTranslation.AmountSendOrder, "" + amountSend).Replace(ClassTranslation.TargetAddressOrder, textBoxWalletDestination.Text),
                                     ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_SUBMIT_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) ==
                                 DialogResult.Yes)
 #else
@@ -64,7 +64,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 DialogResult.Yes)
 #endif
                             {
-                                new Thread(ClassParallelForm.ShowWaitingForm).Start();
+                                ClassParallelForm.ShowWaitingForm();
 
                                 if (checkBoxHideWalletAddress.Checked)
                                 {
@@ -81,17 +81,20 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                         textBoxWalletDestination.Text + "|" + amountSend + "|" + feeSend + "|0", ClassWalletObject.Certificate, true);
                                 }
 
-
-                                checkBoxHideWalletAddress.Checked = false;
-                                textBoxAmount.Text = "0.00000000";
-                                textBoxFee.Text = "0.00001000";
-                                textBoxWalletDestination.Text = string.Empty;
+                                MethodInvoker invoke = () =>
+                                {
+                                    checkBoxHideWalletAddress.Checked = false;
+                                    textBoxAmount.Text = "0.00000000";
+                                    textBoxFee.Text = "0.00001000";
+                                    textBoxWalletDestination.Text = string.Empty;
+                                };
+                                BeginInvoke(invoke);
                             }
                         }
                         else
                         {
 #if WINDOWS
-                            MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_TARGET_CONTENT_TEXT"));
+                            ClassFormPhase.MessageBoxInterface( ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_TARGET_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                             MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_TARGET_CONTENT_TEXT"));
 #endif
@@ -101,7 +104,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 else
                 {
 #if WINDOWS
-                    MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_FEE_CONTENT_TEXT"));
+                    ClassFormPhase.MessageBoxInterface( ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_FEE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                     MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_FEE_CONTENT_TEXT"));
 #endif
@@ -110,7 +113,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             else
             {
 #if WINDOWS
-                MetroMessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_AMOUNT_CONTENT_TEXT"));
+                ClassFormPhase.MessageBoxInterface( ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_AMOUNT_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                 MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_AMOUNT_CONTENT_TEXT"));
 #endif
@@ -279,7 +282,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             if (checkBoxHideWalletAddress.Checked)
             {
 #if WINDOWS
-                if (MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+                if (ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_OPTION_ANONYMITY_CONTENT1_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_OPTION_ANONYMITY_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No)
 #else
@@ -309,7 +312,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private void buttonFeeInformation_Click(object sender, EventArgs e)
         {
 #if WINDOWS
-            MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+            ClassFormPhase.MessageBoxInterface(
                 ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_FEE_INFORMATION_CONTENT_TEXT"),
                 ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_FEE_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 #else
@@ -329,7 +332,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private void buttonEstimatedTimeInformation_Click(object sender, EventArgs e)
         {
 #if WINDOWS
-            MetroMessageBox.Show(ClassFormPhase.WalletXiropht,
+            ClassFormPhase.MessageBoxInterface(
                 ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_TIME_RECEIVE_INFORMATION_CONTENT_TEXT"),
                 ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_TIME_RECEIVE_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 #else
