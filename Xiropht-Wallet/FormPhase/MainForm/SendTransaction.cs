@@ -64,7 +64,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 DialogResult.Yes)
 #endif
                             {
-                                ClassParallelForm.ShowWaitingForm();
+                                ThreadPool.QueueUserWorkItem(delegate { ClassParallelForm.ShowWaitingForm(); });
 
                                 if (checkBoxHideWalletAddress.Checked)
                                 {
@@ -81,14 +81,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                         textBoxWalletDestination.Text + "|" + amountSend + "|" + feeSend + "|0", ClassWalletObject.Certificate, true);
                                 }
 
-                                MethodInvoker invoke = () =>
-                                {
-                                    checkBoxHideWalletAddress.Checked = false;
-                                    textBoxAmount.Text = "0.00000000";
-                                    textBoxFee.Text = "0.00001000";
-                                    textBoxWalletDestination.Text = string.Empty;
-                                };
-                                BeginInvoke(invoke);
+                                checkBoxHideWalletAddress.Checked = false;
+                                textBoxAmount.Text = "0.00000000";
+                                textBoxFee.Text = "0.00001000";
+                                textBoxWalletDestination.Text = string.Empty;
+
                             }
                         }
                         else

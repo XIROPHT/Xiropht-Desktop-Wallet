@@ -65,10 +65,6 @@ namespace Xiropht_Wallet
         /// <summary>
         /// Threading
         /// </summary>
-        private Thread _threadUpdateTransactionWallet;
-
-        private Thread _threadUpdateTransactionWalletShowed;
-        private Thread _threadUpdateBlockWallet;
         private Thread _threadUpdateNetworkStats;
         private const int ThreadUpdateTransactionWalletInterval = 1000;
         private const int ThreadUpdateNetworkStatsInterval = 1000;
@@ -104,7 +100,6 @@ namespace Xiropht_Wallet
         public int TotalTransactionBlockReward;
         private bool _normalTransactionLoaded;
         private bool _anonymousTransactionLoaded;
-        private bool _blockLoaded;
 
         /// <summary>
         /// Constructor.
@@ -1122,10 +1117,10 @@ namespace Xiropht_Wallet
 
 
                     // Show transaction decrypted from cache.
-                    _threadUpdateTransactionWalletShowed = new Thread(delegate ()
+                    ThreadPool.QueueUserWorkItem(delegate
                     {
 
-                        while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                        while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux) && EnableUpdateTransactionWallet)
                         {
                             try
                             {
@@ -1165,7 +1160,7 @@ namespace Xiropht_Wallet
                                             }
                                         }
 
-#region show transaction received/sent by the normal unique wallet id of the wallet
+                                        #region show transaction received/sent by the normal unique wallet id of the wallet
                                         if (TotalTransactionRead != ListTransactionHashShowed.Count)
                                         {
 
@@ -1223,7 +1218,7 @@ namespace Xiropht_Wallet
                                                             dateTimeRecv.AddSeconds(long.Parse(timestampRecv));
                                                         dateTimeRecv = dateTimeRecv.ToLocalTime();
 
-#region show anonymous transaction received
+                                                        #region show anonymous transaction received
                                                         if (wallet == "ANONYMOUS")
                                                         {
 
@@ -1325,8 +1320,8 @@ namespace Xiropht_Wallet
 
                                                             TotalTransactionAnonymousReceived++;
                                                         }
-#endregion
-#region Show block reward transaction.
+                                                        #endregion
+                                                        #region Show block reward transaction.
                                                         else if (wallet.Contains("BLOCKCHAIN["))
                                                         {
                                                             int minShow = (CurrentTransactionHistoryPageBlockReward - 1) * MaxTransactionPerPage;
@@ -1426,10 +1421,10 @@ namespace Xiropht_Wallet
 
                                                             TotalTransactionBlockReward++;
                                                         }
-#endregion
+                                                        #endregion
                                                         else
                                                         {
-#region show normal transaction sent
+                                                            #region show normal transaction sent
                                                             if (type == "SEND")
                                                             {
                                                                 int minShow = (CurrentTransactionHistoryPageNormalSend - 1) * MaxTransactionPerPage;
@@ -1528,8 +1523,8 @@ namespace Xiropht_Wallet
 
                                                                 TotalTransactionNormalSend++;
                                                             }
-#endregion
-#region Show normal transaction received.
+                                                            #endregion
+                                                            #region Show normal transaction received.
                                                             else if (type == "RECV")
                                                             {
                                                                 int minShow = (CurrentTransactionHistoryPageNormalReceive - 1) * MaxTransactionPerPage;
@@ -1626,7 +1621,7 @@ namespace Xiropht_Wallet
 
                                                                 TotalTransactionNormalReceived++;
                                                             }
-#endregion
+                                                            #endregion
                                                         }
                                                     }
                                                     catch (Exception error)
@@ -1643,9 +1638,9 @@ namespace Xiropht_Wallet
                                             _normalTransactionLoaded = true;
 
                                         }
-#endregion
+                                        #endregion
 
-#region Update transaction normal send color
+                                        #region Update transaction normal send color
 
                                         for (int i = 0;
                                         i < TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items
@@ -1711,9 +1706,9 @@ namespace Xiropht_Wallet
                                             BeginInvoke((MethodInvoker)MethodInvoker);
                                         }
 
-#endregion
+                                        #endregion
 
-#region Update transaction anonymity received color
+                                        #region Update transaction anonymity received color
 
                                         for (int i = 0;
                                             i < TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory
@@ -1802,9 +1797,9 @@ namespace Xiropht_Wallet
                                             BeginInvoke((MethodInvoker)MethodInvoker);
                                         }
 
-#endregion
+                                        #endregion
 
-#region Update transaction block reward color
+                                        #region Update transaction block reward color
 
                                         for (int i = 0;
                                             i < TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items
@@ -1890,9 +1885,9 @@ namespace Xiropht_Wallet
                                             BeginInvoke((MethodInvoker)MethodInvoker);
                                         }
 
-#endregion
+                                        #endregion
 
-#region Update normal transaction received color.
+                                        #region Update normal transaction received color.
 
                                         for (int i = 0;
                                             i < TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items
@@ -1981,10 +1976,10 @@ namespace Xiropht_Wallet
                                             BeginInvoke((MethodInvoker)MethodInvoker);
                                         }
 
-#endregion
+                                        #endregion
 
 
-#region Update transaction anonymity sent color
+                                        #region Update transaction anonymity sent color
 
                                         for (int i = 0;
                                             i < TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory
@@ -2073,7 +2068,7 @@ namespace Xiropht_Wallet
                                             BeginInvoke((MethodInvoker)MethodInvoker);
                                         }
 
-#endregion
+                                        #endregion
                                     }
                                     else
                                     {
@@ -2271,7 +2266,7 @@ namespace Xiropht_Wallet
 
                                         }
 
-#region Update transaction anonymity send color.
+                                        #region Update transaction anonymity send color.
 
                                         for (int i = 0;
                                         i < TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items
@@ -2358,9 +2353,9 @@ namespace Xiropht_Wallet
                                             BeginInvoke((MethodInvoker)MethodInvoker);
                                         }
 
-#endregion
+                                        #endregion
 
-#endregion
+                                        #endregion
                                     }
                                     else
                                     {
@@ -2408,17 +2403,13 @@ namespace Xiropht_Wallet
 
                             }
                         }
-                    
-                    })
-                    {
-                        IsBackground = true
-                    };
-                    _threadUpdateTransactionWalletShowed.Start();
+
+                    });
 
                     // Decrypt transaction from cache.
-                    _threadUpdateTransactionWallet = new Thread(async delegate ()
+                    ThreadPool.QueueUserWorkItem(delegate
                     {
-                        while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                        while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux) && EnableUpdateTransactionWallet)
                         {
                             if (ClassWalletObject.BlockTransactionSync)
                             {
@@ -2616,11 +2607,7 @@ namespace Xiropht_Wallet
                             GC.Collect();
                             Thread.Sleep(ThreadUpdateTransactionWalletInterval * 2);
                         }
-                    })
-                    {
-                        IsBackground = true
-                    };
-                    _threadUpdateTransactionWallet.Start();
+                    });
                 }
             }
             catch
@@ -2639,17 +2626,11 @@ namespace Xiropht_Wallet
             if (!EnableUpdateBlockWallet)
             {
                 EnableUpdateBlockWallet = true;
-                if (_threadUpdateBlockWallet != null &&
-                    (_threadUpdateBlockWallet.IsAlive || _threadUpdateBlockWallet != null))
-                {
-                    _threadUpdateBlockWallet.Abort();
-                    GC.SuppressFinalize(_threadUpdateBlockWallet);
-                }
 
 
-                _threadUpdateBlockWallet = new Thread(async delegate ()
+                ThreadPool.QueueUserWorkItem(async delegate
                 {
-                    while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                    while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux) && EnableUpdateBlockWallet)
                     {
 
                         if (ListBlockHashShowed.Count != ClassBlockCache.ListBlock.Count && TotalBlockRead != ClassBlockCache.ListBlock.Count)
@@ -2740,7 +2721,6 @@ namespace Xiropht_Wallet
 
                                     }
                                 }
-                                _blockLoaded = true;
 
                             }
                             catch
@@ -2788,11 +2768,7 @@ namespace Xiropht_Wallet
                             Thread.Sleep(ThreadUpdateTransactionWalletInterval);
                         }
                     }
-                })
-                {
-                    IsBackground = true
-                };
-                _threadUpdateBlockWallet.Start();
+                });
             }
         }
 
@@ -2801,22 +2777,7 @@ namespace Xiropht_Wallet
         /// </summary>
         public void StopUpdateTransactionHistory(bool fullStop, bool clean, bool switchPage = false)
         {
-            if (fullStop)
-            {
-                if (_threadUpdateTransactionWallet != null &&
-                    (_threadUpdateTransactionWallet.IsAlive || _threadUpdateTransactionWallet != null))
-                {
-                    _threadUpdateTransactionWallet.Abort();
-                    GC.SuppressFinalize(_threadUpdateTransactionWallet);
-                }
 
-                if (_threadUpdateTransactionWalletShowed != null &&
-                    (_threadUpdateTransactionWalletShowed.IsAlive || _threadUpdateTransactionWalletShowed != null))
-                {
-                    _threadUpdateTransactionWalletShowed.Abort();
-                    GC.SuppressFinalize(_threadUpdateTransactionWalletShowed);
-                }
-            }
             if (clean)
             {
                 CurrentTransactionHistoryPageAnonymousReceived = 1;
@@ -2897,20 +2858,11 @@ namespace Xiropht_Wallet
         /// </summary>
         public void StopUpdateBlockHistory(bool fullStop, bool switchPage = false)
         {
-            if (fullStop)
-            {
-                if (_threadUpdateBlockWallet != null &&
-                    (_threadUpdateBlockWallet.IsAlive || _threadUpdateBlockWallet != null))
-                {
-                    _threadUpdateBlockWallet.Abort();
-                    GC.SuppressFinalize(_threadUpdateBlockWallet);
-                }
-            }
+
 
             void invoke () => labelNoticeCurrentPage.Text = "1";
             if (!switchPage)
             {
-                _blockLoaded = false;
                 CurrentBlockExplorerPage = 1;
                 TotalBlockRead = 0;
                 ListBlockHashShowed.Clear();
@@ -2921,7 +2873,6 @@ namespace Xiropht_Wallet
             }
             else
             {
-                _blockLoaded = false;
                 TotalBlockRead = 0;
                 ListBlockHashShowed.Clear();
                 void MethodInvoker() => BlockWalletForm.listViewBlockExplorer.Items.Clear();

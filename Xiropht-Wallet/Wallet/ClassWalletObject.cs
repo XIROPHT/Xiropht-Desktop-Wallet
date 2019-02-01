@@ -1346,7 +1346,7 @@ namespace Xiropht_Wallet.Wallet
                             {
                                 if (WalletSyncMode == 1)
                                 {
-                                    packet += "|127.0.0.1";
+                                    //packet += "|127.0.0.1";
                                     foreach (var remoteNodeObj in packet.Split(new[] { "|" }, StringSplitOptions.None))
                                     {
                                         if (remoteNodeObj != null)
@@ -2609,11 +2609,11 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         string packetHandle = splitPacket[i];
                                                         await Task.Factory
-                                                            .StartNew(() => HandlePacketRemoteNodeAsync(packetHandle),
+                                                            .StartNew(async () => await HandlePacketRemoteNodeAsync(packetHandle),
                                                                 CancellationToken.None,
                                                                 TaskCreationOptions.DenyChildAttach,
                                                                 TaskScheduler.Current).ConfigureAwait(false);
-                                                       
+
                                                     }
                                                 }
                                             }
@@ -2621,7 +2621,7 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                     else
                                     {
-                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet.Replace("*", "")),
+                                        await Task.Factory.StartNew(async () => await HandlePacketRemoteNodeAsync(packet.Replace("*", "")),
                                             CancellationToken.None, TaskCreationOptions.DenyChildAttach,
                                             TaskScheduler.Current).ConfigureAwait(false);
 
@@ -2629,7 +2629,7 @@ namespace Xiropht_Wallet.Wallet
                                 }
                                 else
                                 {
-                                    await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet),
+                                    await Task.Factory.StartNew(async () => await HandlePacketRemoteNodeAsync(packet),
                                         CancellationToken.None, TaskCreationOptions.DenyChildAttach,
                                         TaskScheduler.Current).ConfigureAwait(false);
 
@@ -2681,7 +2681,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         string packetHandle = splitPacket[i];
                                                         await Task.Factory
-                                                            .StartNew(() => HandlePacketRemoteNodeAsync(packetHandle),
+                                                            .StartNew(async () => await HandlePacketRemoteNodeAsync(packetHandle),
                                                                 CancellationToken.None,
                                                                 TaskCreationOptions.DenyChildAttach,
                                                                 TaskScheduler.Current).ConfigureAwait(false);
@@ -2693,7 +2693,7 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                     else
                                     {
-                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet.Replace("*", "")),
+                                        await Task.Factory.StartNew(async () => await HandlePacketRemoteNodeAsync(packet.Replace("*", "")),
                                             CancellationToken.None, TaskCreationOptions.DenyChildAttach,
                                             TaskScheduler.Current).ConfigureAwait(false);
 
@@ -2701,7 +2701,7 @@ namespace Xiropht_Wallet.Wallet
                                 }
                                 else
                                 {
-                                    await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet),
+                                    await Task.Factory.StartNew(async () => await HandlePacketRemoteNodeAsync(packet),
                                         CancellationToken.None, TaskCreationOptions.DenyChildAttach,
                                         TaskScheduler.Current).ConfigureAwait(false);
 
