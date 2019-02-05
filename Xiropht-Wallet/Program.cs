@@ -54,7 +54,9 @@ namespace Xiropht_Wallet
 #endif
             ClassWalletSetting.LoadSetting(); // Load the setting file.
             ClassTranslation.InitializationLanguage(); // Initialization of language system.
+#if WINDOWS
             Application.EnableVisualStyles();
+#endif
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new WalletXiropht()); // Start the main interface.
 

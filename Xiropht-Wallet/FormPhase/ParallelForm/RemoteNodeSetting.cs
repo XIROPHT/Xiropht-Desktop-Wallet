@@ -31,7 +31,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             }
 
             ClassWalletSetting.SaveSetting();
-            await ClassWalletObject.FullDisconnection(true);
+            ClassWalletObject.FullDisconnection(true);
             ClassFormPhase.WalletXiropht.SwitchForm(ClassFormPhaseEnumeration.OpenWallet);
 #if WINDOWS
             MetroMessageBox.Show(this, ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_SAVE_SETTING_TEXT"));

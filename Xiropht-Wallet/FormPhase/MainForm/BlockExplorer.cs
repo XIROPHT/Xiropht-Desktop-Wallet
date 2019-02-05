@@ -69,16 +69,17 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             IsShowed = true;
             UpdateStyles();
 
-#if WINDOWS
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
-#endif
         }
 
         private void Block_Resize(object sender, EventArgs e)
         {
-#if WINDOWS
             UpdateStyles();
-#endif
+        }
+
+        private void listViewBlockExplorer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

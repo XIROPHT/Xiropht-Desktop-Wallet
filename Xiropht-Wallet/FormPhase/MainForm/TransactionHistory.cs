@@ -134,15 +134,16 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     X = _panelWaitingSync.Width / 2 - _labelWaitingText.Width / 2,
                     Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
                 };
+                Refresh();
             }
 
-            ClassFormPhase.WalletXiropht.BeginInvoke((MethodInvoker) MethodInvoker);
+            BeginInvoke((MethodInvoker) MethodInvoker);
         }
 
         public void HideWaitingSyncTransactionPanel()
         {
             void MethodInvoker() => _panelWaitingSync.Hide();
-            ClassFormPhase.WalletXiropht.BeginInvoke((MethodInvoker) MethodInvoker);
+            BeginInvoke((MethodInvoker) MethodInvoker);
         }
 
         protected override void OnResize(EventArgs e)
@@ -163,6 +164,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     X = _panelWaitingSync.Width / 2 - _labelWaitingText.Width / 2,
                     Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
                 };
+                Refresh();
             }
 
             base.OnResize(e);
@@ -195,9 +197,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 }
             }
 
-#if WINDOWS
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
-#endif
         }
 
 
@@ -533,9 +533,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void Transaction_Resize(object sender, EventArgs e)
         {
-#if WINDOWS
             UpdateStyles();
-#endif
         }
 
 

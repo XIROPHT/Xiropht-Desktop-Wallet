@@ -79,23 +79,19 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private void CreateWallet_Load(object sender, EventArgs e)
         {
             UpdateStyles();
-#if WINDOWS
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
-#endif
         }
 
         private void CreateWallet_Resize(object sender, EventArgs e)
         {
-#if WINDOWS
             UpdateStyles();
-#endif
         }
 
         private async Task CreateWalletAsync()
         {
             if (InCreation)
             {
-                await ClassWalletObject.FullDisconnection(true).ConfigureAwait(false);
+                ClassWalletObject.FullDisconnection(true);
                 InCreation = false;
             }
 

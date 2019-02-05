@@ -37,7 +37,7 @@
             this.columnHeaderAddress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderDateRecv = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderBlockHeightSrc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.listViewBlockExplorer = new ListViewEx();
+            this.listViewBlockExplorer = new Xiropht_Wallet.FormPhase.MainForm.ListViewEx();
             this.columnHeaderBlockId = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderBlockHash = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderBlockReward = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -104,6 +104,7 @@
             this.listViewBlockExplorer.TabIndex = 0;
             this.listViewBlockExplorer.UseCompatibleStateImageBehavior = false;
             this.listViewBlockExplorer.View = System.Windows.Forms.View.Details;
+            this.listViewBlockExplorer.SelectedIndexChanged += new System.EventHandler(this.listViewBlockExplorer_SelectedIndexChanged);
             // 
             // columnHeaderBlockId
             // 

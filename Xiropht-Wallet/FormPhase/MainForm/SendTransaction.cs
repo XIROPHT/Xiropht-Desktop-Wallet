@@ -34,7 +34,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             }
         }
 
-        private async void ButtonSendTransaction_ClickAsync(object sender, EventArgs e)
+        private void ButtonSendTransaction_Click(object sender, EventArgs e)
         {
             string amountstring = textBoxAmount.Text.Replace(",", ".");
             string feestring = textBoxFee.Text.Replace(",", ".");
@@ -64,27 +64,34 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 DialogResult.Yes)
 #endif
                             {
-                                ThreadPool.QueueUserWorkItem(delegate { ClassParallelForm.ShowWaitingForm(); });
-
-                                if (checkBoxHideWalletAddress.Checked)
+                                new Thread(async delegate ()
                                 {
-                                    await ClassWalletObject.WalletConnect.SendPacketWallet(
-                                                ClassWalletCommand.ClassWalletSendEnumeration.SendTransaction + "|" +
-                                                textBoxWalletDestination.Text + "|" + amountSend + "|" + feeSend + "|1", ClassWalletObject.Certificate, true);
+                                    ClassParallelForm.ShowWaitingForm();
+
+                                    if (checkBoxHideWalletAddress.Checked)
+                                    {
+                                        await ClassWalletObject.WalletConnect.SendPacketWallet(
+                                                    ClassWalletCommand.ClassWalletSendEnumeration.SendTransaction + "|" +
+                                                    textBoxWalletDestination.Text + "|" + amountSend + "|" + feeSend + "|1", ClassWalletObject.Certificate, true);
 
 
-                                }
-                                else
-                                {
-                                    await ClassWalletObject.WalletConnect.SendPacketWallet(
-                                        ClassWalletCommand.ClassWalletSendEnumeration.SendTransaction + "|" +
-                                        textBoxWalletDestination.Text + "|" + amountSend + "|" + feeSend + "|0", ClassWalletObject.Certificate, true);
-                                }
+                                    }
+                                    else
+                                    {
+                                        await ClassWalletObject.WalletConnect.SendPacketWallet(
+                                            ClassWalletCommand.ClassWalletSendEnumeration.SendTransaction + "|" +
+                                            textBoxWalletDestination.Text + "|" + amountSend + "|" + feeSend + "|0", ClassWalletObject.Certificate, true);
+                                    }
 
-                                checkBoxHideWalletAddress.Checked = false;
-                                textBoxAmount.Text = "0.00000000";
-                                textBoxFee.Text = "0.00001000";
-                                textBoxWalletDestination.Text = string.Empty;
+                                    MethodInvoker invoke = () =>
+                                    {
+                                        checkBoxHideWalletAddress.Checked = false;
+                                        textBoxAmount.Text = "0.00000000";
+                                        textBoxFee.Text = "0.00001000";
+                                        textBoxWalletDestination.Text = string.Empty;
+                                    };
+                                    BeginInvoke(invoke);
+                                }).Start();
 
                             }
                         }
@@ -183,9 +190,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private void SendTransaction_Load(object sender, EventArgs e)
         {
             UpdateStyles();
-#if WINDOWS
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
-#endif
             if (!AutoUpdateTimeReceived)
             {
                 AutoUpdateTimeReceived = true;

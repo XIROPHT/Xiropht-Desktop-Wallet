@@ -66,7 +66,7 @@ namespace Xiropht_Wallet
         /// Threading
         /// </summary>
         private Thread _threadUpdateNetworkStats;
-        private const int ThreadUpdateTransactionWalletInterval = 1000;
+        private const int ThreadUpdateTransactionWalletInterval = 2000;
         private const int ThreadUpdateNetworkStatsInterval = 1000;
         private const int MaxTransactionPerPage = 100;
         private const int MaxBlockPerPage = 100;
@@ -157,6 +157,7 @@ namespace Xiropht_Wallet
                             MainWalletForm.AutoScroll = false;
                             MainWalletForm.Parent = panelMainForm;
                             MainWalletForm.Show();
+                            MainWalletForm.Refresh();
                         };
 
                         BeginInvoke(invoke);
@@ -171,6 +172,7 @@ namespace Xiropht_Wallet
                             CreateWalletForm.AutoScroll = false;
                             CreateWalletForm.Parent = panelMainForm;
                             CreateWalletForm.Show();
+                            CreateWalletForm.Refresh();
                         };
                         BeginInvoke(invoke);
 
@@ -183,6 +185,7 @@ namespace Xiropht_Wallet
                             OpenWalletForm.AutoScroll = false;
                             OpenWalletForm.Parent = panelMainForm;
                             OpenWalletForm.Show();
+                            OpenWalletForm.Refresh();
                         };
                         BeginInvoke(invoke);
 
@@ -196,6 +199,7 @@ namespace Xiropht_Wallet
                             OverviewWalletForm.AutoScroll = false;
                             OverviewWalletForm.Parent = panelMainForm;
                             OverviewWalletForm.Show();
+                            OverviewWalletForm.Refresh();
                         };
                         BeginInvoke(invoke);
 
@@ -210,6 +214,7 @@ namespace Xiropht_Wallet
                             SendTransactionWalletForm.AutoScroll = false;
                             SendTransactionWalletForm.Parent = panelMainForm;
                             SendTransactionWalletForm.Show();
+                            SendTransactionWalletForm.Refresh();
                         };
                         BeginInvoke(invoke);
 
@@ -223,6 +228,7 @@ namespace Xiropht_Wallet
                             TransactionHistoryWalletForm.AutoScroll = false;
                             TransactionHistoryWalletForm.Parent = panelMainForm;
                             TransactionHistoryWalletForm.Show();
+                            TransactionHistoryWalletForm.Refresh();
                             buttonPreviousPage.Show();
                             buttonNextPage.Show();
                             buttonFirstPage.Show();
@@ -241,6 +247,7 @@ namespace Xiropht_Wallet
                             BlockWalletForm.AutoScroll = false;
                             BlockWalletForm.Parent = panelMainForm;
                             BlockWalletForm.Show();
+                            BlockWalletForm.Refresh();
                             buttonPreviousPage.Show();
                             buttonNextPage.Show();
                             buttonFirstPage.Show();
@@ -259,6 +266,7 @@ namespace Xiropht_Wallet
                             RestoreWalletForm.AutoScroll = false;
                             RestoreWalletForm.Parent = panelMainForm;
                             RestoreWalletForm.Show();
+                            RestoreWalletForm.Refresh();
                         };
                         BeginInvoke(invoke);
                         break;
@@ -356,12 +364,12 @@ namespace Xiropht_Wallet
 
             _threadUpdateNetworkStats = new Thread(delegate ()
             {
-                while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                while (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                 {
 
                     if (ClassWalletObject.SeedNodeConnectorWallet != null)
                     {
-                        if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                        if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                         {
                             if (!string.IsNullOrEmpty(ClassWalletObject.TotalBlockMined) &&
                                 !string.IsNullOrEmpty(ClassWalletObject.CoinCirculating) &&
@@ -685,15 +693,15 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void MainMenuToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Task.Run(async delegate ()
+            Task.Run(delegate ()
             {
                 if (ClassWalletObject.WalletConnect != null)
                 {
                     if (ClassWalletObject.SeedNodeConnectorWallet != null)
                     {
-                        if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                        if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                         {
-                            await ClassWalletObject.FullDisconnection(true);
+                            ClassWalletObject.FullDisconnection(true);
                         }
                     }
                 }
@@ -709,15 +717,15 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void CreateWalletToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Task.Run(async delegate ()
+            Task.Run(delegate ()
             {
                 if (ClassWalletObject.WalletConnect != null)
                 {
                     if (ClassWalletObject.SeedNodeConnectorWallet != null)
                     {
-                        if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                        if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                         {
-                            await ClassWalletObject.FullDisconnection(true);
+                            ClassWalletObject.FullDisconnection(true);
                         }
                     }
                 }
@@ -732,15 +740,15 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void OpenWalletToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Task.Run(async delegate ()
+            Task.Run(delegate ()
             {
                 if (ClassWalletObject.WalletConnect != null)
                 {
                     if (ClassWalletObject.SeedNodeConnectorWallet != null)
                     {
-                        if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                        if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                         {
-                            await ClassWalletObject.FullDisconnection(true);
+                            ClassWalletObject.FullDisconnection(true);
                         }
                     }
                 }
@@ -788,7 +796,7 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.SeedNodeConnectorWallet != null)
             {
-                if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                 {
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Overview);
                 }
@@ -802,13 +810,13 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void CloseWalletToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Task.Run(async delegate ()
+            Task.Run(delegate ()
             {
                 if (ClassWalletObject.SeedNodeConnectorWallet != null)
                 {
-                    if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                    if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                     {
-                        await ClassWalletObject.FullDisconnection(true).ConfigureAwait(false);
+                        ClassWalletObject.FullDisconnection(true);
                     }
                 }
             });
@@ -824,7 +832,7 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.SeedNodeConnectorWallet != null)
             {
-                if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                 {
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.SendTransaction);
                 }
@@ -840,7 +848,7 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.SeedNodeConnectorWallet != null)
             {
-                if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                 {
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.TransactionHistory);
                 }
@@ -856,7 +864,7 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.SeedNodeConnectorWallet != null)
             {
-                if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                 {
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.BlockExplorer);
                 }
@@ -1120,7 +1128,7 @@ namespace Xiropht_Wallet
                     ThreadPool.QueueUserWorkItem(delegate
                     {
 
-                        while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux) && EnableUpdateTransactionWallet)
+                        while (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                         {
                             try
                             {
@@ -2362,7 +2370,7 @@ namespace Xiropht_Wallet
                                         TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
                                     }
 
-                                    if (!ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                                    if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                                     {
                                         break;
                                     }
@@ -2396,6 +2404,8 @@ namespace Xiropht_Wallet
                                     }
 
                                 }
+
+
                                 Thread.Sleep(ThreadUpdateTransactionWalletInterval);
                             }
                             catch
@@ -2409,7 +2419,7 @@ namespace Xiropht_Wallet
                     // Decrypt transaction from cache.
                     ThreadPool.QueueUserWorkItem(delegate
                     {
-                        while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux) && EnableUpdateTransactionWallet)
+                        while (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                         {
                             if (ClassWalletObject.BlockTransactionSync)
                             {
@@ -2599,7 +2609,7 @@ namespace Xiropht_Wallet
                                 new Thread(() => StopUpdateTransactionHistory(false, false)).Start();
                             }
 
-                            if (!ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                            if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                             {
                                 break;
                             }
@@ -2630,13 +2640,14 @@ namespace Xiropht_Wallet
 
                 ThreadPool.QueueUserWorkItem(async delegate
                 {
-                    while (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux) && EnableUpdateBlockWallet)
+                    while (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                     {
 
                         if (ListBlockHashShowed.Count != ClassBlockCache.ListBlock.Count && TotalBlockRead != ClassBlockCache.ListBlock.Count)
                         {
                             try
                             {
+
 
                                 for (int i = TotalBlockRead; i < ClassBlockCache.ListBlock.Count; i++)
                                 {
@@ -2721,7 +2732,6 @@ namespace Xiropht_Wallet
 
                                     }
                                 }
-
                             }
                             catch
                             {
@@ -2757,7 +2767,7 @@ namespace Xiropht_Wallet
                             }
 
 
-                            if (BlockWalletForm.listViewBlockExplorer.Items.Count > ClassBlockCache.ListBlock.Count)
+                            if (BlockWalletForm.listViewBlockExplorer.Items.Count-1 > ClassBlockCache.ListBlock.Count)
                             {
                                 await Task.Run(delegate ()
                                 {
@@ -2767,6 +2777,9 @@ namespace Xiropht_Wallet
 
                             Thread.Sleep(ThreadUpdateTransactionWalletInterval);
                         }
+
+
+        
                     }
                 });
             }
@@ -2892,7 +2905,6 @@ namespace Xiropht_Wallet
         private void TimerRefresh_Tick(object sender, EventArgs e)
         {
             UpdateStyles();
-#if WINDOWS
             if (Width < BaseInterfaceWidth)
             {
                 Width = BaseInterfaceWidth;
@@ -2910,7 +2922,6 @@ namespace Xiropht_Wallet
             {
                 Height += 10;
             }
-#endif
 
             if (ClassFormPhase.WalletXiropht != null) // Get list of all controls of each menu.
             {
@@ -2965,7 +2976,7 @@ namespace Xiropht_Wallet
             {
                 if (ClassWalletObject.SeedNodeConnectorWallet != null)
                 {
-                    if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                    if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                     {
 
 #if WINDOWS
@@ -2999,14 +3010,14 @@ namespace Xiropht_Wallet
             }
         }
 
-#if WINDOWS
-#region  Wallet Resize Interface Functions.
+        #region  Wallet Resize Interface Functions.
 
         /// <summary>
         /// Resize interface and each controls inside automaticaly.
         /// </summary>
         public void ResizeWalletInterface()
         {
+#if WINDOWS
             try
             {
                 void MethodInvoker()
@@ -3907,10 +3918,11 @@ namespace Xiropht_Wallet
             catch
             {
             }
+#endif
         }
 
 #endregion
-#endif
+
         /// <summary>
         /// Detect when the size of the interface change.
         /// </summary>
@@ -3937,9 +3949,8 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void WalletXiropht_Resize(object sender, EventArgs e)
         {
-#if WINDOWS
+
             ResizeWalletInterface();
-#endif
             //Refresh();
         }
 
@@ -3954,7 +3965,7 @@ namespace Xiropht_Wallet
             {
                 if (ClassWalletObject.SeedNodeConnectorWallet != null)
                 {
-                    if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                    if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                     {
 #if WINDOWS
                         if (MetroMessageBox.Show(this, ClassTranslation.GetLanguageTextFromOrder("RESYNC_BLOCK_EXPLORER_CONTENT_TEXT"),
@@ -4281,9 +4292,9 @@ namespace Xiropht_Wallet
             {
                 if (ClassWalletObject.SeedNodeConnectorWallet != null)
                 {
-                    if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                    if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                     {
-                        await ClassWalletObject.FullDisconnection(true).ConfigureAwait(false);
+                        ClassWalletObject.FullDisconnection(true);
                     }
                 }
             });

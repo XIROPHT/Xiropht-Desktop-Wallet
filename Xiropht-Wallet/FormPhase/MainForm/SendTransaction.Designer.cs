@@ -108,7 +108,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.buttonSendTransaction.Size = new System.Drawing.Size(189, 74);
             this.buttonSendTransaction.TabIndex = 10;
             this.buttonSendTransaction.Text = "Send Transaction";
-            this.buttonSendTransaction.Click += new System.EventHandler(this.ButtonSendTransaction_ClickAsync);
+            this.buttonSendTransaction.Click += new System.EventHandler(this.ButtonSendTransaction_Click);
             // 
             // textBoxFee
             // 

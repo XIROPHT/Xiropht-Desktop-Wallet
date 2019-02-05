@@ -51,9 +51,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private void Main_Load(object sender, EventArgs e)
         {
             UpdateStyles();
-#if WINDOWS
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
-#endif
         }
 
 

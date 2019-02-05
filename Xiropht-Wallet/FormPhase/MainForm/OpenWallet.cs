@@ -209,16 +209,12 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private void OpenWallet_Load(object sender, EventArgs e)
         {
             UpdateStyles();
-#if WINDOWS
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
-#endif
         }
 
         private void OpenWallet_Resize(object sender, EventArgs e)
         {
-#if WINDOWS
             UpdateStyles();
-#endif
         }
 
         private void TextBoxPasswordWallet_KeyDownAsync(object sender, KeyEventArgs e)

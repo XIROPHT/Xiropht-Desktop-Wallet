@@ -207,6 +207,7 @@ namespace Xiropht_Wallet.Wallet
                         {
                             ClassWalletObject.ListRemoteNodeBanned.Add(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost);
                         }
+                        ClassWalletObject.DisconnectWholeRemoteNodeSync(true, true);
                     }
                     else
                     {

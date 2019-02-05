@@ -18,7 +18,7 @@ namespace Xiropht_Wallet.FormPhase
 
         private async void buttonClose_ClickAsync(object sender, EventArgs e)
         {
-            await ClassWalletObject.FullDisconnection(true);
+            ClassWalletObject.FullDisconnection(true);
             Hide();
         }
     }

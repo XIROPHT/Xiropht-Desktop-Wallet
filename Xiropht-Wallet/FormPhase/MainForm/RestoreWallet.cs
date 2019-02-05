@@ -117,17 +117,13 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void textBoxPassword_Resize(object sender, EventArgs e)
         {
-#if WINDOWS
             UpdateStyles();
-#endif
         }
 
         private void RestoreWallet_Load(object sender, EventArgs e)
         {
             UpdateStyles();
-#if WINDOWS
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
-#endif
         }
     }
 }
