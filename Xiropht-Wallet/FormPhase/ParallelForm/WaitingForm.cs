@@ -16,7 +16,7 @@ namespace Xiropht_Wallet.FormPhase
             labelLoadingNetwork.Text = ClassTranslation.GetLanguageTextFromOrder("WAITING_MENU_LABEL_TEXT");
         }
 
-        private async void buttonClose_ClickAsync(object sender, EventArgs e)
+        private void ButtonClose_Click(object sender, EventArgs e)
         {
             ClassWalletObject.FullDisconnection(true);
             Hide();

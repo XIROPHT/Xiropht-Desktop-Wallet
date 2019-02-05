@@ -596,7 +596,7 @@ namespace Xiropht_Wallet.Wallet
                     }
                 }
 
-                ThreadPool.QueueUserWorkItem(async delegate { FullDisconnection(false); });
+                ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(false); });
             });
             _threadListenSeedNodeNetwork.Start();
         }
@@ -670,7 +670,7 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletCreatePasswordNeedMoreCharacters:
                     ClassParallelForm.HideWaitingForm();
                     ClassParallelForm.HideWaitingCreateWalletForm();
-                    ThreadPool.QueueUserWorkItem(async delegate { FullDisconnection(true); });
+                    ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(true); });
 
 #if WINDOWS
                     ClassFormPhase.MessageBoxInterface(
@@ -690,7 +690,7 @@ namespace Xiropht_Wallet.Wallet
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletCreatePasswordNeedLetters:
                     ClassParallelForm.HideWaitingForm();
                     ClassParallelForm.HideWaitingCreateWalletForm();
-                    ThreadPool.QueueUserWorkItem(async delegate { FullDisconnection(true); });
+                    ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(true); });
 
 #if WINDOWS
                     ClassFormPhase.MessageBoxInterface(
@@ -732,7 +732,7 @@ namespace Xiropht_Wallet.Wallet
                         }).Start();
 
 #endif
-                        ThreadPool.QueueUserWorkItem(async delegate { FullDisconnection(true); });
+                        ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(true); });
                     }
                     else
                     {
@@ -875,7 +875,7 @@ namespace Xiropht_Wallet.Wallet
                         ClassWalletCommand.ClassWalletSendEnumeration.LoginPhase + "|" + WalletConnect.WalletAddress,
                         Certificate, true))
                     {
-                        ThreadPool.QueueUserWorkItem(async delegate { FullDisconnection(false); });
+                        ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(false); });
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if DEBUG
                         Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
@@ -894,7 +894,7 @@ namespace Xiropht_Wallet.Wallet
                         ClassWalletCommand.ClassWalletSendEnumeration.PasswordPhase + "|" +
                         WalletConnect.WalletPassword, Certificate, true))
                     {
-                        ThreadPool.QueueUserWorkItem(async delegate { FullDisconnection(false); });
+                        ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(false); });
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if DEBUG
                         Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
@@ -921,7 +921,7 @@ namespace Xiropht_Wallet.Wallet
                         ClassWalletCommand.ClassWalletSendEnumeration.KeyPhase + "|" + WalletConnect.WalletKey,
                         Certificate, true))
                     {
-                        ThreadPool.QueueUserWorkItem(async delegate { FullDisconnection(true); });
+                        ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(true); });
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if DEBUG
                         Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
@@ -1949,7 +1949,7 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                             Log.WriteLine("Exception error on connect to public remote node: " + error.Message);
 #endif
-                            ThreadPool.QueueUserWorkItem(async delegate { DisconnectWholeRemoteNodeSync(true, false); });
+                            ThreadPool.QueueUserWorkItem(delegate { DisconnectWholeRemoteNodeSync(true, false); });
 
                         }
                     }

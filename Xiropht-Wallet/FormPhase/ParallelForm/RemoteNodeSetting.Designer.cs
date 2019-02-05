@@ -125,7 +125,7 @@
             this.buttonValidSetting.TabIndex = 7;
             this.buttonValidSetting.Text = "OK";
             this.buttonValidSetting.UseVisualStyleBackColor = true;
-            this.buttonValidSetting.Click += new System.EventHandler(this.ButtonValidSetting_ClickAsync);
+            this.buttonValidSetting.Click += new System.EventHandler(this.ButtonValidSetting_Click);
             // 
             // RemoteNodeSetting
             // 

@@ -14,7 +14,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             InitializeComponent();
         }
 
-        private async void ButtonValidSetting_ClickAsync(object sender, EventArgs e)
+        private void ButtonValidSetting_Click(object sender, EventArgs e)
         {
             if (radioButtonEnableSeedNodeSync.Checked)
             {

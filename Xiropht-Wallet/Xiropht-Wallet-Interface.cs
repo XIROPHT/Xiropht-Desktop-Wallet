@@ -229,6 +229,11 @@ namespace Xiropht_Wallet
                             TransactionHistoryWalletForm.Parent = panelMainForm;
                             TransactionHistoryWalletForm.Show();
                             TransactionHistoryWalletForm.Refresh();
+                            TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Refresh();
+                            TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Refresh();
+                            TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Refresh();
+                            TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Refresh();
+                            TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Refresh();
                             buttonPreviousPage.Show();
                             buttonNextPage.Show();
                             buttonFirstPage.Show();
@@ -248,6 +253,7 @@ namespace Xiropht_Wallet
                             BlockWalletForm.Parent = panelMainForm;
                             BlockWalletForm.Show();
                             BlockWalletForm.Refresh();
+                            BlockWalletForm.listViewBlockExplorer.Refresh();
                             buttonPreviousPage.Show();
                             buttonNextPage.Show();
                             buttonFirstPage.Show();
@@ -2905,6 +2911,7 @@ namespace Xiropht_Wallet
         private void TimerRefresh_Tick(object sender, EventArgs e)
         {
             UpdateStyles();
+#if WINDOWS
             if (Width < BaseInterfaceWidth)
             {
                 Width = BaseInterfaceWidth;
@@ -2922,7 +2929,7 @@ namespace Xiropht_Wallet
             {
                 Height += 10;
             }
-
+#endif
             if (ClassFormPhase.WalletXiropht != null) // Get list of all controls of each menu.
             {
                 MainWalletForm.GetListControl();
@@ -3010,7 +3017,7 @@ namespace Xiropht_Wallet
             }
         }
 
-        #region  Wallet Resize Interface Functions.
+#region  Wallet Resize Interface Functions.
 
         /// <summary>
         /// Resize interface and each controls inside automaticaly.
@@ -3930,6 +3937,7 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void WalletXiropht_SizeChanged(object sender, EventArgs e)
         {
+#if WINDOWS
             if (Width < BaseInterfaceWidth)
             {
                 Width = BaseInterfaceWidth;
@@ -3939,6 +3947,7 @@ namespace Xiropht_Wallet
             {
                 Height = BaseInterfaceHeight;
             }
+#endif
             //Refresh();
         }
 
@@ -4288,7 +4297,7 @@ namespace Xiropht_Wallet
 
         private void restoreWalletToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Task.Run(async delegate ()
+            Task.Run(delegate ()
             {
                 if (ClassWalletObject.SeedNodeConnectorWallet != null)
                 {

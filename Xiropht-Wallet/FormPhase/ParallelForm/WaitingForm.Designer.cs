@@ -50,7 +50,7 @@
             this.buttonClose.TabIndex = 1;
             this.buttonClose.Text = "X";
             this.buttonClose.UseVisualStyleBackColor = true;
-            this.buttonClose.Click += new System.EventHandler(this.buttonClose_ClickAsync);
+            this.buttonClose.Click += new System.EventHandler(this.ButtonClose_Click);
             // 
             // WaitingForm
             // 
