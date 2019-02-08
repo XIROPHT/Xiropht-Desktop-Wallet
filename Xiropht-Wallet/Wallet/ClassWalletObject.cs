@@ -28,7 +28,7 @@ namespace Xiropht_Wallet.Wallet
         public static ClassSeedNodeConnector SeedNodeConnectorWallet;
         public static ClassWalletConnect WalletConnect;
         public static List<ClassWalletConnectToRemoteNode> ListWalletConnectToRemoteNode;
-        public static List<string> ListRemoteNodeBanned = new List<string>();
+        public static Dictionary<string, long> ListRemoteNodeBanned = new Dictionary<string, long>();
         public static string WalletLastPathFile;
         public static bool WalletPinDisabled;
 
@@ -520,9 +520,7 @@ namespace Xiropht_Wallet.Wallet
             _threadListenSeedNodeNetwork = new Thread(async delegate()
             {
                 var packetNone = 0;
-                var packetError = 10;
                 var packetNoneMax = 100;
-                var packetErrorMax = 1;
                 while (SeedNodeConnectorWallet.GetStatusConnectToSeed(true))
                 {
                     var packetWallet = await WalletConnect.ListenPacketWalletAsync(Certificate, true).ConfigureAwait(false);
@@ -542,17 +540,10 @@ namespace Xiropht_Wallet.Wallet
 
                     if (packetWallet == ClassSeedNodeStatus.SeedError)
                     {
-                        packetError++;
-                    }
-                    else
-                    {
-                        packetError = 0;
+                        break;
                     }
 
                     if (packetNone == packetNoneMax && !InCreateWallet) break;
-
-                    if (packetError == packetErrorMax) break;
-
 
                     if (packetWallet.Contains("*")) // Character separator.
                     {
@@ -1367,7 +1358,7 @@ namespace Xiropht_Wallet.Wallet
                                                     remoteNode = remoteNode.Replace("|", "");
                                                     if (remoteNode != "NONE")
                                                     {
-                                                        if (!ListRemoteNodeBanned.Contains(remoteNode))
+                                                        if (!ListRemoteNodeBanned.ContainsKey(remoteNode))
                                                         {
                                                             if (!ClassRemoteNodeChecker.CheckRemoteNodeHostExist(remoteNode))
                                                             {
@@ -1404,7 +1395,14 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                                                                         Log.WriteLine("Remote node host: " + remoteNode + " is dead.");
 #endif
-                                                                        ListRemoteNodeBanned.Add(remoteNode);
+                                                                        if (!ListRemoteNodeBanned.ContainsKey(remoteNode))
+                                                                        {
+                                                                            ListRemoteNodeBanned.Add(remoteNode, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            ListRemoteNodeBanned[remoteNode] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                                        }
                                                                         break;
                                                                 }
                                                             }
@@ -1418,7 +1416,65 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                                                         else
                                                         {
-                                                            Log.WriteLine("Remote node host: " + remoteNode + " is banned.");
+                                                            if (ListRemoteNodeBanned[remoteNode] + 30 < DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                            {
+                                                                if (!ClassRemoteNodeChecker.CheckRemoteNodeHostExist(remoteNode))
+                                                                {
+                                                                    ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
+                                                                        "Start to check remote node host: " + remoteNode);
+#if DEBUG
+                                                                    Log.WriteLine("Start to check remote node host: " + remoteNode);
+#endif
+                                                                    switch (await ClassRemoteNodeChecker.CheckNewRemoteNodeHostAsync(remoteNode))
+                                                                    {
+                                                                        case ClassRemoteNodeStatus.StatusAlive:
+                                                                            ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
+                                                                                "Remote node host: " + remoteNode +
+                                                                                " is alive and already exist on the list.");
+#if DEBUG
+                                                                            Log.WriteLine(
+                                                                                "Remote node host: " + remoteNode +
+                                                                                " is alive and already exist on the list.");
+#endif
+                                                                            break;
+                                                                        case ClassRemoteNodeStatus.StatusNew:
+                                                                            ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
+                                                                                "Remote node host: " + remoteNode +
+                                                                                " is alive and included on the list.");
+#if DEBUG
+                                                                            Log.WriteLine(
+                                                                                "Remote node host: " + remoteNode +
+                                                                                " is alive and included on the list.");
+#endif
+                                                                            break;
+                                                                        case ClassRemoteNodeStatus.StatusDead:
+                                                                            ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
+                                                                                "Remote node host: " + remoteNode + " is dead.");
+#if DEBUG
+                                                                            Log.WriteLine("Remote node host: " + remoteNode + " is dead.");
+#endif
+                                                                            if (!ListRemoteNodeBanned.ContainsKey(remoteNode))
+                                                                            {
+                                                                                ListRemoteNodeBanned.Add(remoteNode, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                ListRemoteNodeBanned[remoteNode] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                                            }
+                                                                            break;
+                                                                    }
+                                                                }
+#if DEBUG
+                                                                else
+                                                                {
+                                                                    Log.WriteLine("Remote node host: " + remoteNode + " already exist.");
+                                                                }
+#endif
+                                                            }
+                                                            else
+                                                            {
+                                                                Log.WriteLine("Remote node host: " + remoteNode + " is banned.");
+                                                            }
                                                         }
 #endif
                                                     }
@@ -1613,7 +1669,14 @@ namespace Xiropht_Wallet.Wallet
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
-                                                    ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
+                                                    if (!ListRemoteNodeBanned.ContainsKey(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
+                                                    {
+                                                        ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                                    }
+                                                    else
+                                                    {
+                                                        ListRemoteNodeBanned[ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    }
                                                 }
                                                 DisconnectWholeRemoteNodeSync(true, false);
                                                 return;
@@ -1629,7 +1692,14 @@ namespace Xiropht_Wallet.Wallet
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
-                                                    ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
+                                                    if (!ListRemoteNodeBanned.ContainsKey(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
+                                                    {
+                                                        ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                                    }
+                                                    else
+                                                    {
+                                                        ListRemoteNodeBanned[ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    }
                                                 }
                                                 DisconnectWholeRemoteNodeSync(true, false);
                                                 return;
@@ -1645,7 +1715,14 @@ namespace Xiropht_Wallet.Wallet
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
-                                                    ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
+                                                    if (!ListRemoteNodeBanned.ContainsKey(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
+                                                    {
+                                                        ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                                    }
+                                                    else
+                                                    {
+                                                        ListRemoteNodeBanned[ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    }
                                                 }
                                                 DisconnectWholeRemoteNodeSync(true, false);
                                                 return;
@@ -1660,7 +1737,14 @@ namespace Xiropht_Wallet.Wallet
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
-                                                    ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
+                                                    if (!ListRemoteNodeBanned.ContainsKey(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
+                                                    {
+                                                        ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                                    }
+                                                    else
+                                                    {
+                                                        ListRemoteNodeBanned[ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    }
                                                 }
                                                 DisconnectWholeRemoteNodeSync(true, false);
                                                 return;
@@ -1676,7 +1760,14 @@ namespace Xiropht_Wallet.Wallet
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
-                                                    ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
+                                                    if (!ListRemoteNodeBanned.ContainsKey(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
+                                                    {
+                                                        ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                                    }
+                                                    else
+                                                    {
+                                                        ListRemoteNodeBanned[ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    }
                                                 }
                                                 DisconnectWholeRemoteNodeSync(true, false);
                                                 return;
@@ -1692,7 +1783,14 @@ namespace Xiropht_Wallet.Wallet
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
-                                                    ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
+                                                    if (!ListRemoteNodeBanned.ContainsKey(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
+                                                    {
+                                                        ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                                    }
+                                                    else
+                                                    {
+                                                        ListRemoteNodeBanned[ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    }
                                                 }
                                                 DisconnectWholeRemoteNodeSync(true, false);
                                                 return;
@@ -1708,7 +1806,14 @@ namespace Xiropht_Wallet.Wallet
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
-                                                    ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
+                                                    if (!ListRemoteNodeBanned.ContainsKey(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
+                                                    {
+                                                        ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                                    }
+                                                    else
+                                                    {
+                                                        ListRemoteNodeBanned[ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    }
                                                 }
                                                 DisconnectWholeRemoteNodeSync(true, false);
                                                 return;
@@ -1724,7 +1829,10 @@ namespace Xiropht_Wallet.Wallet
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
-                                                    ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
+                                                    if (!ListRemoteNodeBanned.ContainsKey(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
+                                                    {
+                                                        ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                                    }
                                                 }
                                                 DisconnectWholeRemoteNodeSync(true, false);
                                                 return;
@@ -1741,7 +1849,14 @@ namespace Xiropht_Wallet.Wallet
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
-                                                    ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
+                                                    if (!ListRemoteNodeBanned.ContainsKey(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
+                                                    {
+                                                        ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                                    }
+                                                    else
+                                                    {
+                                                        ListRemoteNodeBanned[ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    }
                                                 }
                                                 DisconnectWholeRemoteNodeSync(true, false);
                                                 return;
@@ -1758,7 +1873,14 @@ namespace Xiropht_Wallet.Wallet
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
-                                                    ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
+                                                    if (!ListRemoteNodeBanned.ContainsKey(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
+                                                    {
+                                                        ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                                    }
+                                                    else
+                                                    {
+                                                        ListRemoteNodeBanned[ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    }
                                                 }
                                                 DisconnectWholeRemoteNodeSync(true, false);
                                                 return;
@@ -1775,7 +1897,14 @@ namespace Xiropht_Wallet.Wallet
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
-                                                    ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
+                                                    if (!ListRemoteNodeBanned.ContainsKey(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
+                                                    {
+                                                        ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                                    }
+                                                    else
+                                                    {
+                                                        ListRemoteNodeBanned[ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    }
                                                 }
                                                 DisconnectWholeRemoteNodeSync(true, false);
                                                 return;
@@ -1791,7 +1920,14 @@ namespace Xiropht_Wallet.Wallet
                                             {
                                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
                                                 {
-                                                    ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
+                                                    if (!ListRemoteNodeBanned.ContainsKey(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1))
+                                                    {
+                                                        ListRemoteNodeBanned.Add(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                                    }
+                                                    else
+                                                    {
+                                                        ListRemoteNodeBanned[ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    }
                                                 }
                                                 DisconnectWholeRemoteNodeSync(true, false);
                                                 return;
@@ -1968,7 +2104,14 @@ namespace Xiropht_Wallet.Wallet
                             {
                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ListWalletConnectToRemoteNode[1].RemoteNodeHost))
                                 {
-                                    ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[1].RemoteNodeHost);
+                                    if (!ListRemoteNodeBanned.ContainsKey(ListWalletConnectToRemoteNode[1].RemoteNodeHost))
+                                    {
+                                        ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[1].RemoteNodeHost, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                    }
+                                    else
+                                    {
+                                        ListRemoteNodeBanned[ListWalletConnectToRemoteNode[1].RemoteNodeHost] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                    }
 
 #if DEBUG
                                     Log.WriteLine("remote node banned for too much bad information about coin max supply provided by host: " + ListWalletConnectToRemoteNode[1].RemoteNodeHost);
@@ -2014,8 +2157,15 @@ namespace Xiropht_Wallet.Wallet
                             {
                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ListWalletConnectToRemoteNode[2].RemoteNodeHost))
                                 {
-                                    ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[2].RemoteNodeHost);
 
+                                    if (!ListRemoteNodeBanned.ContainsKey(ListWalletConnectToRemoteNode[2].RemoteNodeHost))
+                                    {
+                                        ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[2].RemoteNodeHost, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                    }
+                                    else
+                                    {
+                                        ListRemoteNodeBanned[ListWalletConnectToRemoteNode[2].RemoteNodeHost] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                    }
 #if DEBUG
                                     Log.WriteLine("remote node banned for too much bad information about coin circulating provided by host: " + ListWalletConnectToRemoteNode[2].RemoteNodeHost);
 #endif
@@ -2057,13 +2207,13 @@ namespace Xiropht_Wallet.Wallet
 #endif
                             if (ListWalletConnectToRemoteNode[5].TotalInvalidPacket >= ClassConnectorSetting.MaxRemoteNodeInvalidPacket)
                             {
-                                if (!ClassConnectorSetting.SeedNodeIp.Contains(ListWalletConnectToRemoteNode[5].RemoteNodeHost))
+                                if (!ListRemoteNodeBanned.ContainsKey(ListWalletConnectToRemoteNode[5].RemoteNodeHost))
                                 {
-                                    ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[5].RemoteNodeHost);
-
-#if DEBUG
-                                    Log.WriteLine("remote node banned for too much bad information about network difficulty provided by host: " + ListWalletConnectToRemoteNode[5].RemoteNodeHost);
-#endif
+                                    ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[5].RemoteNodeHost, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                }
+                                else
+                                {
+                                    ListRemoteNodeBanned[ListWalletConnectToRemoteNode[5].RemoteNodeHost] = DateTimeOffset.Now.ToUnixTimeSeconds();
                                 }
                                 DisconnectWholeRemoteNodeSync(true, false);
                             }
@@ -2103,8 +2253,15 @@ namespace Xiropht_Wallet.Wallet
                             {
                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ListWalletConnectToRemoteNode[6].RemoteNodeHost))
                                 {
-                                    ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[6].RemoteNodeHost);
 
+                                    if (!ListRemoteNodeBanned.ContainsKey(ListWalletConnectToRemoteNode[6].RemoteNodeHost))
+                                    {
+                                        ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[6].RemoteNodeHost, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                    }
+                                    else
+                                    {
+                                        ListRemoteNodeBanned[ListWalletConnectToRemoteNode[6].RemoteNodeHost] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                    }
 #if DEBUG
                                     Log.WriteLine("remote node banned for too much bad information about network hashrate provided by host: " + ListWalletConnectToRemoteNode[6].RemoteNodeHost);
 #endif
@@ -2147,7 +2304,15 @@ namespace Xiropht_Wallet.Wallet
                             {
                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ListWalletConnectToRemoteNode[4].RemoteNodeHost))
                                 {
-                                    ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[4].RemoteNodeHost);
+
+                                    if (!ListRemoteNodeBanned.ContainsKey(ListWalletConnectToRemoteNode[4].RemoteNodeHost))
+                                    {
+                                        ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[4].RemoteNodeHost, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                    }
+                                    else
+                                    {
+                                        ListRemoteNodeBanned[ListWalletConnectToRemoteNode[4].RemoteNodeHost] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                    }
 
 #if DEBUG
                                     Log.WriteLine("remote node banned for too much bad information about total block mined provided by host: " + ListWalletConnectToRemoteNode[4].RemoteNodeHost);
@@ -2192,8 +2357,15 @@ namespace Xiropht_Wallet.Wallet
                             {
                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ListWalletConnectToRemoteNode[3].RemoteNodeHost))
                                 {
-                                    ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[3].RemoteNodeHost);
 
+                                    if (!ListRemoteNodeBanned.ContainsKey(ListWalletConnectToRemoteNode[3].RemoteNodeHost))
+                                    {
+                                        ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[3].RemoteNodeHost, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                    }
+                                    else
+                                    {
+                                        ListRemoteNodeBanned[ListWalletConnectToRemoteNode[3].RemoteNodeHost] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                    }
 #if DEBUG
                                     Log.WriteLine("remote node banned for too much bad information about total transaction fee provided by host: " + ListWalletConnectToRemoteNode[3].RemoteNodeHost);
 #endif
@@ -2237,8 +2409,14 @@ namespace Xiropht_Wallet.Wallet
                             {
                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ListWalletConnectToRemoteNode[7].RemoteNodeHost))
                                 {
-                                    ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[7].RemoteNodeHost);
-
+                                    if (!ListRemoteNodeBanned.ContainsKey(ListWalletConnectToRemoteNode[7].RemoteNodeHost))
+                                    {
+                                        ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[7].RemoteNodeHost, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                    }
+                                    else
+                                    {
+                                        ListRemoteNodeBanned[ListWalletConnectToRemoteNode[7].RemoteNodeHost] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                    }
 #if DEBUG
                                     Log.WriteLine("remote node banned for too much bad information about total pending transaction provided by host: " + ListWalletConnectToRemoteNode[7].RemoteNodeHost);
 #endif
@@ -2282,8 +2460,15 @@ namespace Xiropht_Wallet.Wallet
                             {
                                 if (!ClassConnectorSetting.SeedNodeIp.Contains(ListWalletConnectToRemoteNode[9].RemoteNodeHost))
                                 {
-                                    ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[9].RemoteNodeHost);
 
+                                    if (!ListRemoteNodeBanned.ContainsKey(ListWalletConnectToRemoteNode[9].RemoteNodeHost))
+                                    {
+                                        ListRemoteNodeBanned.Add(ListWalletConnectToRemoteNode[9].RemoteNodeHost, DateTimeOffset.Now.ToUnixTimeSeconds());
+                                    }
+                                    else
+                                    {
+                                        ListRemoteNodeBanned[ListWalletConnectToRemoteNode[9].RemoteNodeHost] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                    }
 #if DEBUG
                                     Log.WriteLine("remote node banned for too much bad information about block per id asked provided by host: " + ListWalletConnectToRemoteNode[9].RemoteNodeHost);
 #endif

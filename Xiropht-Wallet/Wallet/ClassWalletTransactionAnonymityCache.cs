@@ -200,7 +200,14 @@ namespace Xiropht_Wallet.Wallet
                     {
                         if (!ClassConnectorSetting.SeedNodeIp.Contains(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
                         {
-                            ClassWalletObject.ListRemoteNodeBanned.Add(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost);
+                            if (!ClassWalletObject.ListRemoteNodeBanned.ContainsKey(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
+                            {
+                                ClassWalletObject.ListRemoteNodeBanned.Add(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost, DateTimeOffset.Now.ToUnixTimeSeconds());
+                            }
+                            else
+                            {
+                                ClassWalletObject.ListRemoteNodeBanned[ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                            }
                         }
                         ClassWalletObject.DisconnectWholeRemoteNodeSync(true, true);
                     }
