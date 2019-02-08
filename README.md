@@ -19,7 +19,7 @@ For make a binary linux file from executable windows file:
 
 mkbundle --list-targets // Give the list of all target runtime
 
-Target: 4.6.1-linux-libc2.12-amd64
+Example of target: 4.6.1-linux-libc2.12-amd64
 
 mkbundle --fetch-target 4.6.1-linux-libc2.12-amd64 // Functional for Ubuntu 18.04 64bits
 
