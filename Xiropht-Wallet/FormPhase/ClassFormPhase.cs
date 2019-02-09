@@ -1,5 +1,6 @@
-﻿using MetroFramework;
-using System;
+﻿#if WINDOWS
+using MetroFramework;
+#endif
 using System.Windows.Forms;
 using Xiropht_Connector_All.Setting;
 using Xiropht_Wallet.Wallet;
@@ -16,6 +17,7 @@ namespace Xiropht_Wallet.FormPhase
         public const string TransactionHistory = "TRANSACTION";
         public const string BlockExplorer = "BLOCK";
         public const string RestoreWallet = "RESTORE";
+        public const string ContactWallet = "CONTACT";
     }
 
     public class ClassFormPhase

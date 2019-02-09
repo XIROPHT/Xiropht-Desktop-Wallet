@@ -70,6 +70,7 @@ namespace Xiropht_Wallet
             this.labelNoticeTotalPendingTransactionOnReceive = new System.Windows.Forms.Label();
             this.labelNoticeWalletBalance = new System.Windows.Forms.Label();
             this.labelNoticeWalletAddress = new System.Windows.Forms.Label();
+            this.buttonContactWallet = new System.Windows.Forms.Button();
             this.menuStripMenu.SuspendLayout();
             this.panelControlWallet.SuspendLayout();
             this.SuspendLayout();
@@ -82,9 +83,9 @@ namespace Xiropht_Wallet
             this.languageToolStripMenuItem,
             this.settingToolStripMenuItem,
             this.helpToolStripMenuItem});
-            this.menuStripMenu.Location = new System.Drawing.Point(20, 60);
+            this.menuStripMenu.Location = new System.Drawing.Point(0, 0);
             this.menuStripMenu.Name = "menuStripMenu";
-            this.menuStripMenu.Size = new System.Drawing.Size(992, 24);
+            this.menuStripMenu.Size = new System.Drawing.Size(1032, 24);
             this.menuStripMenu.TabIndex = 0;
             // 
             // fileToolStripMenuItem
@@ -424,17 +425,22 @@ namespace Xiropht_Wallet
             this.labelNoticeWalletAddress.Text = "Wallet Address:";
             this.labelNoticeWalletAddress.Click += new System.EventHandler(this.labelNoticeWalletAddress_Click);
             // 
+            // buttonContactWallet
+            // 
+            this.buttonContactWallet.Location = new System.Drawing.Point(20, 417);
+            this.buttonContactWallet.Name = "buttonContactWallet";
+            this.buttonContactWallet.Size = new System.Drawing.Size(194, 54);
+            this.buttonContactWallet.TabIndex = 14;
+            this.buttonContactWallet.Text = "Contact";
+            this.buttonContactWallet.Click += new System.EventHandler(this.buttonContactWallet_Click);
+            // 
             // WalletXiropht
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-#if WINDOWS
-            this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
-#endif
-#if LINUX
             this.BackColor = System.Drawing.Color.White;
-#endif
             this.ClientSize = new System.Drawing.Size(1032, 754);
+            this.Controls.Add(this.buttonContactWallet);
             this.Controls.Add(this.linkLabelWebsite);
             this.Controls.Add(this.labelCopyright);
             this.Controls.Add(this.buttonFirstPage);
@@ -510,6 +516,7 @@ namespace Xiropht_Wallet
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.LinkLabel linkLabelWebsite;
+        private System.Windows.Forms.Button buttonContactWallet;
     }
 }
 

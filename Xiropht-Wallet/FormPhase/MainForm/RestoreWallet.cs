@@ -1,12 +1,8 @@
-﻿#if WINDOWS
-using MetroFramework;
-#endif
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Xiropht_Connector_All.Wallet;
 using Xiropht_Wallet.Wallet;

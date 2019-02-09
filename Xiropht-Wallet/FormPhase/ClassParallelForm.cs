@@ -8,7 +8,7 @@ namespace Xiropht_Wallet.FormPhase
     public class ClassParallelForm
     {
         public static bool PinFormShowed;
-        public static PinForm PinForm = new PinForm();
+        public static PinFormWallet PinForm = new PinFormWallet();
         public static bool WaitingFormShowed;
         public static WaitingForm WaitingForm = new WaitingForm();
         public static bool WaitingCreateWalletFormShowed;

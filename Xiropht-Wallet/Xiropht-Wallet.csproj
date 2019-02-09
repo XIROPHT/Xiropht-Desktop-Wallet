@@ -97,12 +97,14 @@
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
     <Reference Include="Xiropht-Connector-All, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Xiropht-Connector-All\Xiropht-Connector-All\bin\Debug\Xiropht-Connector-All.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassContact.cs" />
     <Compile Include="ClassLog.cs" />
     <Compile Include="ClassMemory.cs" />
     <Compile Include="ClassTranslation.cs" />
@@ -116,11 +118,17 @@
     </Compile>
     <Compile Include="FormPhase\ClassFormPhase.cs" />
     <Compile Include="FormPhase\ClassParallelForm.cs" />
-    <Compile Include="FormPhase\MainForm\BlockExplorer.cs">
+    <Compile Include="FormPhase\MainForm\BlockExplorerWallet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPhase\MainForm\BlockExplorer.Designer.cs">
-      <DependentUpon>BlockExplorer.cs</DependentUpon>
+    <Compile Include="FormPhase\MainForm\BlockExplorerWallet.Designer.cs">
+      <DependentUpon>BlockExplorerWallet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\ContactWallet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\ContactWallet.Designer.cs">
+      <DependentUpon>ContactWallet.cs</DependentUpon>
     </Compile>
     <Compile Include="FormPhase\MainForm\CreateWallet.cs">
       <SubType>Form</SubType>
@@ -128,11 +136,11 @@
     <Compile Include="FormPhase\MainForm\CreateWallet.Designer.cs">
       <DependentUpon>CreateWallet.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPhase\MainForm\Overview.cs">
+    <Compile Include="FormPhase\MainForm\OverviewWallet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPhase\MainForm\Overview.Designer.cs">
-      <DependentUpon>Overview.cs</DependentUpon>
+    <Compile Include="FormPhase\MainForm\OverviewWallet.Designer.cs">
+      <DependentUpon>OverviewWallet.cs</DependentUpon>
     </Compile>
     <Compile Include="FormPhase\MainForm\RestoreWallet.cs">
       <SubType>Form</SubType>
@@ -140,41 +148,47 @@
     <Compile Include="FormPhase\MainForm\RestoreWallet.Designer.cs">
       <DependentUpon>RestoreWallet.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPhase\MainForm\SendTransaction.cs">
+    <Compile Include="FormPhase\MainForm\SendTransactionWallet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPhase\MainForm\SendTransaction.Designer.cs">
-      <DependentUpon>SendTransaction.cs</DependentUpon>
+    <Compile Include="FormPhase\MainForm\SendTransactionWallet.Designer.cs">
+      <DependentUpon>SendTransactionWallet.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPhase\MainForm\TransactionHistory.cs">
+    <Compile Include="FormPhase\MainForm\TransactionHistoryWallet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPhase\MainForm\TransactionHistory.Designer.cs">
-      <DependentUpon>TransactionHistory.cs</DependentUpon>
+    <Compile Include="FormPhase\MainForm\TransactionHistoryWallet.Designer.cs">
+      <DependentUpon>TransactionHistoryWallet.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\About.cs">
+    <Compile Include="FormPhase\ParallelForm\AboutWallet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\About.Designer.cs">
-      <DependentUpon>About.cs</DependentUpon>
+    <Compile Include="FormPhase\ParallelForm\AboutWallet.Designer.cs">
+      <DependentUpon>AboutWallet.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\ChangeWalletPassword.cs">
+    <Compile Include="FormPhase\ParallelForm\AddContactWallet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\ChangeWalletPassword.Designer.cs">
-      <DependentUpon>ChangeWalletPassword.cs</DependentUpon>
+    <Compile Include="FormPhase\ParallelForm\AddContactWallet.Designer.cs">
+      <DependentUpon>AddContactWallet.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\CreateWalletSuccessForm.cs">
+    <Compile Include="FormPhase\ParallelForm\ChangeWalletPasswordWallet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\CreateWalletSuccessForm.Designer.cs">
-      <DependentUpon>CreateWalletSuccessForm.cs</DependentUpon>
+    <Compile Include="FormPhase\ParallelForm\ChangeWalletPasswordWallet.Designer.cs">
+      <DependentUpon>ChangeWalletPasswordWallet.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPhase\MainForm\Main.cs">
+    <Compile Include="FormPhase\ParallelForm\CreateWalletSuccessFormWallet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPhase\MainForm\Main.Designer.cs">
-      <DependentUpon>Main.cs</DependentUpon>
+    <Compile Include="FormPhase\ParallelForm\CreateWalletSuccessFormWallet.Designer.cs">
+      <DependentUpon>CreateWalletSuccessFormWallet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\MainWallet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\MainForm\MainWallet.Designer.cs">
+      <DependentUpon>MainWallet.cs</DependentUpon>
     </Compile>
     <Compile Include="FormPhase\MainForm\OpenWallet.cs">
       <SubType>Form</SubType>
@@ -182,35 +196,35 @@
     <Compile Include="FormPhase\MainForm\OpenWallet.Designer.cs">
       <DependentUpon>OpenWallet.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\PinCodeSetting.cs">
+    <Compile Include="FormPhase\ParallelForm\PinCodeSettingWallet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\PinCodeSetting.Designer.cs">
-      <DependentUpon>PinCodeSetting.cs</DependentUpon>
+    <Compile Include="FormPhase\ParallelForm\PinCodeSettingWallet.Designer.cs">
+      <DependentUpon>PinCodeSettingWallet.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\PinForm.cs">
+    <Compile Include="FormPhase\ParallelForm\PinFormWallet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\PinForm.Designer.cs">
-      <DependentUpon>PinForm.cs</DependentUpon>
+    <Compile Include="FormPhase\ParallelForm\PinFormWallet.Designer.cs">
+      <DependentUpon>PinFormWallet.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\RemoteNodeSetting.cs">
+    <Compile Include="FormPhase\ParallelForm\RemoteNodeSettingWallet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\RemoteNodeSetting.Designer.cs">
-      <DependentUpon>RemoteNodeSetting.cs</DependentUpon>
+    <Compile Include="FormPhase\ParallelForm\RemoteNodeSettingWallet.Designer.cs">
+      <DependentUpon>RemoteNodeSettingWallet.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\WaitingFormReconnect.cs">
+    <Compile Include="FormPhase\ParallelForm\WaitingFormReconnectWallet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\WaitingFormReconnect.Designer.cs">
-      <DependentUpon>WaitingFormReconnect.cs</DependentUpon>
+    <Compile Include="FormPhase\ParallelForm\WaitingFormReconnectWallet.Designer.cs">
+      <DependentUpon>WaitingFormReconnectWallet.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\WaitingForm.cs">
+    <Compile Include="FormPhase\ParallelForm\WaitingFormWallet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPhase\ParallelForm\WaitingForm.Designer.cs">
-      <DependentUpon>WaitingForm.cs</DependentUpon>
+    <Compile Include="FormPhase\ParallelForm\WaitingFormWallet.Designer.cs">
+      <DependentUpon>WaitingFormWallet.cs</DependentUpon>
     </Compile>
     <Compile Include="FormCustom\ClassPanel.cs">
       <SubType>Component</SubType>
@@ -234,53 +248,59 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Wallet\ClassWalletObject.cs" />
-    <EmbeddedResource Include="FormPhase\MainForm\BlockExplorer.resx">
-      <DependentUpon>BlockExplorer.cs</DependentUpon>
+    <EmbeddedResource Include="FormPhase\MainForm\BlockExplorerWallet.resx">
+      <DependentUpon>BlockExplorerWallet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\MainForm\ContactWallet.resx">
+      <DependentUpon>ContactWallet.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormPhase\MainForm\CreateWallet.resx">
       <DependentUpon>CreateWallet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPhase\MainForm\Overview.resx">
-      <DependentUpon>Overview.cs</DependentUpon>
+    <EmbeddedResource Include="FormPhase\MainForm\OverviewWallet.resx">
+      <DependentUpon>OverviewWallet.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormPhase\MainForm\RestoreWallet.resx">
       <DependentUpon>RestoreWallet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPhase\MainForm\SendTransaction.resx">
-      <DependentUpon>SendTransaction.cs</DependentUpon>
+    <EmbeddedResource Include="FormPhase\MainForm\SendTransactionWallet.resx">
+      <DependentUpon>SendTransactionWallet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPhase\MainForm\TransactionHistory.resx">
-      <DependentUpon>TransactionHistory.cs</DependentUpon>
+    <EmbeddedResource Include="FormPhase\MainForm\TransactionHistoryWallet.resx">
+      <DependentUpon>TransactionHistoryWallet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPhase\ParallelForm\About.resx">
-      <DependentUpon>About.cs</DependentUpon>
+    <EmbeddedResource Include="FormPhase\ParallelForm\AboutWallet.resx">
+      <DependentUpon>AboutWallet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPhase\ParallelForm\ChangeWalletPassword.resx">
-      <DependentUpon>ChangeWalletPassword.cs</DependentUpon>
+    <EmbeddedResource Include="FormPhase\ParallelForm\AddContactWallet.resx">
+      <DependentUpon>AddContactWallet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPhase\ParallelForm\CreateWalletSuccessForm.resx">
-      <DependentUpon>CreateWalletSuccessForm.cs</DependentUpon>
+    <EmbeddedResource Include="FormPhase\ParallelForm\ChangeWalletPasswordWallet.resx">
+      <DependentUpon>ChangeWalletPasswordWallet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPhase\MainForm\Main.resx">
-      <DependentUpon>Main.cs</DependentUpon>
+    <EmbeddedResource Include="FormPhase\ParallelForm\CreateWalletSuccessFormWallet.resx">
+      <DependentUpon>CreateWalletSuccessFormWallet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\MainForm\MainWallet.resx">
+      <DependentUpon>MainWallet.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormPhase\MainForm\OpenWallet.resx">
       <DependentUpon>OpenWallet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPhase\ParallelForm\PinCodeSetting.resx">
-      <DependentUpon>PinCodeSetting.cs</DependentUpon>
+    <EmbeddedResource Include="FormPhase\ParallelForm\PinCodeSettingWallet.resx">
+      <DependentUpon>PinCodeSettingWallet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPhase\ParallelForm\PinForm.resx">
-      <DependentUpon>PinForm.cs</DependentUpon>
+    <EmbeddedResource Include="FormPhase\ParallelForm\PinFormWallet.resx">
+      <DependentUpon>PinFormWallet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPhase\ParallelForm\RemoteNodeSetting.resx">
-      <DependentUpon>RemoteNodeSetting.cs</DependentUpon>
+    <EmbeddedResource Include="FormPhase\ParallelForm\RemoteNodeSettingWallet.resx">
+      <DependentUpon>RemoteNodeSettingWallet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPhase\ParallelForm\WaitingFormReconnect.resx">
-      <DependentUpon>WaitingFormReconnect.cs</DependentUpon>
+    <EmbeddedResource Include="FormPhase\ParallelForm\WaitingFormReconnectWallet.resx">
+      <DependentUpon>WaitingFormReconnectWallet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPhase\ParallelForm\WaitingForm.resx">
-      <DependentUpon>WaitingForm.cs</DependentUpon>
+    <EmbeddedResource Include="FormPhase\ParallelForm\WaitingFormWallet.resx">
+      <DependentUpon>WaitingFormWallet.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
