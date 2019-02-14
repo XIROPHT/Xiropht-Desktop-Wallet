@@ -522,6 +522,7 @@ namespace Xiropht_Wallet
             metroButtonSendTransactionWallet.Text = ClassTranslation.GetLanguageTextFromOrder("BUTTON_WALLET_SEND_TRANSACTION_TEXT");
             metroButtonTransactionWallet.Text = ClassTranslation.GetLanguageTextFromOrder("BUTTON_WALLET_TRANSACTION_HISTORY_TEXT");
             metroButtonBlockExplorerWallet.Text = ClassTranslation.GetLanguageTextFromOrder("BUTTON_WALLET_BLOCK_EXPLORER_TEXT");
+            buttonContactWallet.Text = ClassTranslation.GetLanguageTextFromOrder("BUTTON_WALLET_CONTACT_TEXT");
 #if WINDOWS
             Refresh();
 #endif

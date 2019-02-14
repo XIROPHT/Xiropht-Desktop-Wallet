@@ -37,6 +37,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             ClassWalletObject.InSyncTransactionAnonymity = false;
             ClassWalletObject.BlockTransactionSync = false;
             ClassFormPhase.WalletXiropht.StartUpdateTransactionHistory();
+            ClassWalletObject.DisconnectWholeRemoteNodeSync(true, true);
         }
 
         public void AutoResizeColumns(ListView lv)

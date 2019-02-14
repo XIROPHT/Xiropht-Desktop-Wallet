@@ -77,6 +77,13 @@ namespace Xiropht_Wallet
 #endif
                 return false;
             }
+            if (ListContactWallet.ContainsValue(walletAddress))
+            {
+#if DEBUG
+                Log.WriteLine("Contact wallet address: " + walletAddress + " already exist.");
+#endif
+                return false;
+            }
             ListContactWallet.Add(name, walletAddress);
             using (StreamWriter writerContact = new StreamWriter(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + ContactFileName), true))
             {

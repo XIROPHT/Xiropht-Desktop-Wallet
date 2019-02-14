@@ -61,7 +61,12 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public void ResyncBlock()
         {
-            ClassBlockCache.RemoveWalletBlockCache();
+            if (ClassBlockCache.RemoveWalletBlockCache())
+            {
+                ClassFormPhase.WalletXiropht.ListBlockHashShowed.Clear();
+                ClassWalletObject.DisconnectWholeRemoteNodeSync(true, true);
+            }
+
         }
 
         private void Block_Load(object sender, EventArgs e)

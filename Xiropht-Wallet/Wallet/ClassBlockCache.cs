@@ -107,7 +107,7 @@ namespace Xiropht_Wallet.Wallet
         /// <summary>
         /// Clear each block into cache.
         /// </summary>
-        public static void RemoveWalletBlockCache()
+        public static bool RemoveWalletBlockCache()
         {
             try
             {
@@ -125,6 +125,7 @@ namespace Xiropht_Wallet.Wallet
             }
 
             ListBlock.Clear();
+            return true;
         }
     }
 }

@@ -90,9 +90,16 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         }
                         else
                         {
-                            ClassContact.RemoveContact(item.SubItems[0].Text); // Remove contact by his name.
-                            listViewExContact.Items.Remove(item);
-                            listViewExContact.Refresh();
+#if WINDOWS
+                            if (ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("CONTACT_LIST_REMOVE_ACTION_CONTENT_TEXT"), string.Empty, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+#else
+                            if (MessageBox.Show(ClassTranslation.GetLanguageTextFromOrder("CONTACT_LIST_REMOVE_ACTION_CONTENT_TEXT"), string.Empty, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+#endif
+                            {
+                                ClassContact.RemoveContact(item.SubItems[0].Text); // Remove contact by his name.
+                                listViewExContact.Items.Remove(item);
+                                listViewExContact.Refresh();
+                            }
                         }
                         return;
                     }
