@@ -458,7 +458,17 @@ namespace Xiropht_Wallet
                 };
                 BeginInvoke(invoke);
 #else
-               MethodInvoker invoke = () => MessageBox.Show(this, ClassConnectorSetting.CoinName + " is currently in private test, we suggest to not invest your money on it, invest your time only because we are in private test and we need something stable, usefull, secure for provide a real trust on this coin before. Thank you for your understanding.", "Important information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MethodInvoker invoke = () => 
+                {
+                    if (MessageBox.Show(this, ClassConnectorSetting.CoinName + " is currently in private test, we suggest to not invest your money on it, invest your time only because we are in private test and we need something stable, usefull, secure for provide a real trust on this coin before. Thank you for your understanding.", "Important information", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+                    {
+                        if (_firstStart)
+                        {
+                            var firstStartForm = new FirstStartWallet();
+                            firstStartForm.ShowDialog(this);
+                        }
+                    }
+                };
                BeginInvoke(invoke);
 #endif
             }).Start();
