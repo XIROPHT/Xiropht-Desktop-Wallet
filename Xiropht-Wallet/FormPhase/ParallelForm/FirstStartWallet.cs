@@ -5,6 +5,8 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
 {
     public partial class FirstStartWallet : Form
     {
+        bool languageSelected;
+
         public FirstStartWallet()
         {
             InitializeComponent();
@@ -31,14 +33,18 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         private void comboBoxLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
             ClassTranslation.ChangeCurrentLanguage(comboBoxLanguage.Items[comboBoxLanguage.SelectedIndex].ToString());
+            languageSelected = true;
             UpdateLangueForm();
             ClassFormPhase.WalletXiropht.UpdateGraphicLanguageText();
         }
 
         private void buttonEndSetting_Click(object sender, EventArgs e)
         {
-            ClassWalletSetting.SaveSetting();
-            Close();
+            if (languageSelected)
+            {
+                ClassWalletSetting.SaveSetting();
+                Close();
+            }
         }
     }
 }
