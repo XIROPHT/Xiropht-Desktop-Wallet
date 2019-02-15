@@ -2573,6 +2573,7 @@ namespace Xiropht_Wallet.Wallet
                                         break;
                                     }
 #endif
+                                    Thread.Sleep(100);
                                 }
                     }
                     catch
@@ -2588,7 +2589,6 @@ namespace Xiropht_Wallet.Wallet
 
                     if (dead) break;
 
-                    Thread.Sleep(5000);
                 }
 
                 if (dead)
@@ -2736,9 +2736,9 @@ namespace Xiropht_Wallet.Wallet
                                         }
                                     }
                                 }
-                                Thread.Sleep(200);
+                                Thread.Sleep(100);
                             }
-                            Thread.Sleep(5000);
+                            Thread.Sleep(1000);
                         }
                         catch
                         {

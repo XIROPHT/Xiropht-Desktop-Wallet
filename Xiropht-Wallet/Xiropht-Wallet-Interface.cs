@@ -102,13 +102,15 @@ namespace Xiropht_Wallet
         public int TotalTransactionBlockReward;
         private bool _normalTransactionLoaded;
         private bool _anonymousTransactionLoaded;
+        private bool _firstStart;
 
      
         /// <summary>
         /// Constructor.
         /// </summary>
-        public WalletXiropht()
+        public WalletXiropht(bool firstStart)
         {
+            _firstStart = firstStart;
             ClassFormPhase.WalletXiropht = this;
             MainWalletForm = new MainWallet();
             OpenWalletForm = new OpenWallet();
@@ -443,13 +445,24 @@ namespace Xiropht_Wallet
             new Thread(delegate()
             {
 #if WINDOWS
-                MethodInvoker invoke = () => MetroMessageBox.Show(this, ClassConnectorSetting.CoinName + " is currently in private test, we suggest to not invest your money on it, invest your time only because we are in private test and we need something stable, usefull, secure for provide a real trust on this coin before. Thank you for your understanding.", "Important information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MethodInvoker invoke = () =>
+                {
+                    if(ClassFormPhase.MessageBoxInterface(ClassConnectorSetting.CoinName + " is currently in private test, we suggest to not invest your money on it, invest your time only because we are in private test and we need something stable, usefull, secure for provide a real trust on this coin before. Thank you for your understanding.", "Important information", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+                    {
+                        if (_firstStart)
+                        {
+                            var firstStartForm = new FirstStartWallet();
+                            firstStartForm.ShowDialog(this);
+                        }
+                    }
+                };
                 BeginInvoke(invoke);
 #else
                MethodInvoker invoke = () => MessageBox.Show(this, ClassConnectorSetting.CoinName + " is currently in private test, we suggest to not invest your money on it, invest your time only because we are in private test and we need something stable, usefull, secure for provide a real trust on this coin before. Thank you for your understanding.", "Important information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                BeginInvoke(invoke);
 #endif
             }).Start();
+            
         }
 
         /// <summary>
@@ -470,7 +483,7 @@ namespace Xiropht_Wallet
         /// <summary>
         /// Update graphic language text.
         /// </summary>
-        private void UpdateGraphicLanguageText()
+        public void UpdateGraphicLanguageText()
         {
             // Main Interface.
             fileToolStripMenuItem.Text = ClassTranslation.GetLanguageTextFromOrder("MENU_FILE_TEXT");

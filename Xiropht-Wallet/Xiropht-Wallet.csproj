@@ -196,6 +196,12 @@
     <Compile Include="FormPhase\MainForm\OpenWallet.Designer.cs">
       <DependentUpon>OpenWallet.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormPhase\ParallelForm\FirstStartWallet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\FirstStartWallet.Designer.cs">
+      <DependentUpon>FirstStartWallet.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormPhase\ParallelForm\PinCodeSettingWallet.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -286,6 +292,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormPhase\MainForm\OpenWallet.resx">
       <DependentUpon>OpenWallet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\ParallelForm\FirstStartWallet.resx">
+      <DependentUpon>FirstStartWallet.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormPhase\ParallelForm\PinCodeSettingWallet.resx">
       <DependentUpon>PinCodeSettingWallet.cs</DependentUpon>

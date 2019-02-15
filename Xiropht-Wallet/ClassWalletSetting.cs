@@ -50,16 +50,18 @@ namespace Xiropht_Wallet
         /// <summary>
         /// Load setting file of the wallet gui.
         /// </summary>
-        public static void LoadSetting()
+        public static bool LoadSetting()
         {
             if (!File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + _walletSettingFile)))
             {
                 File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + _walletSettingFile)).Close();
+                return true; // This is the first start of the wallet gui.
             }
             else
             {
                 StreamReader reader = new StreamReader(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + _walletSettingFile));
                 string line;
+                int counterLine = 0;
                 while ((line = reader.ReadLine()) != null)
                 {
                     if (line.Contains("SYNC-MODE-SETTING="))
@@ -85,8 +87,14 @@ namespace Xiropht_Wallet
                     {
                         ClassTranslation.CurrentLanguage = line.Replace("CURRENT-WALLET-LANGUAGE=", "").ToLower();
                     }
+                    counterLine++;
+                }
+                if (counterLine == 0)
+                {
+                    return true;
                 }
             }
+            return false;
         }
     }
 }
