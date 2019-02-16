@@ -14,7 +14,7 @@ namespace Xiropht_Wallet.Wallet
         private const string WalletTransactionCacheDirectory = "/Cache/";
         private const string WalletTransactionCacheFileExtension = "transaction.xirtra";
         private static bool _inClearCache;
-        public static List<Tuple<string, string>> ListTransaction;
+        public static List<string> ListTransaction;
 
         /// <summary>
         /// Load transaction in cache.
@@ -30,7 +30,7 @@ namespace Xiropht_Wallet.Wallet
             }
             else
             {
-                ListTransaction = new List<Tuple<string, string>>();
+                ListTransaction = new List<string>();
             }
 
             if (Directory.Exists(
@@ -45,7 +45,7 @@ namespace Xiropht_Wallet.Wallet
                         string line;
                         while ((line = sr.ReadLine()) != null)
                         {
-                            ListTransaction.Add(new Tuple<string, string>(Xiropht_Connector_All.Utils.ClassUtils.ConvertStringtoSHA512(line), line));
+                            ListTransaction.Add(line);
                         }
                     }
                 }
@@ -118,7 +118,7 @@ namespace Xiropht_Wallet.Wallet
         /// Clear each transaction into cache.
         /// </summary>
         /// <param name="walletAddress"></param>
-        public static void RemoveWalletCache(string walletAddress)
+        public static bool RemoveWalletCache(string walletAddress)
         {
             walletAddress += "ANONYMITY";
             _inClearCache = true;
@@ -138,6 +138,7 @@ namespace Xiropht_Wallet.Wallet
 
             ListTransaction.Clear();
             _inClearCache = false;
+            return true;
         }
 
         /// <summary>
@@ -218,15 +219,13 @@ namespace Xiropht_Wallet.Wallet
                         var existTransaction = false;
                         for (var i = 0; i < ListTransaction.Count; i++)
                             if (i < ListTransaction.Count)
-                                if (ListTransaction[i].Item2 == finalTransactionEncrypted)
+                                if (ListTransaction[i] == finalTransactionEncrypted)
                                     existTransaction = true;
 
                         if (!existTransaction)
                         {
 
-                            var tupleTransaction = new Tuple<string, string>(Xiropht_Connector_All.Utils.ClassUtils.ConvertStringtoSHA512(finalTransactionEncrypted), finalTransactionEncrypted);
-
-                            ListTransaction.Add(tupleTransaction);
+                            ListTransaction.Add(finalTransactionEncrypted);
 
 
                             await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted);

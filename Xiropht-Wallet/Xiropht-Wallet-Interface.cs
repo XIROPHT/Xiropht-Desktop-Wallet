@@ -1722,15 +1722,9 @@ namespace Xiropht_Wallet
                                     TransactionHistoryWalletForm = new TransactionHistoryWallet();
                                 }
 
-                                if (ClassWalletObject.BlockTransactionSync)
-                                {
-                                    break;
-                                }
 
                                 if (TransactionHistoryWalletForm.IsShowed)
                                 {
-                                    //  try
-                                    //  {
                                     if (ListTransactionHashShowed.Count ==
                                         ClassWalletTransactionCache.ListTransaction.Count &&
                                         ClassWalletTransactionCache.ListTransaction.Count ==
@@ -2958,14 +2952,6 @@ namespace Xiropht_Wallet
                                     {
                                         break;
                                     }
-                                    /*}
-                                    catch (Exception error)
-                                    {
-                                        _anonymousTransactionLoaded = false;
-                                        _normalTransactionLoaded = false;
-                                        Log.WriteLine("Error on transactions update showed: " + error.Message);
-                                        await Task.Run(() => StopUpdateTransactionHistory(false, false)).ConfigureAwait(false);
-                                    }*/
 
                                     if (TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Count +
                                         TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items
@@ -3005,11 +2991,6 @@ namespace Xiropht_Wallet
                     {
                         while (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                         {
-                            if (ClassWalletObject.BlockTransactionSync)
-                            {
-                                break;
-                            }
-
                             try
                             {
                                 if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.TransactionHistory)
@@ -3107,7 +3088,7 @@ namespace Xiropht_Wallet
                                     {
                                         string decryptedTransaction = ClassAlgo
                                             .GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
-                                                ClassWalletTransactionCache.ListTransaction[i].Item2,
+                                                ClassWalletTransactionCache.ListTransaction[i],
                                                 ClassWalletObject.WalletConnect.WalletAddress +
                                                 ClassWalletObject.WalletConnect.WalletKey,
                                                 ClassWalletNetworkSetting.KeySize); // AES
@@ -3149,7 +3130,7 @@ namespace Xiropht_Wallet
                                     {
                                         string decryptedTransaction = ClassAlgo
                                             .GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
-                                                ClassWalletTransactionAnonymityCache.ListTransaction[i].Item2,
+                                                ClassWalletTransactionAnonymityCache.ListTransaction[i],
                                                 ClassWalletObject.WalletConnect.WalletAddress +
                                                 ClassWalletObject.WalletConnect.WalletKey,
                                                 ClassWalletNetworkSetting.KeySize); // AES
@@ -3227,8 +3208,7 @@ namespace Xiropht_Wallet
                     while (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                     {
 
-                        if (ListBlockHashShowed.Count != ClassBlockCache.ListBlock.Count && TotalBlockRead != ClassBlockCache.ListBlock.Count)
-                        {
+
                             try
                             {
 
@@ -3364,7 +3344,7 @@ namespace Xiropht_Wallet
 
 
         
-                    }
+                    
                 });
             }
         }

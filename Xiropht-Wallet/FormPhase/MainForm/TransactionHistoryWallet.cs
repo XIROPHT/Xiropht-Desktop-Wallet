@@ -29,15 +29,20 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             ClassWalletObject.BlockTransactionSync = true;
             ClassFormPhase.WalletXiropht.StopUpdateTransactionHistory(true, false);
-            ClassWalletTransactionCache.RemoveWalletCache(ClassWalletObject.WalletConnect.WalletAddress);
-            ClassWalletTransactionAnonymityCache.RemoveWalletCache(ClassWalletObject.WalletConnect.WalletAddress);
-            ClassWalletTransactionCache.ListTransaction.Clear();
-            ClassWalletTransactionAnonymityCache.ListTransaction.Clear();
-            ClassWalletObject.InSyncTransaction = false;
-            ClassWalletObject.InSyncTransactionAnonymity = false;
-            ClassWalletObject.BlockTransactionSync = false;
-            ClassFormPhase.WalletXiropht.StartUpdateTransactionHistory();
-            ClassWalletObject.DisconnectWholeRemoteNodeSync(true, true);
+            if (ClassWalletTransactionCache.RemoveWalletCache(ClassWalletObject.WalletConnect.WalletAddress))
+            {
+                if (ClassWalletTransactionAnonymityCache.RemoveWalletCache(ClassWalletObject.WalletConnect.WalletAddress))
+                {
+                    ClassWalletTransactionCache.ListTransaction.Clear();
+                    ClassWalletTransactionAnonymityCache.ListTransaction.Clear();
+                    ClassWalletObject.InSyncTransaction = false;
+                    ClassWalletObject.InSyncTransactionAnonymity = false;
+                    ClassWalletObject.BlockTransactionSync = false;
+                    ClassWalletObject.DisconnectWholeRemoteNodeSync(true, true);
+                    ClassFormPhase.WalletXiropht.EnableUpdateTransactionWallet = false;
+                    ClassFormPhase.WalletXiropht.StartUpdateTransactionHistory();
+                }
+            }
         }
 
         public void AutoResizeColumns(ListView lv)

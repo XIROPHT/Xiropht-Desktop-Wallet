@@ -104,6 +104,7 @@ namespace Xiropht_Wallet.Wallet
             }
         }
 
+
         /// <summary>
         /// Clear each block into cache.
         /// </summary>
