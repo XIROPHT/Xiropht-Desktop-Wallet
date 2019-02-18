@@ -9,7 +9,6 @@ namespace Xiropht_Wallet
     static class Program
     {
         public static CultureInfo GlobalCultureInfo = new CultureInfo("fr-FR"); // Set the global culture info, I don't suggest to change this, this one is used by the blockchain and by the whole network.
-        public static bool IsLinux;
 
         /// <summary>
         /// Point d'entrée principal de l'application.
@@ -49,9 +48,7 @@ namespace Xiropht_Wallet
 #if WINDOWS
             ClassMemory.CleanMemory();
 #endif
-#if LINUX
-            IsLinux = true;
-#endif
+
             bool firstStart = ClassWalletSetting.LoadSetting(); // Load the setting file.
             ClassTranslation.InitializationLanguage(); // Initialization of language system.
             ClassContact.InitializationContactList(); // Initialization of contact system.

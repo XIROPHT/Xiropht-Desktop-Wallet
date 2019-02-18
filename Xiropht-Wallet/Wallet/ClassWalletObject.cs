@@ -166,7 +166,7 @@ namespace Xiropht_Wallet.Wallet
                 DisconnectWholeRemoteNodeSync(true, false); // Disconnect and renew objects.
 
 
-            if (!await SeedNodeConnectorWallet.StartConnectToSeedAsync(string.Empty, ClassConnectorSetting.SeedNodePort, Program.IsLinux))
+            if (!await SeedNodeConnectorWallet.StartConnectToSeedAsync(string.Empty, ClassConnectorSetting.SeedNodePort))
             {
 #if DEBUG
                 Log.WriteLine("Connection error with seed node network.");
@@ -258,13 +258,13 @@ namespace Xiropht_Wallet.Wallet
                     Thread.Sleep(100);
                 }
 
-                while (!SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                while (!SeedNodeConnectorWallet.ReturnStatus())
                 {
                     Thread.Sleep(100);
                 }
 
                 int totalTimeConnected = 0;
-                while (SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                while (SeedNodeConnectorWallet.ReturnStatus())
                 {
                     Thread.Sleep(1000);
                     totalTimeConnected++;
@@ -519,7 +519,7 @@ namespace Xiropht_Wallet.Wallet
             {
                 var packetNone = 0;
                 var packetNoneMax = 100;
-                while (SeedNodeConnectorWallet.GetStatusConnectToSeed(true))
+                while (SeedNodeConnectorWallet.ReturnStatus())
                 {
                     var packetWallet = await WalletConnect.ListenPacketWalletAsync(Certificate, true).ConfigureAwait(false);
 
@@ -1532,7 +1532,7 @@ namespace Xiropht_Wallet.Wallet
                                                 if (!await ListWalletConnectToRemoteNode[0]
                                                     .ConnectToRemoteNodeAsync(
                                                         ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1541,7 +1541,7 @@ namespace Xiropht_Wallet.Wallet
                                                 if (!await ListWalletConnectToRemoteNode[1]
                                                     .ConnectToRemoteNodeAsync(
                                                         ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1550,7 +1550,7 @@ namespace Xiropht_Wallet.Wallet
                                                 if (!await ListWalletConnectToRemoteNode[2]
                                                     .ConnectToRemoteNodeAsync(
                                                         ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1559,7 +1559,7 @@ namespace Xiropht_Wallet.Wallet
                                                 if (!await ListWalletConnectToRemoteNode[3]
                                                     .ConnectToRemoteNodeAsync(
                                                         ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1568,7 +1568,7 @@ namespace Xiropht_Wallet.Wallet
                                                 if (!await ListWalletConnectToRemoteNode[4]
                                                     .ConnectToRemoteNodeAsync(
                                                         ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1577,7 +1577,7 @@ namespace Xiropht_Wallet.Wallet
                                                 if (!await ListWalletConnectToRemoteNode[5]
                                                     .ConnectToRemoteNodeAsync(
                                                         ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1586,7 +1586,7 @@ namespace Xiropht_Wallet.Wallet
                                                 if (!await ListWalletConnectToRemoteNode[6]
                                                     .ConnectToRemoteNodeAsync(
                                                         ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1595,7 +1595,7 @@ namespace Xiropht_Wallet.Wallet
                                                 if (!await ListWalletConnectToRemoteNode[7]
                                                     .ConnectToRemoteNodeAsync(
                                                         ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1604,7 +1604,7 @@ namespace Xiropht_Wallet.Wallet
                                                 if (!await ListWalletConnectToRemoteNode[8]
                                                     .ConnectToRemoteNodeAsync(
                                                         ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1613,7 +1613,7 @@ namespace Xiropht_Wallet.Wallet
                                                 if (!await ListWalletConnectToRemoteNode[9]
                                                     .ConnectToRemoteNodeAsync(
                                                         ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1622,7 +1622,7 @@ namespace Xiropht_Wallet.Wallet
                                                 if (!await ListWalletConnectToRemoteNode[10]
                                                     .ConnectToRemoteNodeAsync(
                                                         ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1631,7 +1631,7 @@ namespace Xiropht_Wallet.Wallet
                                                 if (!await ListWalletConnectToRemoteNode[11]
                                                     .ConnectToRemoteNodeAsync(
                                                         ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1649,7 +1649,7 @@ namespace Xiropht_Wallet.Wallet
                                                     .Item1;
                                                 if (!await ListWalletConnectToRemoteNode[0]
                                                     .ConnectToRemoteNodeAsync(previousNode,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     InsertBanRemoteNode(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
                                                     return;
@@ -1661,7 +1661,7 @@ namespace Xiropht_Wallet.Wallet
                                                     .Item1;
                                                 if (!await ListWalletConnectToRemoteNode[1]
                                                     .ConnectToRemoteNodeAsync(previousNode,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     InsertBanRemoteNode(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
                                                     return;
@@ -1673,7 +1673,7 @@ namespace Xiropht_Wallet.Wallet
                                                     .Item1;
                                                 if (!await ListWalletConnectToRemoteNode[2]
                                                     .ConnectToRemoteNodeAsync(previousNode,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     InsertBanRemoteNode(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
                                                     return;
@@ -1684,7 +1684,7 @@ namespace Xiropht_Wallet.Wallet
                                                     .Item1;
                                                 if (!await ListWalletConnectToRemoteNode[3]
                                                     .ConnectToRemoteNodeAsync(previousNode,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     InsertBanRemoteNode(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
                                                     return;
@@ -1696,7 +1696,7 @@ namespace Xiropht_Wallet.Wallet
                                                     .Item1;
                                                 if (!await ListWalletConnectToRemoteNode[4]
                                                     .ConnectToRemoteNodeAsync(previousNode,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     InsertBanRemoteNode(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
                                                     return;
@@ -1708,7 +1708,7 @@ namespace Xiropht_Wallet.Wallet
                                                     .Item1;
                                                 if (!await ListWalletConnectToRemoteNode[5]
                                                     .ConnectToRemoteNodeAsync(previousNode,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     InsertBanRemoteNode(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
                                                     return;
@@ -1720,7 +1720,7 @@ namespace Xiropht_Wallet.Wallet
                                                     .Item1;
                                                 if (!await ListWalletConnectToRemoteNode[6]
                                                     .ConnectToRemoteNodeAsync(previousNode,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     InsertBanRemoteNode(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
                                                     return;
@@ -1732,7 +1732,7 @@ namespace Xiropht_Wallet.Wallet
                                                     .Item1;
                                                 if (!await ListWalletConnectToRemoteNode[7]
                                                     .ConnectToRemoteNodeAsync(previousNode,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     InsertBanRemoteNode(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
                                                     return;
@@ -1745,7 +1745,7 @@ namespace Xiropht_Wallet.Wallet
                                                 // Take the same remote node host who give the number of transactions owned by the wallet, for be sure to sync at the accurate number of transactions.
                                                 if (!await ListWalletConnectToRemoteNode[8]
                                                     .ConnectToRemoteNodeAsync(previousNode,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     InsertBanRemoteNode(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
                                                     return;
@@ -1758,7 +1758,7 @@ namespace Xiropht_Wallet.Wallet
                                                 // Take the same remote node host who give the number of blocks mined, for be sure to sync at the accurate number of blocks.
                                                 if (!await ListWalletConnectToRemoteNode[9]
                                                     .ConnectToRemoteNodeAsync(previousNode,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     InsertBanRemoteNode(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
                                                     return;
@@ -1771,7 +1771,7 @@ namespace Xiropht_Wallet.Wallet
                                                     .Item1;
                                                 if (!await ListWalletConnectToRemoteNode[10]
                                                     .ConnectToRemoteNodeAsync(previousNode,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     InsertBanRemoteNode(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
                                                     return;
@@ -1783,7 +1783,7 @@ namespace Xiropht_Wallet.Wallet
                                                     .Item1;
                                                 if (!await ListWalletConnectToRemoteNode[11]
                                                     .ConnectToRemoteNodeAsync(previousNode,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     InsertBanRemoteNode(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
                                                     return;
@@ -1793,7 +1793,7 @@ namespace Xiropht_Wallet.Wallet
                                             {
                                                 if (!await ListWalletConnectToRemoteNode[0]
                                                     .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1801,7 +1801,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                 if (!await ListWalletConnectToRemoteNode[1]
                                                     .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1809,7 +1809,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                 if (!await ListWalletConnectToRemoteNode[2]
                                                     .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1817,7 +1817,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                 if (!await ListWalletConnectToRemoteNode[3]
                                                     .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1825,7 +1825,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                 if (!await ListWalletConnectToRemoteNode[4]
                                                     .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1833,7 +1833,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                 if (!await ListWalletConnectToRemoteNode[5]
                                                     .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1841,7 +1841,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                 if (!await ListWalletConnectToRemoteNode[6]
                                                     .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1849,7 +1849,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                 if (!await ListWalletConnectToRemoteNode[7]
                                                     .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1857,7 +1857,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                 if (!await ListWalletConnectToRemoteNode[8]
                                                     .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1865,7 +1865,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                 if (!await ListWalletConnectToRemoteNode[9]
                                                     .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1873,7 +1873,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                 if (!await ListWalletConnectToRemoteNode[10]
                                                     .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;
@@ -1881,7 +1881,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                 if (!await ListWalletConnectToRemoteNode[11]
                                                     .ConnectToRemoteNodeAsync(WalletSyncHostname,
-                                                        ClassConnectorSetting.RemoteNodePort, Program.IsLinux))
+                                                        ClassConnectorSetting.RemoteNodePort))
                                                 {
                                                     DisconnectWholeRemoteNodeSync(true, false);
                                                     return;

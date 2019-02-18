@@ -207,7 +207,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     await Task.Delay(100);
                     if (ClassWalletObject.SeedNodeConnectorWallet != null)
                     {
-                        if (ClassWalletObject.SeedNodeConnectorWallet.GetStatusConnectToSeed(Program.IsLinux))
+                        if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                         {
                             MethodInvoker invoke;
                             if (!string.IsNullOrEmpty(textBoxFee.Text))
