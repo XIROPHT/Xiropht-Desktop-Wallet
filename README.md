@@ -1,6 +1,6 @@
 # Xiropht-Wallet
 
-This is the official Xiropht Wallet Gui, this one is compatible with Netframework 4.6 and with Mono. 
+This is the official Xiropht Wallet Gui, this one is compatible with Netframework 4.6.1 minimum or Mono. 
 
 
 **In production, we suggest to compile the wallet in Release Mode for disable log files.**
