@@ -1363,29 +1363,32 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void labelNoticeWalletAddress_Click(object sender, EventArgs e)
         {
-            if (ClassWalletObject.WalletConnect != null)
+
+            if (!_isCopyWalletAddress)
             {
-                if (!_isCopyWalletAddress)
+                _isCopyWalletAddress = true;
+                if (Environment.OSVersion.Platform == PlatformID.Unix)
                 {
-                    _isCopyWalletAddress = true;
-                    Clipboard.SetText(ClassWalletObject.WalletConnect.WalletAddress);
-                    new Thread(delegate ()
-                    {
-                        string oldText = labelNoticeWalletAddress.Text;
-                        MethodInvoker invoke = () => labelNoticeWalletAddress.Text = oldText + @" copied.";
-                        BeginInvoke(invoke);
-                        invoke = () => labelNoticeWalletAddress.ForeColor = Color.Lime;
-                        BeginInvoke(invoke);
-                        Thread.Sleep(1000);
-                        invoke = () => labelNoticeWalletAddress.ForeColor = Color.Black;
-                        BeginInvoke(invoke);
-                        invoke = () => labelNoticeWalletAddress.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_ADDRESS_TEXT") + " " + ClassWalletObject.WalletConnect.WalletAddress;
-                        if (BeginInvoke(invoke).IsCompleted)
-                        {
-                            _isCopyWalletAddress = false;
-                        }
-                    }).Start();
+                    LinuxClipboard.SetText(ClassWalletObject.WalletConnect.WalletAddress);
                 }
+                else // Windows (normaly)
+                {
+                    Clipboard.SetText(ClassWalletObject.WalletConnect.WalletAddress);
+                }
+                new Thread(delegate ()
+                {
+                    string oldText = labelNoticeWalletAddress.Text;
+                    MethodInvoker invoke = () => labelNoticeWalletAddress.Text = oldText + @" copied.";
+                    BeginInvoke(invoke);
+                    invoke = () => labelNoticeWalletAddress.ForeColor = Color.Lime;
+                    BeginInvoke(invoke);
+                    Thread.Sleep(1000);
+                    invoke = () => labelNoticeWalletAddress.ForeColor = Color.Black;
+                    BeginInvoke(invoke);
+                    invoke = () => labelNoticeWalletAddress.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_ADDRESS_TEXT") + " " + ClassWalletObject.WalletConnect.WalletAddress;
+                     _isCopyWalletAddress = false;
+                    
+                }).Start();
             }
         }
 
