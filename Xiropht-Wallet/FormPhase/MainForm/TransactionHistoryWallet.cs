@@ -16,12 +16,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         public TransactionHistoryWallet()
         {
             InitializeComponent();
-            SetStyle(ControlStyles.UserPaint, true);
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            SetStyle(ControlStyles.DoubleBuffer, true);
-            DoubleBuffered = true;
             AutoScroll = true;
             IsShowed = false;
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
+
         }
 
 
@@ -706,7 +704,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public ListViewEx() : base()
         {
-            DoubleBuffered = true;
+
+            this.SetStyle(
+                ControlStyles.OptimizedDoubleBuffer, true);
         }
 
         protected override void WndProc(ref Message m)

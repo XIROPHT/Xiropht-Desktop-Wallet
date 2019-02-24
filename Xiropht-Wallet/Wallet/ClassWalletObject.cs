@@ -449,11 +449,21 @@ namespace Xiropht_Wallet.Wallet
         /// </summary>
         private static void DisconnectWalletFromSeedNode(bool clean, bool reconnect = false)
         {
-            SeedNodeConnectorWallet?.DisconnectToSeed();
+            try
+            {
+                SeedNodeConnectorWallet?.DisconnectToSeed();
+            }
+            catch
+            {
+
+            }
+
             if (clean)
                 CleanUpWalletConnnection(reconnect);
 
+
             ClassFormPhase.WalletXiropht.StopUpdateTransactionHistory(true, false);
+
             ClassFormPhase.WalletXiropht.StopUpdateBlockHistory(true);
         }
 
@@ -471,8 +481,15 @@ namespace Xiropht_Wallet.Wallet
             SeedNodeConnectorWallet = new ClassSeedNodeConnector();
             if (!reconnect)
             {
-                GC.SuppressFinalize(WalletConnect);
-                WalletConnect = new ClassWalletConnect(SeedNodeConnectorWallet);
+                try
+                {
+                    GC.SuppressFinalize(WalletConnect);
+                    WalletConnect = new ClassWalletConnect(SeedNodeConnectorWallet);
+                }
+                catch
+                {
+
+                }
             }
             if (_threadWalletKeepAlive != null && (_threadWalletKeepAlive.IsAlive || _threadWalletKeepAlive != null))
             {

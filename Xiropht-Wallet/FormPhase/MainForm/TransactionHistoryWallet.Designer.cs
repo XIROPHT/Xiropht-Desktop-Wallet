@@ -31,7 +31,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             this.tabPageTransactionHistory = new System.Windows.Forms.TabControl();
             this.tabPageNormalTransactionSend = new System.Windows.Forms.TabPage();
-            this.listViewNormalSendTransactionHistory = new ListViewEx();
+            this.listViewNormalSendTransactionHistory = new Xiropht_Wallet.FormPhase.MainForm.ListViewEx();
             this.columnHeaderID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -42,7 +42,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.columnHeaderDateRecv = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderBlockHeightSrc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPageNormalTransactionReceived = new System.Windows.Forms.TabPage();
-            this.listViewNormalReceivedTransactionHistory = new ListViewEx();
+            this.listViewNormalReceivedTransactionHistory = new Xiropht_Wallet.FormPhase.MainForm.ListViewEx();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -53,7 +53,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPageAnonymityTransactionSend = new System.Windows.Forms.TabPage();
-            this.listViewAnonymitySendTransactionHistory = new ListViewEx();
+            this.listViewAnonymitySendTransactionHistory = new Xiropht_Wallet.FormPhase.MainForm.ListViewEx();
             this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -64,7 +64,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.columnHeader17 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader18 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPageAnonymityTransactionReceived = new System.Windows.Forms.TabPage();
-            this.listViewAnonymityReceivedTransactionHistory = new ListViewEx();
+            this.listViewAnonymityReceivedTransactionHistory = new Xiropht_Wallet.FormPhase.MainForm.ListViewEx();
             this.columnHeader19 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader20 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader21 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -75,7 +75,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.columnHeader26 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader27 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPageBlockRewardTransaction = new System.Windows.Forms.TabPage();
-            this.listViewBlockRewardTransactionHistory = new ListViewEx();
+            this.listViewBlockRewardTransactionHistory = new Xiropht_Wallet.FormPhase.MainForm.ListViewEx();
             this.columnHeader28 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader29 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader30 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -480,7 +480,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             this.columnHeader36.Text = "Block Height Src";
             // 
-            // TransactionHistory
+            // TransactionHistoryWallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -490,7 +490,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "TransactionHistory";
+            this.Name = "TransactionHistoryWallet";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

@@ -461,6 +461,10 @@ namespace Xiropht_Wallet
             this.MainMenuStrip = this.menuStripMenu;
             this.Name = "WalletXiropht";
             this.Text = "Xiropht Wallet Gui - v";
+#if LINUX
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.MaximizeBox = false;
+#endif
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WalletXiropht_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.WalletXiropht_FormClosed);
             this.Load += new System.EventHandler(this.WalletXiropht_Load);

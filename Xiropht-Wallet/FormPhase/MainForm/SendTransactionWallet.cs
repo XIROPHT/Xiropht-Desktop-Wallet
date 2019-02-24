@@ -346,5 +346,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_TIME_RECEIVE_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 #endif
         }
+
+        private void textBoxWalletDestination_TextChanged(object sender, EventArgs e)
+        {
+            textBoxWalletDestination.Text = ClassUtils.RemoveSpecialCharacters(textBoxWalletDestination.Text);
+        }
     }
 }

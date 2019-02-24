@@ -61,6 +61,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.textBoxWalletDestination.Name = "textBoxWalletDestination";
             this.textBoxWalletDestination.Size = new System.Drawing.Size(313, 20);
             this.textBoxWalletDestination.TabIndex = 15;
+            this.textBoxWalletDestination.TextChanged += new System.EventHandler(this.textBoxWalletDestination_TextChanged);
             // 
             // labelSendTransaction
             // 
@@ -177,7 +178,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.buttonEstimatedTimeInformation.Click += new System.EventHandler(this.buttonEstimatedTimeInformation_Click);
             this.buttonEstimatedTimeInformation.MouseHover += new System.EventHandler(this.buttonEstimatedTimeInformation_MouseHover);
             // 
-            // SendTransaction
+            // SendTransactionWallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -200,7 +201,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "SendTransaction";
+            this.Name = "SendTransactionWallet";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

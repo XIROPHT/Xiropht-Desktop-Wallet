@@ -84,7 +84,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             if (textBoxPasswordWallet.Text == "")
             {
 #if WINDOWS
-                ClassFormPhase.MessageBoxInterface( ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NO_PASSWORD_WRITTED_CONTENT_TEXT"),
+                ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NO_PASSWORD_WRITTED_CONTENT_TEXT"),
                     ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NO_PASSWORD_WRITTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
                 MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NO_PASSWORD_WRITTED_CONTENT_TEXT"),
@@ -93,55 +93,57 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 return;
             }
 
-            bool error = false;
-
-            string passwordEncrypted = ClassAlgo.GetEncryptedResult(ClassAlgoEnumeration.Rijndael,
-                textBoxPasswordWallet.Text, textBoxPasswordWallet.Text, ClassWalletNetworkSetting.KeySize);
-
-            ClassWalletObject.WalletDataDecrypted = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
-                _walletFileData, passwordEncrypted, ClassWalletNetworkSetting.KeySize); // AES
-            if (ClassWalletObject.WalletDataDecrypted == "WRONG")
+            new Thread(async delegate ()
             {
-                error = true;
-            }
 
-            if (error)
-            {
-                ClassWalletObject.WalletDataDecrypted = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
-                    _walletFileData, textBoxPasswordWallet.Text, ClassWalletNetworkSetting.KeySize); // AES
-            }
-
-            try
-            {
-                if (ClassWalletObject.WalletDataDecrypted == "WRONG")
+                try
                 {
+                    bool error = false;
+
+                    string passwordEncrypted = ClassAlgo.GetEncryptedResult(ClassAlgoEnumeration.Rijndael,
+                        textBoxPasswordWallet.Text, textBoxPasswordWallet.Text, ClassWalletNetworkSetting.KeySize);
+
+                    ClassWalletObject.WalletDataDecrypted = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
+                        _walletFileData, passwordEncrypted, ClassWalletNetworkSetting.KeySize); // AES
+                    if (ClassWalletObject.WalletDataDecrypted == "WRONG")
+                    {
+                        error = true;
+                    }
+
+                    if (error)
+                    {
+                        ClassWalletObject.WalletDataDecrypted = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
+                            _walletFileData, textBoxPasswordWallet.Text, ClassWalletNetworkSetting.KeySize); // AES
+                    }
+
+                    if (ClassWalletObject.WalletDataDecrypted == "WRONG")
+                    {
 #if WINDOWS
-                    ClassFormPhase.MessageBoxInterface(
-                        ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_WRONG_PASSWORD_WRITTED_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_WRONG_PASSWORD_WRITTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ClassFormPhase.MessageBoxInterface(
+                            ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_WRONG_PASSWORD_WRITTED_CONTENT_TEXT"),
+                            ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_WRONG_PASSWORD_WRITTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                     MessageBox.Show(ClassFormPhase.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_WRONG_PASSWORD_WRITTED_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_WRONG_PASSWORD_WRITTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #endif
-                    return;
-                }
+                        return;
+                    }
 
-                var splitWalletFileDecrypted =
-                    ClassWalletObject.WalletDataDecrypted.Split(new[] { "\n" }, StringSplitOptions.None);
-                string walletAddress = splitWalletFileDecrypted[0];
-                string walletKey = splitWalletFileDecrypted[1];
-                new Thread(async delegate ()
-                {
+                    var splitWalletFileDecrypted =
+                        ClassWalletObject.WalletDataDecrypted.Split(new[] { "\n" }, StringSplitOptions.None);
+                    string walletAddress = splitWalletFileDecrypted[0];
+                    string walletKey = splitWalletFileDecrypted[1];
+
                     if (!await ClassWalletObject.InitializationWalletConnection(walletAddress, textBoxPasswordWallet.Text,
                     walletKey, ClassWalletPhase.Login))
                     {
                         MethodInvoker invoker = () => textBoxPasswordWallet.Text = "";
                         BeginInvoke(invoker);
 #if WINDOWS
-                    ClassFormPhase.MessageBoxInterface(
-                        ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_TITLE_TEXT"), MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                        ClassFormPhase.MessageBoxInterface(
+                            ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_TITLE_TEXT"), MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
 #else
                         MessageBox.Show(ClassFormPhase.WalletXiropht,
                             ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_TITLE_TEXT"), MessageBoxButtons.OK,
@@ -172,20 +174,20 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         invoke = () => labelOpenFileSelected.Text = ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_LABEL_FILE_SELECTED_TEXT");
                         BeginInvoke(invoke);
                     }
-                }).Start();
-            }
-            catch
-            {
+                }
+                catch
+                {
 #if WINDOWS
-                ClassFormPhase.MessageBoxInterface(
-                    ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_WRONG_PASSWORD_WRITTED_CONTENT_TEXT"),
-                    ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_WRONG_PASSWORD_WRITTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ClassFormPhase.MessageBoxInterface(
+                        ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_WRONG_PASSWORD_WRITTED_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_WRONG_PASSWORD_WRITTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                 MessageBox.Show(ClassFormPhase.WalletXiropht,
                     ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_WRONG_PASSWORD_WRITTED_CONTENT_TEXT"),
                     ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_WRONG_PASSWORD_WRITTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #endif
-            }
+                }
+            }).Start();
         }
 
         /// <summary>
