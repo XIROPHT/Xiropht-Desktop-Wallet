@@ -3774,7 +3774,7 @@ namespace Xiropht_Wallet.Wallet
                                                             {
                                                                 if (!InSyncBlock) break;
 
-                                                                Thread.Sleep(100);
+                                                                Thread.Sleep(10);
                                                             }
                                                         }
                                                     }
@@ -3865,7 +3865,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         if (!InSyncBlock) break;
 
-                                                        Thread.Sleep(100);
+                                                        Thread.Sleep(10);
                                                     }
                                                 }
                                             }
@@ -4104,7 +4104,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         if (!InSyncTransaction || BlockTransactionSync || dateRequestTransaction + 5 < DateTimeOffset.Now.ToUnixTimeSeconds()) break;
 
-                                                        Thread.Sleep(100);
+                                                        Thread.Sleep(10);
                                                     }
 
                                                     if (BlockTransactionSync)
@@ -4231,7 +4231,7 @@ namespace Xiropht_Wallet.Wallet
                                                 {
                                                     if (!InSyncTransactionAnonymity || BlockTransactionSync || dateRequestTransaction + 5 < DateTimeOffset.Now.ToUnixTimeSeconds()) break;
 
-                                                    Thread.Sleep(100);
+                                                    Thread.Sleep(10);
                                                 }
 
                                                 if (BlockTransactionSync)

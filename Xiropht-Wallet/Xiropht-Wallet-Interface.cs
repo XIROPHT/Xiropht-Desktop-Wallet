@@ -3174,7 +3174,7 @@ namespace Xiropht_Wallet
                             catch (Exception error)
                             {
                                 Log.WriteLine("Error on transactions update: " + error.Message);
-                                new Thread(() => StopUpdateTransactionHistory(false, false)).Start();
+                                new Thread(() => StopUpdateTransactionHistory(true, false)).Start();
                             }
 
                             if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
@@ -3367,6 +3367,21 @@ namespace Xiropht_Wallet
                 CurrentTransactionHistoryPageBlockReward = 1;
                 _normalTransactionLoaded = false;
                 _anonymousTransactionLoaded = false;
+                ListTransactionHashShowed.Clear();
+                // Transaction normal
+                MethodInvoker invoke = () =>
+                {
+                    TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Clear();
+                    TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Clear();
+
+                    // Transaction anonymity
+                    TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
+                    TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Clear();
+
+                    // Transaction block reward
+                    TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
+                };
+                BeginInvoke(invoke);
                 void MethodInvoker() => labelNoticeCurrentPage.Text = "1";
                 BeginInvoke((MethodInvoker) MethodInvoker);
             }
