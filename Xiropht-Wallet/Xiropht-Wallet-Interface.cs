@@ -68,7 +68,7 @@ namespace Xiropht_Wallet
         /// Threading
         /// </summary>
         private Thread _threadUpdateNetworkStats;
-        private const int ThreadUpdateTransactionWalletInterval = 100;
+        private const int ThreadUpdateTransactionWalletInterval = 1000;
         private const int ThreadUpdateNetworkStatsInterval = 1000;
         private const int MaxTransactionPerPage = 100;
         private const int MaxBlockPerPage = 100;
@@ -474,7 +474,8 @@ namespace Xiropht_Wallet
                BeginInvoke(invoke);
 #endif
             }).Start();
-            
+            UpdateColorStyle(Color.White, Color.Black, Color.White);
+
         }
 
         /// <summary>
@@ -1081,49 +1082,52 @@ namespace Xiropht_Wallet
         {
             if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.TransactionHistory)
             {
-                if (TransactionHistoryWalletForm.tabPageNormalTransactionSend.Visible) // Normal transaction send list
+                if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
                 {
-                    if (CurrentTransactionHistoryPageNormalSend > 1)
+                    if (TransactionHistoryWalletForm.tabPageNormalTransactionSend.Visible) // Normal transaction send list
                     {
-                        CurrentTransactionHistoryPageNormalSend--;
-                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalSend;
-                        StopUpdateTransactionHistory(false, false, true);
+                        if (CurrentTransactionHistoryPageNormalSend > 1)
+                        {
+                            CurrentTransactionHistoryPageNormalSend--;
+                            labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalSend;
+                            StopUpdateTransactionHistory(false, false, true);
+                        }
                     }
-                }
-                if (TransactionHistoryWalletForm.tabPageNormalTransactionReceived.Visible) // Normal transaction received list
-                {
-                    if (CurrentTransactionHistoryPageNormalReceive > 1)
+                    if (TransactionHistoryWalletForm.tabPageNormalTransactionReceived.Visible) // Normal transaction received list
                     {
-                        CurrentTransactionHistoryPageNormalReceive--;
-                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
-                        StopUpdateTransactionHistory(false, false, true);
+                        if (CurrentTransactionHistoryPageNormalReceive > 1)
+                        {
+                            CurrentTransactionHistoryPageNormalReceive--;
+                            labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
+                            StopUpdateTransactionHistory(false, false, true);
+                        }
                     }
-                }
-                if (TransactionHistoryWalletForm.tabPageAnonymityTransactionSend.Visible) // Anonymous transaction send list 
-                {
-                    if (CurrentTransactionHistoryPageAnonymousSend > 1)
+                    if (TransactionHistoryWalletForm.tabPageAnonymityTransactionSend.Visible) // Anonymous transaction send list 
                     {
-                        CurrentTransactionHistoryPageAnonymousSend--;
-                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousSend;
-                        StopUpdateTransactionHistory(false, false, true);
+                        if (CurrentTransactionHistoryPageAnonymousSend > 1)
+                        {
+                            CurrentTransactionHistoryPageAnonymousSend--;
+                            labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousSend;
+                            StopUpdateTransactionHistory(false, false, true);
+                        }
                     }
-                }
-                if (TransactionHistoryWalletForm.tabPageAnonymityTransactionReceived.Visible) // Anonymous transaction received list 
-                {
-                    if (CurrentTransactionHistoryPageAnonymousReceived > 1)
+                    if (TransactionHistoryWalletForm.tabPageAnonymityTransactionReceived.Visible) // Anonymous transaction received list 
                     {
-                        CurrentTransactionHistoryPageAnonymousReceived--;
-                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
-                        StopUpdateTransactionHistory(false, false, true);
+                        if (CurrentTransactionHistoryPageAnonymousReceived > 1)
+                        {
+                            CurrentTransactionHistoryPageAnonymousReceived--;
+                            labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
+                            StopUpdateTransactionHistory(false, false, true);
+                        }
                     }
-                }
-                if (TransactionHistoryWalletForm.tabPageBlockRewardTransaction.Visible) // block reward transaction list 
-                {
-                    if (CurrentTransactionHistoryPageBlockReward > 1)
+                    if (TransactionHistoryWalletForm.tabPageBlockRewardTransaction.Visible) // block reward transaction list 
                     {
-                        CurrentTransactionHistoryPageBlockReward--;
-                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageBlockReward;
-                        StopUpdateTransactionHistory(false, false, true);
+                        if (CurrentTransactionHistoryPageBlockReward > 1)
+                        {
+                            CurrentTransactionHistoryPageBlockReward--;
+                            labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageBlockReward;
+                            StopUpdateTransactionHistory(false, false, true);
+                        }
                     }
                 }
             }
@@ -1147,57 +1151,60 @@ namespace Xiropht_Wallet
         {
             if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.TransactionHistory)
             {
-                if (TransactionHistoryWalletForm.tabPageNormalTransactionSend.Visible) // Normal transaction send list
+                if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
                 {
-                    int difference = (TotalTransactionNormalSend + MaxTransactionPerPage) - TotalTransactionNormalSend;
-                    if ((CurrentTransactionHistoryPageNormalSend + 1) * MaxTransactionPerPage <= (TotalTransactionNormalSend + difference))
+                    if (TransactionHistoryWalletForm.tabPageNormalTransactionSend.Visible) // Normal transaction send list
                     {
-                        CurrentTransactionHistoryPageNormalSend++;
-                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalSend;
-                        StopUpdateTransactionHistory(false, false, true);
+                        int difference = (TotalTransactionNormalSend + MaxTransactionPerPage) - TotalTransactionNormalSend;
+                        if ((CurrentTransactionHistoryPageNormalSend + 1) * MaxTransactionPerPage <= (TotalTransactionNormalSend + difference))
+                        {
+                            CurrentTransactionHistoryPageNormalSend++;
+                            labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalSend;
+                            StopUpdateTransactionHistory(false, false, true);
+                        }
                     }
-                }
-                if (TransactionHistoryWalletForm.tabPageNormalTransactionReceived.Visible) // Normal transaction received list
-                {
-                    int difference = (TotalTransactionNormalReceived + MaxTransactionPerPage) - TotalTransactionNormalReceived;
+                    if (TransactionHistoryWalletForm.tabPageNormalTransactionReceived.Visible) // Normal transaction received list
+                    {
+                        int difference = (TotalTransactionNormalReceived + MaxTransactionPerPage) - TotalTransactionNormalReceived;
 
-                    if ((CurrentTransactionHistoryPageNormalReceive + 1) * MaxTransactionPerPage <= (TotalTransactionNormalReceived + difference))
-                    {
-                        CurrentTransactionHistoryPageNormalReceive++;
-                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
-                        StopUpdateTransactionHistory(false, false, true);
+                        if ((CurrentTransactionHistoryPageNormalReceive + 1) * MaxTransactionPerPage <= (TotalTransactionNormalReceived + difference))
+                        {
+                            CurrentTransactionHistoryPageNormalReceive++;
+                            labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
+                            StopUpdateTransactionHistory(false, false, true);
+                        }
                     }
-                }
-                if (TransactionHistoryWalletForm.tabPageAnonymityTransactionSend.Visible) // Anonymous transaction send list 
-                {
-                    int difference = (TotalTransactionAnonymousSend + MaxTransactionPerPage) - TotalTransactionAnonymousSend;
+                    if (TransactionHistoryWalletForm.tabPageAnonymityTransactionSend.Visible) // Anonymous transaction send list 
+                    {
+                        int difference = (TotalTransactionAnonymousSend + MaxTransactionPerPage) - TotalTransactionAnonymousSend;
 
-                    if ((CurrentTransactionHistoryPageAnonymousSend + 1) * MaxTransactionPerPage <= TotalTransactionAnonymousSend + difference)
-                    {
-                        CurrentTransactionHistoryPageAnonymousSend++;
-                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousSend;
-                        StopUpdateTransactionHistory(false, false, true);
+                        if ((CurrentTransactionHistoryPageAnonymousSend + 1) * MaxTransactionPerPage <= TotalTransactionAnonymousSend + difference)
+                        {
+                            CurrentTransactionHistoryPageAnonymousSend++;
+                            labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousSend;
+                            StopUpdateTransactionHistory(false, false, true);
+                        }
                     }
-                }
-                if (TransactionHistoryWalletForm.tabPageAnonymityTransactionReceived.Visible) // Anonymous transaction received list 
-                {
-                    int difference = (TotalTransactionAnonymousReceived + MaxTransactionPerPage) - TotalTransactionAnonymousReceived;
-                    if ((CurrentTransactionHistoryPageAnonymousReceived + 1) * MaxTransactionPerPage <= TotalTransactionAnonymousReceived + difference)
+                    if (TransactionHistoryWalletForm.tabPageAnonymityTransactionReceived.Visible) // Anonymous transaction received list 
                     {
-                        CurrentTransactionHistoryPageAnonymousReceived++;
-                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
-                        StopUpdateTransactionHistory(false, false, true);
+                        int difference = (TotalTransactionAnonymousReceived + MaxTransactionPerPage) - TotalTransactionAnonymousReceived;
+                        if ((CurrentTransactionHistoryPageAnonymousReceived + 1) * MaxTransactionPerPage <= TotalTransactionAnonymousReceived + difference)
+                        {
+                            CurrentTransactionHistoryPageAnonymousReceived++;
+                            labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
+                            StopUpdateTransactionHistory(false, false, true);
+                        }
                     }
-                }
-                if (TransactionHistoryWalletForm.tabPageBlockRewardTransaction.Visible) // block reward transaction list 
-                {
-                    int difference = (TotalTransactionBlockReward + MaxTransactionPerPage) - TotalTransactionBlockReward;
+                    if (TransactionHistoryWalletForm.tabPageBlockRewardTransaction.Visible) // block reward transaction list 
+                    {
+                        int difference = (TotalTransactionBlockReward + MaxTransactionPerPage) - TotalTransactionBlockReward;
 
-                    if ((CurrentTransactionHistoryPageBlockReward + 1) * MaxTransactionPerPage <= TotalTransactionBlockReward + difference)
-                    {
-                        CurrentTransactionHistoryPageBlockReward++;
-                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageBlockReward;
-                        StopUpdateTransactionHistory(false, false, true);
+                        if ((CurrentTransactionHistoryPageBlockReward + 1) * MaxTransactionPerPage <= TotalTransactionBlockReward + difference)
+                        {
+                            CurrentTransactionHistoryPageBlockReward++;
+                            labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageBlockReward;
+                            StopUpdateTransactionHistory(false, false, true);
+                        }
                     }
                 }
             }
@@ -1222,40 +1229,43 @@ namespace Xiropht_Wallet
         {
             if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.TransactionHistory)
             {
-                if (TransactionHistoryWalletForm.tabPageNormalTransactionSend.Visible) // Normal transaction send list
+                if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
                 {
-                    CurrentTransactionHistoryPageNormalSend = 1;
-                    labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalSend;
-                    StopUpdateTransactionHistory(false, false, true);
-                }
-                if (TransactionHistoryWalletForm.tabPageNormalTransactionReceived.Visible) // Normal transaction received list
-                {
+                    if (TransactionHistoryWalletForm.tabPageNormalTransactionSend.Visible) // Normal transaction send list
+                    {
+                        CurrentTransactionHistoryPageNormalSend = 1;
+                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalSend;
+                        StopUpdateTransactionHistory(false, false, true);
+                    }
+                    if (TransactionHistoryWalletForm.tabPageNormalTransactionReceived.Visible) // Normal transaction received list
+                    {
 
-                    CurrentTransactionHistoryPageNormalReceive = 1;
-                    labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
-                    StopUpdateTransactionHistory(false, false, true);
-                }
-                if (TransactionHistoryWalletForm.tabPageAnonymityTransactionSend.Visible) // Anonymous transaction send list 
-                {
+                        CurrentTransactionHistoryPageNormalReceive = 1;
+                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
+                        StopUpdateTransactionHistory(false, false, true);
+                    }
+                    if (TransactionHistoryWalletForm.tabPageAnonymityTransactionSend.Visible) // Anonymous transaction send list 
+                    {
 
-                    CurrentTransactionHistoryPageAnonymousSend = 1;
-                    labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousSend;
-                    StopUpdateTransactionHistory(false, false, true);
-                }
-                if (TransactionHistoryWalletForm.tabPageAnonymityTransactionReceived.Visible) // Anonymous transaction received list 
-                {
+                        CurrentTransactionHistoryPageAnonymousSend = 1;
+                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousSend;
+                        StopUpdateTransactionHistory(false, false, true);
+                    }
+                    if (TransactionHistoryWalletForm.tabPageAnonymityTransactionReceived.Visible) // Anonymous transaction received list 
+                    {
 
-                    CurrentTransactionHistoryPageAnonymousReceived = 1;
-                    labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
-                    StopUpdateTransactionHistory(false, false, true);
-                }
-                if (TransactionHistoryWalletForm.tabPageBlockRewardTransaction.Visible) // block reward transaction list 
-                {
+                        CurrentTransactionHistoryPageAnonymousReceived = 1;
+                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
+                        StopUpdateTransactionHistory(false, false, true);
+                    }
+                    if (TransactionHistoryWalletForm.tabPageBlockRewardTransaction.Visible) // block reward transaction list 
+                    {
 
-                    CurrentTransactionHistoryPageBlockReward = 1;
-                    labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageBlockReward;
-                    StopUpdateTransactionHistory(false, false, true);
+                        CurrentTransactionHistoryPageBlockReward = 1;
+                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageBlockReward;
+                        StopUpdateTransactionHistory(false, false, true);
 
+                    }
                 }
             }
             else if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.BlockExplorer)
@@ -1275,71 +1285,74 @@ namespace Xiropht_Wallet
         {
             if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.TransactionHistory)
             {
-                if (TransactionHistoryWalletForm.tabPageNormalTransactionSend.Visible) // Normal transaction send list
+                if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
                 {
-                    float numberParge = ((float)TotalTransactionNormalSend / MaxTransactionPerPage);
-                    numberParge += 0.5f;
-                    numberParge = (float)Math.Round(numberParge, 0);
-                    if (numberParge <= 0)
+                    if (TransactionHistoryWalletForm.tabPageNormalTransactionSend.Visible) // Normal transaction send list
                     {
-                        numberParge = 1;
+                        float numberParge = ((float)TotalTransactionNormalSend / MaxTransactionPerPage);
+                        numberParge += 0.5f;
+                        numberParge = (float)Math.Round(numberParge, 0);
+                        if (numberParge <= 0)
+                        {
+                            numberParge = 1;
+                        }
+                        CurrentTransactionHistoryPageNormalSend = (int)numberParge;
+                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalSend;
+                        StopUpdateTransactionHistory(false, false, true);
                     }
-                    CurrentTransactionHistoryPageNormalSend = (int)numberParge;
-                    labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalSend;
-                    StopUpdateTransactionHistory(false, false, true);
-                }
-                if (TransactionHistoryWalletForm.tabPageNormalTransactionReceived.Visible) // Normal transaction received list
-                {
-                    float numberParge = ((float)TotalTransactionNormalReceived / MaxTransactionPerPage);
-                    numberParge += 0.5f;
-                    numberParge = (float)Math.Round(numberParge, 0);
-                    if (numberParge <= 0)
+                    if (TransactionHistoryWalletForm.tabPageNormalTransactionReceived.Visible) // Normal transaction received list
                     {
-                        numberParge = 1;
+                        float numberParge = ((float)TotalTransactionNormalReceived / MaxTransactionPerPage);
+                        numberParge += 0.5f;
+                        numberParge = (float)Math.Round(numberParge, 0);
+                        if (numberParge <= 0)
+                        {
+                            numberParge = 1;
+                        }
+                        CurrentTransactionHistoryPageNormalReceive = (int)numberParge;
+                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
+                        StopUpdateTransactionHistory(false, false, true);
                     }
-                    CurrentTransactionHistoryPageNormalReceive = (int)numberParge;
-                    labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
-                    StopUpdateTransactionHistory(false, false, true);
-                }
-                if (TransactionHistoryWalletForm.tabPageAnonymityTransactionSend.Visible) // Anonymous transaction send list 
-                {
-                    float numberParge = ((float)TotalTransactionAnonymousSend / MaxTransactionPerPage);
-                    numberParge += 0.5f;
-                    numberParge = (float)Math.Round(numberParge, 0);
-                    if (numberParge <= 0)
+                    if (TransactionHistoryWalletForm.tabPageAnonymityTransactionSend.Visible) // Anonymous transaction send list 
                     {
-                        numberParge = 1;
+                        float numberParge = ((float)TotalTransactionAnonymousSend / MaxTransactionPerPage);
+                        numberParge += 0.5f;
+                        numberParge = (float)Math.Round(numberParge, 0);
+                        if (numberParge <= 0)
+                        {
+                            numberParge = 1;
+                        }
+                        CurrentTransactionHistoryPageAnonymousSend = (int)numberParge;
+                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousSend;
+                        StopUpdateTransactionHistory(false, false, true);
                     }
-                    CurrentTransactionHistoryPageAnonymousSend = (int)numberParge;
-                    labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousSend;
-                    StopUpdateTransactionHistory(false, false, true);
-                }
-                if (TransactionHistoryWalletForm.tabPageAnonymityTransactionReceived.Visible) // Anonymous transaction received list 
-                {
-                    float numberParge = ((float)TotalTransactionAnonymousReceived / MaxTransactionPerPage);
-                    numberParge += 0.5f;
-                    numberParge = (float)Math.Round(numberParge, 0);
-                    if (numberParge <= 0)
+                    if (TransactionHistoryWalletForm.tabPageAnonymityTransactionReceived.Visible) // Anonymous transaction received list 
                     {
-                        numberParge = 1;
+                        float numberParge = ((float)TotalTransactionAnonymousReceived / MaxTransactionPerPage);
+                        numberParge += 0.5f;
+                        numberParge = (float)Math.Round(numberParge, 0);
+                        if (numberParge <= 0)
+                        {
+                            numberParge = 1;
+                        }
+                        CurrentTransactionHistoryPageAnonymousReceived = (int)numberParge;
+                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousReceived;
+                        StopUpdateTransactionHistory(false, false, true);
                     }
-                    CurrentTransactionHistoryPageAnonymousReceived = (int)numberParge;
-                    labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousReceived;
-                    StopUpdateTransactionHistory(false, false, true);
-                }
-                if (TransactionHistoryWalletForm.tabPageBlockRewardTransaction.Visible) // block reward transaction list 
-                {
+                    if (TransactionHistoryWalletForm.tabPageBlockRewardTransaction.Visible) // block reward transaction list 
+                    {
 
-                    float numberParge = ((float)TotalTransactionBlockReward / MaxTransactionPerPage);
-                    numberParge += 0.5f;
-                    numberParge = (float)Math.Round(numberParge, 0);
-                    if (numberParge <= 0)
-                    {
-                        numberParge = 1;
+                        float numberParge = ((float)TotalTransactionBlockReward / MaxTransactionPerPage);
+                        numberParge += 0.5f;
+                        numberParge = (float)Math.Round(numberParge, 0);
+                        if (numberParge <= 0)
+                        {
+                            numberParge = 1;
+                        }
+                        CurrentTransactionHistoryPageBlockReward = (int)numberParge;
+                        labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageBlockReward;
+                        StopUpdateTransactionHistory(false, false, true);
                     }
-                    CurrentTransactionHistoryPageBlockReward = (int)numberParge;
-                    labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageBlockReward;
-                    StopUpdateTransactionHistory(false, false, true);
                 }
             }
             else if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.BlockExplorer)
@@ -1380,12 +1393,13 @@ namespace Xiropht_Wallet
                 new Thread(delegate ()
                 {
                     string oldText = labelNoticeWalletAddress.Text;
+                    var oldColor = labelNoticeWalletAddress.ForeColor;
                     MethodInvoker invoke = () => labelNoticeWalletAddress.Text = oldText + @" copied.";
                     BeginInvoke(invoke);
                     invoke = () => labelNoticeWalletAddress.ForeColor = Color.Lime;
                     BeginInvoke(invoke);
                     Thread.Sleep(1000);
-                    invoke = () => labelNoticeWalletAddress.ForeColor = Color.Black;
+                    invoke = () => labelNoticeWalletAddress.ForeColor = oldColor;
                     BeginInvoke(invoke);
                     invoke = () => labelNoticeWalletAddress.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_ADDRESS_TEXT") + " " + ClassWalletObject.WalletConnect.WalletAddress;
                      _isCopyWalletAddress = false;
@@ -3008,7 +3022,7 @@ namespace Xiropht_Wallet
                                              ClassWalletObject.TotalTransactionInSyncAnonymity));
                                     }
                                 }
-                                else if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.Overview)
+                                else if (ClassFormPhase.FormPhase != ClassFormPhaseEnumeration.TransactionHistory && ClassFormPhase.FormPhase != ClassFormPhaseEnumeration.BlockExplorer)
                                 {
                                     string listOfNodes = string.Empty;
                                     if (ClassWalletObject.ListWalletConnectToRemoteNode != null)
@@ -3055,14 +3069,16 @@ namespace Xiropht_Wallet
                                                 Log.WriteLine("Error on seed node list: " + error.Message);
                                             }
                                         }
-
-                                        if (!ClassWalletObject.InSyncBlock && !ClassWalletObject.InSyncTransaction &&
-                                            !ClassWalletObject.InSyncTransactionAnonymity)
+                                        else
                                         {
-                                            UpdateLabelSyncInformation(
-                                                "Your wallet sync with node(s): " + listOfNodes + " " +
-                                                ClassWalletObject.ListWalletConnectToRemoteNode.Count +
-                                                " connections are open.");
+                                            if (!ClassWalletObject.InSyncBlock && !ClassWalletObject.InSyncTransaction &&
+                                                !ClassWalletObject.InSyncTransactionAnonymity)
+                                            {
+                                                UpdateLabelSyncInformation(
+                                                    "Your wallet sync with node(s): " + listOfNodes + " " +
+                                                    ClassWalletObject.ListWalletConnectToRemoteNode.Count +
+                                                    " connections are open.");
+                                            }
                                         }
                                     }
                                 }
@@ -3075,109 +3091,134 @@ namespace Xiropht_Wallet
                                     copyListTransaction = new List<string>(ClassWalletTransactionCache.ListTransaction);
                                     copyListAnonymousTransaction = new List<string>(ClassWalletTransactionAnonymityCache.ListTransaction);
 
-                                    for (int i = ListTransactionHashShowed.Count;
-                                    i < copyListTransaction.Count;
-                                    i++)
+                                    if (ListTransactionHashShowed.Count < copyListTransaction.Count)
                                     {
-                                        if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
+                                        MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = false;
+                                        BeginInvoke(invokeLockButton);
+                                        for (int i = ListTransactionHashShowed.Count;
+                                        i < copyListTransaction.Count;
+                                        i++)
                                         {
-                                            UpdateLabelSyncInformation(
-                                            "Total transactions loaded and decrypted: " +
-                                            (ListTransactionHashShowed.Count +
-                                             ListTransactionAnonymityHashShowed.Count) + "/" +
-                                            (copyListTransaction.Count +
-                                             copyListAnonymousTransaction.Count));
-                                        }
-                                        if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
-                                        {
-                                            break;
-                                        }
-                                        if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
-                                        {
-                                            if (i < copyListTransaction.Count)
+
+                                            if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                                             {
-                                                string decryptedTransaction = ClassAlgo
-                                                    .GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
-                                                        copyListTransaction[i],
-                                                        ClassWalletObject.WalletConnect.WalletAddress +
-                                                        ClassWalletObject.WalletConnect.WalletKey,
-                                                        ClassWalletNetworkSetting.KeySize); // AES
-
-                                                if (decryptedTransaction == ClassAlgoErrorEnumeration.AlgoError)
+                                                break;
+                                            }
+                                            if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
+                                            {
+                                                if (i < copyListTransaction.Count)
                                                 {
-                                                    TransactionHistoryWalletForm.ResyncTransaction();
-                                                    break;
-                                                }
-                                                else
-                                                {
+                                                    string decryptedTransaction = ClassAlgo
+                                                        .GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
+                                                            copyListTransaction[i],
+                                                            ClassWalletObject.WalletConnect.WalletAddress +
+                                                            ClassWalletObject.WalletConnect.WalletKey,
+                                                            ClassWalletNetworkSetting.KeySize); // AES
 
-                                                    if (!ListTransactionHashShowed.ContainsValue(decryptedTransaction))
+                                                    if (decryptedTransaction == ClassAlgoErrorEnumeration.AlgoError)
                                                     {
-                                                        ListTransactionHashShowed.Add(ListTransactionHashShowed.Count,
-                                                            decryptedTransaction);
+                                                        TransactionHistoryWalletForm.ResyncTransaction();
+                                                        break;
+                                                    }
+                                                    else
+                                                    {
+
+                                                        if (!ListTransactionHashShowed.ContainsValue(decryptedTransaction))
+                                                        {
+                                                            ListTransactionHashShowed.Add(ListTransactionHashShowed.Count,
+                                                                decryptedTransaction);
+                                                        }
                                                     }
                                                 }
+                                                if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
+                                                {
+                                                    UpdateLabelSyncInformation(
+                                                    "Total transactions loaded and decrypted: " +
+                                                    (ListTransactionHashShowed.Count +
+                                                     ListTransactionAnonymityHashShowed.Count) + "/" +
+                                                    (copyListTransaction.Count +
+                                                     copyListAnonymousTransaction.Count));
+                                                }
+                                            }
+                                            else
+                                            {
+                                                UpdateLabelSyncInformation("Total transactions downloaded: " + (ClassWalletTransactionCache.ListTransaction.Count +
+                                                                             ClassWalletTransactionAnonymityCache.ListTransaction.Count) + "/" +
+                                                                             (ClassWalletObject.TotalTransactionInSync + ClassWalletObject.TotalTransactionInSyncAnonymity));
                                             }
                                         }
-                                        else
-                                        {
-                                            UpdateLabelSyncInformation("Total transactions downloaded: " + (ClassWalletTransactionCache.ListTransaction.Count +
-                                                                         ClassWalletTransactionAnonymityCache.ListTransaction.Count) + "/"  +
-                                                                         (ClassWalletObject.TotalTransactionInSync + ClassWalletObject.TotalTransactionInSyncAnonymity));
-                                        }
+                                        invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = true;
+                                        BeginInvoke(invokeLockButton);
+                                    }
+                                    else
+                                    {
+                                        MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = true;
+                                        BeginInvoke(invokeLockButton);
                                     }
 
-                                    for (int i = ListTransactionAnonymityHashShowed.Count;
-                                        i < copyListAnonymousTransaction.Count;
-                                        i++)
+                                    if (ListTransactionAnonymityHashShowed.Count < copyListAnonymousTransaction.Count)
                                     {
-                                        if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncBlock &&
-                                            !ClassWalletObject.InSyncTransactionAnonymity)
+                                        MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = false;
+                                        BeginInvoke(invokeLockButton);
+                                        for (int i = ListTransactionAnonymityHashShowed.Count;
+                                            i < copyListAnonymousTransaction.Count;
+                                            i++)
                                         {
-                                            UpdateLabelSyncInformation(
-                                                "Total transactions loaded and decrypted: " +
-                                                (ListTransactionHashShowed.Count +
-                                                 ListTransactionAnonymityHashShowed.Count) + "/" +
-                                                (copyListTransaction.Count +
-                                                 copyListAnonymousTransaction.Count));
-                                        }
-
-                                        if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
-                                        {
-                                            break;
-                                        }
-                                        if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
-                                        {
-                                            if (i < copyListAnonymousTransaction.Count)
+   
+                                            if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                                             {
-                                                string decryptedTransaction = ClassAlgo
-                                                    .GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
-                                                       copyListAnonymousTransaction[i],
-                                                        ClassWalletObject.WalletConnect.WalletAddress +
-                                                        ClassWalletObject.WalletConnect.WalletKey,
-                                                        ClassWalletNetworkSetting.KeySize); // AES
+                                                break;
+                                            }
+                                            if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
+                                            {
+                                                if (i < copyListAnonymousTransaction.Count)
+                                                {
+                                                    string decryptedTransaction = ClassAlgo
+                                                        .GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
+                                                           copyListAnonymousTransaction[i],
+                                                            ClassWalletObject.WalletConnect.WalletAddress +
+                                                            ClassWalletObject.WalletConnect.WalletKey,
+                                                            ClassWalletNetworkSetting.KeySize); // AES
 
-                                                if (decryptedTransaction == ClassAlgoErrorEnumeration.AlgoError)
-                                                {
-                                                    TransactionHistoryWalletForm.ResyncTransaction();
-                                                    break;
-                                                }
-                                                else
-                                                {
-                                                    if (!ListTransactionAnonymityHashShowed.ContainsValue(decryptedTransaction))
+                                                    if (decryptedTransaction == ClassAlgoErrorEnumeration.AlgoError)
                                                     {
-                                                        ListTransactionAnonymityHashShowed.Add(
-                                                            ListTransactionAnonymityHashShowed.Count, decryptedTransaction);
+                                                        TransactionHistoryWalletForm.ResyncTransaction();
+                                                        break;
+                                                    }
+                                                    else
+                                                    {
+                                                        if (!ListTransactionAnonymityHashShowed.ContainsValue(decryptedTransaction))
+                                                        {
+                                                            ListTransactionAnonymityHashShowed.Add(
+                                                                ListTransactionAnonymityHashShowed.Count, decryptedTransaction);
+                                                        }
                                                     }
                                                 }
+                                                if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncBlock && !ClassWalletObject.InSyncTransactionAnonymity)
+                                                {
+                                                    UpdateLabelSyncInformation(
+                                                        "Total transactions loaded and decrypted: " +
+                                                        (ListTransactionHashShowed.Count +
+                                                         ListTransactionAnonymityHashShowed.Count) + "/" +
+                                                        (copyListTransaction.Count +
+                                                         copyListAnonymousTransaction.Count));
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                UpdateLabelSyncInformation("Total transactions downloaded: " + (ClassWalletTransactionCache.ListTransaction.Count +
+                                                                             ClassWalletTransactionAnonymityCache.ListTransaction.Count) + "/" +
+                                                                             (ClassWalletObject.TotalTransactionInSync + ClassWalletObject.TotalTransactionInSyncAnonymity));
                                             }
                                         }
-                                        else
-                                        {
-                                            UpdateLabelSyncInformation("Total transactions downloaded: " + (ClassWalletTransactionCache.ListTransaction.Count +
-                                                                         ClassWalletTransactionAnonymityCache.ListTransaction.Count) + "/" +
-                                                                         (ClassWalletObject.TotalTransactionInSync + ClassWalletObject.TotalTransactionInSyncAnonymity));
-                                        }
+                                        invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = true;
+                                        BeginInvoke(invokeLockButton);
+                                    }
+                                    else
+                                    {
+                                        MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = true;
+                                        BeginInvoke(invokeLockButton);
                                     }
 
                                     if (!ClassWalletObject.InSyncTransaction &&
@@ -3196,8 +3237,7 @@ namespace Xiropht_Wallet
                                                  ClassWalletObject.TotalTransactionInSyncAnonymity));
                                         }
                                     }
-                                    copyListAnonymousTransaction.Clear();
-                                    copyListTransaction.Clear();
+
                                 }
                             }
                             catch (Exception error)
@@ -3213,7 +3253,7 @@ namespace Xiropht_Wallet
                                 break;
                             }
 
-                            Thread.Sleep(ThreadUpdateTransactionWalletInterval);
+                            Thread.Sleep(ThreadUpdateTransactionWalletInterval*2);
                         }
                     });
                 }
@@ -4501,6 +4541,124 @@ namespace Xiropht_Wallet
         }
 
         #endregion
+
+        private void darkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UpdateColorStyle(Color.Black, Color.White, Color.PaleTurquoise);
+        }
+
+
+        private void lightToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UpdateColorStyle(Color.White, Color.Black, Color.White);
+        }
+
+        /// <summary>
+        /// Change colors of all controls of the wallet interface.
+        /// </summary>
+        /// <param name="background"></param>
+        /// <param name="text"></param>
+        private void UpdateColorStyle(Color background, Color text, Color backgroundList)
+        {
+#if WINDOWS
+            if (background == Color.Black)
+            {
+                Theme = MetroThemeStyle.Dark;
+            }
+            else if (background == Color.White)
+            {
+                Theme = MetroThemeStyle.Light;
+            }
+#else
+            BackColor = background;
+#endif
+            for (int i = 0; i < Controls.Count; i++)
+            {
+                if (i < Controls.Count)
+                {
+                    Controls[i].ForeColor = text;
+                }
+            }
+            OpenWalletForm.BackColor = background;
+            for (int i = 0; i < OpenWalletForm.Controls.Count; i++)
+            {
+                if (i < OpenWalletForm.Controls.Count)
+                {
+                    if (!(OpenWalletForm.Controls[i] is TextBox))
+                    {
+                        OpenWalletForm.Controls[i].BackColor = background;
+                        OpenWalletForm.Controls[i].ForeColor = text;
+                    }
+                }
+            }
+            MainWalletForm.BackColor = background;
+            for (int i = 0; i < MainWalletForm.Controls.Count; i++)
+            {
+                if (i < MainWalletForm.Controls.Count)
+                {
+                    if (!(MainWalletForm.Controls[i] is TextBox))
+                    {
+                        MainWalletForm.Controls[i].BackColor = background;
+                        MainWalletForm.Controls[i].ForeColor = text;
+                    }
+                }
+            }
+            OverviewWalletForm.BackColor = background;
+            for (int i = 0; i < OverviewWalletForm.Controls.Count; i++)
+            {
+                if (i < OverviewWalletForm.Controls.Count)
+                {
+                    if (!(OverviewWalletForm.Controls[i] is TextBox))
+                    {
+                        OverviewWalletForm.Controls[i].BackColor = background;
+                        OverviewWalletForm.Controls[i].ForeColor = text;
+                    }
+                }
+            }
+            SendTransactionWalletForm.BackColor = background;
+            for (int i = 0; i < SendTransactionWalletForm.Controls.Count; i++)
+            {
+                if (i < SendTransactionWalletForm.Controls.Count)
+                {
+                    if (!(SendTransactionWalletForm.Controls[i] is TextBox))
+                    {
+                        SendTransactionWalletForm.Controls[i].BackColor = background;
+                        SendTransactionWalletForm.Controls[i].ForeColor = text;
+                    }
+                }
+            }
+            CreateWalletForm.BackColor = background;
+            for (int i = 0; i < CreateWalletForm.Controls.Count; i++)
+            {
+                if (i < CreateWalletForm.Controls.Count)
+                {
+                    if (!(CreateWalletForm.Controls[i] is TextBox))
+                    {
+                        CreateWalletForm.Controls[i].BackColor = background;
+                        CreateWalletForm.Controls[i].ForeColor = text;
+                    }
+                }
+            }
+            RestoreWalletForm.BackColor = background;
+            for (int i = 0; i < RestoreWalletForm.Controls.Count; i++)
+            {
+                if (i < RestoreWalletForm.Controls.Count)
+                {
+                    if (!(RestoreWalletForm.Controls[i] is TextBox))
+                    {
+                        RestoreWalletForm.Controls[i].BackColor = background;
+                        RestoreWalletForm.Controls[i].ForeColor = text;
+                    }
+                }
+            }
+            for (int i = 0; i < panelControlWallet.Controls.Count; i++)
+            {
+                if (i < panelControlWallet.Controls.Count)
+                {
+                    panelControlWallet.Controls[i].ForeColor = text;
+                }
+            }
+        }
 
     }
 }
