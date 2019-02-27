@@ -540,73 +540,70 @@ namespace Xiropht_Wallet.Wallet
                 var packetAlgoError = 0;
                 while (SeedNodeConnectorWallet.ReturnStatus())
                 {
-                    var packetWallet = await WalletConnect.ListenPacketWalletAsync(Certificate, true).ConfigureAwait(false);
+                    var packetWallet = await WalletConnect.ListenPacketWalletAsync(Certificate, true);
 
-                    if (packetWallet.Length > 0)
+                    if (packetWallet == ClassAlgoErrorEnumeration.AlgoError)
+                    {
+                        packetAlgoError++;
+                    }
+                    if (packetWallet == ClassSeedNodeStatus.SeedNone)
+                    {
+                        packetNone++;
+                    }
+                    else
+                    {
+                        packetNone = 0;
+                    }
+
+                    if (packetWallet == ClassSeedNodeStatus.SeedError)
+                    {
+                        break;
+                    }
+
+                    if (packetNone == packetNoneMax && !InCreateWallet) break;
+
+                    if (packetAlgoError == packetAlgoErrorMax) break;
+
+                    if (packetWallet.Contains("*")) // Character separator.
+                    {
+                        var splitPacket = packetWallet.Split(new[] { "*" }, StringSplitOptions.None);
+                        foreach (var packetEach in splitPacket)
+                        {
+                            if (packetEach != null)
+                            {
+                                if (!string.IsNullOrEmpty(packetEach))
+                                {
+                                    if (packetEach.Length > 1)
+                                    {
+                                        if (packetEach == ClassAlgoErrorEnumeration.AlgoError)
+                                        {
+                                            packetAlgoError++;
+
+                                        }
+
+                                        HandleWalletPacket(packetEach.Replace("*", ""));
+
+#if DEBUG
+                                        Log.WriteLine("Packet wallet received: " + packetEach.Replace("*", ""));
+#endif
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
                     {
                         if (packetWallet == ClassAlgoErrorEnumeration.AlgoError)
                         {
                             packetAlgoError++;
                         }
-                        if (packetWallet == ClassSeedNodeStatus.SeedNone)
-                        {
-                            packetNone++;
-                        }
-                        else
-                        {
-                            packetNone = 0;
-                        }
 
-                        if (packetWallet == ClassSeedNodeStatus.SeedError)
-                        {
-                            break;
-                        }
-
-                        if (packetNone == packetNoneMax && !InCreateWallet) break;
-
-                        if (packetAlgoError == packetAlgoErrorMax) break;
-
-                        if (packetWallet.Contains("*")) // Character separator.
-                        {
-                            var splitPacket = packetWallet.Split(new[] { "*" }, StringSplitOptions.None);
-                            foreach (var packetEach in splitPacket)
-                            {
-                                if (packetEach != null)
-                                {
-                                    if (!string.IsNullOrEmpty(packetEach))
-                                    {
-                                        if (packetEach.Length > 1)
-                                        {
-                                            if (packetEach == ClassAlgoErrorEnumeration.AlgoError)
-                                            {
-                                                packetAlgoError++;
-
-                                            }
-
-                                            HandleWalletPacket(packetEach.Replace("*", ""));
+                        HandleWalletPacket(packetWallet);
 
 #if DEBUG
-                                            Log.WriteLine("Packet wallet received: " + packetEach.Replace("*", ""));
-#endif
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (packetWallet == ClassAlgoErrorEnumeration.AlgoError)
-                            {
-                                packetAlgoError++;
-                            }
-
-                            HandleWalletPacket(packetWallet);
-
-#if DEBUG
-                            Log.WriteLine("Packet wallet received: " + packetWallet);
+                        Log.WriteLine("Packet wallet received: " + packetWallet);
 #endif
 
-                        }
                     }
                 }
 
