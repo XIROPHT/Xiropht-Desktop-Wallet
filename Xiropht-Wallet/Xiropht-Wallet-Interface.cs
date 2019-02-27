@@ -3093,6 +3093,8 @@ namespace Xiropht_Wallet
 
                                     if (ListTransactionHashShowed.Count < copyListTransaction.Count)
                                     {
+                                        long loadingDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+
                                         MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = false;
                                         BeginInvoke(invokeLockButton);
                                         for (int i = ListTransactionHashShowed.Count;
@@ -3125,10 +3127,16 @@ namespace Xiropht_Wallet
 
                                                         if (!ListTransactionHashShowed.ContainsValue(decryptedTransaction))
                                                         {
+                                                            loadingDate = DateTimeOffset.Now.ToUnixTimeSeconds();
                                                             ListTransactionHashShowed.Add(ListTransactionHashShowed.Count,
                                                                 decryptedTransaction);
                                                         }
                                                     }
+                                                }
+                                                if (loadingDate + 10 < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
+                                                {
+                                                    new Thread(() => StopUpdateTransactionHistory(true, false)).Start();
+                                                    break;
                                                 }
                                                 if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
                                                 {
@@ -3158,6 +3166,7 @@ namespace Xiropht_Wallet
 
                                     if (ListTransactionAnonymityHashShowed.Count < copyListAnonymousTransaction.Count)
                                     {
+                                        long loadingDate = DateTimeOffset.Now.ToUnixTimeSeconds();
                                         MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = false;
                                         BeginInvoke(invokeLockButton);
                                         for (int i = ListTransactionAnonymityHashShowed.Count;
@@ -3189,10 +3198,16 @@ namespace Xiropht_Wallet
                                                     {
                                                         if (!ListTransactionAnonymityHashShowed.ContainsValue(decryptedTransaction))
                                                         {
+                                                            loadingDate = DateTimeOffset.Now.ToUnixTimeSeconds();
                                                             ListTransactionAnonymityHashShowed.Add(
                                                                 ListTransactionAnonymityHashShowed.Count, decryptedTransaction);
                                                         }
                                                     }
+                                                }
+                                                if (loadingDate + 10 < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
+                                                {
+                                                    new Thread(() => StopUpdateTransactionHistory(true, false)).Start();
+                                                    break;
                                                 }
                                                 if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncBlock && !ClassWalletObject.InSyncTransactionAnonymity)
                                                 {
