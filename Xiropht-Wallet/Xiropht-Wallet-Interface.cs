@@ -3104,6 +3104,8 @@ namespace Xiropht_Wallet
 
                                             if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                                             {
+                                                ListTransactionHashShowed.Clear();
+                                                ListTransactionAnonymityHashShowed.Clear();
                                                 break;
                                             }
                                             if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
@@ -3135,6 +3137,8 @@ namespace Xiropht_Wallet
                                                 }
                                                 if (loadingDate + 10 < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
                                                 {
+                                                    ListTransactionHashShowed.Clear();
+                                                    ListTransactionAnonymityHashShowed.Clear();
                                                     new Thread(() => StopUpdateTransactionHistory(true, false)).Start();
                                                     break;
                                                 }
@@ -3176,6 +3180,8 @@ namespace Xiropht_Wallet
    
                                             if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                                             {
+                                                ListTransactionHashShowed.Clear();
+                                                ListTransactionAnonymityHashShowed.Clear();
                                                 break;
                                             }
                                             if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
@@ -3206,6 +3212,8 @@ namespace Xiropht_Wallet
                                                 }
                                                 if (loadingDate + 10 < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
                                                 {
+                                                    ListTransactionHashShowed.Clear();
+                                                    ListTransactionAnonymityHashShowed.Clear();
                                                     new Thread(() => StopUpdateTransactionHistory(true, false)).Start();
                                                     break;
                                                 }
