@@ -113,9 +113,13 @@ namespace Xiropht_Wallet.FormPhase
         /// <param name="title"></param>
         /// <param name="button"></param>
         /// <param name="icon"></param>
-        public static DialogResult MessageBoxInterface(string text, string title, MessageBoxButtons button, MessageBoxIcon icon)
+        public static DialogResult MessageBoxInterface(string text, string title, MessageBoxButtons button, MessageBoxIcon icon, bool targetMainInterface = false)
         {
-            return MetroMessageBox.Show(WalletXiropht, text, title, button, icon);
+            if (!targetMainInterface)
+            {
+                return MetroMessageBox.Show(WalletXiropht, text, title, button, icon);
+            }
+            return MessageBox.Show(text, title, button, icon);
         }
 
 #endif

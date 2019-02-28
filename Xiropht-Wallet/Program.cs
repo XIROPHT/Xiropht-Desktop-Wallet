@@ -22,7 +22,6 @@ namespace Xiropht_Wallet
             Log.InitializeLog(); // Initialization of log system.
             Log.AutoWriteLog(); // Start the automatic write of log lines.
 #endif
-#if DEBUG
             AppDomain.CurrentDomain.UnhandledException += delegate(object sender, UnhandledExceptionEventArgs args)
             {
                 var filePath = ClassUtils.ConvertPath(Directory.GetCurrentDirectory()+"\\error_wallet.txt");
@@ -44,7 +43,6 @@ namespace Xiropht_Wallet
 
                 Environment.Exit(1);
             };
-#endif
 #if WINDOWS
             ClassMemory.CleanMemory();
 #endif
