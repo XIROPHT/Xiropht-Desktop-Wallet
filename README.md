@@ -68,6 +68,8 @@ For more informations about how work the network connection of wallet, please ch
 
 - Hungarian: Maxy86
 
+- Polish: XirophtEnthusiast
+
 **Official testers:**
 
 - DigitalTwister
