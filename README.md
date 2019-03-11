@@ -64,6 +64,8 @@ For more informations about how work the network connection of wallet, please ch
 
 - French: Xiropht
 
+- German: Stone
+
 - Greek: Alpha
 
 - Hungarian: Maxy86
