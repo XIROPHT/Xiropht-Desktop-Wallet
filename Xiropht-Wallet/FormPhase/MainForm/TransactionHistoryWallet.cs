@@ -206,21 +206,23 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void listViewNormalSendTransactionHistory_MouseClick(object sender, MouseEventArgs e)
         {
-            ListViewItem item = listViewNormalSendTransactionHistory.GetItemAt(0, e.Y);
+            try
+            {
+                ListViewItem item = listViewNormalSendTransactionHistory.GetItemAt(0, e.Y);
 
-            bool found = false;
-            if (item == null) return;
-            for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
-                if (item.SubItems[ix].Bounds.Contains(e.Location))
-                {
-                    if (!found)
+                bool found = false;
+                if (item == null) return;
+                for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
+                    if (item.SubItems[ix].Bounds.Contains(e.Location))
                     {
-                        found = true;
-                        Clipboard.SetText(item.SubItems[ix].Text);
+                        if (!found)
+                        {
+                            found = true;
+                            Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
-                        new Thread(() =>
-                                ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
-                            .Start();
+                            new Thread(() =>
+                                    ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
+                                .Start();
 #else
                         new Thread(delegate ()
                         {
@@ -228,23 +230,30 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             BeginInvoke(invoker);
                         }).Start();
 #endif
-                        return;
+                            return;
+                        }
                     }
-                }
+            }
+            catch
+            {
+
+            }
         }
 
         private void listViewNormalReceivedTransactionHistory_MouseClick(object sender, MouseEventArgs e)
         {
-            ListViewItem item = listViewNormalReceivedTransactionHistory.GetItemAt(5, e.Y);
-            if (item == null) return;
-            for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
-                if (item.SubItems[ix].Bounds.Contains(e.Location))
-                {
-                    Clipboard.SetText(item.SubItems[ix].Text);
+            try
+            {
+                ListViewItem item = listViewNormalReceivedTransactionHistory.GetItemAt(5, e.Y);
+                if (item == null) return;
+                for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
+                    if (item.SubItems[ix].Bounds.Contains(e.Location))
+                    {
+                        Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
-                    new Thread(() =>
-                            ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
-                        .Start();
+                        new Thread(() =>
+                                ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
+                            .Start();
 #else
                     new Thread(delegate ()
                     {
@@ -252,22 +261,29 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         BeginInvoke(invoker);
                     }).Start();
 #endif
-                    return;
-                }
+                        return;
+                    }
+            }
+            catch
+            {
+
+            }
         }
 
         private void listViewAnonymitySendTransactionHistory_MouseClick(object sender, MouseEventArgs e)
         {
-            ListViewItem item = listViewAnonymitySendTransactionHistory.GetItemAt(5, e.Y);
-            if (item == null) return;
-            for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
-                if (item.SubItems[ix].Bounds.Contains(e.Location))
-                {
-                    Clipboard.SetText(item.SubItems[ix].Text);
+            try
+            {
+                ListViewItem item = listViewAnonymitySendTransactionHistory.GetItemAt(5, e.Y);
+                if (item == null) return;
+                for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
+                    if (item.SubItems[ix].Bounds.Contains(e.Location))
+                    {
+                        Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
-                    new Thread(() =>
-                            ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
-                        .Start();
+                        new Thread(() =>
+                                ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
+                            .Start();
 #else
                     new Thread(delegate()
                     {
@@ -275,22 +291,29 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         BeginInvoke(invoker);
                     }).Start();
 #endif
-                    return;
-                }
+                        return;
+                    }
+            }
+            catch
+            {
+
+            }
         }
 
         private void listViewAnonymityReceivedTransactionHistory_MouseClick(object sender, MouseEventArgs e)
         {
-            ListViewItem item = listViewAnonymityReceivedTransactionHistory.GetItemAt(5, e.Y);
-            if (item == null) return;
-            for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
-                if (item.SubItems[ix].Bounds.Contains(e.Location))
-                {
-                    Clipboard.SetText(item.SubItems[ix].Text);
+            try
+            {
+                ListViewItem item = listViewAnonymityReceivedTransactionHistory.GetItemAt(5, e.Y);
+                if (item == null) return;
+                for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
+                    if (item.SubItems[ix].Bounds.Contains(e.Location))
+                    {
+                        Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
-                    new Thread(() =>
-                            ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
-                        .Start();
+                        new Thread(() =>
+                                ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
+                            .Start();
 #else
                     new Thread(delegate ()
                     {
@@ -298,22 +321,29 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         BeginInvoke(invoker);
                     }).Start();
 #endif
-                    return;
-                }
+                        return;
+                    }
+            }
+            catch
+            {
+
+            }
         }
 
         private void listViewBlockRewardTransactionHistory_MouseClick(object sender, MouseEventArgs e)
         {
-            ListViewItem item = listViewBlockRewardTransactionHistory.GetItemAt(5, e.Y);
-            if (item == null) return;
-            for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
-                if (item.SubItems[ix].Bounds.Contains(e.Location))
-                {
-                    Clipboard.SetText(item.SubItems[ix].Text);
+            try
+            {
+                ListViewItem item = listViewBlockRewardTransactionHistory.GetItemAt(5, e.Y);
+                if (item == null) return;
+                for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
+                    if (item.SubItems[ix].Bounds.Contains(e.Location))
+                    {
+                        Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
-                    new Thread(() =>
-                            ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error))
-                        .Start();
+                        new Thread(() =>
+                                ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error))
+                            .Start();
 #else
                     new Thread(delegate ()
                     {
@@ -321,8 +351,13 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         BeginInvoke(invoker);
                     }).Start();
 #endif
-                    return;
-                }
+                        return;
+                    }
+            }
+            catch
+            {
+
+            }
         }
 
         #region Ordering events.

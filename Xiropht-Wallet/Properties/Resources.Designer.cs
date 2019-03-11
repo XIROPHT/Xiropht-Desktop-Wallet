@@ -59,5 +59,15 @@ namespace Xiropht_Wallet.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap logo_web_transparent {
+            get {
+                object obj = ResourceManager.GetObject("logo-web-transparent", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

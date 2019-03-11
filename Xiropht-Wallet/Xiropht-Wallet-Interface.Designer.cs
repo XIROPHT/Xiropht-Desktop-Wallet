@@ -31,6 +31,7 @@ namespace Xiropht_Wallet
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WalletXiropht));
             this.menuStripMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,12 +70,14 @@ namespace Xiropht_Wallet
             this.labelCopyright = new System.Windows.Forms.Label();
             this.linkLabelWebsite = new System.Windows.Forms.LinkLabel();
             this.buttonContactWallet = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panelMainForm = new Xiropht_Wallet.FormCustom.ClassPanel();
             this.panelControlWallet = new Xiropht_Wallet.FormCustom.ClassPanel();
             this.labelNoticeTotalPendingTransactionOnReceive = new System.Windows.Forms.Label();
             this.labelNoticeWalletBalance = new System.Windows.Forms.Label();
             this.labelNoticeWalletAddress = new System.Windows.Forms.Label();
             this.menuStripMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelControlWallet.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -243,14 +246,14 @@ namespace Xiropht_Wallet
             // darkToolStripMenuItem
             // 
             this.darkToolStripMenuItem.Name = "darkToolStripMenuItem";
-            this.darkToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.darkToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.darkToolStripMenuItem.Text = "Dark";
             this.darkToolStripMenuItem.Click += new System.EventHandler(this.darkToolStripMenuItem_Click);
             // 
             // lightToolStripMenuItem
             // 
             this.lightToolStripMenuItem.Name = "lightToolStripMenuItem";
-            this.lightToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.lightToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.lightToolStripMenuItem.Text = "Light";
             this.lightToolStripMenuItem.Click += new System.EventHandler(this.lightToolStripMenuItem_Click);
             // 
@@ -411,6 +414,16 @@ namespace Xiropht_Wallet
             this.buttonContactWallet.Text = "Contact";
             this.buttonContactWallet.Click += new System.EventHandler(this.buttonContactWallet_Click);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImage = global::Xiropht_Wallet.Properties.Resources.logo_web_transparent;
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox1.Location = new System.Drawing.Point(20, 477);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(194, 152);
+            this.pictureBox1.TabIndex = 15;
+            this.pictureBox1.TabStop = false;
+            // 
             // panelMainForm
             // 
             this.panelMainForm.Location = new System.Drawing.Point(220, 177);
@@ -466,6 +479,7 @@ namespace Xiropht_Wallet
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1032, 754);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.buttonContactWallet);
             this.Controls.Add(this.linkLabelWebsite);
             this.Controls.Add(this.labelCopyright);
@@ -484,6 +498,7 @@ namespace Xiropht_Wallet
             this.Controls.Add(this.metroButtonSendTransactionWallet);
             this.Controls.Add(this.metroButtonTransactionWallet);
             this.Controls.Add(this.metroButtonBlockExplorerWallet);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStripMenu;
             this.Name = "WalletXiropht";
             this.Text = "Xiropht Wallet Gui - v";
@@ -494,6 +509,7 @@ namespace Xiropht_Wallet
             this.Resize += new System.EventHandler(this.WalletXiropht_Resize);
             this.menuStripMenu.ResumeLayout(false);
             this.menuStripMenu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelControlWallet.ResumeLayout(false);
             this.panelControlWallet.PerformLayout();
             this.ResumeLayout(false);
@@ -546,6 +562,7 @@ namespace Xiropht_Wallet
         private System.Windows.Forms.ToolStripMenuItem themeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem darkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem lightToolStripMenuItem;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 
