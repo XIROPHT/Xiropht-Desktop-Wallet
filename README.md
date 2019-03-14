@@ -17,14 +17,17 @@ Linux:
 
 For make a binary linux file from executable windows file:
 
+~~~~text
 mkbundle --list-targets // Give the list of all target runtime
+~~~~ 
 
 Example of target: 4.6.1-linux-libc2.12-amd64
 
+~~~text
 mkbundle --fetch-target 4.6.1-linux-libc2.12-amd64 // Functional for Ubuntu 18.04 64bits
 
 mkbundle --cross 4.6.1-linux-libc2.12-amd64 Xiropht-Wallet.exe -o Xiropht-Wallet Xiropht-Connector-All.dll MetroFramework.Fonts.dll MetroFramework.dll MetroFramework.Design.dll --deps -z --static
-
+~~~
 
 Informations:
 
