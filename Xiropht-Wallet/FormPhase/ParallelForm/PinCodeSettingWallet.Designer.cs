@@ -40,7 +40,7 @@
             // 
             // textBoxPinCode
             // 
-            this.textBoxPinCode.Location = new System.Drawing.Point(178, 123);
+            this.textBoxPinCode.Location = new System.Drawing.Point(236, 123);
             this.textBoxPinCode.Name = "textBoxPinCode";
             this.textBoxPinCode.PasswordChar = '*';
             this.textBoxPinCode.Size = new System.Drawing.Size(271, 20);
@@ -49,7 +49,7 @@
             // labelYourPinCode
             // 
             this.labelYourPinCode.AutoSize = true;
-            this.labelYourPinCode.Location = new System.Drawing.Point(70, 130);
+            this.labelYourPinCode.Location = new System.Drawing.Point(12, 126);
             this.labelYourPinCode.Name = "labelYourPinCode";
             this.labelYourPinCode.Size = new System.Drawing.Size(102, 13);
             this.labelYourPinCode.TabIndex = 6;
@@ -57,7 +57,7 @@
             // 
             // textBoxWalletOldPassword
             // 
-            this.textBoxWalletOldPassword.Location = new System.Drawing.Point(178, 83);
+            this.textBoxWalletOldPassword.Location = new System.Drawing.Point(236, 83);
             this.textBoxWalletOldPassword.Name = "textBoxWalletOldPassword";
             this.textBoxWalletOldPassword.PasswordChar = '*';
             this.textBoxWalletOldPassword.Size = new System.Drawing.Size(271, 20);
@@ -66,7 +66,7 @@
             // labelYourPassword
             // 
             this.labelYourPassword.AutoSize = true;
-            this.labelYourPassword.Location = new System.Drawing.Point(66, 90);
+            this.labelYourPassword.Location = new System.Drawing.Point(12, 86);
             this.labelYourPassword.Name = "labelYourPassword";
             this.labelYourPassword.Size = new System.Drawing.Size(106, 13);
             this.labelYourPassword.TabIndex = 4;
@@ -75,7 +75,7 @@
             // labelNoticePinCodeStatus
             // 
             this.labelNoticePinCodeStatus.AutoSize = true;
-            this.labelNoticePinCodeStatus.Location = new System.Drawing.Point(175, 21);
+            this.labelNoticePinCodeStatus.Location = new System.Drawing.Point(133, 20);
             this.labelNoticePinCodeStatus.Name = "labelNoticePinCodeStatus";
             this.labelNoticePinCodeStatus.Size = new System.Drawing.Size(120, 13);
             this.labelNoticePinCodeStatus.TabIndex = 8;
@@ -84,7 +84,7 @@
             // labelPinCodeStatus
             // 
             this.labelPinCodeStatus.AutoSize = true;
-            this.labelPinCodeStatus.Location = new System.Drawing.Point(296, 21);
+            this.labelPinCodeStatus.Location = new System.Drawing.Point(296, 20);
             this.labelPinCodeStatus.Name = "labelPinCodeStatus";
             this.labelPinCodeStatus.Size = new System.Drawing.Size(46, 13);
             this.labelPinCodeStatus.TabIndex = 9;
@@ -104,12 +104,13 @@
             // 
             this.labelNoticePinInformation.AutoSize = true;
             this.labelNoticePinInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelNoticePinInformation.Location = new System.Drawing.Point(12, 49);
+            this.labelNoticePinInformation.Location = new System.Drawing.Point(17, 42);
             this.labelNoticePinInformation.Name = "labelNoticePinInformation";
             this.labelNoticePinInformation.Size = new System.Drawing.Size(534, 13);
             this.labelNoticePinInformation.TabIndex = 11;
             this.labelNoticePinInformation.Text = "Remember, your setting is available only for your wallet, each wallet setting are" +
     " independant.";
+            this.labelNoticePinInformation.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // PinCodeSettingWallet
             // 

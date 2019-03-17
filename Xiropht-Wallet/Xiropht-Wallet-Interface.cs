@@ -725,7 +725,7 @@ namespace Xiropht_Wallet
                 {
                     if (ClassWalletObject.SeedNodeConnectorWallet != null)
                     {
-                        if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                        if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() && ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
                         {
                             ClassWalletObject.FullDisconnection(true);
                         }
@@ -749,7 +749,7 @@ namespace Xiropht_Wallet
                 {
                     if (ClassWalletObject.SeedNodeConnectorWallet != null)
                     {
-                        if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                        if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() && ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
                         {
                             ClassWalletObject.FullDisconnection(true);
                         }
@@ -772,7 +772,7 @@ namespace Xiropht_Wallet
                 {
                     if (ClassWalletObject.SeedNodeConnectorWallet != null)
                     {
-                        if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                        if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() && ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
                         {
                             ClassWalletObject.FullDisconnection(true);
                         }
@@ -822,7 +822,7 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.SeedNodeConnectorWallet != null)
             {
-                if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() && ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
                 {
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Overview);
                 }
@@ -840,7 +840,7 @@ namespace Xiropht_Wallet
             {
                 if (ClassWalletObject.SeedNodeConnectorWallet != null)
                 {
-                    if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                    if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() && ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
                     {
                         ClassWalletObject.FullDisconnection(true);
                     }
@@ -858,7 +858,7 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.SeedNodeConnectorWallet != null)
             {
-                if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() && ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
                 {
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.SendTransaction);
                 }
@@ -874,7 +874,7 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.SeedNodeConnectorWallet != null)
             {
-                if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() && ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
                 {
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.TransactionHistory);
                 }
@@ -890,7 +890,7 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.SeedNodeConnectorWallet != null)
             {
-                if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() && ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
                 {
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.BlockExplorer);
                 }
@@ -948,8 +948,11 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.WalletConnect != null)
             {
-                var changeWalletPassword = new ChangeWalletPasswordWallet { StartPosition = FormStartPosition.CenterParent };
-                changeWalletPassword.ShowDialog(this);
+                if (ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
+                {
+                    var changeWalletPassword = new ChangeWalletPasswordWallet { StartPosition = FormStartPosition.CenterParent };
+                    changeWalletPassword.ShowDialog(this);
+                }
             }
         }
 
@@ -962,8 +965,11 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.WalletConnect != null)
             {
-                var pinCodeSetting = new PinCodeSettingWallet { StartPosition = FormStartPosition.CenterParent };
-                pinCodeSetting.ShowDialog(this);
+                if (ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
+                {
+                    var pinCodeSetting = new PinCodeSettingWallet { StartPosition = FormStartPosition.CenterParent };
+                    pinCodeSetting.ShowDialog(this);
+                }
             }
         }
 
@@ -978,7 +984,7 @@ namespace Xiropht_Wallet
             {
                 if (ClassWalletObject.SeedNodeConnectorWallet != null)
                 {
-                    if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                    if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() && ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
                     {
 
 #if WINDOWS
@@ -1007,8 +1013,11 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.WalletConnect != null)
             {
-                var remoteNodeSetting = new RemoteNodeSettingWallet { StartPosition = FormStartPosition.CenterParent };
-                remoteNodeSetting.ShowDialog(this);
+                if (ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
+                {
+                    var remoteNodeSetting = new RemoteNodeSettingWallet { StartPosition = FormStartPosition.CenterParent };
+                    remoteNodeSetting.ShowDialog(this);
+                }
             }
         }
 
@@ -1054,7 +1063,7 @@ namespace Xiropht_Wallet
             {
                 if (ClassWalletObject.SeedNodeConnectorWallet != null)
                 {
-                    if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                    if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() && ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
                     {
 #if WINDOWS
                         if (MetroMessageBox.Show(this, ClassTranslation.GetLanguageTextFromOrder("RESYNC_BLOCK_EXPLORER_CONTENT_TEXT"),
@@ -1470,7 +1479,7 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.SeedNodeConnectorWallet != null)
             {
-                if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() && ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
                 {
                     ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.ContactWallet);
                 }
@@ -4681,6 +4690,11 @@ namespace Xiropht_Wallet
                     panelControlWallet.Controls[i].ForeColor = text;
                 }
             }
+            buttonLastPage.ForeColor = Color.Black;
+            buttonFirstPage.ForeColor = Color.Black;
+            buttonNextPage.ForeColor = Color.Black;
+            buttonPreviousPage.ForeColor = Color.Black;
+            ContactWalletForm.buttonAddContact.ForeColor = Color.Black;
         }
 
     }

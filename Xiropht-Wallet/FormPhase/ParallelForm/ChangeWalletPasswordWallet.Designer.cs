@@ -40,7 +40,7 @@
             // labelChangePasswordWallet
             // 
             this.labelChangePasswordWallet.AutoSize = true;
-            this.labelChangePasswordWallet.Location = new System.Drawing.Point(67, 72);
+            this.labelChangePasswordWallet.Location = new System.Drawing.Point(12, 68);
             this.labelChangePasswordWallet.Name = "labelChangePasswordWallet";
             this.labelChangePasswordWallet.Size = new System.Drawing.Size(123, 13);
             this.labelChangePasswordWallet.TabIndex = 0;
@@ -65,7 +65,7 @@
             // labelChangePasswordPinCode
             // 
             this.labelChangePasswordPinCode.AutoSize = true;
-            this.labelChangePasswordPinCode.Location = new System.Drawing.Point(88, 112);
+            this.labelChangePasswordPinCode.Location = new System.Drawing.Point(12, 108);
             this.labelChangePasswordPinCode.Name = "labelChangePasswordPinCode";
             this.labelChangePasswordPinCode.Size = new System.Drawing.Size(102, 13);
             this.labelChangePasswordPinCode.TabIndex = 2;
@@ -82,7 +82,7 @@
             // labelChangePasswordNewPassword
             // 
             this.labelChangePasswordNewPassword.AutoSize = true;
-            this.labelChangePasswordNewPassword.Location = new System.Drawing.Point(61, 149);
+            this.labelChangePasswordNewPassword.Location = new System.Drawing.Point(12, 145);
             this.labelChangePasswordNewPassword.Name = "labelChangePasswordNewPassword";
             this.labelChangePasswordNewPassword.Size = new System.Drawing.Size(129, 13);
             this.labelChangePasswordNewPassword.TabIndex = 4;

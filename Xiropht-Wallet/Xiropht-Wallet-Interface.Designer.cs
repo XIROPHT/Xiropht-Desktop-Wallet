@@ -297,7 +297,7 @@ namespace Xiropht_Wallet
             // 
             this.labelSyncInformation.AutoSize = true;
             this.labelSyncInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSyncInformation.Location = new System.Drawing.Point(5, 710);
+            this.labelSyncInformation.Location = new System.Drawing.Point(17, 716);
             this.labelSyncInformation.Name = "labelSyncInformation";
             this.labelSyncInformation.Size = new System.Drawing.Size(103, 15);
             this.labelSyncInformation.TabIndex = 3;
@@ -312,7 +312,7 @@ namespace Xiropht_Wallet
             // 
             this.labelNetworkPhase.AutoSize = true;
             this.labelNetworkPhase.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelNetworkPhase.Location = new System.Drawing.Point(5, 657);
+            this.labelNetworkPhase.Location = new System.Drawing.Point(17, 694);
             this.labelNetworkPhase.Name = "labelNetworkPhase";
             this.labelNetworkPhase.Size = new System.Drawing.Size(204, 16);
             this.labelNetworkPhase.TabIndex = 5;
@@ -322,7 +322,7 @@ namespace Xiropht_Wallet
             // 
             this.labelCoinName.AutoSize = true;
             this.labelCoinName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelCoinName.Location = new System.Drawing.Point(5, 632);
+            this.labelCoinName.Location = new System.Drawing.Point(17, 674);
             this.labelCoinName.Name = "labelCoinName";
             this.labelCoinName.Size = new System.Drawing.Size(140, 16);
             this.labelCoinName.TabIndex = 4;
@@ -386,7 +386,7 @@ namespace Xiropht_Wallet
             // 
             this.labelCopyright.AutoSize = true;
             this.labelCopyright.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelCopyright.Location = new System.Drawing.Point(5, 736);
+            this.labelCopyright.Location = new System.Drawing.Point(17, 736);
             this.labelCopyright.Name = "labelCopyright";
             this.labelCopyright.Size = new System.Drawing.Size(238, 15);
             this.labelCopyright.TabIndex = 12;
@@ -420,7 +420,7 @@ namespace Xiropht_Wallet
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox1.Location = new System.Drawing.Point(20, 477);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(194, 152);
+            this.pictureBox1.Size = new System.Drawing.Size(194, 194);
             this.pictureBox1.TabIndex = 15;
             this.pictureBox1.TabStop = false;
             // 
