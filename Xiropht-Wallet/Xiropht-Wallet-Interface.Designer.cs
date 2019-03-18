@@ -70,14 +70,14 @@ namespace Xiropht_Wallet
             this.labelCopyright = new System.Windows.Forms.Label();
             this.linkLabelWebsite = new System.Windows.Forms.LinkLabel();
             this.buttonContactWallet = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.panelMainForm = new Xiropht_Wallet.FormCustom.ClassPanel();
             this.panelControlWallet = new Xiropht_Wallet.FormCustom.ClassPanel();
             this.labelNoticeTotalPendingTransactionOnReceive = new System.Windows.Forms.Label();
             this.labelNoticeWalletBalance = new System.Windows.Forms.Label();
             this.labelNoticeWalletAddress = new System.Windows.Forms.Label();
             this.menuStripMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.panelControlWallet.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -414,15 +414,14 @@ namespace Xiropht_Wallet
             this.buttonContactWallet.Text = "Contact";
             this.buttonContactWallet.Click += new System.EventHandler(this.buttonContactWallet_Click);
             // 
-            // pictureBox1
+            // pictureBoxLogo
             // 
-            this.pictureBox1.BackgroundImage = global::Xiropht_Wallet.Properties.Resources.logo_web_transparent;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(20, 477);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(194, 194);
-            this.pictureBox1.TabIndex = 15;
-            this.pictureBox1.TabStop = false;
+            this.pictureBoxLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBoxLogo.Location = new System.Drawing.Point(20, 477);
+            this.pictureBoxLogo.Name = "pictureBoxLogo";
+            this.pictureBoxLogo.Size = new System.Drawing.Size(194, 194);
+            this.pictureBoxLogo.TabIndex = 15;
+            this.pictureBoxLogo.TabStop = false;
             // 
             // panelMainForm
             // 
@@ -479,7 +478,7 @@ namespace Xiropht_Wallet
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1032, 754);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pictureBoxLogo);
             this.Controls.Add(this.buttonContactWallet);
             this.Controls.Add(this.linkLabelWebsite);
             this.Controls.Add(this.labelCopyright);
@@ -509,7 +508,7 @@ namespace Xiropht_Wallet
             this.Resize += new System.EventHandler(this.WalletXiropht_Resize);
             this.menuStripMenu.ResumeLayout(false);
             this.menuStripMenu.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             this.panelControlWallet.ResumeLayout(false);
             this.panelControlWallet.PerformLayout();
             this.ResumeLayout(false);
@@ -562,7 +561,7 @@ namespace Xiropht_Wallet
         private System.Windows.Forms.ToolStripMenuItem themeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem darkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem lightToolStripMenuItem;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBoxLogo;
     }
 }
 

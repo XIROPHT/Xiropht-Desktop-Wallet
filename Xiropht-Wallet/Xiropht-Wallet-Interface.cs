@@ -412,6 +412,8 @@ namespace Xiropht_Wallet
         {
             Text += Assembly.GetExecutingAssembly().GetName().Version;
 
+            pictureBoxLogo.BackgroundImage = Properties.Resources.logo_web_transparent;
+
             // Initialize form size.
             CurrentInterfaceWidth = Width;
             CurrentInterfaceHeight = Height;
