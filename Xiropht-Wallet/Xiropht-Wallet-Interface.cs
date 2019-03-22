@@ -1554,8 +1554,8 @@ namespace Xiropht_Wallet
                 var totalBlockLeft =
                     Math.Round(
                         (Decimal.Parse(ClassWalletObject.CoinMaxSupply.Replace(".", ","), NumberStyles.Any,
-                             Program.GlobalCultureInfo) / 10) - Decimal.Parse(info), 0);
-                Decimal totalCoinMined = Decimal.Parse(info) * 10;
+                             Program.GlobalCultureInfo) / ClassConnectorSetting.ConstantBlockReward) - Decimal.Parse(info), 0);
+                Decimal totalCoinMined = Decimal.Parse(info) * ClassConnectorSetting.ConstantBlockReward;
                 Decimal totalInPending = totalCoinMined - (Decimal.Parse(ClassWalletObject.CoinCirculating.Replace(".", ","), NumberStyles.Any, Program.GlobalCultureInfo) + Decimal.Parse(ClassWalletObject.TotalFee.Replace(".", ","), NumberStyles.Any, Program.GlobalCultureInfo));
                 int blockchainHeight = (int.Parse(info) + 1);
 

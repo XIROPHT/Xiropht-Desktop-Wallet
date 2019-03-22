@@ -1373,7 +1373,7 @@ namespace Xiropht_Wallet.Wallet
 
                         break;
                     case ClassSeedNodeCommand.ClassReceiveSeedEnumeration.WalletSendRemoteNode:
-                        if (!WalletOnUseSync)
+                        if (!WalletOnUseSync && !EnableReceivePacketRemoteNode)
                         {
                             LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
 
@@ -1382,9 +1382,7 @@ namespace Xiropht_Wallet.Wallet
                             {
                                 if (WalletSyncMode == 1)
                                 {
-#if WINDOWS
-                                    packet += "|127.0.0.1";
-#endif
+
                                     foreach (var remoteNodeObj in packet.Split(new[] { "|" }, StringSplitOptions.None))
                                     {
                                         if (remoteNodeObj != null)
