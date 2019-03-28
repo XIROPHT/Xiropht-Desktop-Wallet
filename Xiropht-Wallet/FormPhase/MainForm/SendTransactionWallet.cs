@@ -223,14 +223,13 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                     Decimal timePendingFromFee = ClassWalletObject.RemoteNodeTotalPendingTransactionInNetwork;
 
 
-
                                     if (timePendingFromFee <= 0)
                                     {
                                         timePendingFromFee = 1;
                                     }
                                     else
                                     {
-                                        Decimal decreaseTime = ((feeAmount * 100000) / timePendingFromFee) * 100;
+                                        Decimal decreaseTime = ((feeAmount * 1000) / timePendingFromFee) * 100;
                                         if (decreaseTime > 0)
                                         {
                                             timePendingFromFee = timePendingFromFee - decreaseTime;
@@ -243,6 +242,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                 timePendingFromFee = (timePendingFromFee * 1) / 100;
                                             }
                                         }
+                                    }
+                                    if (timePendingFromFee < 1)
+                                    {
+                                        timePendingFromFee = 1;
                                     }
 
                                     if (timePendingFromFee < 60)
