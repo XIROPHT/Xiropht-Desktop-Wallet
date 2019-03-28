@@ -130,11 +130,12 @@ namespace Xiropht_Wallet.FormPhase
                     {
                         if (WaitingForm.InvokeRequired)
                         {
-                            WaitingForm.Invoke((Action)delegate { WaitingForm.Hide(); });
+                            WaitingForm.Invoke((Action)delegate { WaitingForm.Hide(); WaitingForm.Refresh(); });
                         }
                         else
                         {
                             WaitingForm.Hide();
+                            WaitingForm.Refresh();
                         }
                     }
                     catch

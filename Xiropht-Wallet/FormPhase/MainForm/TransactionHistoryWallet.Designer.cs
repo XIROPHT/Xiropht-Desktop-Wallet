@@ -29,6 +29,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabPageTransactionHistory = new System.Windows.Forms.TabControl();
             this.tabPageNormalTransactionSend = new System.Windows.Forms.TabPage();
             this.listViewNormalSendTransactionHistory = new Xiropht_Wallet.FormPhase.MainForm.ListViewEx();
@@ -85,6 +86,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.columnHeader34 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader35 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader36 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.timerRefresh = new System.Windows.Forms.Timer(this.components);
             this.tabPageTransactionHistory.SuspendLayout();
             this.tabPageNormalTransactionSend.SuspendLayout();
             this.tabPageNormalTransactionReceived.SuspendLayout();
@@ -480,6 +482,12 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             this.columnHeader36.Text = "Block Height Src";
             // 
+            // timerRefresh
+            // 
+            this.timerRefresh.Enabled = true;
+            this.timerRefresh.Interval = 2000;
+            this.timerRefresh.Tick += new System.EventHandler(this.timerRefresh_Tick);
+            // 
             // TransactionHistoryWallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -567,5 +575,6 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         public System.Windows.Forms.TabPage tabPageNormalTransactionReceived;
         public System.Windows.Forms.TabPage tabPageAnonymityTransactionReceived;
         public System.Windows.Forms.TabPage tabPageBlockRewardTransaction;
+        private System.Windows.Forms.Timer timerRefresh;
     }
 }

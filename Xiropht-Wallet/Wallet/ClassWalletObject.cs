@@ -16,6 +16,7 @@ using Xiropht_Connector_All.Utils;
 using Xiropht_Connector_All.Wallet;
 using Xiropht_Wallet.FormPhase;
 using Xiropht_Wallet.FormPhase.ParallelForm;
+using Xiropht_Wallet.Threading;
 
 namespace Xiropht_Wallet.Wallet
 {
@@ -106,20 +107,6 @@ namespace Xiropht_Wallet.Wallet
         ///  object for remote node connection to sync the wallet.
         /// </summary>
         public static bool EnableReceivePacketRemoteNode;
-        private static Thread _threadListenRemoteNodeNetwork1;
-        private static Thread _threadListenRemoteNodeNetwork2;
-        private static Thread _threadListenRemoteNodeNetwork3;
-        private static Thread _threadListenRemoteNodeNetwork4;
-        private static Thread _threadListenRemoteNodeNetwork5;
-        private static Thread _threadListenRemoteNodeNetwork6;
-        private static Thread _threadListenRemoteNodeNetwork7;
-        private static Thread _threadListenRemoteNodeNetwork8;
-        private static Thread _threadListenRemoteNodeNetwork9;
-        private static Thread _threadListenRemoteNodeNetwork10;
-        private static Thread _threadListenRemoteNodeNetwork11;
-        private static Thread _threadListenRemoteNodeNetwork12;
-        private static Thread _threadSendRemoteNodePacketNetwork;
-        private static Thread _threadCheckRemoteNodePacketNetwork;
         public static int WalletSyncMode;
         public static string WalletSyncHostname;
         public static bool WalletClosed;
@@ -239,10 +226,10 @@ namespace Xiropht_Wallet.Wallet
                     ClassFormPhase.WalletXiropht.StartUpdateBlockSync();
                 ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_BLOCK_CACHE_READ_SUCCESS_TEXT"));
             }
-            catch(Exception error)
+            catch (Exception error)
             {
 #if DEBUG
-                Log.WriteLine("Can't read block cache, error: "+error.Message);
+                Log.WriteLine("Can't read block cache, error: " + error.Message);
 #endif
                 ClassBlockCache.RemoveWalletBlockCache();
             }
@@ -343,7 +330,7 @@ namespace Xiropht_Wallet.Wallet
                                 if (await InitializationWalletConnection(WalletConnect.WalletAddress, WalletConnect.WalletPassword,
                                     WalletConnect.WalletKey, ClassWalletPhase.Login))
                                 {
-                                    ListenSeedNodeNetworkForWallet();
+                                    ListenSeedNodeNetworkForWalletAsync();
                                     if (await WalletConnect.SendPacketWallet(Certificate, string.Empty, false))
                                     {
                                         if (await WalletConnect.SendPacketWallet(
@@ -530,9 +517,9 @@ namespace Xiropht_Wallet.Wallet
         /// <summary>
         ///     Listen seed node network.
         /// </summary>
-        public static void ListenSeedNodeNetworkForWallet()
+        public static async void ListenSeedNodeNetworkForWalletAsync()
         {
-            _threadListenSeedNodeNetwork = new Thread(async delegate ()
+            await Task.Factory.StartNew(async () =>
             {
                 var packetNone = 0;
                 var packetNoneMax = 100;
@@ -540,7 +527,7 @@ namespace Xiropht_Wallet.Wallet
                 var packetAlgoError = 0;
                 while (SeedNodeConnectorWallet.ReturnStatus())
                 {
-                    var packetWallet = await WalletConnect.ListenPacketWalletAsync(Certificate, true).ConfigureAwait(false);
+                    var packetWallet = await WalletConnect.ListenPacketWalletAsync(Certificate, true);
 
                     if (packetWallet.Length > 0)
                     {
@@ -610,27 +597,20 @@ namespace Xiropht_Wallet.Wallet
                     }
                 }
 
-                ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(false); });
-            })
-            {
-                Priority = ThreadPriority.AboveNormal
-            };
-            _threadListenSeedNodeNetwork.Start();
+                await Task.Factory.StartNew(delegate { FullDisconnection(false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
+
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
+            
         }
 
         /// <summary>
         ///     Enable keep alive packet for wallet.
         /// </summary>
-        private static void EnableKeepAliveWallet()
+        private static async void EnableKeepAliveWalletAsync()
         {
-            if (_threadWalletKeepAlive != null && (_threadWalletKeepAlive.IsAlive || _threadWalletKeepAlive != null))
+            await Task.Factory.StartNew(async () =>
             {
-                _threadWalletKeepAlive.Abort();
-                GC.SuppressFinalize(_threadWalletKeepAlive);
-            }
-            _threadWalletKeepAlive = new Thread(async delegate ()
-            {
-                Thread.Sleep(2000);
+                await Task.Delay(2000);
                 try
                 {
                     while (SeedNodeConnectorWallet.ReturnStatus())
@@ -644,18 +624,14 @@ namespace Xiropht_Wallet.Wallet
 #endif
                             break;
                         }
-                        Thread.Sleep(5000);
+                        await Task.Delay(5000);
                     }
-                    new Thread(() => FullDisconnection(false)).Start();
+                    await Task.Factory.StartNew(delegate { FullDisconnection(false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                 }
                 catch
                 {
                 }
-            })
-            {
-                Priority = ThreadPriority.Lowest
-            };
-            _threadWalletKeepAlive.Start();
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -704,7 +680,9 @@ namespace Xiropht_Wallet.Wallet
                     case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletCreatePasswordNeedMoreCharacters:
                         ClassParallelForm.HideWaitingForm();
                         ClassParallelForm.HideWaitingCreateWalletForm();
-                        ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(true); });
+                        await Task.Factory.StartNew(delegate { FullDisconnection(true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
+                        await Task.Factory.StartNew(delegate { FullDisconnection(true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
+
 
 #if WINDOWS
                         ClassFormPhase.MessageBoxInterface(
@@ -724,7 +702,7 @@ namespace Xiropht_Wallet.Wallet
                     case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletCreatePasswordNeedLetters:
                         ClassParallelForm.HideWaitingForm();
                         ClassParallelForm.HideWaitingCreateWalletForm();
-                        ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(true); });
+                        await Task.Factory.StartNew(delegate { FullDisconnection(true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
 #if WINDOWS
                         ClassFormPhase.MessageBoxInterface(
@@ -766,7 +744,7 @@ namespace Xiropht_Wallet.Wallet
                         }).Start();
 
 #endif
-                            ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(true); });
+                            await Task.Factory.StartNew(delegate { FullDisconnection(true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                         }
                         else
                         {
@@ -846,7 +824,7 @@ namespace Xiropht_Wallet.Wallet
                         }).Start();
 
 #endif
-                            ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(true); });
+                            await Task.Factory.StartNew(delegate { FullDisconnection(true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                         }
                         else
                         {
@@ -909,7 +887,7 @@ namespace Xiropht_Wallet.Wallet
                             ClassWalletCommand.ClassWalletSendEnumeration.LoginPhase + "|" + WalletConnect.WalletAddress,
                             Certificate, true))
                         {
-                            ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(false); });
+                            await Task.Factory.StartNew(delegate { FullDisconnection(false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                             ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if DEBUG
                             Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
@@ -922,13 +900,13 @@ namespace Xiropht_Wallet.Wallet
                         Log.WriteLine("Wallet accepted to login on the blockchain, submit password..");
 #endif
 
-                        EnableKeepAliveWallet();
+                        EnableKeepAliveWalletAsync();
                         WalletConnect.SelectWalletPhase(ClassWalletPhase.Password);
                         if (!await WalletConnect.SendPacketWallet(
                             ClassWalletCommand.ClassWalletSendEnumeration.PasswordPhase + "|" +
                             WalletConnect.WalletPassword, Certificate, true))
                         {
-                            ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(false); });
+                            await Task.Factory.StartNew(delegate { FullDisconnection(false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                             ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if DEBUG
                             Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
@@ -955,7 +933,7 @@ namespace Xiropht_Wallet.Wallet
                             ClassWalletCommand.ClassWalletSendEnumeration.KeyPhase + "|" + WalletConnect.WalletKey,
                             Certificate, true))
                         {
-                            ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(true); });
+                            await Task.Factory.StartNew(delegate { FullDisconnection(true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                             ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if DEBUG
                             Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
@@ -983,7 +961,7 @@ namespace Xiropht_Wallet.Wallet
                         {
                             WalletAmountInPending = splitPacket[2];
                         }
-                        ThreadPool.QueueUserWorkItem(delegate { ClassFormPhase.ShowWalletInformationInMenu(WalletConnect.WalletAddress, WalletConnect.WalletAmount); });
+                        await Task.Factory.StartNew(delegate { ClassFormPhase.ShowWalletInformationInMenu(WalletConnect.WalletAddress, WalletConnect.WalletAmount); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
 #if DEBUG
                         Log.WriteLine("Actual Balance: " + WalletConnect.WalletAmount);
@@ -1000,7 +978,7 @@ namespace Xiropht_Wallet.Wallet
                                     ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletAskRemoteNode, Certificate, false,
                                     true))
                             {
-                                ThreadPool.QueueUserWorkItem(delegate { FullDisconnection(false); });
+                                await Task.Factory.StartNew(delegate { FullDisconnection(false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                 ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if DEBUG
                                 Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
@@ -1575,7 +1553,7 @@ namespace Xiropht_Wallet.Wallet
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1584,7 +1562,7 @@ namespace Xiropht_Wallet.Wallet
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1593,7 +1571,7 @@ namespace Xiropht_Wallet.Wallet
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1602,7 +1580,7 @@ namespace Xiropht_Wallet.Wallet
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1611,7 +1589,7 @@ namespace Xiropht_Wallet.Wallet
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1620,7 +1598,7 @@ namespace Xiropht_Wallet.Wallet
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1629,7 +1607,7 @@ namespace Xiropht_Wallet.Wallet
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1638,7 +1616,7 @@ namespace Xiropht_Wallet.Wallet
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1647,7 +1625,7 @@ namespace Xiropht_Wallet.Wallet
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1656,7 +1634,7 @@ namespace Xiropht_Wallet.Wallet
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1665,7 +1643,7 @@ namespace Xiropht_Wallet.Wallet
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1674,7 +1652,7 @@ namespace Xiropht_Wallet.Wallet
                                                     ClassRemoteNodeChecker.ListRemoteNodeChecked[randomSeedNode].Item1,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
                                         }
@@ -1839,7 +1817,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1847,7 +1825,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1855,7 +1833,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1863,7 +1841,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1871,7 +1849,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1879,7 +1857,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1887,7 +1865,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1895,7 +1873,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1903,7 +1881,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1911,7 +1889,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1919,7 +1897,7 @@ namespace Xiropht_Wallet.Wallet
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                                 return;
                                             }
 
@@ -1927,7 +1905,8 @@ namespace Xiropht_Wallet.Wallet
                                                 .ConnectToRemoteNodeAsync(WalletSyncHostname,
                                                     ClassConnectorSetting.RemoteNodePort))
                                             {
-                                                DisconnectWholeRemoteNodeSync(true, false);
+                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
+
                                                 return;
                                             }
                                         }
@@ -1945,11 +1924,11 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                                         Log.WriteLine("Enable receive packet remote node list.");
 #endif
-                                        ListenRemoteNodeNetwork();
+                                        ListenRemoteNodeNetworkAsync();
 #if DEBUG
                                         Log.WriteLine("Enable send packet remote node list.");
 #endif
-                                        SendRemoteNodeNetwork();
+                                        SendRemoteNodeNetworkAsync();
 
 #if DEBUG
                                         Log.WriteLine("Enable check packet remote node list.");
@@ -1971,7 +1950,8 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                     catch
                                     {
-                                        new Thread(() => DisconnectWholeRemoteNodeSync(true, true)).Start();
+                                        await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
+
                                     }
                                 }
                                 else
@@ -2312,19 +2292,13 @@ namespace Xiropht_Wallet.Wallet
             return true;
         }
 
-#endregion
+        #endregion
 
         #region Remote node Sync
 
         public static void CheckRemoteNodeNetwork()
         {
-            if (_threadCheckRemoteNodePacketNetwork != null &&
-                (_threadCheckRemoteNodePacketNetwork.IsAlive || _threadCheckRemoteNodePacketNetwork != null))
-            {
-                _threadCheckRemoteNodePacketNetwork.Abort();
-                GC.SuppressFinalize(_threadCheckRemoteNodePacketNetwork);
-            }
-            _threadCheckRemoteNodePacketNetwork = new Thread(delegate ()
+            Task.Factory.StartNew(async () =>
             {
                 var dead = false;
                 LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
@@ -2362,7 +2336,7 @@ namespace Xiropht_Wallet.Wallet
                         dead = true;
                         break;
                     }
-                    if (LastRemoteNodePacketReceived + 10 < DateTimeOffset.Now.ToUnixTimeSeconds() || !EnableReceivePacketRemoteNode)
+                    if (LastRemoteNodePacketReceived + 30 < DateTimeOffset.Now.ToUnixTimeSeconds() || !EnableReceivePacketRemoteNode)
                     {
                         dead = true;
                         break;
@@ -2377,34 +2351,21 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                     Log.WriteLine("Remote node connection dead or stuck.");
 #endif
-                    ThreadPool.QueueUserWorkItem(delegate
-                    {
-                        DisconnectWholeRemoteNodeSync(true, false);
-                    });
+                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
+
                 }
-            })
-            {
-                Priority = ThreadPriority.Lowest
-            };
-            _threadCheckRemoteNodePacketNetwork.Start();
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest);
         }
 
         /// <summary>
         ///     Send each packet on each connected remote node.
         /// </summary>
-        public static void SendRemoteNodeNetwork()
+        public static async void SendRemoteNodeNetworkAsync()
         {
-            if (_threadSendRemoteNodePacketNetwork != null &&
-                (_threadSendRemoteNodePacketNetwork.IsAlive || _threadSendRemoteNodePacketNetwork != null))
-            {
-                _threadSendRemoteNodePacketNetwork.Abort();
-                GC.SuppressFinalize(_threadSendRemoteNodePacketNetwork);
-            }
-
             if (!WalletOnSendingPacketRemoteNode)
             {
                 WalletOnSendingPacketRemoteNode = true;
-                _threadSendRemoteNodePacketNetwork = new Thread(async delegate ()
+                await Task.Factory.StartNew(async () =>
                 {
                     while (EnableReceivePacketRemoteNode && SeedNodeConnectorWallet.ReturnStatus())
                     {
@@ -2522,29 +2483,26 @@ namespace Xiropht_Wallet.Wallet
                                 }
                                 Thread.Sleep(100);
                             }
-                            Thread.Sleep(1000);
+                            Thread.Sleep(500);
                         }
                         catch
                         {
                             break;
                         }
-                       
+
                     }
-                    
-                    ThreadPool.QueueUserWorkItem(delegate{ DisconnectWholeRemoteNodeSync(true, false); });
-                });
-                _threadSendRemoteNodePacketNetwork.Priority = ThreadPriority.Lowest;
-                _threadSendRemoteNodePacketNetwork.Start();
+                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
+                }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal);
+                
             }
         }
 
         /// <summary>
         ///     Listen each remote node from the list.
         /// </summary>
-        public static void ListenRemoteNodeNetwork()
+        public static async void ListenRemoteNodeNetworkAsync()
         {
-
-            _threadListenRemoteNodeNetwork1 = new Thread(async delegate ()
+            await Task.Factory.StartNew(async () => 
             {
                 try
                 {
@@ -2572,7 +2530,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         string packetHandle = splitPacket[i];
 
-                                                        HandlePacketRemoteNodeAsync(packetHandle);
+                                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packetHandle), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
 
                                                     }
@@ -2582,13 +2540,13 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                     else
                                     {
-                                        HandlePacketRemoteNodeAsync(packet.Replace("*", ""));
+                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet.Replace("*", "")), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
                                     }
                                 }
                                 else
                                 {
-                                    HandlePacketRemoteNodeAsync(packet);
+                                    await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                 }
                             }
                         }
@@ -2601,7 +2559,7 @@ namespace Xiropht_Wallet.Wallet
                             break;
                         }
                     }
-                    ThreadPool.QueueUserWorkItem(delegate { DisconnectWholeRemoteNodeSync(true, false); });
+                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -2610,12 +2568,8 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                 Log.WriteLine("Disconnect remote node connection");
 #endif
-            })
-            {
-                Priority = ThreadPriority.Lowest
-            }; // to sync total number of transaction owned by the wallet.
-            _threadListenRemoteNodeNetwork1.Start();
-            _threadListenRemoteNodeNetwork2 = new Thread(async delegate()
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal).ConfigureAwait(false);
+            await Task.Factory.StartNew(async () => 
             {
                 try
                 {
@@ -2642,7 +2596,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         string packetHandle = splitPacket[i];
 
-                                                        HandlePacketRemoteNodeAsync(packetHandle);
+                                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packetHandle), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
 
                                                     }
@@ -2652,13 +2606,13 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                     else
                                     {
-                                        HandlePacketRemoteNodeAsync(packet.Replace("*", ""));
+                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet.Replace("*", "")), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
                                     }
                                 }
                                 else
                                 {
-                                    HandlePacketRemoteNodeAsync(packet);
+                                    await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                 }
                             }
                         }
@@ -2670,7 +2624,7 @@ namespace Xiropht_Wallet.Wallet
                             break;
                         }
 
-                    ThreadPool.QueueUserWorkItem(delegate{ DisconnectWholeRemoteNodeSync(true, false); });
+                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -2679,10 +2633,8 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                 Log.WriteLine("Disconnect remote node connection");
 #endif
-            }); // to sync max supply.
-            _threadListenRemoteNodeNetwork2.Priority = ThreadPriority.Lowest;
-            _threadListenRemoteNodeNetwork2.Start();
-            _threadListenRemoteNodeNetwork3 = new Thread(async delegate()
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal).ConfigureAwait(false);
+            await Task.Factory.StartNew(async () => 
             {
                 try
                 {
@@ -2709,8 +2661,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         string packetHandle = splitPacket[i];
 
-                                                        HandlePacketRemoteNodeAsync(packetHandle);
-
+                                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packetHandle), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
                                                     }
                                                 }
@@ -2719,13 +2670,14 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                     else
                                     {
-                                        HandlePacketRemoteNodeAsync(packet.Replace("*", ""));
+                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet.Replace("*", "")), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
                                     }
                                 }
                                 else
                                 {
-                                    HandlePacketRemoteNodeAsync(packet);
+                                    await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
+
                                 }
                             }
                         }
@@ -2736,7 +2688,7 @@ namespace Xiropht_Wallet.Wallet
 #endif
                             break;
                         }
-                    ThreadPool.QueueUserWorkItem(delegate{ DisconnectWholeRemoteNodeSync(true, false); });
+                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -2745,10 +2697,8 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                 Log.WriteLine("Disconnect remote node connection");
 #endif
-            }); // to sync coin circulating of the network.
-            _threadListenRemoteNodeNetwork3.Priority = ThreadPriority.Lowest;
-            _threadListenRemoteNodeNetwork3.Start();
-            _threadListenRemoteNodeNetwork4 = new Thread(async delegate()
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal).ConfigureAwait(false);
+            await Task.Factory.StartNew(async () => 
             {
                 try
                 {
@@ -2776,7 +2726,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         string packetHandle = splitPacket[i];
 
-                                                        HandlePacketRemoteNodeAsync(packetHandle);
+                                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packetHandle), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
 
                                                     }
@@ -2786,13 +2736,13 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                     else
                                     {
-                                        HandlePacketRemoteNodeAsync(packet.Replace("*", ""));
+                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet.Replace("*", "")), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
                                     }
                                 }
                                 else
                                 {
-                                    HandlePacketRemoteNodeAsync(packet);
+                                    await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                 }
                             }
                         }
@@ -2803,7 +2753,7 @@ namespace Xiropht_Wallet.Wallet
 #endif
                             break;
                         }
-                    ThreadPool.QueueUserWorkItem(delegate{ DisconnectWholeRemoteNodeSync(true, false); });
+                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -2812,10 +2762,8 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                 Log.WriteLine("Disconnect remote node connection");
 #endif
-            }); // to sync total fee in the network.
-            _threadListenRemoteNodeNetwork4.Priority = ThreadPriority.Lowest;
-            _threadListenRemoteNodeNetwork4.Start();
-            _threadListenRemoteNodeNetwork5 = new Thread(async delegate()
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal).ConfigureAwait(false);
+            await Task.Factory.StartNew(async () => 
             {
                 try
                 {
@@ -2842,7 +2790,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         string packetHandle = splitPacket[i];
 
-                                                        HandlePacketRemoteNodeAsync(packetHandle);
+                                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packetHandle), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
 
                                                     }
@@ -2852,13 +2800,13 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                     else
                                     {
-                                        HandlePacketRemoteNodeAsync(packet.Replace("*", ""));
+                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet.Replace("*", "")), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
                                     }
                                 }
                                 else
                                 {
-                                    HandlePacketRemoteNodeAsync(packet);
+                                    await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                 }
                             }
                         }
@@ -2869,7 +2817,7 @@ namespace Xiropht_Wallet.Wallet
 #endif
                             break;
                         }
-                    ThreadPool.QueueUserWorkItem(delegate{ DisconnectWholeRemoteNodeSync(true, false); });
+                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -2878,10 +2826,8 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                 Log.WriteLine("Disconnect remote node connection");
 #endif
-            }); // to sync total block mined.
-            _threadListenRemoteNodeNetwork5.Priority = ThreadPriority.Lowest;
-            _threadListenRemoteNodeNetwork5.Start();
-            _threadListenRemoteNodeNetwork6 = new Thread(async delegate()
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal).ConfigureAwait(false);
+            await Task.Factory.StartNew(async () => 
             {
                 try
                 {
@@ -2908,7 +2854,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         string packetHandle = splitPacket[i];
 
-                                                        HandlePacketRemoteNodeAsync(packetHandle);
+                                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packetHandle), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
 
                                                     }
@@ -2918,13 +2864,13 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                     else
                                     {
-                                        HandlePacketRemoteNodeAsync(packet.Replace("*", ""));
+                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet.Replace("*", "")), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
                                     }
                                 }
                                 else
                                 {
-                                    HandlePacketRemoteNodeAsync(packet);
+                                    await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                 }
                             }
                         }
@@ -2935,7 +2881,7 @@ namespace Xiropht_Wallet.Wallet
 #endif
                             break;
                         }
-                    ThreadPool.QueueUserWorkItem(delegate{ DisconnectWholeRemoteNodeSync(true, false); });
+                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -2944,10 +2890,8 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                 Log.WriteLine("Disconnect remote node connection");
 #endif
-            }); // to sync current mining difficulty.
-            _threadListenRemoteNodeNetwork6.Priority = ThreadPriority.Lowest;
-            _threadListenRemoteNodeNetwork6.Start();
-            _threadListenRemoteNodeNetwork7 = new Thread(async delegate()
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal).ConfigureAwait(false);
+            await Task.Factory.StartNew(async () => 
             {
                 try
                 {
@@ -2974,7 +2918,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         string packetHandle = splitPacket[i];
 
-                                                        HandlePacketRemoteNodeAsync(packetHandle);
+                                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packetHandle), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
 
                                                     }
@@ -2984,13 +2928,13 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                     else
                                     {
-                                        HandlePacketRemoteNodeAsync(packet.Replace("*", ""));
+                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet.Replace("*", "")), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
                                     }
                                 }
                                 else
                                 {
-                                    HandlePacketRemoteNodeAsync(packet);
+                                    await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                 }
                             }
                         }
@@ -3001,7 +2945,7 @@ namespace Xiropht_Wallet.Wallet
 #endif
                             break;
                         }
-                    ThreadPool.QueueUserWorkItem(delegate{ DisconnectWholeRemoteNodeSync(true, false); });
+                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -3010,10 +2954,8 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                 Log.WriteLine("Disconnect remote node connection");
 #endif
-            }); // to sync current mining hashrate.
-            _threadListenRemoteNodeNetwork7.Priority = ThreadPriority.Lowest;
-            _threadListenRemoteNodeNetwork7.Start();
-            _threadListenRemoteNodeNetwork8 = new Thread(async delegate()
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal).ConfigureAwait(false);
+            await Task.Factory.StartNew(async () => 
             {
                 try
                 {
@@ -3040,7 +2982,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         string packetHandle = splitPacket[i];
 
-                                                        HandlePacketRemoteNodeAsync(packetHandle);
+                                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packetHandle), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
 
                                                     }
@@ -3050,13 +2992,13 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                     else
                                     {
-                                        HandlePacketRemoteNodeAsync(packet.Replace("*", ""));
+                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet.Replace("*", "")), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
                                     }
                                 }
                                 else
                                 {
-                                    HandlePacketRemoteNodeAsync(packet);
+                                    await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                 }
                             }
                         }
@@ -3067,7 +3009,7 @@ namespace Xiropht_Wallet.Wallet
 #endif
                             break;
                         }
-                    ThreadPool.QueueUserWorkItem(delegate{ DisconnectWholeRemoteNodeSync(true, false); });
+                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -3076,10 +3018,8 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                 Log.WriteLine("Disconnect remote node connection");
 #endif
-            }); // to sync total pending transaction of the network.
-            _threadListenRemoteNodeNetwork8.Priority = ThreadPriority.Lowest;
-            _threadListenRemoteNodeNetwork8.Start();
-            _threadListenRemoteNodeNetwork9 = new Thread(async delegate()
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal).ConfigureAwait(false);
+            await Task.Factory.StartNew(async () => 
             {
                 try
                 {
@@ -3106,7 +3046,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         string packetHandle = splitPacket[i];
 
-                                                        HandlePacketRemoteNodeAsync(packetHandle);
+                                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packetHandle), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
 
                                                     }
@@ -3116,13 +3056,13 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                     else
                                     {
-                                        HandlePacketRemoteNodeAsync(packet.Replace("*", ""));
+                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet.Replace("*", "")), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
                                     }
                                 }
                                 else
                                 {
-                                    HandlePacketRemoteNodeAsync(packet);
+                                    await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                 }
                             }
                         }
@@ -3133,7 +3073,7 @@ namespace Xiropht_Wallet.Wallet
 #endif
                             break;
                         }
-                    ThreadPool.QueueUserWorkItem(delegate{ DisconnectWholeRemoteNodeSync(true, false); });
+                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -3142,10 +3082,8 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                 Log.WriteLine("Disconnect remote node connection");
 #endif
-            }); // For sync transactions of the wallet.
-            _threadListenRemoteNodeNetwork9.Priority = ThreadPriority.Lowest;
-            _threadListenRemoteNodeNetwork9.Start();
-            _threadListenRemoteNodeNetwork10 = new Thread(async delegate()
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal).ConfigureAwait(false);
+            await Task.Factory.StartNew(async () => 
             {
                 try
                 {
@@ -3172,7 +3110,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         string packetHandle = splitPacket[i];
 
-                                                        HandlePacketRemoteNodeAsync(packetHandle);
+                                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packetHandle), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
 
                                                     }
@@ -3182,13 +3120,13 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                     else
                                     {
-                                        HandlePacketRemoteNodeAsync(packet.Replace("*", ""));
+                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet.Replace("*", "")), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
                                     }
                                 }
                                 else
                                 {
-                                    HandlePacketRemoteNodeAsync(packet);
+                                    await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                 }
                             }
                         }
@@ -3199,7 +3137,7 @@ namespace Xiropht_Wallet.Wallet
 #endif
                             break;
                         }
-                    ThreadPool.QueueUserWorkItem(delegate{ DisconnectWholeRemoteNodeSync(true, false); });
+                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -3208,10 +3146,8 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                 Log.WriteLine("Disconnect remote node connection");
 #endif
-            }); // For sync blocks mined.
-            _threadListenRemoteNodeNetwork10.Priority = ThreadPriority.Lowest;
-            _threadListenRemoteNodeNetwork10.Start();
-            _threadListenRemoteNodeNetwork11 = new Thread(async delegate()
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal).ConfigureAwait(false);
+            await Task.Factory.StartNew(async () => 
             {
                 try
                 {
@@ -3238,7 +3174,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         string packetHandle = splitPacket[i];
 
-                                                        HandlePacketRemoteNodeAsync(packetHandle);
+                                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packetHandle), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
 
                                                     }
@@ -3248,13 +3184,13 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                     else
                                     {
-                                        HandlePacketRemoteNodeAsync(packet.Replace("*", ""));
+                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet.Replace("*", "")), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
                                     }
                                 }
                                 else
                                 {
-                                    HandlePacketRemoteNodeAsync(packet);
+                                    await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                 }
                             }
                         }
@@ -3265,7 +3201,7 @@ namespace Xiropht_Wallet.Wallet
 #endif
                             break;
                         }
-                    ThreadPool.QueueUserWorkItem(delegate{ DisconnectWholeRemoteNodeSync(true, false); });
+                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -3274,10 +3210,8 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                 Log.WriteLine("Disconnect remote node connection");
 #endif
-            }); // For sync last block found timestamp of the network.
-            _threadListenRemoteNodeNetwork11.Priority = ThreadPriority.Lowest;
-            _threadListenRemoteNodeNetwork11.Start();
-            _threadListenRemoteNodeNetwork12 = new Thread(async delegate()
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal).ConfigureAwait(false);
+            await Task.Factory.StartNew(async () => 
             {
                 try
                 {
@@ -3304,7 +3238,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         string packetHandle = splitPacket[i];
 
-                                                        HandlePacketRemoteNodeAsync(packetHandle);
+                                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packetHandle), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
 
                                                     }
@@ -3314,13 +3248,13 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                     else
                                     {
-                                        HandlePacketRemoteNodeAsync(packet.Replace("*", ""));
+                                        await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet.Replace("*", "")), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
                                     }
                                 }
                                 else
                                 {
-                                    HandlePacketRemoteNodeAsync(packet);
+                                    await Task.Factory.StartNew(() => HandlePacketRemoteNodeAsync(packet), CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                 }
                             }
                         }
@@ -3331,7 +3265,7 @@ namespace Xiropht_Wallet.Wallet
 #endif
                             break;
                         }
-                    ThreadPool.QueueUserWorkItem(delegate{ DisconnectWholeRemoteNodeSync(true, false); });
+                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest);
                 }
                 catch
                 {
@@ -3340,9 +3274,7 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                 Log.WriteLine("Disconnect remote node connection");
 #endif
-            }); // For sync last block found timestamp of the network.
-            _threadListenRemoteNodeNetwork12.Priority = ThreadPriority.Lowest;
-            _threadListenRemoteNodeNetwork12.Start();
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -4556,7 +4488,7 @@ namespace Xiropht_Wallet.Wallet
                 {
                     ListRemoteNodeBanned.Add(host, DateTimeOffset.Now.ToUnixTimeSeconds());
                 }
-                ThreadPool.QueueUserWorkItem(delegate{ DisconnectWholeRemoteNodeSync(true, false); });
+                Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest);
             }
         }
 
@@ -4564,117 +4496,12 @@ namespace Xiropht_Wallet.Wallet
         /// <summary>
         ///     Disconnect wallet from every remote nodes.
         /// </summary>
-        [SecurityPermission(SecurityAction.Assert, ControlThread = true)]
         public static void DisconnectWholeRemoteNodeSync(bool clean, bool resync)
         {
             EnableReceivePacketRemoteNode = false;
             WalletOnUseSync = false;
             WalletOnSendingPacketRemoteNode = false;
             LastRemoteNodePacketReceived = 0;
-            try
-            {
-
-                if (_threadCheckRemoteNodePacketNetwork != null &&
-                    (_threadCheckRemoteNodePacketNetwork.IsAlive || _threadCheckRemoteNodePacketNetwork != null))
-                {
-                    _threadCheckRemoteNodePacketNetwork.Abort();
-                    GC.SuppressFinalize(_threadCheckRemoteNodePacketNetwork);
-                }
-
-                if (_threadSendRemoteNodePacketNetwork != null && (_threadSendRemoteNodePacketNetwork.IsAlive || _threadSendRemoteNodePacketNetwork != null))
-                {
-                    _threadSendRemoteNodePacketNetwork.Abort();
-                    GC.SuppressFinalize(_threadSendRemoteNodePacketNetwork);
-                }
-
-
-                if (_threadListenRemoteNodeNetwork1 != null &&
-                    (_threadListenRemoteNodeNetwork1.IsAlive || _threadListenRemoteNodeNetwork1 != null))
-                {
-                    _threadListenRemoteNodeNetwork1.Abort();
-                    GC.SuppressFinalize(_threadListenRemoteNodeNetwork1);
-                }
-
-                if (_threadListenRemoteNodeNetwork2 != null &&
-                    (_threadListenRemoteNodeNetwork2.IsAlive || _threadListenRemoteNodeNetwork2 != null))
-                {
-                    _threadListenRemoteNodeNetwork2.Abort();
-                    GC.SuppressFinalize(_threadListenRemoteNodeNetwork2);
-                }
-
-                if (_threadListenRemoteNodeNetwork3 != null &&
-                    (_threadListenRemoteNodeNetwork3.IsAlive || _threadListenRemoteNodeNetwork3 != null))
-                {
-                    _threadListenRemoteNodeNetwork3.Abort();
-                    GC.SuppressFinalize(_threadListenRemoteNodeNetwork3);
-                }
-
-                if (_threadListenRemoteNodeNetwork4 != null &&
-                    (_threadListenRemoteNodeNetwork4.IsAlive || _threadListenRemoteNodeNetwork4 != null))
-                {
-                    _threadListenRemoteNodeNetwork4.Abort();
-                    GC.SuppressFinalize(_threadListenRemoteNodeNetwork4);
-                }
-
-                if (_threadListenRemoteNodeNetwork5 != null &&
-                    (_threadListenRemoteNodeNetwork5.IsAlive || _threadListenRemoteNodeNetwork5 != null))
-                {
-                    _threadListenRemoteNodeNetwork5.Abort();
-                    GC.SuppressFinalize(_threadListenRemoteNodeNetwork5);
-                }
-
-                if (_threadListenRemoteNodeNetwork6 != null &&
-                    (_threadListenRemoteNodeNetwork6.IsAlive || _threadListenRemoteNodeNetwork6 != null))
-                {
-                    _threadListenRemoteNodeNetwork6.Abort();
-                    GC.SuppressFinalize(_threadListenRemoteNodeNetwork6);
-                }
-
-                if (_threadListenRemoteNodeNetwork7 != null &&
-                    (_threadListenRemoteNodeNetwork7.IsAlive || _threadListenRemoteNodeNetwork7 != null))
-                {
-                    _threadListenRemoteNodeNetwork7.Abort();
-                    GC.SuppressFinalize(_threadListenRemoteNodeNetwork7);
-                }
-
-                if (_threadListenRemoteNodeNetwork8 != null &&
-                    (_threadListenRemoteNodeNetwork8.IsAlive || _threadListenRemoteNodeNetwork8 != null))
-                {
-                    _threadListenRemoteNodeNetwork8.Abort();
-                    GC.SuppressFinalize(_threadListenRemoteNodeNetwork8);
-                }
-
-                if (_threadListenRemoteNodeNetwork9 != null &&
-                    (_threadListenRemoteNodeNetwork9.IsAlive || _threadListenRemoteNodeNetwork9 != null))
-                {
-                    _threadListenRemoteNodeNetwork9.Abort();
-                    GC.SuppressFinalize(_threadListenRemoteNodeNetwork9);
-                }
-
-                if (_threadListenRemoteNodeNetwork10 != null &&
-                    (_threadListenRemoteNodeNetwork10.IsAlive || _threadListenRemoteNodeNetwork10 != null))
-                {
-                    _threadListenRemoteNodeNetwork10.Abort();
-                    GC.SuppressFinalize(_threadListenRemoteNodeNetwork10);
-                }
-
-                if (_threadListenRemoteNodeNetwork11 != null &&
-                    (_threadListenRemoteNodeNetwork11.IsAlive || _threadListenRemoteNodeNetwork11 != null))
-                {
-                    _threadListenRemoteNodeNetwork11.Abort();
-                    GC.SuppressFinalize(_threadListenRemoteNodeNetwork11);
-                }
-
-                if (_threadListenRemoteNodeNetwork12 != null &&
-                    (_threadListenRemoteNodeNetwork12.IsAlive || _threadListenRemoteNodeNetwork12 != null))
-                {
-                    _threadListenRemoteNodeNetwork12.Abort();
-                    GC.SuppressFinalize(_threadListenRemoteNodeNetwork12);
-                }
-            }
-            catch
-            {
-            }
 
             if (ListWalletConnectToRemoteNode != null)
             {
@@ -4739,6 +4566,6 @@ namespace Xiropht_Wallet.Wallet
             ListWalletConnectToRemoteNode = null;
         }
 
-#endregion
+        #endregion
     }
 }

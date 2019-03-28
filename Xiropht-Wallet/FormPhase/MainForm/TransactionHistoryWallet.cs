@@ -145,8 +145,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public void HideWaitingSyncTransactionPanel()
         {
-            void MethodInvoker() => _panelWaitingSync.Hide();
-            BeginInvoke((MethodInvoker)MethodInvoker);
+            MethodInvoker invoke = () => { _panelWaitingSync.Hide(); _panelWaitingSync.Refresh(); Refresh(); };
+            BeginInvoke(invoke);
         }
 
         protected override void OnResize(EventArgs e)
@@ -663,6 +663,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 listViewAnonymitySendTransactionHistory.Hide();
                 listViewNormalReceivedTransactionHistory.Hide();
             }
+        }
+
+        private void timerRefresh_Tick(object sender, EventArgs e)
+        {
+            Refresh();
         }
     }
 

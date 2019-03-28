@@ -5,9 +5,11 @@ using System;
 using System.Drawing;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Xiropht_Connector_All.Wallet;
+using Xiropht_Wallet.Threading;
 using Xiropht_Wallet.Wallet;
 
 namespace Xiropht_Wallet.FormPhase.MainForm
@@ -128,6 +130,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             {
                 Console.WriteLine("Exception error: " + error.Message);
             }
+            Refresh();
         }
 
         /// <summary>
@@ -206,7 +209,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private async void StartAutoUpdateTimeReceived()
         {
-            await Task.Run(async delegate()
+            await Task.Factory.StartNew(async delegate()
             {
                 while (true)
                 {
@@ -285,7 +288,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         }
                     }
                 }
-            }).ConfigureAwait(false);
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
         }
 
         private void CheckBoxHideWalletAddress_Click(object sender, EventArgs e)

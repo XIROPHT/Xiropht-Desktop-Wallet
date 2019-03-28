@@ -273,6 +273,9 @@ namespace Xiropht_Wallet
                         BeginInvoke(invoke);
                         break;
                 }
+
+                invoke = () => Refresh();
+                BeginInvoke(invoke);
             }
         }
 

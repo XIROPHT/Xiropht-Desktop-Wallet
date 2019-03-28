@@ -64,7 +64,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     ClassWalletPhase.Create))
             {
                 ClassWalletObject.WalletNewPassword = walletPassword;
-                ClassWalletObject.ListenSeedNodeNetworkForWallet();
+                ClassWalletObject.ListenSeedNodeNetworkForWalletAsync();
 
                 ClassWalletObject.WalletDataCreationPath = walletPath;
 

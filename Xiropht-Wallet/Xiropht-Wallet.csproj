@@ -248,6 +248,7 @@
     </Compile>
     <Compile Include="LinuxClipboard.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Threading\PriorityScheduler.cs" />
     <Compile Include="WaitingCreateWalletForm.cs">
       <SubType>Form</SubType>
     </Compile>

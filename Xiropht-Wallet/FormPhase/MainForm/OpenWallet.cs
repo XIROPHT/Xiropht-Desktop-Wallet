@@ -155,7 +155,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     MethodInvoker invoke = () => textBoxPasswordWallet.Text = "";
                     BeginInvoke(invoke);
 
-                    ClassWalletObject.ListenSeedNodeNetworkForWallet();
+                    ClassWalletObject.ListenSeedNodeNetworkForWalletAsync();
 
                     Stopwatch packetSpeedCalculator = new Stopwatch();
                     packetSpeedCalculator.Start();
