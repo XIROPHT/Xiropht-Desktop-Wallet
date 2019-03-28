@@ -570,7 +570,8 @@ namespace Xiropht_Wallet.Wallet
 
                                             }
 
-                                            HandleWalletPacket(packetEach.Replace("*", ""));
+                                            await Task.Factory.StartNew(delegate { HandleWalletPacket(packetEach.Replace("*", "")); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
+
 
 #if DEBUG
                                             Log.WriteLine("Packet wallet received: " + packetEach.Replace("*", ""));
@@ -587,7 +588,7 @@ namespace Xiropht_Wallet.Wallet
                                 packetAlgoError++;
                             }
 
-                            HandleWalletPacket(packetWallet);
+                            await Task.Factory.StartNew(delegate { HandleWalletPacket(packetWallet); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
 #if DEBUG
                             Log.WriteLine("Packet wallet received: " + packetWallet);
@@ -597,7 +598,7 @@ namespace Xiropht_Wallet.Wallet
                     }
                 }
 
-                await Task.Factory.StartNew(delegate { FullDisconnection(false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
+                await Task.Factory.StartNew(delegate { FullDisconnection(false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal).ConfigureAwait(false);
 
             }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
             

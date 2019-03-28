@@ -130,12 +130,12 @@ namespace Xiropht_Wallet.FormPhase
                     {
                         if (WaitingForm.InvokeRequired)
                         {
-                            WaitingForm.Invoke((Action)delegate { WaitingForm.Hide(); WaitingForm.Refresh(); });
+                            WaitingForm.Invoke((Action)delegate { WaitingForm.Refresh();  WaitingForm.Hide();  });
                         }
                         else
                         {
-                            WaitingForm.Hide();
                             WaitingForm.Refresh();
+                            WaitingForm.Hide();
                         }
                     }
                     catch
@@ -195,7 +195,7 @@ namespace Xiropht_Wallet.FormPhase
                     WaitingFormReconnectShowed = false;
                     try
                     {
-                        WaitingFormReconnect.Invoke((MethodInvoker)delegate { WaitingFormReconnect.Hide(); });
+                        WaitingFormReconnect.Invoke((MethodInvoker)delegate { WaitingFormReconnect.Hide(); WaitingFormReconnect.Refresh(); });
                     }
                     catch
                     {
@@ -245,7 +245,7 @@ namespace Xiropht_Wallet.FormPhase
                 if (WaitingForm2Showed)
                 {
                     WaitingForm2Showed = false;
-                    WaitingForm2.Invoke((MethodInvoker)delegate () { WaitingForm2.Hide(); });
+                    WaitingForm2.Invoke((MethodInvoker)delegate () { WaitingForm2.Hide(); WaitingForm2.Refresh(); });
                 }
             }).Start();
         }

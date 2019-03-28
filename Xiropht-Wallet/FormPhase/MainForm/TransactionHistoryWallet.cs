@@ -145,7 +145,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public void HideWaitingSyncTransactionPanel()
         {
-            MethodInvoker invoke = () => { _panelWaitingSync.Hide(); _panelWaitingSync.Refresh(); Refresh(); };
+            MethodInvoker invoke = () => { _panelWaitingSync.Refresh(); _panelWaitingSync.Hide();  Refresh(); };
             BeginInvoke(invoke);
         }
 
@@ -667,7 +667,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void timerRefresh_Tick(object sender, EventArgs e)
         {
+#if LINUX
             Refresh();
+#endif
         }
     }
 
