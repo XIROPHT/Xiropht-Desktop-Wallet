@@ -18,15 +18,15 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         {
             if (radioButtonEnableSeedNodeSync.Checked)
             {
-                ClassWalletObject.WalletSyncMode = 0;
+                ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_DEFAULT;
             }
             else if (radioButtonEnablePublicRemoteNodeSync.Checked)
             {
-                ClassWalletObject.WalletSyncMode = 1;
+                ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE;
             }
             else if (radioButtonEnableManualRemoteNodeSync.Checked)
             {
-                ClassWalletObject.WalletSyncMode = 2;
+                ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE;
                 ClassWalletObject.WalletSyncHostname = textBoxRemoteNodeHost.Text;
             }
 
@@ -72,17 +72,17 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             labelNoticePrivateRemoteNode.Text = ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_USE_MANUAL_NODE_INFORMATION_TEXT");
             switch(ClassWalletObject.WalletSyncMode)
             {
-                case 0:
+                case (int)ClassWalletSyncMode.WALLET_SYNC_DEFAULT:
                     radioButtonEnableSeedNodeSync.Checked = true;
                     radioButtonEnablePublicRemoteNodeSync.Checked = false;
                     radioButtonEnableManualRemoteNodeSync.Checked = false;
                     break;
-                case 1:
+                case (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE:
                     radioButtonEnableSeedNodeSync.Checked = false;
                     radioButtonEnablePublicRemoteNodeSync.Checked = true;
                     radioButtonEnableManualRemoteNodeSync.Checked = false;
                     break;
-                case 2:
+                case (int)ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE:
                     radioButtonEnableSeedNodeSync.Checked = false;
                     radioButtonEnablePublicRemoteNodeSync.Checked = false;
                     radioButtonEnableManualRemoteNodeSync.Checked = true;

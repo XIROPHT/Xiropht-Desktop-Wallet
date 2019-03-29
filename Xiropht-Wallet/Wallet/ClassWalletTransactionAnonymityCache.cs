@@ -176,7 +176,7 @@ namespace Xiropht_Wallet.Wallet
                     amountAndFeeDecrypted = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
                             realFeeAmountRecv, decryptKey, ClassWalletNetworkSetting.KeySize); // AES
 
-                if (amountAndFeeDecrypted != "NULL" && amountAndFeeDecrypted != "WRONG")
+                if (amountAndFeeDecrypted != "NULL" && amountAndFeeDecrypted != ClassAlgoErrorEnumeration.AlgoError)
                 {
                     var splitDecryptedAmountAndFee =
                         amountAndFeeDecrypted.Split(new[] { "-" }, StringSplitOptions.None);

@@ -68,15 +68,15 @@ namespace Xiropht_Wallet
                     {
                         if (line.Replace("SYNC-MODE-SETTING=", "") == "0")
                         {
-                            ClassWalletObject.WalletSyncMode = 0;
+                            ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_DEFAULT;
                         }
                         else if (line.Replace("SYNC-MODE-SETTING=", "") == "1")
                         {
-                            ClassWalletObject.WalletSyncMode = 1;
+                            ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE;
                         }
                         else if (line.Replace("SYNC-MODE-SETTING=", "") == "2")
                         {
-                            ClassWalletObject.WalletSyncMode = 2;
+                            ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE;
                         }
                     }
                     else if (line.Contains("SYNC-MODE-MANUAL-HOST-SETTING="))

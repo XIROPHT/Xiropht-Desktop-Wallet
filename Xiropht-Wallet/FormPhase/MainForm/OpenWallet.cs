@@ -105,7 +105,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
                     ClassWalletObject.WalletDataDecrypted = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
                         _walletFileData, passwordEncrypted, ClassWalletNetworkSetting.KeySize); // AES
-                    if (ClassWalletObject.WalletDataDecrypted == "WRONG")
+                    if (ClassWalletObject.WalletDataDecrypted == ClassAlgoErrorEnumeration.AlgoError)
                     {
                         error = true;
                     }
@@ -116,7 +116,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             _walletFileData, textBoxPasswordWallet.Text, ClassWalletNetworkSetting.KeySize); // AES
                     }
 
-                    if (ClassWalletObject.WalletDataDecrypted == "WRONG")
+                    if (ClassWalletObject.WalletDataDecrypted == ClassAlgoErrorEnumeration.AlgoError)
                     {
 #if WINDOWS
                         ClassFormPhase.MessageBoxInterface(
@@ -168,7 +168,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             Thread.Sleep((int)packetSpeedCalculator.ElapsedMilliseconds);
                         }
                         await ClassWalletObject.WalletConnect.SendPacketWallet(
-                            "WALLET|" + ClassWalletObject.WalletConnect.WalletAddress, ClassWalletObject.Certificate, true);
+                            ClassConnectorSettingEnumeration.WalletLoginType + "|" + ClassWalletObject.WalletConnect.WalletAddress, ClassWalletObject.Certificate, true);
                         _walletFileData = string.Empty;
                         _fileSelectedPath = string.Empty;
                         invoke = () => labelOpenFileSelected.Text = ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_LABEL_FILE_SELECTED_TEXT");
