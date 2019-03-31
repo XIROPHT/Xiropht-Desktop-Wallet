@@ -52,8 +52,9 @@ namespace Xiropht_Wallet
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.themeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.darkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.darkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.darkerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.metroButtonBlockExplorerWallet = new System.Windows.Forms.Button();
             this.metroButtonTransactionWallet = new System.Windows.Forms.Button();
             this.metroButtonSendTransactionWallet = new System.Windows.Forms.Button();
@@ -237,25 +238,33 @@ namespace Xiropht_Wallet
             // themeToolStripMenuItem
             // 
             this.themeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lightToolStripMenuItem,
             this.darkToolStripMenuItem,
-            this.lightToolStripMenuItem});
+            this.darkerToolStripMenuItem});
             this.themeToolStripMenuItem.Name = "themeToolStripMenuItem";
             this.themeToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
             this.themeToolStripMenuItem.Text = "Theme";
             // 
-            // darkToolStripMenuItem
-            // 
-            this.darkToolStripMenuItem.Name = "darkToolStripMenuItem";
-            this.darkToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
-            this.darkToolStripMenuItem.Text = "Dark";
-            this.darkToolStripMenuItem.Click += new System.EventHandler(this.darkToolStripMenuItem_Click);
-            // 
             // lightToolStripMenuItem
             // 
             this.lightToolStripMenuItem.Name = "lightToolStripMenuItem";
-            this.lightToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
+            this.lightToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.lightToolStripMenuItem.Text = "Light";
             this.lightToolStripMenuItem.Click += new System.EventHandler(this.lightToolStripMenuItem_Click);
+            // 
+            // darkToolStripMenuItem
+            // 
+            this.darkToolStripMenuItem.Name = "darkToolStripMenuItem";
+            this.darkToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.darkToolStripMenuItem.Text = "Dark";
+            this.darkToolStripMenuItem.Click += new System.EventHandler(this.darkToolStripMenuItem_Click);
+            // 
+            // darkerToolStripMenuItem
+            // 
+            this.darkerToolStripMenuItem.Name = "darkerToolStripMenuItem";
+            this.darkerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.darkerToolStripMenuItem.Text = "Darker";
+            this.darkerToolStripMenuItem.Click += new System.EventHandler(this.darkerToolStipMenuItem_Click);
             // 
             // metroButtonBlockExplorerWallet
             // 
@@ -501,6 +510,9 @@ namespace Xiropht_Wallet
             this.MainMenuStrip = this.menuStripMenu;
             this.Name = "WalletXiropht";
             this.Text = "Xiropht Wallet Gui - v";
+#if LINUX
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+#endif
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WalletXiropht_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.WalletXiropht_FormClosed);
             this.Load += new System.EventHandler(this.WalletXiropht_Load);
@@ -559,9 +571,10 @@ namespace Xiropht_Wallet
         private System.Windows.Forms.LinkLabel linkLabelWebsite;
         private System.Windows.Forms.Button buttonContactWallet;
         private System.Windows.Forms.ToolStripMenuItem themeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem darkToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem darkerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem lightToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBoxLogo;
+        private System.Windows.Forms.ToolStripMenuItem darkToolStripMenuItem;
     }
 }
 

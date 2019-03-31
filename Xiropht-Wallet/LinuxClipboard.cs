@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Xiropht_Wallet.FormPhase;
+
 
 namespace Xiropht_Wallet
 {
@@ -13,11 +13,11 @@ namespace Xiropht_Wallet
         {
             try
             {
-                BashRunner.Run($"echo "+text+" | xclip -selection c");
+                BashRunner.Run($"echo '" + text + "' | xclip -selection c");
             }
             catch
             {
-                MessageBox.Show(ClassFormPhase.WalletXiropht, "Please be sure to have install xclip: sudo apt-get install xclip");
+                MessageBox.Show(ClassFormPhase.WalletXiropht, "Please be sure to have install xclip, example: sudo apt-get install xclip");
             }
         }
 

@@ -51,14 +51,22 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
 
         private void ButtonCopyWalletInformation_Click(object sender, EventArgs e)
         {
+#if WINDOWS
             Clipboard.SetText(labelYourPublicKey.Text + " " + Environment.NewLine +
                              labelYourPrivateKey.Text + " " + Environment.NewLine +
                              labelYourPinCode.Text);
-#if WINDOWS
+
+
             ClassFormPhase.MessageBoxInterface(
                 ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_COPY_WALLET_INFORMATION_CONTENT_TEXT"),
                 ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_COPY_WALLET_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question);
 #else
+
+            LinuxClipboard.SetText(labelYourPublicKey.Text + " " + Environment.NewLine +
+                             labelYourPrivateKey.Text + " " + Environment.NewLine +
+                             labelYourPinCode.Text);
+
+
             MessageBox.Show(ClassFormPhase.WalletXiropht,
                 ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_COPY_WALLET_INFORMATION_CONTENT_TEXT"),
                 ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_COPY_WALLET_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question);

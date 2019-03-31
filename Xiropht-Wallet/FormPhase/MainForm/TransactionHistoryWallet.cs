@@ -145,7 +145,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public void HideWaitingSyncTransactionPanel()
         {
-            MethodInvoker invoke = () => { _panelWaitingSync.Refresh(); _panelWaitingSync.Hide();  Refresh(); };
+            MethodInvoker invoke = () => { _panelWaitingSync.Refresh(); _panelWaitingSync.Hide(); Refresh(); };
             BeginInvoke(invoke);
         }
 
@@ -224,11 +224,12 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                     ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
                                 .Start();
 #else
-                        new Thread(delegate ()
-                        {
-                            MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
-                            BeginInvoke(invoker);
-                        }).Start();
+                            LinuxClipboard.SetText(item.SubItems[ix].Text);
+                            new Thread(delegate ()
+                            {
+                                MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                BeginInvoke(invoker);
+                            }).Start();
 #endif
                             return;
                         }
@@ -255,11 +256,12 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
                             .Start();
 #else
-                    new Thread(delegate ()
-                    {
-                        MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
-                        BeginInvoke(invoker);
-                    }).Start();
+                        LinuxClipboard.SetText(item.SubItems[ix].Text);
+                        new Thread(delegate ()
+                        {
+                            MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                            BeginInvoke(invoker);
+                        }).Start();
 #endif
                         return;
                     }
@@ -285,11 +287,12 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
                             .Start();
 #else
-                    new Thread(delegate()
-                    {
-                        MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
-                        BeginInvoke(invoker);
-                    }).Start();
+                        LinuxClipboard.SetText(item.SubItems[ix].Text);
+                        new Thread(delegate ()
+                        {
+                            MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                            BeginInvoke(invoker);
+                        }).Start();
 #endif
                         return;
                     }
@@ -315,11 +318,12 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
                             .Start();
 #else
-                    new Thread(delegate ()
-                    {
-                        MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
-                        BeginInvoke(invoker);
-                    }).Start();
+                        LinuxClipboard.SetText(item.SubItems[ix].Text);
+                        new Thread(delegate ()
+                        {
+                            MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                            BeginInvoke(invoker);
+                        }).Start();
 #endif
                         return;
                     }
@@ -341,15 +345,17 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     {
                         Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
+
                         new Thread(() =>
                                 ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error))
                             .Start();
 #else
-                    new Thread(delegate ()
-                    {
-                        MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
-                        BeginInvoke(invoker);
-                    }).Start();
+                        LinuxClipboard.SetText(item.SubItems[ix].Text);
+                        new Thread(delegate ()
+                        {
+                            MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                            BeginInvoke(invoker);
+                        }).Start();
 #endif
                         return;
                     }
@@ -668,7 +674,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private void timerRefresh_Tick(object sender, EventArgs e)
         {
 #if LINUX
-            Refresh();
+            foreach (Control control in Controls)
+            {
+                control.Refresh();
+            }
 #endif
         }
     }

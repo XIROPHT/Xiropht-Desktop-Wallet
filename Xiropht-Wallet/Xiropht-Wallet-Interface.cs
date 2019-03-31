@@ -479,7 +479,7 @@ namespace Xiropht_Wallet
                BeginInvoke(invoke);
 #endif
             }).Start();
-            UpdateColorStyle(Color.White, Color.Black, Color.White);
+            UpdateColorStyle(Color.White, Color.Black, Color.White, Color.LightSkyBlue);
 
         }
 
@@ -4579,15 +4579,19 @@ namespace Xiropht_Wallet
 
         #endregion
 
-        private void darkToolStripMenuItem_Click(object sender, EventArgs e)
+        private void darkerToolStipMenuItem_Click(object sender, EventArgs e)
         {
-            UpdateColorStyle(Color.Black, Color.White, Color.PaleTurquoise);
+            UpdateColorStyle(Color.FromArgb(17, 17, 17), Color.White, Color.PaleTurquoise, Color.CornflowerBlue);
         }
-
 
         private void lightToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UpdateColorStyle(Color.White, Color.Black, Color.White);
+            UpdateColorStyle(Color.White, Color.Black, Color.White, Color.LightSkyBlue);
+        }
+
+        private void darkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UpdateColorStyle(Color.FromArgb(47, 49, 54), Color.White, Color.PaleTurquoise, Color.DeepSkyBlue);
         }
 
         /// <summary>
@@ -4595,20 +4599,21 @@ namespace Xiropht_Wallet
         /// </summary>
         /// <param name="background"></param>
         /// <param name="text"></param>
-        private void UpdateColorStyle(Color background, Color text, Color backgroundList)
+        private void UpdateColorStyle(Color background, Color text, Color backgroundList, Color menuStripBackground)
         {
 #if WINDOWS
-            if (background == Color.Black)
-            {
-                Theme = MetroThemeStyle.Dark;
-            }
-            else if (background == Color.White)
-            {
-                Theme = MetroThemeStyle.Light;
-            }
+
+            MetroColors.Custom = background;
+            Theme = MetroThemeStyle.Custom;
+            UseCustomForeColor = true;
+            ForeColor = text;
+
 #else
             BackColor = background;
 #endif
+            menuStripMenu.BackColor = menuStripBackground;
+
+
             for (int i = 0; i < Controls.Count; i++)
             {
                 if (i < Controls.Count)
@@ -4700,7 +4705,9 @@ namespace Xiropht_Wallet
             buttonNextPage.ForeColor = Color.Black;
             buttonPreviousPage.ForeColor = Color.Black;
             ContactWalletForm.buttonAddContact.ForeColor = Color.Black;
+            pictureBoxLogo.BackColor = background;
         }
+
 
     }
 }
