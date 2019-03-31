@@ -25,15 +25,15 @@ namespace Xiropht_Wallet.Wallet
                 ListBlock = new List<string>();
             }
 
-            if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory + "\\")))
+            if (Directory.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory + "\\")))
             {
                 if (
-                    File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory +
+                    File.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory +
                                 "/blockchain" + WalletBlockCacheFileExtension)))
                 {
 
                     int counter = 0;
-                    using (FileStream fs = File.Open(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory +
+                    using (FileStream fs = File.Open(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory +
                                                      "/blockchain" + WalletBlockCacheFileExtension), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     using (BufferedStream bs = new BufferedStream(fs))
                     using (StreamReader sr = new StreamReader(bs))
@@ -49,12 +49,12 @@ namespace Xiropht_Wallet.Wallet
             }
             else
             {
-                if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory)) == false)
+                if (Directory.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory)) == false)
                 {
-                    Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory));
+                    Directory.CreateDirectory(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory));
                 }
 
-                Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory));
+                Directory.CreateDirectory(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory));
             }
         }
 
@@ -64,19 +64,19 @@ namespace Xiropht_Wallet.Wallet
         /// <param name="block"></param>
         public static async Task SaveWalletBlockCache(string block)
         {
-            if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory)) == false)
+            if (Directory.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory)) == false)
             {
-                Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory));
+                Directory.CreateDirectory(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory));
             }
-            if (File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory +
+            if (File.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory +
                             "/blockchain" + WalletBlockCacheFileExtension)) == false)
             {
                 try
                 {
-                    File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory +
+                    File.Create(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory +
                                 "/blockchain" + WalletBlockCacheFileExtension)).Close();
 
-                    using (var transactionFile = new StreamWriter(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory +
+                    using (var transactionFile = new StreamWriter(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory +
                                                            "/blockchain" + WalletBlockCacheFileExtension), true))
                     {
                         await transactionFile.WriteAsync(block + "\n").ConfigureAwait(false);
@@ -91,7 +91,7 @@ namespace Xiropht_Wallet.Wallet
             {
                 try
                 {
-                    using (var transactionFile = new StreamWriter(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory +
+                    using (var transactionFile = new StreamWriter(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory +
                                                            "/blockchain" + WalletBlockCacheFileExtension), true))
                     {
                         await transactionFile.WriteAsync(block + "\n").ConfigureAwait(false);
@@ -112,12 +112,12 @@ namespace Xiropht_Wallet.Wallet
         {
             try
             {
-                if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory + "\\")))
+                if (Directory.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory + "\\")))
                 {
-                    File.Delete(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory +
+                    File.Delete(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory +
                                 "/blockchain." + WalletBlockCacheFileExtension));
-                    Directory.Delete(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory + "\\"), true);
-                    Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletBlockCacheDirectory));
+                    Directory.Delete(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory + "\\"), true);
+                    Directory.CreateDirectory(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory));
                 }
             }
             catch

@@ -24,7 +24,7 @@ namespace Xiropht_Wallet
 #endif
             AppDomain.CurrentDomain.UnhandledException += delegate(object sender, UnhandledExceptionEventArgs args)
             {
-                var filePath = ClassUtils.ConvertPath(Directory.GetCurrentDirectory()+"\\error_wallet.txt");
+                var filePath = ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory+"\\error_wallet.txt");
                 var exception = (Exception) args.ExceptionObject;
                 using (var writer = new StreamWriter(filePath, true))
                 {

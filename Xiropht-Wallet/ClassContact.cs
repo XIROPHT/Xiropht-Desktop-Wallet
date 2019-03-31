@@ -14,13 +14,13 @@ namespace Xiropht_Wallet
         /// </summary>
         public static void InitializationContactList()
         {
-            if (!File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + ContactFileName)))
+            if (!File.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + ContactFileName)))
             {
-                File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + ContactFileName)).Close(); // Create and close the file for don't make in busy permissions.
+                File.Create(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + ContactFileName)).Close(); // Create and close the file for don't make in busy permissions.
             }
             else
             {
-                using (FileStream fs = File.Open(ClassUtils.ConvertPath(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + ContactFileName)), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (FileStream fs = File.Open(ClassUtils.ConvertPath(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + ContactFileName)), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 using (BufferedStream bs = new BufferedStream(fs))
                 using (StreamReader sr = new StreamReader(bs))
                 {
@@ -56,7 +56,7 @@ namespace Xiropht_Wallet
 #if DEBUG
                         Log.WriteLine("Database contact list file corrupted, remake it");
 #endif
-                        File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + ContactFileName)).Close(); // Create and close the file for don't make in busy permissions.
+                        File.Create(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + ContactFileName)).Close(); // Create and close the file for don't make in busy permissions.
                     }
                 }
             }
@@ -85,7 +85,7 @@ namespace Xiropht_Wallet
                 return false;
             }
             ListContactWallet.Add(name, walletAddress);
-            using (StreamWriter writerContact = new StreamWriter(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + ContactFileName), true))
+            using (StreamWriter writerContact = new StreamWriter(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + ContactFileName), true))
             {
                 writerContact.WriteLine(name + "|" + walletAddress);
             }
@@ -103,11 +103,11 @@ namespace Xiropht_Wallet
                 ListContactWallet.Remove(name);
             }
 
-            File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + ContactFileName)).Close(); // Create and close the file for don't make in busy permissions.
+            File.Create(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + ContactFileName)).Close(); // Create and close the file for don't make in busy permissions.
 
             foreach (var contact in ListContactWallet)
             {
-                using (StreamWriter writerContact = new StreamWriter(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + ContactFileName), true))
+                using (StreamWriter writerContact = new StreamWriter(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + ContactFileName), true))
                 {
                     writerContact.WriteLine(contact.Key + "|" + contact.Value);
                 }

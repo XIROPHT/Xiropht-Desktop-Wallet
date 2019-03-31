@@ -52,7 +52,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             var saveFileDialogWallet = new SaveFileDialog
             {
-                InitialDirectory = Directory.GetCurrentDirectory(),
+                InitialDirectory = System.AppDomain.CurrentDomain.BaseDirectory,
                 Filter = @"Wallet File (*.xir) | *.xir",
                 FilterIndex = 2,
                 RestoreDirectory = true

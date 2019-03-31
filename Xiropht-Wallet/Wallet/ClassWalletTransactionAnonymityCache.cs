@@ -34,11 +34,11 @@ namespace Xiropht_Wallet.Wallet
             }
 
             if (Directory.Exists(
-                ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\")))
+                ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory + walletAddress + "\\")))
             {
-                if (File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\"+WalletTransactionCacheFileExtension)))
+                if (File.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory + walletAddress + "\\"+WalletTransactionCacheFileExtension)))
                 {
-                    using (FileStream fs = File.Open(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    using (FileStream fs = File.Open(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     using (BufferedStream bs = new BufferedStream(fs))
                     using (StreamReader sr = new StreamReader(bs))
                     {
@@ -51,18 +51,18 @@ namespace Xiropht_Wallet.Wallet
                 }
                 else
                 {
-                    File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension)).Close();
+                    File.Create(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension)).Close();
                 }
   
             }
             else
             {
-                if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory)) == false)
+                if (Directory.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory)) == false)
                 {
-                    Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory));
+                    Directory.CreateDirectory(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory));
                 }
 
-                Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory +
+                Directory.CreateDirectory(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory +
                                           walletAddress));
             }
         }
@@ -76,30 +76,30 @@ namespace Xiropht_Wallet.Wallet
             walletAddress += "ANONYMITY";
             if (ListTransaction.Count > 0 && _inClearCache == false)
             {
-                if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory)) == false)
+                if (Directory.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory)) == false)
                 {
-                    Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory));
+                    Directory.CreateDirectory(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory));
                 }
 
-                if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory +
+                if (Directory.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory +
                                      walletAddress)) == false)
                 {
-                    Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory +
+                    Directory.CreateDirectory(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory +
                                               walletAddress));
                 }
 
 
-                if (!File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory +
+                if (!File.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory +
                                 walletAddress +
                                 "\\" + WalletTransactionCacheFileExtension)))
                 {
-                    File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension)).Close();
+                    File.Create(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension)).Close();
                 }
                 try
                 {
 
                     using (var transactionFile = new StreamWriter(ClassUtils.ConvertPath(
-                        Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory +
+                        System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory +
                         walletAddress +
                         "\\" + WalletTransactionCacheFileExtension), true))
                     {
@@ -123,16 +123,16 @@ namespace Xiropht_Wallet.Wallet
             walletAddress += "ANONYMITY";
             _inClearCache = true;
             if (Directory.Exists(
-                ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\")))
+                ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory + walletAddress + "\\")))
             {
-              if (File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension)))
+              if (File.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension)))
               {
-                  File.Delete(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension));
+                  File.Delete(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory + walletAddress + "\\" + WalletTransactionCacheFileExtension));
               }
 
                 Directory.Delete(
-                    ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory + walletAddress + "\\"), true);
-                Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransactionCacheDirectory +
+                    ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory + walletAddress + "\\"), true);
+                Directory.CreateDirectory(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransactionCacheDirectory +
                                           walletAddress));
             }
 

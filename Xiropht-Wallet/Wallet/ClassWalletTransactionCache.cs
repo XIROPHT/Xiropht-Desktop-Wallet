@@ -33,11 +33,11 @@ namespace Xiropht_Wallet.Wallet
             }
 
             if (Directory.Exists(
-                ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\")))
+                ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\")))
             {
-                if (File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheFileExtension)))
+                if (File.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheFileExtension)))
                 {
-                    using (FileStream fs = File.Open(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheFileExtension), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    using (FileStream fs = File.Open(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheFileExtension), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     using (BufferedStream bs = new BufferedStream(fs))
                     using (StreamReader sr = new StreamReader(bs))
                     {
@@ -50,18 +50,18 @@ namespace Xiropht_Wallet.Wallet
                 }
                 else
                 {
-                    File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheFileExtension)).Close();
+                    File.Create(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheFileExtension)).Close();
                 }
 
             }
             else
             {
-                if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory)) == false)
+                if (Directory.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory)) == false)
                 {
-                    Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory));
+                    Directory.CreateDirectory(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory));
                 }
 
-                Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory +
+                Directory.CreateDirectory(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory +
                                           walletAddress));
             }
 
@@ -78,30 +78,30 @@ namespace Xiropht_Wallet.Wallet
             {
                 if (ListTransaction.Count > 0 && _inClearCache == false)
                 {
-                    if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory)) == false)
+                    if (Directory.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory)) == false)
                     {
-                        Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory));
+                        Directory.CreateDirectory(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory));
                     }
 
-                    if (Directory.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory +
+                    if (Directory.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory +
                                          walletAddress)) == false)
                     {
-                        Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory +
+                        Directory.CreateDirectory(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory +
                                                   walletAddress));
                     }
 
 
-                    if (!File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory +
+                    if (!File.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory +
                                     walletAddress +
                                     "\\" + WalletTransMethodInvokerCacheFileExtension)))
                     {
-                        File.Create(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheFileExtension)).Close();
+                        File.Create(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheFileExtension)).Close();
                     }
                     try
                     {
 
                         using (var transMethodInvokerFile = new StreamWriter(ClassUtils.ConvertPath(
-                            Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory +
+                            System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory +
                             walletAddress +
                             "\\" + WalletTransMethodInvokerCacheFileExtension), true))
                         {
@@ -125,16 +125,16 @@ namespace Xiropht_Wallet.Wallet
         {
             _inClearCache = true;
             if (Directory.Exists(
-                ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\")))
+                ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\")))
             {
-                if (File.Exists(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheFileExtension)))
+                if (File.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheFileExtension)))
                 {
-                    File.Delete(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheFileExtension));
+                    File.Delete(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\" + WalletTransMethodInvokerCacheFileExtension));
                 }
 
                 Directory.Delete(
-                    ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\"), true);
-                Directory.CreateDirectory(ClassUtils.ConvertPath(Directory.GetCurrentDirectory() + WalletTransMethodInvokerCacheDirectory +
+                    ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory + walletAddress + "\\"), true);
+                Directory.CreateDirectory(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletTransMethodInvokerCacheDirectory +
                                           walletAddress));
             }
 

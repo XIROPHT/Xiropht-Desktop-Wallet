@@ -40,7 +40,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             var openWalletFile = new OpenFileDialog
             {
-                InitialDirectory = Directory.GetCurrentDirectory(),
+                InitialDirectory = System.AppDomain.CurrentDomain.BaseDirectory,
                 Filter = "Xiropht Wallet (*.xir) | *.xir",
                 FilterIndex = 2,
                 DereferenceLinks = false
