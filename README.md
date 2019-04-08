@@ -87,6 +87,6 @@ For more informations about how work the network connection of wallet, please ch
 - Xiropht
 - PhelanConaill
 
-**External library used: MetroFramework (used on Windows only) a good UI, fast and provide less freezing: https://github.com/dennismagno/metroframework-modern-ui **
+**External library used: MetroFramework (used on Windows only) a good UI, fast and provide less freezing: https://github.com/dennismagno/metroframework-modern-ui**
 
 **--> Use this one: https://github.com/XIROPHT/metroframework-modern-ui**
