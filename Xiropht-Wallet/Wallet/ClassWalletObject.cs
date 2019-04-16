@@ -1497,44 +1497,57 @@ namespace Xiropht_Wallet.Wallet
 
                                 if (ClassRemoteNodeChecker.ListRemoteNodeChecked.Count > 0)
                                 {
-
-                                    ListWalletConnectToRemoteNode.Clear();
-                                    ListWalletConnectToRemoteNode.Add(
-                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                            .ObjectTransaction));
-                                    ListWalletConnectToRemoteNode.Add(
-                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                            .ObjectSupply));
-                                    ListWalletConnectToRemoteNode.Add(
-                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                            .ObjectCirculating));
-                                    ListWalletConnectToRemoteNode.Add(
-                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                            .ObjectFee));
-                                    ListWalletConnectToRemoteNode.Add(
-                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                            .ObjectBlockMined));
-                                    ListWalletConnectToRemoteNode.Add(
-                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                            .ObjectDifficulty));
-                                    ListWalletConnectToRemoteNode.Add(
-                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                            .ObjectRate));
-                                    ListWalletConnectToRemoteNode.Add(
-                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                            .ObjectPendingTransaction));
-                                    ListWalletConnectToRemoteNode.Add(
-                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                            .ObjectAskWalletTransaction));
-                                    ListWalletConnectToRemoteNode.Add(
-                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                            .ObjectAskBlock));
-                                    ListWalletConnectToRemoteNode.Add(
-                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                            .ObjectAskLastBlockFound));
-                                    ListWalletConnectToRemoteNode.Add(
-                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                            .ObjectAskWalletAnonymityTransaction));
+                                    try
+                                    {
+                                        ListWalletConnectToRemoteNode.Clear();
+                                    }
+                                    catch
+                                    {
+                                        ListWalletConnectToRemoteNode = new List<ClassWalletConnectToRemoteNode>();
+                                    }
+                                    try
+                                    {
+                                        ListWalletConnectToRemoteNode.Add(
+                                            new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                                .ObjectTransaction));
+                                        ListWalletConnectToRemoteNode.Add(
+                                            new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                                .ObjectSupply));
+                                        ListWalletConnectToRemoteNode.Add(
+                                            new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                                .ObjectCirculating));
+                                        ListWalletConnectToRemoteNode.Add(
+                                            new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                                .ObjectFee));
+                                        ListWalletConnectToRemoteNode.Add(
+                                            new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                                .ObjectBlockMined));
+                                        ListWalletConnectToRemoteNode.Add(
+                                            new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                                .ObjectDifficulty));
+                                        ListWalletConnectToRemoteNode.Add(
+                                            new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                                .ObjectRate));
+                                        ListWalletConnectToRemoteNode.Add(
+                                            new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                                .ObjectPendingTransaction));
+                                        ListWalletConnectToRemoteNode.Add(
+                                            new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                                .ObjectAskWalletTransaction));
+                                        ListWalletConnectToRemoteNode.Add(
+                                            new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                                .ObjectAskBlock));
+                                        ListWalletConnectToRemoteNode.Add(
+                                            new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                                .ObjectAskLastBlockFound));
+                                        ListWalletConnectToRemoteNode.Add(
+                                            new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                                .ObjectAskWalletAnonymityTransaction));
+                                    }
+                                    catch
+                                    {
+                                        return;
+                                    }
 
                                     try
                                     {
