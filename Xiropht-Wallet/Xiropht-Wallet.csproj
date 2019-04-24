@@ -109,6 +109,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Xiropht-Connector-All\Xiropht-Connector-All\bin\Release\Xiropht-Connector-All.dll</HintPath>
     </Reference>
+    <Reference Include="zxing, Version=0.16.4.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.16.4\lib\net461\zxing.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClassContact.cs" />
@@ -336,6 +339,7 @@
     <EmbeddedResource Include="Xiropht-Wallet-Interface.resx">
       <DependentUpon>Xiropht-Wallet-Interface.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

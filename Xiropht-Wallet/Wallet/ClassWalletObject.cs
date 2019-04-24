@@ -270,7 +270,7 @@ namespace Xiropht_Wallet.Wallet
         /// </summary>
         public static bool FullDisconnection(bool manualDisconnection)
         {
-
+            ClassFormPhase.WalletXiropht.HideWalletAddressQRCode();
             if (!WalletClosed && !WalletInReconnect || manualDisconnection)
             {
                 if (manualDisconnection || WalletConnect.WalletPhase == ClassWalletPhase.Create)
@@ -929,6 +929,7 @@ namespace Xiropht_Wallet.Wallet
                             Log.WriteLine("Cannot send packet, your wallet has been disconnected.");
 #endif
                         }
+                        ClassFormPhase.WalletXiropht.ShowWalletAddressQRCode(WalletConnect.WalletAddress);
 
                         break;
                     case ClassWalletCommand.ClassWalletReceiveEnumeration.LoginAcceptedPhase:

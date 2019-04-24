@@ -21,6 +21,9 @@ using Xiropht_Wallet.FormPhase;
 using Xiropht_Wallet.FormPhase.MainForm;
 using Xiropht_Wallet.FormPhase.ParallelForm;
 using Xiropht_Wallet.Wallet;
+using Xiropht_Wallet.Threading;
+using ZXing.QrCode;
+using ZXing;
 
 namespace Xiropht_Wallet
 {
@@ -163,6 +166,8 @@ namespace Xiropht_Wallet
                             MainWalletForm.Parent = panelMainForm;
                             MainWalletForm.Show();
                             MainWalletForm.Refresh();
+                            HideWalletAddressQRCode();
+
                         };
 
                         BeginInvoke(invoke);
@@ -175,6 +180,8 @@ namespace Xiropht_Wallet
                             CreateWalletForm.Parent = panelMainForm;
                             CreateWalletForm.Show();
                             CreateWalletForm.Refresh();
+                            HideWalletAddressQRCode();
+
                         };
                         BeginInvoke(invoke);
                         break;
@@ -186,6 +193,8 @@ namespace Xiropht_Wallet
                             OpenWalletForm.Parent = panelMainForm;
                             OpenWalletForm.Show();
                             OpenWalletForm.Refresh();
+                            HideWalletAddressQRCode();
+
                         };
                         BeginInvoke(invoke);
                         break;
@@ -841,7 +850,7 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void CloseWalletToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Task.Run(delegate ()
+            Task.Factory.StartNew(delegate ()
             {
                 if (ClassWalletObject.SeedNodeConnectorWallet != null)
                 {
@@ -850,7 +859,7 @@ namespace Xiropht_Wallet
                         ClassWalletObject.FullDisconnection(true);
                     }
                 }
-            });
+            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, PriorityScheduler.Lowest);
             ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
         }
 
@@ -942,6 +951,41 @@ namespace Xiropht_Wallet
                 RestoreWalletForm.GetListControl();
                 ContactWalletForm.GetListControl();
             }
+        }
+
+        /// <summary>
+        /// Show QR Code generated from wallet address.
+        /// </summary>
+        /// <param name="walletAddress"></param>
+        public void ShowWalletAddressQRCode(string walletAddress)
+        {
+            QrCodeEncodingOptions options = new QrCodeEncodingOptions
+            {
+                DisableECI = true,
+                CharacterSet = "UTF-8",
+                Width = 250,
+                Height = 250,
+            };
+
+            BarcodeWriter qr = new BarcodeWriter
+            {
+                Options = options,
+                Format = BarcodeFormat.QR_CODE
+            };
+            var result = new Bitmap(qr.Write(walletAddress.Trim()));
+            pictureBoxQRCodeWallet.BackgroundImage = result;
+
+        }
+
+        /// <summary>
+        /// Hide QR Code generated from wallet address.
+        /// </summary>
+        public void HideWalletAddressQRCode()
+        {
+            pictureBoxQRCodeWallet.Image = null;
+            pictureBoxQRCodeWallet.Invalidate();
+            pictureBoxQRCodeWallet.BringToFront();
+            pictureBoxQRCodeWallet.BackgroundImage = null;
         }
 
         /// <summary>
@@ -4030,6 +4074,7 @@ namespace Xiropht_Wallet
                                     }
                                 }
 
+
                                 #endregion
 
 
@@ -4265,6 +4310,7 @@ namespace Xiropht_Wallet
                                         }
                                     }
                                 }
+
 
                                 #endregion
 
