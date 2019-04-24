@@ -90,3 +90,5 @@ For more informations about how work the network connection of wallet, please ch
 **External library used: MetroFramework (used on Windows only) a good UI, fast and provide less freezing: https://github.com/dennismagno/metroframework-modern-ui**
 
 **--> Use this one: https://github.com/XIROPHT/metroframework-modern-ui**
+
+**External library used: ZXing.Net, a QR Code generator used since version 0.4.8.7R: https://github.com/micjahn/ZXing.Net/**
