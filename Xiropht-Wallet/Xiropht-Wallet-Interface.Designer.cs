@@ -61,7 +61,6 @@ namespace Xiropht_Wallet
             this.buttonOverviewWallet = new System.Windows.Forms.Button();
             this.labelSyncInformation = new System.Windows.Forms.Label();
             this.timerRefresh = new System.Windows.Forms.Timer(this.components);
-            this.labelNetworkPhase = new System.Windows.Forms.Label();
             this.labelCoinName = new System.Windows.Forms.Label();
             this.buttonPreviousPage = new System.Windows.Forms.Button();
             this.labelNoticeCurrentPage = new System.Windows.Forms.Label();
@@ -308,7 +307,7 @@ namespace Xiropht_Wallet
             // 
             this.labelSyncInformation.AutoSize = true;
             this.labelSyncInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSyncInformation.Location = new System.Drawing.Point(17, 716);
+            this.labelSyncInformation.Location = new System.Drawing.Point(17, 710);
             this.labelSyncInformation.Name = "labelSyncInformation";
             this.labelSyncInformation.Size = new System.Drawing.Size(103, 15);
             this.labelSyncInformation.TabIndex = 3;
@@ -318,16 +317,6 @@ namespace Xiropht_Wallet
             // 
             this.timerRefresh.Enabled = true;
             this.timerRefresh.Tick += new System.EventHandler(this.TimerRefresh_Tick);
-            // 
-            // labelNetworkPhase
-            // 
-            this.labelNetworkPhase.AutoSize = true;
-            this.labelNetworkPhase.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelNetworkPhase.Location = new System.Drawing.Point(17, 694);
-            this.labelNetworkPhase.Name = "labelNetworkPhase";
-            this.labelNetworkPhase.Size = new System.Drawing.Size(204, 16);
-            this.labelNetworkPhase.TabIndex = 5;
-            this.labelNetworkPhase.Text = "Network Phase: Private Test";
             // 
             // labelCoinName
             // 
@@ -508,7 +497,6 @@ namespace Xiropht_Wallet
             this.Controls.Add(this.buttonPreviousPage);
             this.Controls.Add(this.buttonNextPage);
             this.Controls.Add(this.labelCoinName);
-            this.Controls.Add(this.labelNetworkPhase);
             this.Controls.Add(this.labelSyncInformation);
             this.Controls.Add(this.panelMainForm);
             this.Controls.Add(this.panelControlWallet);
@@ -521,6 +509,10 @@ namespace Xiropht_Wallet
             this.MainMenuStrip = this.menuStripMenu;
             this.Name = "WalletXiropht";
             this.Text = "Xiropht Wallet Gui - v";
+#if LINUX
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.MaximizeBox = false;
+#endif
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WalletXiropht_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.WalletXiropht_FormClosed);
             this.Load += new System.EventHandler(this.WalletXiropht_Load);
@@ -528,10 +520,6 @@ namespace Xiropht_Wallet
             this.Resize += new System.EventHandler(this.WalletXiropht_Resize);
             this.menuStripMenu.ResumeLayout(false);
             this.menuStripMenu.PerformLayout();
-#if LINUX
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
-            this.MaximizeBox = false;
-#endif
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxQRCodeWallet)).EndInit();
             this.panelControlWallet.ResumeLayout(false);
@@ -564,7 +552,6 @@ namespace Xiropht_Wallet
         private System.Windows.Forms.ToolStripMenuItem changePasswordToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingPinCodeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem syncToolStripMenuItem;
-        private System.Windows.Forms.Label labelNetworkPhase;
         private System.Windows.Forms.Label labelCoinName;
         private System.Windows.Forms.ToolStripMenuItem remoteNodeSettingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resyncTransactionToolStripMenuItem;

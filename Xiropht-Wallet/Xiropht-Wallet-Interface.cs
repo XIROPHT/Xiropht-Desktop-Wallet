@@ -433,7 +433,7 @@ namespace Xiropht_Wallet
             BaseInterfaceWidth = Width;
             ClassFormPhase.InitializeMainInterface(this);
             labelCoinName.Text = "Coin Name: " + ClassConnectorSetting.CoinName;
-            labelNetworkPhase.Text = "Network Phase: " + ClassConnectorSetting.NetworkPhase;
+            //labelNetworkPhase.Text = "Network Phase: " + ClassConnectorSetting.NetworkPhase;
             if (ListControlSizeBase.Count == 0)
             {
                 for (int i = 0; i < Controls.Count; i++)
@@ -458,12 +458,13 @@ namespace Xiropht_Wallet
                 languageToolStripMenuItem.DropDownItems.Add(ClassTranslation.UppercaseFirst(key), null, LanguageSubMenuItem_Click);
             }
             UpdateGraphicLanguageText();
-            new Thread(delegate()
+            #region Message about test phase [Removed on 5 May 2019 to be ready on 15 May 2019 -> Main Network]
+            /*new Thread(delegate()
             {
 #if WINDOWS
                 MethodInvoker invoke = () =>
                 {
-                    if(ClassFormPhase.MessageBoxInterface(ClassConnectorSetting.CoinName + " is currently in private test, we suggest to not invest your money on it, invest your time only because we are in private test and we need something stable, usefull, secure for provide a real trust on this coin before. Thank you for your understanding.", "Important information", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+                    if(ClassFormPhase.MessageBoxInterface(ClassConnectorSetting.CoinName + " is currently in public test, we suggest to not invest your money on it, invest your time only because we are in private test and we need something stable, usefull, secure for provide a real trust on this coin before. Thank you for your understanding.", "Important information", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
                     {
                         if (_firstStart)
                         {
@@ -476,7 +477,7 @@ namespace Xiropht_Wallet
 #else
                 MethodInvoker invoke = () => 
                 {
-                    if (MessageBox.Show(this, ClassConnectorSetting.CoinName + " is currently in private test, we suggest to not invest your money on it, invest your time only because we are in private test and we need something stable, usefull, secure for provide a real trust on this coin before. Thank you for your understanding.", "Important information", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+                    if (MessageBox.Show(this, ClassConnectorSetting.CoinName + " is currently in public test, we suggest to not invest your money on it, invest your time only because we are in private test and we need something stable, usefull, secure for provide a real trust on this coin before. Thank you for your understanding.", "Important information", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
                     {
                         if (_firstStart)
                         {
@@ -487,7 +488,8 @@ namespace Xiropht_Wallet
                 };
                BeginInvoke(invoke);
 #endif
-            }).Start();
+            }).Start();*/
+            #endregion
             UpdateColorStyle(Color.White, Color.Black, Color.White, Color.LightSkyBlue);
 
         }
@@ -973,8 +975,8 @@ namespace Xiropht_Wallet
                 Format = BarcodeFormat.QR_CODE
             };
             var result = new Bitmap(qr.Write(walletAddress.Trim()));
-            pictureBoxQRCodeWallet.BackgroundImage = result;
-
+            MethodInvoker invoke = () => pictureBoxQRCodeWallet.BackgroundImage = result;
+            pictureBoxQRCodeWallet.BeginInvoke(invoke);
         }
 
         /// <summary>
@@ -1619,11 +1621,15 @@ namespace Xiropht_Wallet
             }
             catch
             {
-                OverviewWalletForm.labelTextCoinMined.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_COIN_MINED_TEXT");
-                OverviewWalletForm.labelTextBlockchainHeight.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_BLOCKCHAIN_HEIGHT_TEXT");
-                OverviewWalletForm.labelTextTotalBlockMined.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_BLOCK_MINED_TEXT");
-                OverviewWalletForm.labelTextTotalBlockLeft.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_BLOCK_LEFT_TEXT");
-                OverviewWalletForm.labelTextTotalCoinInPending.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_COIN_PENDING");
+                MethodInvoker invoke = () =>
+                {
+                    OverviewWalletForm.labelTextCoinMined.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_COIN_MINED_TEXT");
+                    OverviewWalletForm.labelTextBlockchainHeight.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_BLOCKCHAIN_HEIGHT_TEXT");
+                    OverviewWalletForm.labelTextTotalBlockMined.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_BLOCK_MINED_TEXT");
+                    OverviewWalletForm.labelTextTotalBlockLeft.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_BLOCK_LEFT_TEXT");
+                    OverviewWalletForm.labelTextTotalCoinInPending.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_COIN_PENDING");
+                };
+                BeginInvoke(invoke);
             }
 
         }
