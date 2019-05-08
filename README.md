@@ -59,7 +59,7 @@ For more informations about how work the network connection of wallet, please ch
 
 **Developers:**
 
-- Xiropht
+- Xiropht (Sam Segura)
 
 **Language files contributors:**
 
