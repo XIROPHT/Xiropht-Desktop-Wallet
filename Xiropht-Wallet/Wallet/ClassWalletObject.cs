@@ -120,6 +120,8 @@ namespace Xiropht_Wallet.Wallet
         public static string WalletAmountInPending;
         public static int WalletPacketSpeedTime;
 
+        public static string WalletPrivateKeyEncryptedQRCode;
+
         #region Initialization
 
         /// <summary>
@@ -131,7 +133,7 @@ namespace Xiropht_Wallet.Wallet
             string phase)
         {
             WalletClosed = false;
-            Certificate = Xiropht_Connector_All.Utils.ClassUtils.GenerateCertificate();
+            Certificate = ClassUtils.GenerateCertificate();
             if (SeedNodeConnectorWallet == null) // First initialization
             {
                 SeedNodeConnectorWallet = new ClassSeedNodeConnector();
@@ -714,7 +716,6 @@ namespace Xiropht_Wallet.Wallet
                         ClassParallelForm.HideWaitingForm();
                         ClassParallelForm.HideWaitingCreateWalletForm();
 
-                        WalletDataCreation = Xiropht_Connector_All.Utils.ClassUtils.DecompressData(splitPacket[1]);
 
                         if (splitPacket[1] == ClassAlgoErrorEnumeration.AlgoError)
                         {
@@ -741,12 +742,13 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                             Log.WriteLine("Packet create wallet data: " + WalletDataCreation);
 #endif
-                            var decryptWalletDataCreation = ClassAlgo.GetDecryptedResult(
-                                    ClassAlgoEnumeration.Rijndael,
-                                    WalletDataCreation, WalletNewPassword, ClassWalletNetworkSetting.KeySize);
+                            var decryptWalletDataCreation = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael, splitPacket[1], WalletNewPassword, ClassWalletNetworkSetting.KeySize);
+                            WalletDataCreation = Xiropht_Connector_All.Utils.ClassUtils.DecompressData(decryptWalletDataCreation);
 
 
-                            var splitWalletData = decryptWalletDataCreation.Split(new[] { "\n" }, StringSplitOptions.None);
+
+
+                            var splitWalletData = WalletDataCreation.Split(new[] { "\n" }, StringSplitOptions.None);
                             var pin = splitPacket[2];
                             var publicKey = splitWalletData[2];
                             var privateKey = splitWalletData[3];
@@ -794,11 +796,12 @@ namespace Xiropht_Wallet.Wallet
                         ClassParallelForm.HideWaitingForm();
                         ClassParallelForm.HideWaitingCreateWalletForm();
 
-                        WalletDataCreation = Xiropht_Connector_All.Utils.ClassUtils.DecompressData(splitPacket[1]);
+                        WalletDataCreation = splitPacket[1];
 
                         if (splitPacket[1] == ClassAlgoErrorEnumeration.AlgoError)
                         {
                             WalletNewPassword = string.Empty;
+                            WalletPrivateKeyEncryptedQRCode = string.Empty;
                             GC.SuppressFinalize(WalletDataCreation);
 #if WINDOWS
                             ClassFormPhase.MessageBoxInterface(
@@ -823,23 +826,19 @@ namespace Xiropht_Wallet.Wallet
 #endif
                             var decryptWalletDataCreation = ClassAlgo.GetDecryptedResult(
                                     ClassAlgoEnumeration.Rijndael,
-                                    WalletDataCreation, WalletNewPassword, ClassWalletNetworkSetting.KeySize);
+                                    WalletDataCreation, WalletPrivateKeyEncryptedQRCode, ClassWalletNetworkSetting.KeySize);
 
 
                             var splitWalletData = decryptWalletDataCreation.Split(new[] { "\n" }, StringSplitOptions.None);
-                            var pin = splitPacket[2];
                             var publicKey = splitWalletData[2];
                             var privateKey = splitWalletData[3];
+                            var pin = splitWalletData[4];
 
                             var walletDataToSave = splitWalletData[0] + "\n"; // Only wallet address
                             walletDataToSave += splitWalletData[2] + "\n"; // Only public key
 
-                            var passwordEncrypted = ClassAlgo.GetEncryptedResult(ClassAlgoEnumeration.Rijndael,
-                                WalletNewPassword, WalletNewPassword,
-                                ClassWalletNetworkSetting.KeySize);
-                            var walletDataToSaveEncrypted = ClassAlgo.GetEncryptedResult(
-                                    ClassAlgoEnumeration.Rijndael,
-                                    walletDataToSave, passwordEncrypted, ClassWalletNetworkSetting.KeySize);
+                            var passwordEncrypted = ClassAlgo.GetEncryptedResult(ClassAlgoEnumeration.Rijndael, WalletNewPassword, WalletNewPassword, ClassWalletNetworkSetting.KeySize);
+                            var walletDataToSaveEncrypted = ClassAlgo.GetEncryptedResult(ClassAlgoEnumeration.Rijndael, walletDataToSave, passwordEncrypted, ClassWalletNetworkSetting.KeySize);
                             TextWriter writerWallet = new StreamWriter(WalletDataCreationPath);
 
                             writerWallet.Write(walletDataToSaveEncrypted, false);
@@ -850,6 +849,7 @@ namespace Xiropht_Wallet.Wallet
                             WalletDataCreationPath = string.Empty;
                             WalletDataPinCreation = string.Empty;
                             WalletNewPassword = string.Empty;
+                            WalletPrivateKeyEncryptedQRCode = string.Empty;
                             var key = publicKey;
                             var key1 = privateKey;
                             var pin1 = pin;
@@ -964,10 +964,7 @@ namespace Xiropht_Wallet.Wallet
                             DisconnectWholeRemoteNodeSync(true, false);
                             LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
                             EnableReceivePacketRemoteNode = false;
-                            if (!await SeedNodeConnectorWallet
-                                .SendPacketToSeedNodeAsync(
-                                    ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletAskRemoteNode, Certificate, false,
-                                    true))
+                            if (!await SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletAskRemoteNode, Certificate, false, true))
                             {
                                 await Task.Factory.StartNew(delegate { FullDisconnection(false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                                 ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
@@ -2269,10 +2266,10 @@ namespace Xiropht_Wallet.Wallet
         ///     Send a packet to the seed node network.
         /// </summary>
         /// <param name="packet"></param>
-        public static async Task<bool> SendPacketWalletToSeedNodeNetwork(string packet)
+        public static async Task<bool> SendPacketWalletToSeedNodeNetwork(string packet, bool encrypted = true)
         {
 
-            if (!await WalletConnect.SendPacketWallet(packet, Certificate, true))
+            if (!await WalletConnect.SendPacketWallet(packet, Certificate, encrypted))
             {
                 ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS

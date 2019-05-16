@@ -53,7 +53,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         var feeSend = checkFee.Item2;
                         if (CheckAmountNetwork(amountSend + feeSend))
                         {
-                            string destination = ClassUtils.RemoveSpecialCharacters(textBoxWalletDestination.Text);
+                            string destination = ClassUtility.RemoveSpecialCharacters(textBoxWalletDestination.Text);
                             if ((destination.Length >= 48 &&
                                  destination.Length <= 128) && Regex.IsMatch(
                                     destination,
@@ -358,7 +358,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void textBoxWalletDestination_TextChanged(object sender, EventArgs e)
         {
-            textBoxWalletDestination.Text = ClassUtils.RemoveSpecialCharacters(textBoxWalletDestination.Text);
+            textBoxWalletDestination.Text = ClassUtility.RemoveSpecialCharacters(textBoxWalletDestination.Text);
         }
     }
 }

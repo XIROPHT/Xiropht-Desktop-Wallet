@@ -118,7 +118,8 @@
     <Compile Include="ClassLog.cs" />
     <Compile Include="ClassMemory.cs" />
     <Compile Include="ClassTranslation.cs" />
-    <Compile Include="ClassUtils.cs" />
+    <Compile Include="ClassUtility.cs" />
+    <Compile Include="ClassWalletRestoreFunctions.cs" />
     <Compile Include="ClassWalletSetting.cs" />
     <Compile Include="FormCustom\ClassListView.cs">
       <SubType>Component</SubType>

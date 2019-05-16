@@ -35,12 +35,12 @@ namespace Xiropht_Wallet
                     break;
             }
 
-            if (!File.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile)))
+            if (!File.Exists(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile)))
             {
-                File.Create(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile)).Close();
+                File.Create(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile)).Close();
             }
 
-            StreamWriter writer = new StreamWriter(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile), false);
+            StreamWriter writer = new StreamWriter(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile), false);
             writer.WriteLine(syncModeSetting);
             writer.WriteLine(syncModeManualHostSetting);
             writer.WriteLine("CURRENT-WALLET-LANGUAGE="+ClassTranslation.CurrentLanguage);
@@ -52,14 +52,14 @@ namespace Xiropht_Wallet
         /// </summary>
         public static bool LoadSetting()
         {
-            if (!File.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile)))
+            if (!File.Exists(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile)))
             {
-                File.Create(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile)).Close();
+                File.Create(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile)).Close();
                 return true; // This is the first start of the wallet gui.
             }
             else
             {
-                StreamReader reader = new StreamReader(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile));
+                StreamReader reader = new StreamReader(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile));
                 string line;
                 int counterLine = 0;
                 while ((line = reader.ReadLine()) != null)

@@ -16,7 +16,7 @@ namespace Xiropht_Wallet
         /// </summary>
         public static void InitializeLog()
         {
-            _writerLog = new StreamWriter(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory+"\\wallet.log"))
+            _writerLog = new StreamWriter(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory+"\\wallet.log"))
             {
                 AutoFlush = true
             };

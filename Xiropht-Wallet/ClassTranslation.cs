@@ -38,9 +38,9 @@ namespace Xiropht_Wallet
             {
                 CurrentLanguage = "english"; // By Default on initialization.
             }
-            if (Directory.Exists(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + LanguageFolderName)))
+            if (Directory.Exists(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + LanguageFolderName)))
             {
-                string[] languageFilesList = Directory.GetFiles(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + LanguageFolderName), "*.xirlang").Select(Path.GetFileName).ToArray();
+                string[] languageFilesList = Directory.GetFiles(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + LanguageFolderName), "*.xirlang").Select(Path.GetFileName).ToArray();
                 if (languageFilesList.Length == 0)
                 {
 #if DEBUG
@@ -67,7 +67,7 @@ namespace Xiropht_Wallet
 #if DEBUG
                                     Log.WriteLine("Read language file: "+languageFilesList[i]);
 #endif
-                                    using (FileStream fs = File.Open(ClassUtils.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + LanguageFolderName + "\\" + languageFilesList[i]), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                                    using (FileStream fs = File.Open(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + LanguageFolderName + "\\" + languageFilesList[i]), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                                     using (BufferedStream bs = new BufferedStream(fs))
                                     using (StreamReader sr = new StreamReader(bs))
                                     {

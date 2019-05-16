@@ -134,7 +134,6 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         ClassWalletObject.WalletDataDecrypted.Split(new[] { "\n" }, StringSplitOptions.None);
                     string walletAddress = splitWalletFileDecrypted[0];
                     string walletKey = splitWalletFileDecrypted[1];
-
                     if (!await ClassWalletObject.InitializationWalletConnection(walletAddress, textBoxPasswordWallet.Text,
                     walletKey, ClassWalletPhase.Login))
                     {
