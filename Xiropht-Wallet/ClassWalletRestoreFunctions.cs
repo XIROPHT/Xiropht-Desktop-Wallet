@@ -66,7 +66,7 @@ namespace Xiropht_Wallet
                     Options = options,
                     Format = BarcodeFormat.QR_CODE
                 };
-                string sourceKey = privateKey.Trim() + "|" + password.Trim();
+                string sourceKey = privateKey.Trim() + "|" + password.Trim() + "|" + DateTimeOffset.Now.ToUnixTimeSeconds();
                 using (var representationQRCode = new Bitmap(qr.Write(sourceKey)))
                 {
 
@@ -95,9 +95,11 @@ namespace Xiropht_Wallet
                                 string randomEndPrivateKey = privateKey.Remove(0, (privateKey.Length - ClassUtils.GetRandomBetween(privateKey.Length / 4, privateKey.Length / 8))); // Indicate only a small part of the end of the private key (For old private key users).
                                 qrCodeEncryptedRequest = randomEndPrivateKey + "|" + QrCodeStringEncrypted;
                             }
-                            string decryptQrCode = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael, QrCodeStringEncrypted, privateKey, ClassWalletNetworkSetting.KeySize);
 
-                            using (Bitmap qrCode = Base64StringToBitmap(decryptQrCode))
+                            // Testing QR Code encryption.
+                            string decryptQrCode = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael, QrCodeStringEncrypted, privateKey, ClassWalletNetworkSetting.KeySize); // Decrypt QR Code.
+
+                            using (Bitmap qrCode = Base64StringToBitmap(decryptQrCode)) // Retrieve data to bitmap.
                             {
 
                                 source = new BitmapLuminanceSource(qrCode);
@@ -105,11 +107,11 @@ namespace Xiropht_Wallet
                                 bitmap = new BinaryBitmap(new HybridBinarizer(source));
                                 result = new MultiFormatReader().decode(bitmap);
 
-                                if (result != null)
+                                if (result != null) 
                                 {
-                                    if (result.Text == sourceKey)
+                                    if (result.Text == sourceKey) // Check representation.
                                     {
-                                        return qrCodeEncryptedRequest;
+                                        return qrCodeEncryptedRequest; // Return encrypted QR Code.
                                     }
                                 }
                             }
