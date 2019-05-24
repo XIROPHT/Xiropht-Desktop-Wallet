@@ -38,8 +38,10 @@ namespace Xiropht_Wallet.Wallet
         public static ClassWalletConnect WalletConnect;
         public static List<ClassWalletConnectToRemoteNode> ListWalletConnectToRemoteNode;
         public static Dictionary<string, long> ListRemoteNodeBanned = new Dictionary<string, long>();
+        public static Dictionary<string, long> ListRemoteNodeTotalDisconnect = new Dictionary<string, long>();
         public static string WalletLastPathFile;
         public static bool WalletPinDisabled;
+        public const long WalletMaxRemoteNodeDisconnectAllowed = 3;
 
 
         /// <summary>
@@ -484,9 +486,6 @@ namespace Xiropht_Wallet.Wallet
             ClassWalletTransactionAnonymityCache.ListTransaction.Clear();
             ClassWalletTransactionCache.ListTransaction.Clear();
             ClassBlockCache.ListBlock.Clear();
-            ClassFormPhase.WalletXiropht.copyListAnonymousTransaction.Clear();
-            ClassFormPhase.WalletXiropht.copyListTransaction.Clear();
-
         }
 
         /// <summary>
@@ -743,7 +742,7 @@ namespace Xiropht_Wallet.Wallet
                             Log.WriteLine("Packet create wallet data: " + WalletDataCreation);
 #endif
                             var decryptWalletDataCreation = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael, splitPacket[1], WalletNewPassword, ClassWalletNetworkSetting.KeySize);
-                            WalletDataCreation = Xiropht_Connector_All.Utils.ClassUtils.DecompressData(decryptWalletDataCreation);
+                            WalletDataCreation = ClassUtils.DecompressData(decryptWalletDataCreation);
 
 
 
@@ -1347,6 +1346,23 @@ namespace Xiropht_Wallet.Wallet
                             }
                             LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
 
+                            try
+                            {
+                                if (ListRemoteNodeBanned.Count > 0)
+                                {
+                                    foreach (var seedNodeIp in ClassConnectorSetting.SeedNodeIp)
+                                    {
+                                        if (ListRemoteNodeBanned.ContainsKey(seedNodeIp.Key))
+                                        {
+                                            ListRemoteNodeBanned[seedNodeIp.Key] = 0;
+                                        }
+                                    }
+                                }
+                            }
+                            catch
+                            {
+
+                            }
                             bool noPublicNode = false;
                             if (!SettingManualRemoteNode)
                             {
@@ -1414,11 +1430,15 @@ namespace Xiropht_Wallet.Wallet
                                                             }
 #endif
                                                         }
-#if DEBUG
                                                         else
                                                         {
+
                                                             if (ListRemoteNodeBanned[remoteNode] + ClassConnectorSetting.MaxRemoteNodeBanTime < DateTimeOffset.Now.ToUnixTimeSeconds())
                                                             {
+                                                                if (ListRemoteNodeTotalDisconnect.ContainsKey(remoteNode))
+                                                                {
+                                                                    ListRemoteNodeTotalDisconnect[remoteNode] = 0;
+                                                                }
                                                                 if (!ClassRemoteNodeChecker.CheckRemoteNodeHostExist(remoteNode))
                                                                 {
                                                                     ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
@@ -1470,7 +1490,6 @@ namespace Xiropht_Wallet.Wallet
                                                                 Log.WriteLine("Remote node host: " + remoteNode + " is banned.");
                                                             }
                                                         }
-#endif
                                                     }
                                                     else
                                                     {
@@ -1547,7 +1566,7 @@ namespace Xiropht_Wallet.Wallet
                                     {
                                         if (WalletSyncMode == (int)ClassWalletSyncMode.WALLET_SYNC_DEFAULT || noPublicNode) // Seed node sync.
                                         {
-                                            var randomSeedNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
+                                            var randomSeedNode = ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             if (!await ListWalletConnectToRemoteNode[0]
                                                 .ConnectToRemoteNodeAsync(
@@ -1659,14 +1678,14 @@ namespace Xiropht_Wallet.Wallet
                                         }
                                         else if (WalletSyncMode == (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE) // Public remote node sync.
                                         {
-                                            ClassRemoteNodeChecker.ListRemoteNodeChecked = ClassRemoteNodeChecker
-                                                .ListRemoteNodeChecked.Distinct().ToList();
+                                            ClassRemoteNodeChecker.ListRemoteNodeChecked = ClassRemoteNodeChecker.ListRemoteNodeChecked.Distinct().ToList();
+
 #if DEBUG
                                             Log.WriteLine("Total remote node checked: " + ClassRemoteNodeChecker.ListRemoteNodeChecked.Count);
 #endif
 
                                             string previousNode;
-                                            var randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
+                                            var randomNode = ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1678,7 +1697,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
+                                            randomNode = ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1690,7 +1709,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
+                                            randomNode = ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1701,7 +1720,7 @@ namespace Xiropht_Wallet.Wallet
                                                 InsertBanRemoteNode(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode].Item1);
                                                 return;
                                             }
-                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
+                                            randomNode = ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1713,7 +1732,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
+                                            randomNode = ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1725,7 +1744,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
+                                            randomNode = ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1737,7 +1756,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
+                                            randomNode = ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1749,7 +1768,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
+                                            randomNode = ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1761,7 +1780,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
+                                            randomNode = ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1774,7 +1793,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
+                                            randomNode = ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1788,7 +1807,7 @@ namespace Xiropht_Wallet.Wallet
                                             }
 
 
-                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
+                                            randomNode = ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -1800,7 +1819,7 @@ namespace Xiropht_Wallet.Wallet
                                                 return;
                                             }
 
-                                            randomNode = Xiropht_Connector_All.Utils.ClassUtils.GetRandomBetween(0,
+                                            randomNode = ClassUtils.GetRandomBetween(0,
                                                 ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
                                             previousNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNode]
                                                 .Item1;
@@ -2316,6 +2335,18 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                                         Log.WriteLine("Remote node " + ListWalletConnectToRemoteNode[i].RemoteNodeHost + " id:" + i + " connection dead or stuck.");
 #endif
+                                        if (!ListRemoteNodeTotalDisconnect.ContainsKey(ListWalletConnectToRemoteNode[i].RemoteNodeHost))
+                                        {
+                                            ListRemoteNodeTotalDisconnect.Add(ListWalletConnectToRemoteNode[i].RemoteNodeHost, 1);
+                                        }
+                                        else
+                                        {
+                                            ListRemoteNodeTotalDisconnect[ListWalletConnectToRemoteNode[i].RemoteNodeHost]++;
+                                            if (ListRemoteNodeTotalDisconnect[ListWalletConnectToRemoteNode[i].RemoteNodeHost] >= WalletMaxRemoteNodeDisconnectAllowed)
+                                            {
+                                                InsertBanRemoteNode(ListWalletConnectToRemoteNode[i].RemoteNodeHost);
+                                            }
+                                        }
                                         dead = true;
                                         break;
                                     }
@@ -2325,6 +2356,18 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                                         Log.WriteLine("Remote node " + ListWalletConnectToRemoteNode[i].RemoteNodeHost + " id:" + i + " connection dead or stuck.");
 #endif
+                                        if (!ListRemoteNodeTotalDisconnect.ContainsKey(ListWalletConnectToRemoteNode[i].RemoteNodeHost))
+                                        {
+                                            ListRemoteNodeTotalDisconnect.Add(ListWalletConnectToRemoteNode[i].RemoteNodeHost, 1);
+                                        }
+                                        else
+                                        {
+                                            ListRemoteNodeTotalDisconnect[ListWalletConnectToRemoteNode[i].RemoteNodeHost]++;
+                                            if (ListRemoteNodeTotalDisconnect[ListWalletConnectToRemoteNode[i].RemoteNodeHost] >= WalletMaxRemoteNodeDisconnectAllowed)
+                                            {
+                                                InsertBanRemoteNode(ListWalletConnectToRemoteNode[i].RemoteNodeHost);
+                                            }
+                                        }
                                         dead = true;
                                         break;
                                     }
@@ -2355,7 +2398,7 @@ namespace Xiropht_Wallet.Wallet
                     await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
 
                 }
-            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest);
+            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -2493,7 +2536,7 @@ namespace Xiropht_Wallet.Wallet
 
                     }
                     await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
-                }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal);
+                }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.BelowNormal).ConfigureAwait(false);
                 
             }
         }
@@ -4546,7 +4589,7 @@ namespace Xiropht_Wallet.Wallet
                     {
                         ListRemoteNodeBanned.Add(host, DateTimeOffset.Now.ToUnixTimeSeconds());
                     }
-                    Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest);
+                    Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
                 }
             }
         }

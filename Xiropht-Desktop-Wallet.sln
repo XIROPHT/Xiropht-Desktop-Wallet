@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xiropht-Wallet", "Xiropht-Wallet\Xiropht-Wallet.csproj", "{AC906F1F-C934-48E4-9CB8-8F8438237EE3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xiropht-Desktop-Wallet", "Xiropht-Desktop-Wallet\Xiropht-Desktop-Wallet.csproj", "{AC906F1F-C934-48E4-9CB8-8F8438237EE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

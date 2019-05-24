@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("Wallet Gui Xiropht")]
-[assembly: AssemblyDescription("A Wallet GUI for Xiropht")]
+[assembly: AssemblyTitle("Xiropht Desktop Wallet")]
+[assembly: AssemblyDescription("The official Desktop Wallet of Xiropht")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Xiropht")]
-[assembly: AssemblyProduct("Wallet Gui Xiropht")]
+[assembly: AssemblyProduct("Xiropht Desktop Wallet")]
 [assembly: AssemblyCopyright("Copyright © Xiropht Developer 2019")]
 [assembly: AssemblyTrademark("Xiropht")]
 [assembly: AssemblyCulture("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Vous pouvez spécifier toutes les valeurs ou indiquer les numéros de build et de révision par défaut
 // en utilisant '*', comme indiqué ci-dessous :
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.4.9.0")]
-[assembly: AssemblyFileVersion("0.4.9.0")]
+[assembly: AssemblyVersion("0.4.9.1")]
+[assembly: AssemblyFileVersion("0.4.9.1")]

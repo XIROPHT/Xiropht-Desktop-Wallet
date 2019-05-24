@@ -24,6 +24,7 @@ using Xiropht_Wallet.Wallet;
 using Xiropht_Wallet.Threading;
 using ZXing.QrCode;
 using ZXing;
+using System.Linq;
 
 namespace Xiropht_Wallet
 {
@@ -89,8 +90,6 @@ namespace Xiropht_Wallet
         public Dictionary<int, string> ListTransactionHashShowed = new Dictionary<int, string>();
         public Dictionary<int, string> ListTransactionAnonymityHashShowed = new Dictionary<int, string>();
         public Dictionary<int, string> ListBlockHashShowed = new Dictionary<int, string>();
-        public List<string> copyListTransaction = new List<string>();
-        public List<string> copyListAnonymousTransaction = new List<string>();
         public int TotalTransactionRead;
         public int TotalAnonymityTransactionRead;
         public int TotalBlockRead;
@@ -3150,19 +3149,15 @@ namespace Xiropht_Wallet
 
                                 if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
                                 {
-                                    copyListTransaction.Clear();
-                                    copyListAnonymousTransaction.Clear();
-                                    copyListTransaction = new List<string>(ClassWalletTransactionCache.ListTransaction);
-                                    copyListAnonymousTransaction = new List<string>(ClassWalletTransactionAnonymityCache.ListTransaction);
 
-                                    if (ListTransactionHashShowed.Count < copyListTransaction.Count)
+                                    if (ListTransactionHashShowed.Count < ClassWalletTransactionCache.ListTransaction.Count)
                                     {
                                         long loadingDate = DateTimeOffset.Now.ToUnixTimeSeconds();
 
                                         MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = false;
                                         BeginInvoke(invokeLockButton);
                                         for (int i = ListTransactionHashShowed.Count;
-                                        i < copyListTransaction.Count;
+                                        i < ClassWalletTransactionCache.ListTransaction.Count;
                                         i++)
                                         {
 
@@ -3174,14 +3169,9 @@ namespace Xiropht_Wallet
                                             }
                                             if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
                                             {
-                                                if (i < copyListTransaction.Count)
+                                                if (i < ClassWalletTransactionCache.ListTransaction.Count)
                                                 {
-                                                    string decryptedTransaction = ClassAlgo
-                                                        .GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
-                                                            copyListTransaction[i],
-                                                            ClassWalletObject.WalletConnect.WalletAddress +
-                                                            ClassWalletObject.WalletConnect.WalletKey,
-                                                            ClassWalletNetworkSetting.KeySize); // AES
+                                                    string decryptedTransaction = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael, ClassWalletTransactionCache.ListTransaction.ElementAt(i).Key, ClassWalletObject.WalletConnect.WalletAddress + ClassWalletObject.WalletConnect.WalletKey, ClassWalletNetworkSetting.KeySize); // AES
 
                                                     if (decryptedTransaction == ClassAlgoErrorEnumeration.AlgoError)
                                                     {
@@ -3212,8 +3202,8 @@ namespace Xiropht_Wallet
                                                     "Total transactions loaded and decrypted: " +
                                                     (ListTransactionHashShowed.Count +
                                                      ListTransactionAnonymityHashShowed.Count) + "/" +
-                                                    (copyListTransaction.Count +
-                                                     copyListAnonymousTransaction.Count));
+                                                    (ClassWalletTransactionCache.ListTransaction.Count +
+                                                     ClassWalletTransactionAnonymityCache.ListTransaction.Count));
                                                 }
                                             }
                                             else
@@ -3232,13 +3222,13 @@ namespace Xiropht_Wallet
                                         BeginInvoke(invokeLockButton);
                                     }
 
-                                    if (ListTransactionAnonymityHashShowed.Count < copyListAnonymousTransaction.Count)
+                                    if (ListTransactionAnonymityHashShowed.Count < ClassWalletTransactionAnonymityCache.ListTransaction.Count)
                                     {
                                         long loadingDate = DateTimeOffset.Now.ToUnixTimeSeconds();
                                         MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = false;
                                         BeginInvoke(invokeLockButton);
                                         for (int i = ListTransactionAnonymityHashShowed.Count;
-                                            i < copyListAnonymousTransaction.Count;
+                                            i < ClassWalletTransactionAnonymityCache.ListTransaction.Count;
                                             i++)
                                         {
    
@@ -3250,11 +3240,11 @@ namespace Xiropht_Wallet
                                             }
                                             if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
                                             {
-                                                if (i < copyListAnonymousTransaction.Count)
+                                                if (i < ClassWalletTransactionAnonymityCache.ListTransaction.Count)
                                                 {
                                                     string decryptedTransaction = ClassAlgo
                                                         .GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
-                                                           copyListAnonymousTransaction[i],
+                                                           ClassWalletTransactionAnonymityCache.ListTransaction.ElementAt(i).Key,
                                                             ClassWalletObject.WalletConnect.WalletAddress +
                                                             ClassWalletObject.WalletConnect.WalletKey,
                                                             ClassWalletNetworkSetting.KeySize); // AES
@@ -3287,8 +3277,8 @@ namespace Xiropht_Wallet
                                                         "Total transactions loaded and decrypted: " +
                                                         (ListTransactionHashShowed.Count +
                                                          ListTransactionAnonymityHashShowed.Count) + "/" +
-                                                        (copyListTransaction.Count +
-                                                         copyListAnonymousTransaction.Count));
+                                                        (ClassWalletTransactionCache.ListTransaction.Count +
+                                                         ClassWalletTransactionAnonymityCache.ListTransaction.Count));
                                                 }
 
                                             }
@@ -3311,8 +3301,8 @@ namespace Xiropht_Wallet
                                     if (!ClassWalletObject.InSyncTransaction &&
                                         !ClassWalletObject.InSyncTransactionAnonymity &&
                                         (ListTransactionHashShowed.Count + ListTransactionAnonymityHashShowed.Count) ==
-                                        copyListTransaction.Count +
-                                        copyListAnonymousTransaction.Count)
+                                        ClassWalletTransactionCache.ListTransaction.Count +
+                                        ClassWalletTransactionAnonymityCache.ListTransaction.Count)
                                     {
                                         if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.TransactionHistory)
                                         {
@@ -3363,139 +3353,130 @@ namespace Xiropht_Wallet
                 EnableUpdateBlockWallet = true;
 
 
-                ThreadPool.QueueUserWorkItem(async delegate
+                ThreadPool.QueueUserWorkItem(delegate
                 {
                     while (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                     {
 
 
-                            try
+                        try
+                        {
+
+
+                            for (int i = TotalBlockRead; i < ClassBlockCache.ListBlock.Count; i++)
                             {
 
-
-                                for (int i = TotalBlockRead; i < ClassBlockCache.ListBlock.Count; i++)
+                                if (i < ClassBlockCache.ListBlock.Count)
                                 {
-
-                                    if (i < ClassBlockCache.ListBlock.Count)
+                                    string[] splitBlock = ClassBlockCache.ListBlock[i]
+                                        .Split(new[] { "#" }, StringSplitOptions.None);
+                                    string hash = splitBlock[1];
+                                    if (!ListBlockHashShowed.ContainsValue(hash))
                                     {
-                                        string[] splitBlock = ClassBlockCache.ListBlock[i]
-                                            .Split(new[] { "#" }, StringSplitOptions.None);
-                                        string hash = splitBlock[1];
-                                        if (!ListBlockHashShowed.ContainsValue(hash))
+                                        ListBlockHashShowed.Add(i, hash);
+                                        int minShow = (CurrentBlockExplorerPage - 1) * MaxBlockPerPage;
+                                        int maxShow = CurrentBlockExplorerPage * MaxBlockPerPage;
+
+                                        if (i >= minShow && i < maxShow)
                                         {
-                                            ListBlockHashShowed.Add(i, hash);
-                                            int minShow = (CurrentBlockExplorerPage - 1) * MaxBlockPerPage;
-                                            int maxShow = CurrentBlockExplorerPage * MaxBlockPerPage;
+                                            string blockHeight = splitBlock[0];
+                                            string transactionHash = splitBlock[2];
+                                            string timestampCreate = splitBlock[3];
+                                            string timestampFound = splitBlock[4];
+                                            string difficulty = splitBlock[5];
+                                            string reward = splitBlock[6];
+                                            DateTime dateTimeCreate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                            dateTimeCreate = dateTimeCreate.AddSeconds(int.Parse(timestampCreate));
+                                            dateTimeCreate = dateTimeCreate.ToLocalTime();
+                                            DateTime dateTimeFound = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                            dateTimeFound = dateTimeFound.AddSeconds(int.Parse(timestampFound));
+                                            dateTimeFound = dateTimeFound.ToLocalTime();
 
-                                            if (i >= minShow && i < maxShow)
+                                            string[] row =
                                             {
-                                                string blockHeight = splitBlock[0];
-                                                string transactionHash = splitBlock[2];
-                                                string timestampCreate = splitBlock[3];
-                                                string timestampFound = splitBlock[4];
-                                                string difficulty = splitBlock[5];
-                                                string reward = splitBlock[6];
-                                                DateTime dateTimeCreate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                dateTimeCreate = dateTimeCreate.AddSeconds(int.Parse(timestampCreate));
-                                                dateTimeCreate = dateTimeCreate.ToLocalTime();
-                                                DateTime dateTimeFound = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                dateTimeFound = dateTimeFound.AddSeconds(int.Parse(timestampFound));
-                                                dateTimeFound = dateTimeFound.ToLocalTime();
-
-                                                string[] row =
-                                                {
                                                     blockHeight, hash,
                                                     reward, difficulty, dateTimeCreate.ToString(CultureInfo.InvariantCulture),
                                                     dateTimeFound.ToString(CultureInfo.InvariantCulture), transactionHash
                                                 };
-                                                var listViewItem = new ListViewItem(row);
+                                            var listViewItem = new ListViewItem(row);
 
-                                                void Invoker() =>
-                                                    BlockWalletForm.listViewBlockExplorer.Items.Add(listViewItem);
+                                            void Invoker() =>
+                                                BlockWalletForm.listViewBlockExplorer.Items.Add(listViewItem);
 
-                                                BeginInvoke((MethodInvoker)Invoker);
+                                            BeginInvoke((MethodInvoker)Invoker);
 
-                                            }
-                                            if (TotalBlockRead == minShow)
-                                            {
-                                                void MethodInvoker() =>
-                                                    BlockWalletForm.AutoResizeColumns(BlockWalletForm
-                                                        .listViewBlockExplorer);
-
-                                                BeginInvoke((MethodInvoker)MethodInvoker);
-                                            }
                                         }
-                                        
+                                        if (TotalBlockRead == minShow)
+                                        {
+                                            void MethodInvoker() =>
+                                                BlockWalletForm.AutoResizeColumns(BlockWalletForm
+                                                    .listViewBlockExplorer);
+
+                                            BeginInvoke((MethodInvoker)MethodInvoker);
+                                        }
                                     }
-                                    TotalBlockRead++;
+
+                                }
+                                TotalBlockRead++;
 
 
-                                    if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.BlockExplorer)
+                                if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.BlockExplorer)
+                                {
+                                    if (ClassWalletObject.InSyncBlock)
                                     {
-                                        if (ClassWalletObject.InSyncBlock)
-                                        {
-                                            UpdateLabelSyncInformation(
-                                                "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count + "/" +
-                                                ClassWalletObject.TotalBlockInSync + ".");
-                                        }
-                                        else
-                                        {
-                                            UpdateLabelSyncInformation(
-                                                "Total blocks loaded: " + ListBlockHashShowed.Count + "/" +
-                                                ClassBlockCache.ListBlock.Count + ".");
-                                        }
-
+                                        UpdateLabelSyncInformation(
+                                            "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count + "/" +
+                                            ClassWalletObject.TotalBlockInSync + ".");
                                     }
+                                    else
+                                    {
+                                        UpdateLabelSyncInformation(
+                                            "Total blocks loaded: " + ListBlockHashShowed.Count + "/" +
+                                            ClassBlockCache.ListBlock.Count + ".");
+                                    }
+
                                 }
                             }
-                            catch
-                            {
-                                await Task.Run(delegate ()
-                                {
-                                    StopUpdateBlockHistory(false);
-                                }).ConfigureAwait(false);
-                            }
+                        }
+                        catch
+                        {
 
-                            if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.BlockExplorer)
-                            {
-                                if (ClassWalletObject.InSyncBlock)
-                                {
-                                    UpdateLabelSyncInformation(
-                                        "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count + "/" +
-                                        ClassWalletObject.TotalBlockInSync + ".");
-                                }
-                                else
-                                {
-                                    UpdateLabelSyncInformation(
-                                        "Total blocks loaded: " + ListBlockHashShowed.Count + "/" +
-                                        ClassBlockCache.ListBlock.Count + ".");
-                                }
-                            }
-                            if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.Overview)
-                            {
-                                if (ClassWalletObject.InSyncBlock && !ClassWalletObject.InSyncTransactionAnonymity && !ClassWalletObject.InSyncTransaction)
-                                {
-                                    UpdateLabelSyncInformation(
-                                        "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count + "/" +
-                                        ClassWalletObject.TotalBlockInSync + " from node: " + ClassWalletObject.ListWalletConnectToRemoteNode[9].RemoteNodeHost + ".");
-                                }
-                            }
+                            new Thread(() => StopUpdateBlockHistory(false)).Start();
+                        }
 
-
-                            if (BlockWalletForm.listViewBlockExplorer.Items.Count-1 > ClassBlockCache.ListBlock.Count)
+                        if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.BlockExplorer)
+                        {
+                            if (ClassWalletObject.InSyncBlock)
                             {
-                                await Task.Run(delegate ()
-                                {
-                                    StopUpdateBlockHistory(false);
-                                }).ConfigureAwait(false);
+                                UpdateLabelSyncInformation(
+                                    "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count + "/" +
+                                    ClassWalletObject.TotalBlockInSync + ".");
                             }
-
-                            Thread.Sleep(ThreadUpdateTransactionWalletInterval);
+                            else
+                            {
+                                UpdateLabelSyncInformation(
+                                    "Total blocks loaded: " + ListBlockHashShowed.Count + "/" +
+                                    ClassBlockCache.ListBlock.Count + ".");
+                            }
+                        }
+                        if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.Overview)
+                        {
+                            if (ClassWalletObject.InSyncBlock && !ClassWalletObject.InSyncTransactionAnonymity && !ClassWalletObject.InSyncTransaction)
+                            {
+                                UpdateLabelSyncInformation(
+                                    "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count + "/" +
+                                    ClassWalletObject.TotalBlockInSync + " from node: " + ClassWalletObject.ListWalletConnectToRemoteNode[9].RemoteNodeHost + ".");
+                            }
                         }
 
 
-        
-                    
+                        if (BlockWalletForm.listViewBlockExplorer.Items.Count - 1 > ClassBlockCache.ListBlock.Count)
+                        {
+                            new Thread(() => StopUpdateBlockHistory(false)).Start();
+                        }
+
+                        Thread.Sleep(ThreadUpdateTransactionWalletInterval);
+                    }
                 });
             }
         }
@@ -3516,9 +3497,7 @@ namespace Xiropht_Wallet
                 _normalTransactionLoaded = false;
                 _anonymousTransactionLoaded = false;
                 ListTransactionHashShowed.Clear();
-                copyListTransaction.Clear();
-                copyListAnonymousTransaction.Clear();
-                                // Transaction normal
+
                 MethodInvoker invoke = () =>
                 {
                     TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Clear();

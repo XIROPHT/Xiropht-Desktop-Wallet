@@ -14,7 +14,7 @@ namespace Xiropht_Wallet.Wallet
         private const string WalletTransMethodInvokerCacheDirectory = "/Cache/";
         private const string WalletTransMethodInvokerCacheFileExtension = "transaction.xirtra";
         private static bool _inClearCache;
-        public static List<string> ListTransaction; // hash, transaction
+        public static Dictionary<string, long> ListTransaction; // hash, transaction
 
         /// <summary>
         /// Load transMethodInvoker in cache.
@@ -29,7 +29,7 @@ namespace Xiropht_Wallet.Wallet
             }
             else
             {
-                ListTransaction = new List<string>();
+                ListTransaction = new Dictionary<string, long>();
             }
 
             if (Directory.Exists(
@@ -44,7 +44,7 @@ namespace Xiropht_Wallet.Wallet
                         string line;
                         while ((line = sr.ReadLine()) != null)
                         {
-                            ListTransaction.Add(line);
+                            ListTransaction.Add(line, ListTransaction.Count);
                         }
                     }
                 }
@@ -220,16 +220,17 @@ namespace Xiropht_Wallet.Wallet
                     {
 
                         var existTransaction = false;
-                        for (var i = 0; i < ListTransaction.Count; i++)
-                            if (i < ListTransaction.Count)
-                                if (ListTransaction[i] == finalTransactionEncrypted)
-                                    existTransaction = true;
+                       
+                        if (ListTransaction.ContainsKey(finalTransactionEncrypted))
+                        {
+                            existTransaction = true;
+                        }
 
                         if (!existTransaction)
                         {
 
 
-                            ListTransaction.Add(finalTransactionEncrypted);
+                            ListTransaction.Add(finalTransactionEncrypted, ListTransaction.Count);
 
 
                             await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted, false);

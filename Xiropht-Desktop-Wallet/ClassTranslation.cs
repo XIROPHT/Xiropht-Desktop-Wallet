@@ -4,14 +4,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-#if WINDOWS
-using MetroFramework;
-#endif
 using Xiropht_Connector_All.Setting;
 using Xiropht_Wallet.FormPhase;
 
 namespace Xiropht_Wallet
 {
+
     public class ClassTranslation
     {
         public static string CurrentLanguage;
