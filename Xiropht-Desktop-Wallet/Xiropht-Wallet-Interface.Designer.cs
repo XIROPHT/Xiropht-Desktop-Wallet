@@ -508,7 +508,7 @@ namespace Xiropht_Wallet
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStripMenu;
             this.Name = "WalletXiropht";
-            this.Text = "Xiropht Wallet Gui - v";
+            this.Text = "Xiropht Desktop Wallet - v";
 #if LINUX
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;

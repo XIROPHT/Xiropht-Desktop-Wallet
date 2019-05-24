@@ -35,7 +35,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             }
             labelLanguageContributors.Text = contributorsText;
 
-            labelWalletGuiVersion.Text = "GUI Wallet Xiropht v" + Assembly.GetExecutingAssembly().GetName().Version + "R"+Environment.NewLine+ "Copyright © "+DateTime.Now.Year+" Xiropht Developer";
+            labelWalletGuiVersion.Text = "Xiropht Desktop Wallet v" + Assembly.GetExecutingAssembly().GetName().Version + "R"+Environment.NewLine+ "Copyright © "+DateTime.Now.Year+" Xiropht Developer";
         }
 
         private void linkLabelWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

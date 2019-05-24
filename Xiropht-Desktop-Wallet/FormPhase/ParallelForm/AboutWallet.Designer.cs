@@ -46,7 +46,7 @@
             this.labelWalletGuiVersion.Name = "labelWalletGuiVersion";
             this.labelWalletGuiVersion.Size = new System.Drawing.Size(296, 60);
             this.labelWalletGuiVersion.TabIndex = 0;
-            this.labelWalletGuiVersion.Text = "GUI Wallet Xiropht\r\n\r\nCopyright © 2019 Xiropht Developer\r\n";
+            this.labelWalletGuiVersion.Text = "Xiropht Desktop Wallet\r\n\r\nCopyright © 2019 Xiropht Developer\r\n";
             // 
             // label2
             // 
@@ -109,7 +109,7 @@
             this.linkLabelWebsite.Text = "https://xiropht.com/";
             this.linkLabelWebsite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelWebsite_LinkClicked);
             // 
-            // About
+            // AboutWallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -123,7 +123,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "About";
+            this.Name = "AboutWallet";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
