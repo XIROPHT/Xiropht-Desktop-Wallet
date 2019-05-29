@@ -81,7 +81,7 @@ namespace Xiropht_Wallet
                         {
 
                             string qrCodeString = BitmapToBase64String(representationQRCode);
-                            string QrCodeStringEncrypted = ClassAlgo.GetEncryptedResult(ClassAlgoEnumeration.Rijndael, qrCodeString, privateKey, ClassWalletNetworkSetting.KeySize);
+                            string QrCodeStringEncrypted = ClassAlgo.GetEncryptedResultManual(ClassAlgoEnumeration.Rijndael, qrCodeString, privateKey, ClassWalletNetworkSetting.KeySize);
                             string qrCodeEncryptedRequest = string.Empty;
 
                             if (privateKey.Contains("$"))
@@ -97,7 +97,7 @@ namespace Xiropht_Wallet
                             }
 
                             // Testing QR Code encryption.
-                            string decryptQrCode = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael, QrCodeStringEncrypted, privateKey, ClassWalletNetworkSetting.KeySize); // Decrypt QR Code.
+                            string decryptQrCode = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael, QrCodeStringEncrypted, privateKey, ClassWalletNetworkSetting.KeySize); // Decrypt QR Code.
 
                             using (Bitmap qrCode = Base64StringToBitmap(decryptQrCode)) // Retrieve data to bitmap.
                             {

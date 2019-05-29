@@ -3156,7 +3156,7 @@ namespace Xiropht_Wallet
                                             {
                                                 if (i < ClassWalletTransactionCache.ListTransaction.Count)
                                                 {
-                                                    string decryptedTransaction = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael, ClassWalletTransactionCache.ListTransaction.ElementAt(i).Key, ClassWalletObject.WalletConnect.WalletAddress + ClassWalletObject.WalletConnect.WalletKey, ClassWalletNetworkSetting.KeySize); // AES
+                                                    string decryptedTransaction = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael, ClassWalletTransactionCache.ListTransaction.ElementAt(i).Key, ClassWalletObject.WalletConnect.WalletAddress + ClassWalletObject.WalletConnect.WalletKey, ClassWalletNetworkSetting.KeySize); // AES
 
                                                     if (decryptedTransaction == ClassAlgoErrorEnumeration.AlgoError)
                                                     {
@@ -3227,8 +3227,7 @@ namespace Xiropht_Wallet
                                             {
                                                 if (i < ClassWalletTransactionAnonymityCache.ListTransaction.Count)
                                                 {
-                                                    string decryptedTransaction = ClassAlgo
-                                                        .GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
+                                                    string decryptedTransaction = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael,
                                                            ClassWalletTransactionAnonymityCache.ListTransaction.ElementAt(i).Key,
                                                             ClassWalletObject.WalletConnect.WalletAddress +
                                                             ClassWalletObject.WalletConnect.WalletKey,

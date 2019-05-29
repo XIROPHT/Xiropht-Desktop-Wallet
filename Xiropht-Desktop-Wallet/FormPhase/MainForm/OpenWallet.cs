@@ -100,10 +100,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 {
                     bool error = false;
 
-                    string passwordEncrypted = ClassAlgo.GetEncryptedResult(ClassAlgoEnumeration.Rijndael,
+                    string passwordEncrypted = ClassAlgo.GetEncryptedResultManual(ClassAlgoEnumeration.Rijndael,
                         textBoxPasswordWallet.Text, textBoxPasswordWallet.Text, ClassWalletNetworkSetting.KeySize);
 
-                    ClassWalletObject.WalletDataDecrypted = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
+                    ClassWalletObject.WalletDataDecrypted = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael,
                         _walletFileData, passwordEncrypted, ClassWalletNetworkSetting.KeySize); // AES
                     if (ClassWalletObject.WalletDataDecrypted == ClassAlgoErrorEnumeration.AlgoError)
                     {
@@ -112,7 +112,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
                     if (error)
                     {
-                        ClassWalletObject.WalletDataDecrypted = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
+                        ClassWalletObject.WalletDataDecrypted = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael,
                             _walletFileData, textBoxPasswordWallet.Text, ClassWalletNetworkSetting.KeySize); // AES
                     }
 

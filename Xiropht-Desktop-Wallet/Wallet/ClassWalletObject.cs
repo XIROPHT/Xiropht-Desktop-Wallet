@@ -741,7 +741,7 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                             Log.WriteLine("Packet create wallet data: " + WalletDataCreation);
 #endif
-                            var decryptWalletDataCreation = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael, splitPacket[1], WalletNewPassword, ClassWalletNetworkSetting.KeySize);
+                            var decryptWalletDataCreation = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael, splitPacket[1], WalletNewPassword, ClassWalletNetworkSetting.KeySize);
                             WalletDataCreation = ClassUtils.DecompressData(decryptWalletDataCreation);
 
 
@@ -755,10 +755,10 @@ namespace Xiropht_Wallet.Wallet
                             var walletDataToSave = splitWalletData[0] + "\n"; // Only wallet address
                             walletDataToSave += splitWalletData[2] + "\n"; // Only public key
 
-                            var passwordEncrypted = ClassAlgo.GetEncryptedResult(ClassAlgoEnumeration.Rijndael,
+                            var passwordEncrypted = ClassAlgo.GetEncryptedResultManual(ClassAlgoEnumeration.Rijndael,
                                 WalletNewPassword, WalletNewPassword,
                                 ClassWalletNetworkSetting.KeySize);
-                            var walletDataToSaveEncrypted = ClassAlgo.GetEncryptedResult(
+                            var walletDataToSaveEncrypted = ClassAlgo.GetEncryptedResultManual(
                                     ClassAlgoEnumeration.Rijndael,
                                     walletDataToSave, passwordEncrypted, ClassWalletNetworkSetting.KeySize);
                             TextWriter writerWallet = new StreamWriter(WalletDataCreationPath);
@@ -823,7 +823,7 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                             Log.WriteLine("Packet create wallet data: " + WalletDataCreation);
 #endif
-                            var decryptWalletDataCreation = ClassAlgo.GetDecryptedResult(
+                            var decryptWalletDataCreation = ClassAlgo.GetDecryptedResultManual(
                                     ClassAlgoEnumeration.Rijndael,
                                     WalletDataCreation, WalletPrivateKeyEncryptedQRCode, ClassWalletNetworkSetting.KeySize);
 
@@ -836,8 +836,8 @@ namespace Xiropht_Wallet.Wallet
                             var walletDataToSave = splitWalletData[0] + "\n"; // Only wallet address
                             walletDataToSave += splitWalletData[2] + "\n"; // Only public key
 
-                            var passwordEncrypted = ClassAlgo.GetEncryptedResult(ClassAlgoEnumeration.Rijndael, WalletNewPassword, WalletNewPassword, ClassWalletNetworkSetting.KeySize);
-                            var walletDataToSaveEncrypted = ClassAlgo.GetEncryptedResult(ClassAlgoEnumeration.Rijndael, walletDataToSave, passwordEncrypted, ClassWalletNetworkSetting.KeySize);
+                            var passwordEncrypted = ClassAlgo.GetEncryptedResultManual(ClassAlgoEnumeration.Rijndael, WalletNewPassword, WalletNewPassword, ClassWalletNetworkSetting.KeySize);
+                            var walletDataToSaveEncrypted = ClassAlgo.GetEncryptedResultManual(ClassAlgoEnumeration.Rijndael, walletDataToSave, passwordEncrypted, ClassWalletNetworkSetting.KeySize);
                             TextWriter writerWallet = new StreamWriter(WalletDataCreationPath);
 
                             writerWallet.Write(walletDataToSaveEncrypted, false);
@@ -1232,9 +1232,9 @@ namespace Xiropht_Wallet.Wallet
                         WalletConnect.WalletPassword = WalletNewPassword; // Update the network object for packet encryption.
 
 
-                        var encryptedPassword = ClassAlgo.GetEncryptedResult(ClassAlgoEnumeration.Rijndael,
+                        var encryptedPassword = ClassAlgo.GetEncryptedResultManual(ClassAlgoEnumeration.Rijndael,
                             WalletNewPassword, WalletNewPassword, ClassWalletNetworkSetting.KeySize);
-                        var encryptWalletDataSave = ClassAlgo.GetEncryptedResult(ClassAlgoEnumeration.Rijndael,
+                        var encryptWalletDataSave = ClassAlgo.GetEncryptedResultManual(ClassAlgoEnumeration.Rijndael,
                                 WalletDataDecrypted, encryptedPassword, ClassWalletNetworkSetting.KeySize); // AES
 
                         if (File.Exists(WalletLastPathFile))

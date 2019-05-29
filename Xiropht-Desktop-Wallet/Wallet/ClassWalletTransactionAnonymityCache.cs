@@ -170,10 +170,10 @@ namespace Xiropht_Wallet.Wallet
 
                 var amountAndFeeDecrypted = "NULL";
                 if (type == "SEND")
-                    amountAndFeeDecrypted = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
+                    amountAndFeeDecrypted = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael,
                             realFeeAmountSend, decryptKey, ClassWalletNetworkSetting.KeySize); // AES
                 else if (type == "RECV")
-                    amountAndFeeDecrypted = ClassAlgo.GetDecryptedResult(ClassAlgoEnumeration.Rijndael,
+                    amountAndFeeDecrypted = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael,
                             realFeeAmountRecv, decryptKey, ClassWalletNetworkSetting.KeySize); // AES
 
                 if (amountAndFeeDecrypted != "NULL" && amountAndFeeDecrypted != ClassAlgoErrorEnumeration.AlgoError)
@@ -193,7 +193,7 @@ namespace Xiropht_Wallet.Wallet
                                                 timestampRecv + "#" + blockchainHeight;
 
                     var finalTransactionEncrypted =
-                         ClassAlgo.GetEncryptedResult(ClassAlgoEnumeration.Rijndael, finalTransaction,
+                         ClassAlgo.GetEncryptedResultManual(ClassAlgoEnumeration.Rijndael, finalTransaction,
                             ClassWalletObject.WalletConnect.WalletAddress + ClassWalletObject.WalletConnect.WalletKey,
                             ClassWalletNetworkSetting.KeySize); // AES
 
