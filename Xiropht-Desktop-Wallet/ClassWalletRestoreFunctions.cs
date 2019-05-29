@@ -66,7 +66,7 @@ namespace Xiropht_Wallet
                     Options = options,
                     Format = BarcodeFormat.QR_CODE
                 };
-                string sourceKey = privateKey.Trim() + "|" + password.Trim() + "|" + DateTimeOffset.Now.ToUnixTimeSeconds();
+                string sourceKey = privateKey.Trim() + "|" + password.Trim() + "|" + ClassUtils.DateUnixTimeNowSecond();
                 using (var representationQRCode = new Bitmap(qr.Write(sourceKey)))
                 {
 

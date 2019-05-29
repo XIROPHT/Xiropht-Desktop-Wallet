@@ -1911,10 +1911,8 @@ namespace Xiropht_Wallet
                                                                     TransactionHistoryWalletForm
                                                                         .listViewAnonymityReceivedTransactionHistory
                                                                         .BeginInvoke(invoke);
-                                                                    DateTimeOffset transactionOffset =
-                                                                        new DateTimeOffset(dateTimeRecv);
-                                                                    if (transactionOffset.ToUnixTimeSeconds() >
-                                                                        DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >
+                                                                        ClassUtils.DateUnixTimeNowSecond())
                                                                     {
                                                                         invoke = () =>
                                                                             TransactionHistoryWalletForm
@@ -2010,10 +2008,9 @@ namespace Xiropht_Wallet
                                                                 TransactionHistoryWalletForm
                                                                     .listViewBlockRewardTransactionHistory
                                                                     .BeginInvoke(invoke);
-                                                                DateTimeOffset transactionOffset =
-                                                                    new DateTimeOffset(dateTimeRecv);
-                                                                if (transactionOffset.ToUnixTimeSeconds() >
-                                                                    DateTimeOffset.Now.ToUnixTimeSeconds())
+
+                                                                if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >
+                                                                    ClassUtils.DateUnixTimeNowSecond())
                                                                 {
                                                                     invoke = () =>
                                                                         TransactionHistoryWalletForm
@@ -2095,10 +2092,6 @@ namespace Xiropht_Wallet
 
                                                                 if (TotalTransactionNormalSend >= minShow && TotalTransactionNormalSend < maxShow && !_normalTransactionLoaded)
                                                                 {
-                                                                    DateTimeOffset transactionOffset =
-                                                                        new DateTimeOffset(dateTimeRecv);
-
-
                                                                     string[] row =
                                                                     {
                                                                         (TotalTransactionNormalSend+1).ToString(), dateTimeSend.ToString(),
@@ -2116,8 +2109,8 @@ namespace Xiropht_Wallet
                                                                         .listViewNormalSendTransactionHistory
                                                                         .BeginInvoke(invoke);
                                                                     ;
-                                                                    if (transactionOffset.ToUnixTimeSeconds() >
-                                                                        DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >
+                                                                        ClassUtils.DateUnixTimeNowSecond())
                                                                     {
                                                                         invoke = () =>
                                                                             TransactionHistoryWalletForm
@@ -2214,10 +2207,9 @@ namespace Xiropht_Wallet
                                                                     TransactionHistoryWalletForm
                                                                         .listViewNormalReceivedTransactionHistory
                                                                         .BeginInvoke(invoke);
-                                                                    DateTimeOffset transactionOffset =
-                                                                        new DateTimeOffset(dateTimeRecv);
-                                                                    if (transactionOffset.ToUnixTimeSeconds() >
-                                                                        DateTimeOffset.Now.ToUnixTimeSeconds())
+
+                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >
+                                                                        ClassUtils.DateUnixTimeNowSecond())
                                                                     {
                                                                         invoke = () =>
                                                                             TransactionHistoryWalletForm
@@ -2333,10 +2325,9 @@ namespace Xiropht_Wallet
                                                                     .listViewNormalSendTransactionHistory.Items[i1]
                                                                     .SubItems[7]
                                                                     .Text.ToString());
-                                                            DateTimeOffset transactionOffset = transactionWalletDateRecv;
 
-                                                            if (transactionOffset.ToUnixTimeSeconds() >
-                                                                DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
+                                                                ClassUtils.DateUnixTimeNowSecond())
                                                             {
 
 
@@ -2402,9 +2393,8 @@ namespace Xiropht_Wallet
                                                                     .listViewAnonymityReceivedTransactionHistory.Items[i1]
                                                                     .SubItems[7]
                                                                     .Text.ToString());
-                                                            DateTimeOffset transactionOffset = transactionWalletDateRecv;
-                                                            if (transactionOffset.ToUnixTimeSeconds() >
-                                                                DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
+                                                                ClassUtils.DateUnixTimeNowSecond())
                                                             {
                                                                 if (TransactionHistoryWalletForm
                                                                         .listViewAnonymityReceivedTransactionHistory
@@ -2493,9 +2483,8 @@ namespace Xiropht_Wallet
                                                                     .listViewBlockRewardTransactionHistory.Items[i1]
                                                                     .SubItems[7]
                                                                     .Text.ToString());
-                                                            DateTimeOffset transactionOffset = transactionWalletDateRecv;
-                                                            if (transactionOffset.ToUnixTimeSeconds() >
-                                                                DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
+                                                                ClassUtils.DateUnixTimeNowSecond())
                                                             {
                                                                 if (TransactionHistoryWalletForm
                                                                         .listViewBlockRewardTransactionHistory.Items[i1]
@@ -2582,9 +2571,8 @@ namespace Xiropht_Wallet
                                                                     .listViewNormalReceivedTransactionHistory.Items[i1]
                                                                     .SubItems[7]
                                                                     .Text.ToString());
-                                                            DateTimeOffset transactionOffset = transactionWalletDateRecv;
-                                                            if (transactionOffset.ToUnixTimeSeconds() >
-                                                                DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
+                                                                ClassUtils.DateUnixTimeNowSecond())
                                                             {
                                                                 if (TransactionHistoryWalletForm
                                                                         .listViewNormalReceivedTransactionHistory.Items[i1]
@@ -2673,9 +2661,8 @@ namespace Xiropht_Wallet
                                                                     .listViewAnonymitySendTransactionHistory.Items[i1]
                                                                     .SubItems[7]
                                                                     .Text.ToString());
-                                                            DateTimeOffset transactionOffset = transactionWalletDateRecv;
-                                                            if (transactionOffset.ToUnixTimeSeconds() >
-                                                                DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
+                                                                ClassUtils.DateUnixTimeNowSecond())
                                                             {
                                                                 if (TransactionHistoryWalletForm
                                                                         .listViewAnonymitySendTransactionHistory
@@ -2843,10 +2830,9 @@ namespace Xiropht_Wallet
                                                             TransactionHistoryWalletForm
                                                                 .listViewAnonymitySendTransactionHistory
                                                                 .BeginInvoke(invoke);
-                                                            DateTimeOffset transactionOffset =
-                                                                new DateTimeOffset(dateTimeRecv);
-                                                            if (transactionOffset.ToUnixTimeSeconds() >
-                                                                DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                            
+                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >
+                                                                ClassUtils.DateUnixTimeNowSecond())
                                                             {
                                                                 invoke = () =>
                                                                     TransactionHistoryWalletForm
@@ -2961,9 +2947,8 @@ namespace Xiropht_Wallet
                                                                     .listViewAnonymitySendTransactionHistory.Items[i1]
                                                                     .SubItems[7]
                                                                     .Text.ToString());
-                                                            DateTimeOffset transactionOffset = transactionWalletDateRecv;
-                                                            if (transactionOffset.ToUnixTimeSeconds() >
-                                                                DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
+                                                                ClassUtils.DateUnixTimeNowSecond())
                                                             {
                                                                 if (TransactionHistoryWalletForm
                                                                         .listViewAnonymitySendTransactionHistory.Items[i1]
@@ -3152,7 +3137,7 @@ namespace Xiropht_Wallet
 
                                     if (ListTransactionHashShowed.Count < ClassWalletTransactionCache.ListTransaction.Count)
                                     {
-                                        long loadingDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                        long loadingDate = ClassUtils.DateUnixTimeNowSecond();
 
                                         MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = false;
                                         BeginInvoke(invokeLockButton);
@@ -3183,13 +3168,13 @@ namespace Xiropht_Wallet
 
                                                         if (!ListTransactionHashShowed.ContainsValue(decryptedTransaction))
                                                         {
-                                                            loadingDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                            loadingDate = ClassUtils.DateUnixTimeNowSecond();
                                                             ListTransactionHashShowed.Add(ListTransactionHashShowed.Count,
                                                                 decryptedTransaction);
                                                         }
                                                     }
                                                 }
-                                                if (loadingDate + 10 < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
+                                                if (loadingDate + 10 < ClassUtils.DateUnixTimeNowSecond() && !ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
                                                 {
                                                     ListTransactionHashShowed.Clear();
                                                     ListTransactionAnonymityHashShowed.Clear();
@@ -3224,7 +3209,7 @@ namespace Xiropht_Wallet
 
                                     if (ListTransactionAnonymityHashShowed.Count < ClassWalletTransactionAnonymityCache.ListTransaction.Count)
                                     {
-                                        long loadingDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                        long loadingDate = ClassUtils.DateUnixTimeNowSecond();
                                         MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = false;
                                         BeginInvoke(invokeLockButton);
                                         for (int i = ListTransactionAnonymityHashShowed.Count;
@@ -3258,13 +3243,13 @@ namespace Xiropht_Wallet
                                                     {
                                                         if (!ListTransactionAnonymityHashShowed.ContainsValue(decryptedTransaction))
                                                         {
-                                                            loadingDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                            loadingDate = ClassUtils.DateUnixTimeNowSecond();
                                                             ListTransactionAnonymityHashShowed.Add(
                                                                 ListTransactionAnonymityHashShowed.Count, decryptedTransaction);
                                                         }
                                                     }
                                                 }
-                                                if (loadingDate + 10 < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
+                                                if (loadingDate + 10 < ClassUtils.DateUnixTimeNowSecond() && !ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
                                                 {
                                                     ListTransactionHashShowed.Clear();
                                                     ListTransactionAnonymityHashShowed.Clear();

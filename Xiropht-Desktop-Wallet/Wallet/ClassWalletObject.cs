@@ -342,10 +342,10 @@ namespace Xiropht_Wallet.Wallet
                                         if (await WalletConnect.SendPacketWallet(
                                             ClassConnectorSettingEnumeration.WalletLoginType+"|" + WalletConnect.WalletAddress, Certificate, true))
                                         {
-                                            var timeoutDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                            var timeoutDate = ClassUtils.DateUnixTimeNowSecond();
                                             while (WalletInReconnect)
                                             {
-                                                if (timeoutDate + 5 < DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                if (timeoutDate + 5 < ClassUtils.DateUnixTimeNowSecond())
                                                 {
                                                     maxRetry--;
                                                     break;
@@ -517,7 +517,7 @@ namespace Xiropht_Wallet.Wallet
                 var packetAlgoError = 0;
                 while (SeedNodeConnectorWallet.ReturnStatus())
                 {
-                    var packetWallet = await WalletConnect.ListenPacketWalletAsync(Certificate, true).ConfigureAwait(false);
+                    var packetWallet = await WalletConnect.ListenPacketWalletAsync(Certificate, true);
 
                     if (packetWallet.Length > 0)
                     {
@@ -958,10 +958,10 @@ namespace Xiropht_Wallet.Wallet
                         Log.WriteLine("Pending amount in pending to receive: " + WalletAmountInPending);
 
 #endif
-                        if (LastRemoteNodePacketReceived + 120 < DateTimeOffset.Now.ToUnixTimeSeconds())
+                        if (LastRemoteNodePacketReceived + 120 < ClassUtils.DateUnixTimeNowSecond())
                         {
                             DisconnectWholeRemoteNodeSync(true, false);
-                            LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                            LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
                             EnableReceivePacketRemoteNode = false;
                             if (!await SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletAskRemoteNode, Certificate, false, true))
                             {
@@ -1344,7 +1344,7 @@ namespace Xiropht_Wallet.Wallet
                             {
                                 ClassRemoteNodeChecker.ListRemoteNodeChecked = new List<Tuple<string, int>>();
                             }
-                            LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                            LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
 
                             try
                             {
@@ -1433,7 +1433,7 @@ namespace Xiropht_Wallet.Wallet
                                                         else
                                                         {
 
-                                                            if (ListRemoteNodeBanned[remoteNode] + ClassConnectorSetting.MaxRemoteNodeBanTime < DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                            if (ListRemoteNodeBanned[remoteNode] + ClassConnectorSetting.MaxRemoteNodeBanTime < ClassUtils.DateUnixTimeNowSecond())
                                                             {
 
                                                                 if (!ClassRemoteNodeChecker.CheckRemoteNodeHostExist(remoteNode))
@@ -2326,7 +2326,7 @@ namespace Xiropht_Wallet.Wallet
             Task.Factory.StartNew(async () =>
             {
                 var dead = false;
-                LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
                 while (EnableReceivePacketRemoteNode && SeedNodeConnectorWallet.ReturnStatus())
                 {
                     try
@@ -2385,7 +2385,7 @@ namespace Xiropht_Wallet.Wallet
                         dead = true;
                         break;
                     }
-                    if (LastRemoteNodePacketReceived + 30 < DateTimeOffset.Now.ToUnixTimeSeconds() || !EnableReceivePacketRemoteNode)
+                    if (LastRemoteNodePacketReceived + 30 < ClassUtils.DateUnixTimeNowSecond() || !EnableReceivePacketRemoteNode)
                     {
                         dead = true;
                         break;
@@ -2559,7 +2559,7 @@ namespace Xiropht_Wallet.Wallet
                     {
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[0].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
+                            var packet = await ListWalletConnectToRemoteNode[0].ListenRemoteNodeNetworkAsync();
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -2625,7 +2625,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync && SeedNodeConnectorWallet.ReturnStatus())
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[1].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
+                            var packet = await ListWalletConnectToRemoteNode[1].ListenRemoteNodeNetworkAsync();
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -2690,7 +2690,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync && SeedNodeConnectorWallet.ReturnStatus())
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[2].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
+                            var packet = await ListWalletConnectToRemoteNode[2].ListenRemoteNodeNetworkAsync();
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -2754,7 +2754,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync && SeedNodeConnectorWallet.ReturnStatus())
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[3].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
+                            var packet = await ListWalletConnectToRemoteNode[3].ListenRemoteNodeNetworkAsync();
 
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
@@ -2819,7 +2819,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync && SeedNodeConnectorWallet.ReturnStatus())
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[4].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
+                            var packet = await ListWalletConnectToRemoteNode[4].ListenRemoteNodeNetworkAsync();
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -2883,7 +2883,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync && SeedNodeConnectorWallet.ReturnStatus())
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[5].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
+                            var packet = await ListWalletConnectToRemoteNode[5].ListenRemoteNodeNetworkAsync();
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -2947,7 +2947,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync && SeedNodeConnectorWallet.ReturnStatus())
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[6].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
+                            var packet = await ListWalletConnectToRemoteNode[6].ListenRemoteNodeNetworkAsync();
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -3011,7 +3011,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync && SeedNodeConnectorWallet.ReturnStatus())
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[7].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
+                            var packet = await ListWalletConnectToRemoteNode[7].ListenRemoteNodeNetworkAsync();
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -3075,7 +3075,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync && SeedNodeConnectorWallet.ReturnStatus())
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[8].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
+                            var packet = await ListWalletConnectToRemoteNode[8].ListenRemoteNodeNetworkAsync();
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -3139,7 +3139,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync && SeedNodeConnectorWallet.ReturnStatus())
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[9].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
+                            var packet = await ListWalletConnectToRemoteNode[9].ListenRemoteNodeNetworkAsync();
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -3203,7 +3203,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync && SeedNodeConnectorWallet.ReturnStatus())
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[10].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
+                            var packet = await ListWalletConnectToRemoteNode[10].ListenRemoteNodeNetworkAsync();
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -3267,7 +3267,7 @@ namespace Xiropht_Wallet.Wallet
                     while (WalletOnUseSync && SeedNodeConnectorWallet.ReturnStatus())
                         try
                         {
-                            var packet = await ListWalletConnectToRemoteNode[11].ListenRemoteNodeNetworkAsync().ConfigureAwait(false);
+                            var packet = await ListWalletConnectToRemoteNode[11].ListenRemoteNodeNetworkAsync();
                             if (packet == ClassWalletConnectToRemoteNodeObjectError.ObjectError) break;
 
                             if (packet != ClassWalletConnectToRemoteNodeObjectError.ObjectNone)
@@ -3357,17 +3357,17 @@ namespace Xiropht_Wallet.Wallet
                                     {
                                         if (WalletCheckMaxSupply != 0)
                                         {
-                                            if ((ListWalletConnectToRemoteNode[1].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[1].RemoteNodeHost) || splitPacket[1] != CoinMaxSupply))
+                                            if ((ListWalletConnectToRemoteNode[1].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < ClassUtils.DateUnixTimeNowSecond() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[1].RemoteNodeHost) || splitPacket[1] != CoinMaxSupply))
                                             {
                                                 WalletCheckMaxSupply = 0;
 
                                                 await Task.Delay(100);
                                                 if (await SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletCheckMaxSupply + "|" + splitPacket[1] + "|" + ListWalletConnectToRemoteNode[1].RemoteNodeHost, Certificate, false, true))
                                                 {
-                                                    var dateSend = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    var dateSend = ClassUtils.DateUnixTimeNowSecond();
                                                     while (WalletCheckMaxSupply == 0)
                                                     {
-                                                        if (dateSend + 5 < DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                        if (dateSend + 5 < ClassUtils.DateUnixTimeNowSecond())
                                                         {
                                                             WalletCheckMaxSupply = -1;
                                                             break;
@@ -3387,8 +3387,8 @@ namespace Xiropht_Wallet.Wallet
                                                         Log.WriteLine("Coin max supply information is good.");
 #endif
                                                         LastRemoteNodePacketReceived =
-                                                            DateTimeOffset.Now.ToUnixTimeSeconds();
-                                                        ListWalletConnectToRemoteNode[1].LastTrustDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                            ClassUtils.DateUnixTimeNowSecond();
+                                                        ListWalletConnectToRemoteNode[1].LastTrustDate = ClassUtils.DateUnixTimeNowSecond();
                                                         CoinMaxSupply = splitPacket[1]
                                                             .Replace(
                                                                 ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeCoinMaxSupply,
@@ -3405,7 +3405,7 @@ namespace Xiropht_Wallet.Wallet
                                             else
                                             {
                                                 LastRemoteNodePacketReceived =
-                                                    DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    ClassUtils.DateUnixTimeNowSecond();
                                                 CoinMaxSupply = splitPacket[1]
                                                     .Replace(
                                                         ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeCoinMaxSupply,
@@ -3416,7 +3416,7 @@ namespace Xiropht_Wallet.Wallet
                                     else
                                     {
                                         LastRemoteNodePacketReceived =
-                                            DateTimeOffset.Now.ToUnixTimeSeconds();
+                                            ClassUtils.DateUnixTimeNowSecond();
                                         CoinMaxSupply = splitPacket[1]
                                             .Replace(
                                                 ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeCoinMaxSupply,
@@ -3435,16 +3435,16 @@ namespace Xiropht_Wallet.Wallet
                                 {
                                     if (WalletCheckCoinCirculating != 0)
                                     {
-                                        if ((ListWalletConnectToRemoteNode[2].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[2].RemoteNodeHost)) || CoinCirculating != splitPacket[1])
+                                        if ((ListWalletConnectToRemoteNode[2].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < ClassUtils.DateUnixTimeNowSecond() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[2].RemoteNodeHost)) || CoinCirculating != splitPacket[1])
                                         {
                                             WalletCheckCoinCirculating = 0;
                                             await Task.Delay(100);
                                             if (await SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletCheckCoinCirculating + "|" + splitPacket[1] + "|" + ListWalletConnectToRemoteNode[2].RemoteNodeHost, Certificate, false, true))
                                             {
-                                                var dateSend = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                var dateSend = ClassUtils.DateUnixTimeNowSecond();
                                                 while (WalletCheckCoinCirculating == 0)
                                                 {
-                                                    if (dateSend + 5 < DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                    if (dateSend + 5 < ClassUtils.DateUnixTimeNowSecond())
                                                     {
                                                         WalletCheckCoinCirculating = -1;
                                                         break;
@@ -3458,8 +3458,8 @@ namespace Xiropht_Wallet.Wallet
                                                 if (WalletCheckCoinCirculating == 1)
                                                 {
                                                     LastRemoteNodePacketReceived =
-                                                    DateTimeOffset.Now.ToUnixTimeSeconds();
-                                                    ListWalletConnectToRemoteNode[2].LastTrustDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    ClassUtils.DateUnixTimeNowSecond();
+                                                    ListWalletConnectToRemoteNode[2].LastTrustDate = ClassUtils.DateUnixTimeNowSecond();
                                                     CoinCirculating = splitPacket[1]
                                                         .Replace(
                                                             ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
@@ -3470,7 +3470,7 @@ namespace Xiropht_Wallet.Wallet
                                         else
                                         {
                                             LastRemoteNodePacketReceived =
-                                                DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                ClassUtils.DateUnixTimeNowSecond();
                                             CoinCirculating = splitPacket[1]
                                                 .Replace(
                                                     ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
@@ -3481,7 +3481,7 @@ namespace Xiropht_Wallet.Wallet
                                 else
                                 {
                                     LastRemoteNodePacketReceived =
-                                        DateTimeOffset.Now.ToUnixTimeSeconds();
+                                        ClassUtils.DateUnixTimeNowSecond();
                                     CoinCirculating = splitPacket[1]
                                         .Replace(
                                             ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
@@ -3495,17 +3495,17 @@ namespace Xiropht_Wallet.Wallet
                                 {
                                     if (WalletCheckNetworkDifficulty != 0)
                                     {
-                                        if ((ListWalletConnectToRemoteNode[5].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[5].RemoteNodeHost)) || NetworkDifficulty != splitPacket[1])
+                                        if ((ListWalletConnectToRemoteNode[5].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < ClassUtils.DateUnixTimeNowSecond() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[5].RemoteNodeHost)) || NetworkDifficulty != splitPacket[1])
                                         {
                                             WalletCheckNetworkDifficulty = 0;
                                             await Task.Delay(100);
                                             if (await SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletCheckNetworkDifficulty + "|" + splitPacket[1] + "|" + ListWalletConnectToRemoteNode[5].RemoteNodeHost, Certificate, false, true))
 
                                             {
-                                                var dateSend = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                var dateSend = ClassUtils.DateUnixTimeNowSecond();
                                                 while (WalletCheckNetworkDifficulty == 0)
                                                 {
-                                                    if (dateSend + 5 < DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                    if (dateSend + 5 < ClassUtils.DateUnixTimeNowSecond())
                                                     {
                                                         WalletCheckNetworkDifficulty = -1;
                                                         break;
@@ -3518,8 +3518,8 @@ namespace Xiropht_Wallet.Wallet
                                                 }
                                                 if (WalletCheckNetworkDifficulty == 1)
                                                 {
-                                                    LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
-                                                    ListWalletConnectToRemoteNode[5].LastTrustDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
+                                                    ListWalletConnectToRemoteNode[5].LastTrustDate = ClassUtils.DateUnixTimeNowSecond();
                                                     NetworkDifficulty = splitPacket[1]
                                                         .Replace(
                                                             ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
@@ -3529,7 +3529,7 @@ namespace Xiropht_Wallet.Wallet
                                         }
                                         else
                                         {
-                                            LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                            LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
                                             NetworkDifficulty = splitPacket[1]
                                                 .Replace(
                                                     ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
@@ -3539,7 +3539,7 @@ namespace Xiropht_Wallet.Wallet
                                 }
                                 else
                                 {
-                                    LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                    LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
                                     NetworkDifficulty = splitPacket[1]
                                         .Replace(
                                             ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
@@ -3553,17 +3553,17 @@ namespace Xiropht_Wallet.Wallet
                                 {
                                     if (WalletCheckNetworkHashrate != 0)
                                     {
-                                        if ((ListWalletConnectToRemoteNode[6].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[6].RemoteNodeHost)) || NetworkHashrate != splitPacket[1])
+                                        if ((ListWalletConnectToRemoteNode[6].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < ClassUtils.DateUnixTimeNowSecond() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[6].RemoteNodeHost)) || NetworkHashrate != splitPacket[1])
                                         {
                                             WalletCheckNetworkHashrate = 0;
                                             await Task.Delay(100);
                                             if (await SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletCheckNetworkHashrate + "|" + splitPacket[1] + "|" + ListWalletConnectToRemoteNode[6].RemoteNodeHost, Certificate, false, true))
 
                                             {
-                                                var dateSend = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                var dateSend = ClassUtils.DateUnixTimeNowSecond();
                                                 while (WalletCheckNetworkHashrate == 0)
                                                 {
-                                                    if (dateSend + 5 < DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                    if (dateSend + 5 < ClassUtils.DateUnixTimeNowSecond())
                                                     {
                                                         WalletCheckNetworkHashrate = -1;
                                                         break;
@@ -3577,8 +3577,8 @@ namespace Xiropht_Wallet.Wallet
                                                 if (WalletCheckNetworkHashrate == 1)
                                                 {
                                                     LastRemoteNodePacketReceived =
-                                            DateTimeOffset.Now.ToUnixTimeSeconds();
-                                                    ListWalletConnectToRemoteNode[6].LastTrustDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                            ClassUtils.DateUnixTimeNowSecond();
+                                                    ListWalletConnectToRemoteNode[6].LastTrustDate = ClassUtils.DateUnixTimeNowSecond();
                                                     NetworkHashrate = splitPacket[1]
                                                         .Replace(
                                                             ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeCurrentRate,
@@ -3589,7 +3589,7 @@ namespace Xiropht_Wallet.Wallet
                                         else
                                         {
                                             LastRemoteNodePacketReceived =
-                                                DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                ClassUtils.DateUnixTimeNowSecond();
                                             NetworkHashrate = splitPacket[1]
                                                 .Replace(
                                                     ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeCurrentRate,
@@ -3600,7 +3600,7 @@ namespace Xiropht_Wallet.Wallet
                                 else
                                 {
                                     LastRemoteNodePacketReceived =
-                                        DateTimeOffset.Now.ToUnixTimeSeconds();
+                                        ClassUtils.DateUnixTimeNowSecond();
                                     NetworkHashrate = splitPacket[1]
                                         .Replace(
                                             ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeCurrentRate,
@@ -3614,16 +3614,16 @@ namespace Xiropht_Wallet.Wallet
                                 {
                                     if (WalletCheckTotalBlockMined != 0)
                                     {
-                                        if ((ListWalletConnectToRemoteNode[4].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[4].RemoteNodeHost)) || TotalBlockMined != splitPacket[1])
+                                        if ((ListWalletConnectToRemoteNode[4].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < ClassUtils.DateUnixTimeNowSecond() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[4].RemoteNodeHost)) || TotalBlockMined != splitPacket[1])
                                         {
                                             WalletCheckTotalBlockMined = 0;
                                             await Task.Delay(100);
                                             if (await SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletCheckTotalBlockMined + "|" + splitPacket[1] + "|" + ListWalletConnectToRemoteNode[4].RemoteNodeHost, Certificate, false, true))
                                             {
-                                                var dateSend = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                var dateSend = ClassUtils.DateUnixTimeNowSecond();
                                                 while (WalletCheckTotalBlockMined == 0)
                                                 {
-                                                    if (dateSend + 5 < DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                    if (dateSend + 5 < ClassUtils.DateUnixTimeNowSecond())
                                                     {
                                                         WalletCheckTotalBlockMined = -1;
                                                         break;
@@ -3636,8 +3636,8 @@ namespace Xiropht_Wallet.Wallet
                                                 }
                                                 if (WalletCheckTotalBlockMined == 1)
                                                 {
-                                                    LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
-                                                    ListWalletConnectToRemoteNode[4].LastTrustDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
+                                                    ListWalletConnectToRemoteNode[4].LastTrustDate = ClassUtils.DateUnixTimeNowSecond();
                                                     TotalBlockMined = splitPacket[1]
                                                         .Replace(
                                                             ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
@@ -3646,7 +3646,7 @@ namespace Xiropht_Wallet.Wallet
                                                     if (!ClassFormPhase.WalletXiropht.EnableUpdateBlockWallet)
                                                         ClassFormPhase.WalletXiropht.StartUpdateBlockSync();
 
-                                                    if (_lastBlockReceived + 30 <= DateTimeOffset.Now.ToUnixTimeSeconds()) InSyncBlock = false;
+                                                    if (_lastBlockReceived + 30 <= ClassUtils.DateUnixTimeNowSecond()) InSyncBlock = false;
 
                                                     if (!InSyncBlock)
                                                     {
@@ -3746,7 +3746,7 @@ namespace Xiropht_Wallet.Wallet
                                         }
                                         else
                                         {
-                                            LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                            LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
 
                                             TotalBlockMined = splitPacket[1]
                                                 .Replace(
@@ -3756,7 +3756,7 @@ namespace Xiropht_Wallet.Wallet
                                             if (!ClassFormPhase.WalletXiropht.EnableUpdateBlockWallet)
                                                 ClassFormPhase.WalletXiropht.StartUpdateBlockSync();
 
-                                            if (_lastBlockReceived + 30 <= DateTimeOffset.Now.ToUnixTimeSeconds()) InSyncBlock = false;
+                                            if (_lastBlockReceived + 30 <= ClassUtils.DateUnixTimeNowSecond()) InSyncBlock = false;
 
                                             if (!InSyncBlock)
                                             {
@@ -3854,7 +3854,7 @@ namespace Xiropht_Wallet.Wallet
                                 }
                                 else
                                 {
-                                    LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                    LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
                                     TotalBlockMined = splitPacket[1]
                                         .Replace(
                                             ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
@@ -3863,7 +3863,7 @@ namespace Xiropht_Wallet.Wallet
                                     if (!ClassFormPhase.WalletXiropht.EnableUpdateBlockWallet)
                                         ClassFormPhase.WalletXiropht.StartUpdateBlockSync();
 
-                                    if (_lastBlockReceived + 30 <= DateTimeOffset.Now.ToUnixTimeSeconds()) InSyncBlock = false;
+                                    if (_lastBlockReceived + 30 <= ClassUtils.DateUnixTimeNowSecond()) InSyncBlock = false;
 
                                     if (!InSyncBlock)
                                     {
@@ -3963,16 +3963,16 @@ namespace Xiropht_Wallet.Wallet
                                 {
                                     if (WalletCheckTotalTransactionFee != 0)
                                     {
-                                        if ((ListWalletConnectToRemoteNode[3].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[3].RemoteNodeHost)) || TotalFee != splitPacket[1])
+                                        if ((ListWalletConnectToRemoteNode[3].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < ClassUtils.DateUnixTimeNowSecond() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[3].RemoteNodeHost)) || TotalFee != splitPacket[1])
                                         {
                                             WalletCheckTotalTransactionFee = 0;
                                             await Task.Delay(100);
                                             if (await SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletCheckTotalTransactionFee + "|" + splitPacket[1] + "|" + ListWalletConnectToRemoteNode[3].RemoteNodeHost, Certificate, false, true))
                                             {
-                                                var dateSend = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                var dateSend = ClassUtils.DateUnixTimeNowSecond();
                                                 while (WalletCheckTotalTransactionFee == 0)
                                                 {
-                                                    if (dateSend + 5 < DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                    if (dateSend + 5 < ClassUtils.DateUnixTimeNowSecond())
                                                     {
                                                         WalletCheckTotalTransactionFee = -1;
                                                         break;
@@ -3985,8 +3985,8 @@ namespace Xiropht_Wallet.Wallet
                                                 }
                                                 if (WalletCheckTotalTransactionFee == 1)
                                                 {
-                                                    LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
-                                                    ListWalletConnectToRemoteNode[3].LastTrustDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
+                                                    ListWalletConnectToRemoteNode[3].LastTrustDate = ClassUtils.DateUnixTimeNowSecond();
                                                     TotalFee = splitPacket[1]
                                                         .Replace(ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeTotalFee,
                                                             "");
@@ -3996,7 +3996,7 @@ namespace Xiropht_Wallet.Wallet
                                         else
                                         {
                                             LastRemoteNodePacketReceived =
-                                                DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                ClassUtils.DateUnixTimeNowSecond();
                                             TotalFee = splitPacket[1]
                                                 .Replace(ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeTotalFee,
                                                     "");
@@ -4007,7 +4007,7 @@ namespace Xiropht_Wallet.Wallet
                                 else
                                 {
                                     LastRemoteNodePacketReceived =
-                                        DateTimeOffset.Now.ToUnixTimeSeconds();
+                                        ClassUtils.DateUnixTimeNowSecond();
                                     TotalFee = splitPacket[1]
                                         .Replace(ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeTotalFee,
                                             "");
@@ -4020,17 +4020,17 @@ namespace Xiropht_Wallet.Wallet
                                 {
                                     if (WalletCheckTotalPendingTransaction != 0)
                                     {
-                                        if ((ListWalletConnectToRemoteNode[7].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[7].RemoteNodeHost)) || "" + RemoteNodeTotalPendingTransactionInNetwork != splitPacket[1])
+                                        if ((ListWalletConnectToRemoteNode[7].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < ClassUtils.DateUnixTimeNowSecond() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[7].RemoteNodeHost)) || "" + RemoteNodeTotalPendingTransactionInNetwork != splitPacket[1])
                                         {
                                             WalletCheckTotalPendingTransaction = 0;
                                             await Task.Delay(100);
                                             if (await SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletCheckTotalPendingTransaction + "|" + splitPacket[1] + "|" + ListWalletConnectToRemoteNode[7].RemoteNodeHost, Certificate, false, true))
 
                                             {
-                                                var dateSend = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                var dateSend = ClassUtils.DateUnixTimeNowSecond();
                                                 while (WalletCheckTotalPendingTransaction == 0)
                                                 {
-                                                    if (dateSend + 5 < DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                    if (dateSend + 5 < ClassUtils.DateUnixTimeNowSecond())
                                                     {
                                                         WalletCheckTotalPendingTransaction = -1;
                                                         break;
@@ -4044,8 +4044,8 @@ namespace Xiropht_Wallet.Wallet
                                                 if (WalletCheckTotalPendingTransaction == 1)
                                                 {
                                                     LastRemoteNodePacketReceived =
-                                                        DateTimeOffset.Now.ToUnixTimeSeconds();
-                                                    ListWalletConnectToRemoteNode[7].LastTrustDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                        ClassUtils.DateUnixTimeNowSecond();
+                                                    ListWalletConnectToRemoteNode[7].LastTrustDate = ClassUtils.DateUnixTimeNowSecond();
 
                                                     RemoteNodeTotalPendingTransactionInNetwork = int.Parse(splitPacket[1]
                                                         .Replace(
@@ -4058,7 +4058,7 @@ namespace Xiropht_Wallet.Wallet
                                         else
                                         {
                                             LastRemoteNodePacketReceived =
-                                                DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                ClassUtils.DateUnixTimeNowSecond();
                                             try
                                             {
                                                 RemoteNodeTotalPendingTransactionInNetwork = int.Parse(splitPacket[1]
@@ -4078,7 +4078,7 @@ namespace Xiropht_Wallet.Wallet
                                 else
                                 {
                                     LastRemoteNodePacketReceived =
-                                        DateTimeOffset.Now.ToUnixTimeSeconds();
+                                        ClassUtils.DateUnixTimeNowSecond();
 
                                     RemoteNodeTotalPendingTransactionInNetwork = int.Parse(splitPacket[1]
                                         .Replace(
@@ -4090,7 +4090,7 @@ namespace Xiropht_Wallet.Wallet
                             case ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletYourNumberTransaction:
                                 #region Receive total transaction to sync.
                                 LastRemoteNodePacketReceived =
-                                    DateTimeOffset.Now.ToUnixTimeSeconds();
+                                    ClassUtils.DateUnixTimeNowSecond();
                                 if (BlockTransactionSync)
                                 {
                                     return;
@@ -4157,7 +4157,7 @@ namespace Xiropht_Wallet.Wallet
                                                     {
                                                         return;
                                                     }
-                                                    var dateRequestTransaction = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    var dateRequestTransaction = ClassUtils.DateUnixTimeNowSecond();
 #if DEBUG
                                                     Log.WriteLine("Ask transaction id: " + i);
 #endif
@@ -4191,7 +4191,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                     while (InReceiveTransaction)
                                                     {
-                                                        if (!InSyncTransaction || WalletClosed || BlockTransactionSync || dateRequestTransaction + 5 < DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                        if (!InSyncTransaction || WalletClosed || BlockTransactionSync || dateRequestTransaction + 5 < ClassUtils.DateUnixTimeNowSecond())
                                                         {
                                                             if (!WalletClosed)
                                                             {
@@ -4245,7 +4245,7 @@ namespace Xiropht_Wallet.Wallet
                             case ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletYourAnonymityNumberTransaction:
                                 #region Receive total anonymous transaction to sync.
                                 LastRemoteNodePacketReceived =
-                                    DateTimeOffset.Now.ToUnixTimeSeconds();
+                                    ClassUtils.DateUnixTimeNowSecond();
                                 if (BlockTransactionSync)
                                 {
                                     return;
@@ -4313,7 +4313,7 @@ namespace Xiropht_Wallet.Wallet
                                                 {
                                                     return;
                                                 }
-                                                var dateRequestTransaction = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                var dateRequestTransaction = ClassUtils.DateUnixTimeNowSecond();
 #if DEBUG
                                                 Log.WriteLine("Ask anonymity transaction id: " + i);
 #endif
@@ -4341,7 +4341,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                 while (InReceiveTransactionAnonymity)
                                                 {
-                                                    if (!InSyncTransactionAnonymity || WalletClosed || BlockTransactionSync || dateRequestTransaction + 5 < DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                    if (!InSyncTransactionAnonymity || WalletClosed || BlockTransactionSync || dateRequestTransaction + 5 < ClassUtils.DateUnixTimeNowSecond())
                                                     {
                                                         if (!WalletClosed)
                                                         {
@@ -4393,7 +4393,7 @@ namespace Xiropht_Wallet.Wallet
                                                       ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
                                                           .SendRemoteNodeLastBlockFoundTimestamp, ""));
 #endif
-                                LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
                                 if (int.TryParse(
                                     splitPacket[1]
                                         .Replace(
@@ -4409,7 +4409,7 @@ namespace Xiropht_Wallet.Wallet
                                 break;
                             case ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeBlockPerId:
                                 #region Receive block sync by ID.
-                                LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
 
 #if DEBUG
                                 Log.WriteLine("Block received: " + splitPacket[1].Replace(ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.SendRemoteNodeBlockPerId, ""));
@@ -4419,16 +4419,16 @@ namespace Xiropht_Wallet.Wallet
                                 {
                                     if (WalletCheckBlockPerId != 0)
                                     {
-                                        if ((ListWalletConnectToRemoteNode[9].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < DateTimeOffset.Now.ToUnixTimeSeconds() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[9].RemoteNodeHost)))
+                                        if ((ListWalletConnectToRemoteNode[9].LastTrustDate + ClassConnectorSetting.MaxDelayRemoteNodeTrust < ClassUtils.DateUnixTimeNowSecond() && !ClassConnectorSetting.SeedNodeIp.ContainsKey(ListWalletConnectToRemoteNode[9].RemoteNodeHost)))
                                         {
                                             WalletCheckBlockPerId = 0;
                                             await Task.Delay(100);
                                             if (await SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassSeedNodeCommand.ClassSendSeedEnumeration.WalletCheckBlockPerId + "|" + splitPacket[1] + "|" + ListWalletConnectToRemoteNode[9].RemoteNodeHost, Certificate, false, true))
                                             {
-                                                var dateSend = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                var dateSend = ClassUtils.DateUnixTimeNowSecond();
                                                 while (WalletCheckBlockPerId == 0)
                                                 {
-                                                    if (dateSend + 5 < DateTimeOffset.Now.ToUnixTimeSeconds())
+                                                    if (dateSend + 5 < ClassUtils.DateUnixTimeNowSecond())
                                                     {
                                                         WalletCheckBlockPerId = -1;
                                                         await Task.Factory.StartNew(() => DisconnectWholeRemoteNodeSync(true, true), CancellationToken.None, TaskCreationOptions.RunContinuationsAsynchronously, PriorityScheduler.Lowest).ConfigureAwait(false);
@@ -4443,8 +4443,8 @@ namespace Xiropht_Wallet.Wallet
                                                 if (WalletCheckBlockPerId == 1)
                                                 {
                                                     LastRemoteNodePacketReceived =
-                                                        DateTimeOffset.Now.ToUnixTimeSeconds();
-                                                    ListWalletConnectToRemoteNode[9].LastTrustDate = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                        ClassUtils.DateUnixTimeNowSecond();
+                                                    ListWalletConnectToRemoteNode[9].LastTrustDate = ClassUtils.DateUnixTimeNowSecond();
                                                     var exist = false;
                                                     for (var i = 0; i < ClassBlockCache.ListBlock.Count; i++)
                                                     {
@@ -4475,7 +4475,7 @@ namespace Xiropht_Wallet.Wallet
                                                                         .SendRemoteNodeBlockPerId, ""));
                                                     }
 
-                                                    _lastBlockReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                                    _lastBlockReceived = ClassUtils.DateUnixTimeNowSecond();
                                                     InReceiveBlock = false;
                                                 }
                                                 else
@@ -4486,7 +4486,7 @@ namespace Xiropht_Wallet.Wallet
                                         }
                                         else
                                         {
-                                            LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                            LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
                                             var exist = false;
                                             for (var i = 0; i < ClassBlockCache.ListBlock.Count; i++)
                                             {
@@ -4517,7 +4517,7 @@ namespace Xiropht_Wallet.Wallet
                                                                 .SendRemoteNodeBlockPerId, ""));
                                             }
 
-                                            _lastBlockReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                            _lastBlockReceived = ClassUtils.DateUnixTimeNowSecond();
                                             InReceiveBlock = false;
                                         }
                                     }
@@ -4547,20 +4547,20 @@ namespace Xiropht_Wallet.Wallet
                                                         .SendRemoteNodeBlockPerId, ""));
                                     }
 
-                                    _lastBlockReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                    _lastBlockReceived = ClassUtils.DateUnixTimeNowSecond();
                                     InReceiveBlock = false;
                                 }
                                 #endregion
                                 break;
                             case ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletTransactionPerId:
                                 #region Receive transaction by ID.
-                                LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
                                 await Task.Factory.StartNew(() => ClassWalletTransactionCache.AddWalletTransactionAsync(splitPacket[1]), CancellationToken.None, TaskCreationOptions.RunContinuationsAsynchronously, PriorityScheduler.Lowest).ConfigureAwait(false);
                                 #endregion
                                 break;
                             case ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletAnonymityTransactionPerId:
                                 #region Receive anonymous transaction sync by ID.
-                                LastRemoteNodePacketReceived = DateTimeOffset.Now.ToUnixTimeSeconds();
+                                LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
                                 await Task.Factory.StartNew(() => ClassWalletTransactionAnonymityCache.AddWalletTransactionAsync(splitPacket[1]), CancellationToken.None, TaskCreationOptions.RunContinuationsAsynchronously, PriorityScheduler.Lowest).ConfigureAwait(false);
                                 #endregion
                                 break;
@@ -4588,11 +4588,11 @@ namespace Xiropht_Wallet.Wallet
                 {
                     if (ListRemoteNodeBanned.ContainsKey(host))
                     {
-                        ListRemoteNodeBanned[host] = DateTimeOffset.Now.ToUnixTimeSeconds();
+                        ListRemoteNodeBanned[host] = ClassUtils.DateUnixTimeNowSecond();
                     }
                     else
                     {
-                        ListRemoteNodeBanned.Add(host, DateTimeOffset.Now.ToUnixTimeSeconds());
+                        ListRemoteNodeBanned.Add(host, ClassUtils.DateUnixTimeNowSecond());
                     }
                     Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, false); }, CancellationToken.None, TaskCreationOptions.RunContinuationsAsynchronously, PriorityScheduler.Lowest).ConfigureAwait(false);
                 }
