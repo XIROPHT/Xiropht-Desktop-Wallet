@@ -667,6 +667,8 @@ namespace Xiropht_Wallet.Wallet
                         Log.WriteLine("New genesis key received: " + splitPacket[1]);
 #endif
                         ClassConnectorSetting.NETWORK_GENESIS_KEY = splitPacket[1];
+
+                        WalletConnect.UpdateWalletIv();
                         break;
                     case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletCreatePasswordNeedMoreCharacters:
                         ClassParallelForm.HideWaitingForm();
@@ -1255,13 +1257,15 @@ namespace Xiropht_Wallet.Wallet
                             ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_TITLE_TEXT"),
                             MessageBoxButtons.OK, MessageBoxIcon.Question);
 #else
-                    new Thread(delegate ()
-                    {
-                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_TITLE_TEXT"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Question);
-                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
-                    }).Start();
+                        WalletConnect.UpdateWalletIv();
+
+                        new Thread(delegate ()
+                        {
+                            MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_TITLE_TEXT"),
+                            MessageBoxButtons.OK, MessageBoxIcon.Question);
+                            ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                        }).Start();
 
 #endif
                         break;
