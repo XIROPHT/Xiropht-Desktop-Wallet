@@ -1252,12 +1252,13 @@ namespace Xiropht_Wallet.Wallet
                         writerWalletNew.Close();
 
                         WalletNewPassword = string.Empty;
+                        WalletConnect.UpdateWalletIv();
+
 #if WINDOWS
                         ClassFormPhase.MessageBoxInterface(
                             ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CHANGE_PASSWORD_ACCEPTED_TITLE_TEXT"),
                             MessageBoxButtons.OK, MessageBoxIcon.Question);
 #else
-                        WalletConnect.UpdateWalletIv();
 
                         new Thread(delegate ()
                         {
