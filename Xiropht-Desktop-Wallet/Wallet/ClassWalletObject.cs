@@ -578,6 +578,13 @@ namespace Xiropht_Wallet.Wallet
                                 }
                             }
                         }
+                        if (!string.IsNullOrEmpty(WalletConnect.WalletAddress))
+                        {
+                            if (!ClassFormPhase.WalletXiropht.WalletTransactionHistoryRunning)
+                            {
+                                ClassFormPhase.WalletXiropht.StopAndRestartTransactionHistory();
+                            }
+                        }
                     }
                     catch
                     {
@@ -586,7 +593,7 @@ namespace Xiropht_Wallet.Wallet
                 }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-               Task.Factory.StartNew(delegate { FullDisconnection(false); }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                Task.Factory.StartNew(delegate { FullDisconnection(false); }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             }).ConfigureAwait(false);
@@ -957,10 +964,6 @@ namespace Xiropht_Wallet.Wallet
                         Log.WriteLine("Pending amount in pending to receive: " + WalletAmountInPending);
 
 #endif
-                    if (!ClassFormPhase.WalletXiropht.WalletTransactionHistoryRunning)
-                    {
-                        ClassFormPhase.WalletXiropht.StartUpdateTransactionHistory();
-                    }
                     if (LastRemoteNodePacketReceived + 120 < ClassUtils.DateUnixTimeNowSecond())
                     {
                         DisconnectWholeRemoteNodeSync(true, false);
