@@ -12,6 +12,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private ClassPanel _panelWaitingSync;
         public bool IsShowed;
         private Label _labelWaitingText = new Label();
+        public bool IsShowedWaitingTransaction;
 
         public TransactionHistoryWallet()
         {
@@ -138,6 +139,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
                 };
                 Refresh();
+                IsShowedWaitingTransaction = true;
             }
 
             BeginInvoke((MethodInvoker)MethodInvoker);
@@ -145,7 +147,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public void HideWaitingSyncTransactionPanel()
         {
-            MethodInvoker invoke = () => { _panelWaitingSync.Refresh(); _panelWaitingSync.Hide(); Refresh(); };
+            MethodInvoker invoke = () => { _panelWaitingSync.Refresh(); _panelWaitingSync.Hide(); Refresh(); IsShowedWaitingTransaction = false; };
             BeginInvoke(invoke);
         }
 

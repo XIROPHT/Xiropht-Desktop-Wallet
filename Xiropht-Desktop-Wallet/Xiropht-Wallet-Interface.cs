@@ -1806,1240 +1806,1269 @@ namespace Xiropht_Wallet
                                 UpdateCurrentPageNumberTransactionHistory();
 
 
-
-                                if (TransactionHistoryWalletForm.IsShowed)
+                                if (ClassWalletObject.TotalTransactionInSyncAnonymity == ClassWalletTransactionAnonymityCache.ListTransaction.Count && ListAnonymousTransactionHashShowed.Count == ClassWalletTransactionAnonymityCache.ListTransaction.Count)
                                 {
-                                    if (ListTransactionShowed.Count ==
-                                        ClassWalletTransactionCache.ListTransaction.Count &&
-                                        ClassWalletTransactionCache.ListTransaction.Count ==
-                                        ClassWalletObject.TotalTransactionInSync &&
-                                        ClassWalletTransactionAnonymityCache.ListTransaction.Count ==
-                                        ClassWalletObject.TotalTransactionInSyncAnonymity)
+                                    if (ClassWalletObject.TotalTransactionInSync == ClassWalletTransactionCache.ListTransaction.Count && ListTransactionHashShowed.Count == ClassWalletTransactionCache.ListTransaction.Count)
                                     {
-                                        if (ListAnonymousTransactionShowed.Count ==
-                                            ClassWalletTransactionAnonymityCache.ListTransaction.Count)
+                                        if (TransactionHistoryWalletForm.IsShowed)
                                         {
-                                            if (ClassWalletTransactionAnonymityCache.ListTransaction.Count ==
+                                            if (ListTransactionShowed.Count ==
+                                                ClassWalletTransactionCache.ListTransaction.Count &&
+                                                ClassWalletTransactionCache.ListTransaction.Count ==
+                                                ClassWalletObject.TotalTransactionInSync &&
+                                                ClassWalletTransactionAnonymityCache.ListTransaction.Count ==
                                                 ClassWalletObject.TotalTransactionInSyncAnonymity)
                                             {
-                                                if (ClassWalletTransactionCache.ListTransaction.Count ==
-                                                    ClassWalletObject.TotalTransactionInSync)
+                                                if (ListAnonymousTransactionShowed.Count ==
+                                                    ClassWalletTransactionAnonymityCache.ListTransaction.Count)
                                                 {
-                                                    TransactionHistoryWalletForm.HideWaitingSyncTransactionPanel();
-                                                }
-                                            }
-                                        }
-
-                                        #region show transaction received/sent by the normal unique wallet id of the wallet
-                                        if (TotalTransactionRead != ListTransactionShowed.Count)
-                                        {
-
-                                            for (int i = ListTransactionShowed.Count - 1; i >= TotalTransactionRead;
-                                                i--)
-                                            {
-                                                string[] splitTransaction = ListTransactionShowed[i].Split(new[] { "#" }, StringSplitOptions.None);
-                                                string type = splitTransaction[0];
-                                                string hash = splitTransaction[1];
-                                                string wallet = splitTransaction[2];
-                                                Decimal amount = Decimal.Parse(
-                                                    splitTransaction[3].ToString(Program.GlobalCultureInfo),
-                                                    NumberStyles.Currency, Program.GlobalCultureInfo);
-                                                Decimal fee = Decimal.Parse(
-                                                    splitTransaction[4].ToString(Program.GlobalCultureInfo),
-                                                    NumberStyles.Currency, Program.GlobalCultureInfo);
-                                                string timestamp = splitTransaction[5];
-                                                if (ClassConnectorSetting.MAJOR_UPDATE_1)
-                                                {
-                                                    string timestampRecv = splitTransaction[6];
-                                                    string blockchainHeight = splitTransaction[7];
-
-                                                    blockchainHeight = blockchainHeight.Replace("{", "");
-                                                    blockchainHeight = blockchainHeight.Replace("}", "");
-                                                    if (blockchainHeight.Contains(";"))
+                                                    if (ClassWalletTransactionAnonymityCache.ListTransaction.Count ==
+                                                        ClassWalletObject.TotalTransactionInSyncAnonymity)
                                                     {
-                                                        var splitBlockchainHeight =
-                                                            blockchainHeight.Split(new[] { ";" },
-                                                                StringSplitOptions.None);
-                                                        blockchainHeight = string.Empty;
-                                                        foreach (var height in splitBlockchainHeight)
+                                                        if (ClassWalletTransactionCache.ListTransaction.Count ==
+                                                            ClassWalletObject.TotalTransactionInSync)
                                                         {
-                                                            var blockId =
-                                                                height.Split(new[] { "~" }, StringSplitOptions.None)[0];
-
-                                                            blockchainHeight += blockId + " ";
+                                                            TransactionHistoryWalletForm.HideWaitingSyncTransactionPanel();
                                                         }
                                                     }
-                                                    else
+                                                }
+
+                                                #region show transaction received/sent by the normal unique wallet id of the wallet
+                                                if (TotalTransactionRead != ListTransactionShowed.Count)
+                                                {
+
+                                                    for (int i = ListTransactionShowed.Count - 1; i >= TotalTransactionRead;
+                                                        i--)
                                                     {
-                                                        blockchainHeight = blockchainHeight.Split(new[] { "~" },
-                                                            StringSplitOptions.None)[0];
-                                                    }
-
-
-                                                    DateTime dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                    dateTimeSend = dateTimeSend.AddSeconds(long.Parse(timestamp));
-                                                    dateTimeSend = dateTimeSend.ToLocalTime();
-
-                                                    try
-                                                    {
-                                                        var dateTimeRecv = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                        dateTimeRecv =
-                                                            dateTimeRecv.AddSeconds(long.Parse(timestampRecv));
-                                                        dateTimeRecv = dateTimeRecv.ToLocalTime();
-
-                                                        #region show anonymous transaction received
-                                                        if (wallet == "ANONYMOUS")
+                                                        string[] splitTransaction = ListTransactionShowed[i].Split(new[] { "#" }, StringSplitOptions.None);
+                                                        string type = splitTransaction[0];
+                                                        string hash = splitTransaction[1];
+                                                        string wallet = splitTransaction[2];
+                                                        Decimal amount = Decimal.Parse(
+                                                            splitTransaction[3].ToString(Program.GlobalCultureInfo),
+                                                            NumberStyles.Currency, Program.GlobalCultureInfo);
+                                                        Decimal fee = Decimal.Parse(
+                                                            splitTransaction[4].ToString(Program.GlobalCultureInfo),
+                                                            NumberStyles.Currency, Program.GlobalCultureInfo);
+                                                        string timestamp = splitTransaction[5];
+                                                        if (ClassConnectorSetting.MAJOR_UPDATE_1)
                                                         {
+                                                            string timestampRecv = splitTransaction[6];
+                                                            string blockchainHeight = splitTransaction[7];
 
-                                                            int minShow = (CurrentTransactionHistoryPageAnonymousReceived - 1) * MaxTransactionPerPage;
-                                                            int maxShow = CurrentTransactionHistoryPageAnonymousReceived * MaxTransactionPerPage;
-
-                                                            if (!_normalTransactionLoaded)
+                                                            blockchainHeight = blockchainHeight.Replace("{", "");
+                                                            blockchainHeight = blockchainHeight.Replace("}", "");
+                                                            if (blockchainHeight.Contains(";"))
                                                             {
-                                                                if (TotalTransactionAnonymousReceived >= minShow && TotalTransactionAnonymousReceived < maxShow && !_normalTransactionLoaded)
+                                                                var splitBlockchainHeight =
+                                                                    blockchainHeight.Split(new[] { ";" },
+                                                                        StringSplitOptions.None);
+                                                                blockchainHeight = string.Empty;
+                                                                foreach (var height in splitBlockchainHeight)
                                                                 {
-                                                                    string[] row =
-                                                                    {
-                                                                    (TotalTransactionAnonymousReceived+1).ToString(),
-                                                                    dateTimeSend.ToString(),
-                                                                    type, hash, "" + amount, "" + fee, wallet,
-                                                                    dateTimeRecv.ToString(), blockchainHeight
-                                                                };
-                                                                    var listViewItem = new ListViewItem(row);
+                                                                    var blockId =
+                                                                        height.Split(new[] { "~" }, StringSplitOptions.None)[0];
 
-
-                                                                    MethodInvoker invoke = () =>
-                                                                        TransactionHistoryWalletForm
-                                                                            .listViewAnonymityReceivedTransactionHistory.Items
-                                                                            .Add(listViewItem);
-                                                                    TransactionHistoryWalletForm
-                                                                        .listViewAnonymityReceivedTransactionHistory
-                                                                        .BeginInvoke(invoke);
-                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >
-                                                                        ClassUtils.DateUnixTimeNowSecond())
-                                                                    {
-                                                                        invoke = () =>
-                                                                            TransactionHistoryWalletForm
-                                                                                    .listViewAnonymityReceivedTransactionHistory
-                                                                                    .Items[
-                                                                                        TransactionHistoryWalletForm
-                                                                                            .listViewAnonymityReceivedTransactionHistory
-                                                                                            .Items.Count - 1].BackColor =
-                                                                                Color.FromArgb(255, 153, 102);
-                                                                        TransactionHistoryWalletForm
-                                                                            .listViewAnonymityReceivedTransactionHistory
-                                                                            .BeginInvoke(invoke);
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        invoke = () =>
-                                                                            TransactionHistoryWalletForm
-                                                                                    .listViewAnonymityReceivedTransactionHistory
-                                                                                    .Items[
-                                                                                        TransactionHistoryWalletForm
-                                                                                            .listViewAnonymityReceivedTransactionHistory
-                                                                                            .Items.Count - 1].BackColor =
-                                                                                Color.FromArgb(0, 255, 153);
-                                                                        TransactionHistoryWalletForm
-                                                                            .listViewAnonymityReceivedTransactionHistory
-                                                                            .BeginInvoke(invoke);
-                                                                    }
-
+                                                                    blockchainHeight += blockId + " ";
                                                                 }
                                                             }
-
-                                                            if (_normalTransactionLoaded && CurrentTransactionHistoryPageAnonymousReceived == 1)
+                                                            else
                                                             {
-                                                                string[] row =
+                                                                blockchainHeight = blockchainHeight.Split(new[] { "~" },
+                                                                    StringSplitOptions.None)[0];
+                                                            }
+
+
+                                                            DateTime dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                            dateTimeSend = dateTimeSend.AddSeconds(long.Parse(timestamp));
+                                                            dateTimeSend = dateTimeSend.ToLocalTime();
+
+                                                            try
+                                                            {
+                                                                var dateTimeRecv = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                                dateTimeRecv =
+                                                                    dateTimeRecv.AddSeconds(long.Parse(timestampRecv));
+                                                                dateTimeRecv = dateTimeRecv.ToLocalTime();
+
+                                                                #region show anonymous transaction received
+                                                                if (wallet == "ANONYMOUS")
                                                                 {
+
+                                                                    int minShow = (CurrentTransactionHistoryPageAnonymousReceived - 1) * MaxTransactionPerPage;
+                                                                    int maxShow = CurrentTransactionHistoryPageAnonymousReceived * MaxTransactionPerPage;
+
+                                                                    if (!_normalTransactionLoaded)
+                                                                    {
+                                                                        if (TotalTransactionAnonymousReceived >= minShow && TotalTransactionAnonymousReceived < maxShow && !_normalTransactionLoaded)
+                                                                        {
+                                                                            string[] row =
+                                                                            {
                                                                     (TotalTransactionAnonymousReceived+1).ToString(),
                                                                     dateTimeSend.ToString(),
                                                                     type, hash, "" + amount, "" + fee, wallet,
                                                                     dateTimeRecv.ToString(), blockchainHeight
                                                                 };
-                                                                var listViewItem = new ListViewItem(row);
+                                                                            var listViewItem = new ListViewItem(row);
 
 
-                                                                MethodInvoker invoke = () =>
-                                                                    TransactionHistoryWalletForm
-                                                                        .listViewAnonymityReceivedTransactionHistory.Items
-                                                                        .Insert(0, listViewItem);
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewAnonymityReceivedTransactionHistory
-                                                                    .BeginInvoke(invoke);
+                                                                            MethodInvoker invoke = () =>
+                                                                                TransactionHistoryWalletForm
+                                                                                    .listViewAnonymityReceivedTransactionHistory.Items
+                                                                                    .Add(listViewItem);
+                                                                            TransactionHistoryWalletForm
+                                                                                .listViewAnonymityReceivedTransactionHistory
+                                                                                .BeginInvoke(invoke);
+                                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >
+                                                                                ClassUtils.DateUnixTimeNowSecond())
+                                                                            {
+                                                                                invoke = () =>
+                                                                                    TransactionHistoryWalletForm
+                                                                                            .listViewAnonymityReceivedTransactionHistory
+                                                                                            .Items[
+                                                                                                TransactionHistoryWalletForm
+                                                                                                    .listViewAnonymityReceivedTransactionHistory
+                                                                                                    .Items.Count - 1].BackColor =
+                                                                                        Color.FromArgb(255, 153, 102);
+                                                                                TransactionHistoryWalletForm
+                                                                                    .listViewAnonymityReceivedTransactionHistory
+                                                                                    .BeginInvoke(invoke);
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                invoke = () =>
+                                                                                    TransactionHistoryWalletForm
+                                                                                            .listViewAnonymityReceivedTransactionHistory
+                                                                                            .Items[
+                                                                                                TransactionHistoryWalletForm
+                                                                                                    .listViewAnonymityReceivedTransactionHistory
+                                                                                                    .Items.Count - 1].BackColor =
+                                                                                        Color.FromArgb(0, 255, 153);
+                                                                                TransactionHistoryWalletForm
+                                                                                    .listViewAnonymityReceivedTransactionHistory
+                                                                                    .BeginInvoke(invoke);
+                                                                            }
 
-                                                            }
+                                                                        }
+                                                                    }
 
-                                                            if (TotalTransactionAnonymousReceived == minShow)
-                                                            {
-                                                                void Invoker() =>
-                                                                    TransactionHistoryWalletForm.AutoResizeColumns(
+                                                                    if (_normalTransactionLoaded && CurrentTransactionHistoryPageAnonymousReceived == 1)
+                                                                    {
+                                                                        string[] row =
+                                                                        {
+                                                                    (TotalTransactionAnonymousReceived+1).ToString(),
+                                                                    dateTimeSend.ToString(),
+                                                                    type, hash, "" + amount, "" + fee, wallet,
+                                                                    dateTimeRecv.ToString(), blockchainHeight
+                                                                };
+                                                                        var listViewItem = new ListViewItem(row);
+
+
+                                                                        MethodInvoker invoke = () =>
+                                                                            TransactionHistoryWalletForm
+                                                                                .listViewAnonymityReceivedTransactionHistory.Items
+                                                                                .Insert(0, listViewItem);
                                                                         TransactionHistoryWalletForm
-                                                                            .listViewAnonymityReceivedTransactionHistory);
+                                                                            .listViewAnonymityReceivedTransactionHistory
+                                                                            .BeginInvoke(invoke);
 
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewAnonymityReceivedTransactionHistory
-                                                                    .BeginInvoke((MethodInvoker)Invoker);
+                                                                    }
 
-                                                            }
+                                                                    if (TotalTransactionAnonymousReceived == minShow)
+                                                                    {
+                                                                        void Invoker() =>
+                                                                            TransactionHistoryWalletForm.AutoResizeColumns(
+                                                                                TransactionHistoryWalletForm
+                                                                                    .listViewAnonymityReceivedTransactionHistory);
 
-                                                            TotalTransactionAnonymousReceived++;
-                                                        }
-                                                        #endregion
-                                                        #region Show block reward transaction.
-                                                        else if (wallet.Contains("BLOCKCHAIN["))
-                                                        {
-                                                            int minShow = (CurrentTransactionHistoryPageBlockReward - 1) * MaxTransactionPerPage;
-                                                            int maxShow = CurrentTransactionHistoryPageBlockReward * MaxTransactionPerPage;
+                                                                        TransactionHistoryWalletForm
+                                                                            .listViewAnonymityReceivedTransactionHistory
+                                                                            .BeginInvoke((MethodInvoker)Invoker);
 
-                                                            if (TotalTransactionBlockReward >= minShow && TotalTransactionBlockReward < maxShow && !_normalTransactionLoaded)
-                                                            {
-                                                                string[] row =
+                                                                    }
+
+                                                                    TotalTransactionAnonymousReceived++;
+                                                                }
+                                                                #endregion
+                                                                #region Show block reward transaction.
+                                                                else if (wallet.Contains("BLOCKCHAIN["))
                                                                 {
+                                                                    int minShow = (CurrentTransactionHistoryPageBlockReward - 1) * MaxTransactionPerPage;
+                                                                    int maxShow = CurrentTransactionHistoryPageBlockReward * MaxTransactionPerPage;
+
+                                                                    if (TotalTransactionBlockReward >= minShow && TotalTransactionBlockReward < maxShow && !_normalTransactionLoaded)
+                                                                    {
+                                                                        string[] row =
+                                                                        {
                                                                     (TotalTransactionBlockReward+1).ToString(), dateTimeSend.ToString(),
                                                                     type,
                                                                     hash, "" + amount, "" + fee, wallet,
                                                                     dateTimeRecv.ToString(), blockchainHeight
                                                                 };
-                                                                var listViewItem = new ListViewItem(row);
+                                                                        var listViewItem = new ListViewItem(row);
 
 
 
-                                                                MethodInvoker invoke = () =>
-                                                                    TransactionHistoryWalletForm
-                                                                        .listViewBlockRewardTransactionHistory.Items
-                                                                        .Add(listViewItem);
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewBlockRewardTransactionHistory
-                                                                    .BeginInvoke(invoke);
-
-                                                                if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >
-                                                                    ClassUtils.DateUnixTimeNowSecond())
-                                                                {
-                                                                    invoke = () =>
+                                                                        MethodInvoker invoke = () =>
+                                                                            TransactionHistoryWalletForm
+                                                                                .listViewBlockRewardTransactionHistory.Items
+                                                                                .Add(listViewItem);
                                                                         TransactionHistoryWalletForm
-                                                                                .listViewBlockRewardTransactionHistory
-                                                                                .Items[
-                                                                                    TransactionHistoryWalletForm
+                                                                            .listViewBlockRewardTransactionHistory
+                                                                            .BeginInvoke(invoke);
+
+                                                                        if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >
+                                                                            ClassUtils.DateUnixTimeNowSecond())
+                                                                        {
+                                                                            invoke = () =>
+                                                                                TransactionHistoryWalletForm
                                                                                         .listViewBlockRewardTransactionHistory
-                                                                                        .Items
-                                                                                        .Count - 1].BackColor =
-                                                                            Color.FromArgb(255, 153, 102);
-                                                                    TransactionHistoryWalletForm
-                                                                        .listViewBlockRewardTransactionHistory
-                                                                        .BeginInvoke(invoke);
+                                                                                        .Items[
+                                                                                            TransactionHistoryWalletForm
+                                                                                                .listViewBlockRewardTransactionHistory
+                                                                                                .Items
+                                                                                                .Count - 1].BackColor =
+                                                                                    Color.FromArgb(255, 153, 102);
+                                                                            TransactionHistoryWalletForm
+                                                                                .listViewBlockRewardTransactionHistory
+                                                                                .BeginInvoke(invoke);
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            invoke = () =>
+                                                                                TransactionHistoryWalletForm
+                                                                                        .listViewBlockRewardTransactionHistory
+                                                                                        .Items[
+                                                                                            TransactionHistoryWalletForm
+                                                                                                .listViewBlockRewardTransactionHistory
+                                                                                                .Items
+                                                                                                .Count - 1].BackColor =
+                                                                                    Color.FromArgb(0, 255, 153);
+                                                                            TransactionHistoryWalletForm
+                                                                                .listViewBlockRewardTransactionHistory
+                                                                                .BeginInvoke(invoke);
+                                                                        }
+
+
+                                                                    }
+                                                                    if (_normalTransactionLoaded && CurrentTransactionHistoryPageBlockReward == 1)
+                                                                    {
+                                                                        string[] row =
+                                                                        {
+                                                                    (TotalTransactionBlockReward+1).ToString(), dateTimeSend.ToString(),
+                                                                    type,
+                                                                    hash, "" + amount, "" + fee, wallet,
+                                                                    dateTimeRecv.ToString(), blockchainHeight
+                                                                };
+                                                                        var listViewItem = new ListViewItem(row);
+
+
+
+                                                                        MethodInvoker invoke = () =>
+                                                                            TransactionHistoryWalletForm
+                                                                                .listViewBlockRewardTransactionHistory.Items
+                                                                                .Insert(0, listViewItem);
+                                                                        TransactionHistoryWalletForm
+                                                                            .listViewBlockRewardTransactionHistory
+                                                                            .BeginInvoke(invoke);
+
+
+                                                                    }
+
+                                                                    if (TotalTransactionBlockReward == minShow)
+                                                                    {
+                                                                        void Invoker() =>
+                                                                            TransactionHistoryWalletForm.AutoResizeColumns(
+                                                                                TransactionHistoryWalletForm
+                                                                                    .listViewBlockRewardTransactionHistory);
+
+                                                                        TransactionHistoryWalletForm
+                                                                            .listViewBlockRewardTransactionHistory
+                                                                            .BeginInvoke((MethodInvoker)Invoker);
+                                                                    }
+
+                                                                    TotalTransactionBlockReward++;
                                                                 }
+                                                                #endregion
                                                                 else
                                                                 {
-                                                                    invoke = () =>
-                                                                        TransactionHistoryWalletForm
-                                                                                .listViewBlockRewardTransactionHistory
-                                                                                .Items[
+                                                                    #region show normal transaction sent
+                                                                    if (type == "SEND")
+                                                                    {
+                                                                        int minShow = (CurrentTransactionHistoryPageNormalSend - 1) * MaxTransactionPerPage;
+                                                                        int maxShow = CurrentTransactionHistoryPageNormalSend * MaxTransactionPerPage;
+
+                                                                        if (TotalTransactionNormalSend >= minShow && TotalTransactionNormalSend < maxShow && !_normalTransactionLoaded)
+                                                                        {
+                                                                            string[] row =
+                                                                            {
+                                                                        (TotalTransactionNormalSend+1).ToString(), dateTimeSend.ToString(),
+                                                                        type, hash, "" + amount, "" + fee, wallet,
+                                                                        dateTimeRecv.ToString(), blockchainHeight
+                                                                    };
+                                                                            var listViewItem = new ListViewItem(row);
+
+
+                                                                            MethodInvoker invoke = () =>
+                                                                                TransactionHistoryWalletForm
+                                                                                    .listViewNormalSendTransactionHistory.Items
+                                                                                    .Add(listViewItem);
+                                                                            TransactionHistoryWalletForm
+                                                                                .listViewNormalSendTransactionHistory
+                                                                                .BeginInvoke(invoke);
+                                                                            ;
+                                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >
+                                                                                ClassUtils.DateUnixTimeNowSecond())
+                                                                            {
+                                                                                invoke = () =>
                                                                                     TransactionHistoryWalletForm
-                                                                                        .listViewBlockRewardTransactionHistory
-                                                                                        .Items
-                                                                                        .Count - 1].BackColor =
-                                                                            Color.FromArgb(0, 255, 153);
-                                                                    TransactionHistoryWalletForm
-                                                                        .listViewBlockRewardTransactionHistory
-                                                                        .BeginInvoke(invoke);
-                                                                }
+                                                                                            .listViewNormalSendTransactionHistory
+                                                                                            .Items[
+                                                                                                TransactionHistoryWalletForm
+                                                                                                    .listViewNormalSendTransactionHistory
+                                                                                                    .Items.Count - 1].BackColor =
+                                                                                        Color.FromArgb(255, 153, 102);
+                                                                                TransactionHistoryWalletForm
+                                                                                    .listViewNormalSendTransactionHistory
+                                                                                    .BeginInvoke(invoke);
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                invoke = () =>
+                                                                                    TransactionHistoryWalletForm
+                                                                                            .listViewNormalSendTransactionHistory
+                                                                                            .Items[
+                                                                                                TransactionHistoryWalletForm
+                                                                                                    .listViewNormalSendTransactionHistory
+                                                                                                    .Items.Count - 1].BackColor =
+                                                                                        Color.FromArgb(0, 255, 153);
+                                                                                TransactionHistoryWalletForm
+                                                                                    .listViewNormalSendTransactionHistory
+                                                                                    .BeginInvoke(invoke);
+                                                                            }
 
 
-                                                            }
-                                                            if (_normalTransactionLoaded && CurrentTransactionHistoryPageBlockReward == 1)
-                                                            {
-                                                                string[] row =
-                                                                {
-                                                                    (TotalTransactionBlockReward+1).ToString(), dateTimeSend.ToString(),
-                                                                    type,
-                                                                    hash, "" + amount, "" + fee, wallet,
-                                                                    dateTimeRecv.ToString(), blockchainHeight
-                                                                };
-                                                                var listViewItem = new ListViewItem(row);
-
-
-
-                                                                MethodInvoker invoke = () =>
-                                                                    TransactionHistoryWalletForm
-                                                                        .listViewBlockRewardTransactionHistory.Items
-                                                                        .Insert(0, listViewItem);
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewBlockRewardTransactionHistory
-                                                                    .BeginInvoke(invoke);
-
-
-                                                            }
-
-                                                            if (TotalTransactionBlockReward == minShow)
-                                                            {
-                                                                void Invoker() =>
-                                                                    TransactionHistoryWalletForm.AutoResizeColumns(
-                                                                        TransactionHistoryWalletForm
-                                                                            .listViewBlockRewardTransactionHistory);
-
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewBlockRewardTransactionHistory
-                                                                    .BeginInvoke((MethodInvoker)Invoker);
-                                                            }
-
-                                                            TotalTransactionBlockReward++;
-                                                        }
-                                                        #endregion
-                                                        else
-                                                        {
-                                                            #region show normal transaction sent
-                                                            if (type == "SEND")
-                                                            {
-                                                                int minShow = (CurrentTransactionHistoryPageNormalSend - 1) * MaxTransactionPerPage;
-                                                                int maxShow = CurrentTransactionHistoryPageNormalSend * MaxTransactionPerPage;
-
-                                                                if (TotalTransactionNormalSend >= minShow && TotalTransactionNormalSend < maxShow && !_normalTransactionLoaded)
-                                                                {
-                                                                    string[] row =
-                                                                    {
+                                                                        }
+                                                                        if (_normalTransactionLoaded && CurrentTransactionHistoryPageNormalSend == 1)
+                                                                        {
+                                                                            string[] row =
+                                                                            {
                                                                         (TotalTransactionNormalSend+1).ToString(), dateTimeSend.ToString(),
                                                                         type, hash, "" + amount, "" + fee, wallet,
                                                                         dateTimeRecv.ToString(), blockchainHeight
                                                                     };
-                                                                    var listViewItem = new ListViewItem(row);
+                                                                            var listViewItem = new ListViewItem(row);
 
 
-                                                                    MethodInvoker invoke = () =>
-                                                                        TransactionHistoryWalletForm
-                                                                            .listViewNormalSendTransactionHistory.Items
-                                                                            .Add(listViewItem);
-                                                                    TransactionHistoryWalletForm
-                                                                        .listViewNormalSendTransactionHistory
-                                                                        .BeginInvoke(invoke);
-                                                                    ;
-                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >
-                                                                        ClassUtils.DateUnixTimeNowSecond())
-                                                                    {
-                                                                        invoke = () =>
+                                                                            MethodInvoker invoke = () =>
+                                                                                TransactionHistoryWalletForm
+                                                                                    .listViewNormalSendTransactionHistory.Items
+                                                                                    .Insert(0, listViewItem);
                                                                             TransactionHistoryWalletForm
-                                                                                    .listViewNormalSendTransactionHistory
-                                                                                    .Items[
-                                                                                        TransactionHistoryWalletForm
-                                                                                            .listViewNormalSendTransactionHistory
-                                                                                            .Items.Count - 1].BackColor =
-                                                                                Color.FromArgb(255, 153, 102);
-                                                                        TransactionHistoryWalletForm
-                                                                            .listViewNormalSendTransactionHistory
-                                                                            .BeginInvoke(invoke);
+                                                                                .listViewNormalSendTransactionHistory
+                                                                                .BeginInvoke(invoke);
+
+
+                                                                        }
+
+
+                                                                        if (TotalTransactionNormalSend == minShow)
+                                                                        {
+                                                                            void Invoker() =>
+                                                                                TransactionHistoryWalletForm.AutoResizeColumns(
+                                                                                    TransactionHistoryWalletForm
+                                                                                        .listViewNormalSendTransactionHistory);
+
+                                                                            TransactionHistoryWalletForm
+                                                                                .listViewNormalSendTransactionHistory
+                                                                                .BeginInvoke((MethodInvoker)Invoker);
+                                                                        }
+
+
+                                                                        TotalTransactionNormalSend++;
                                                                     }
-                                                                    else
+                                                                    #endregion
+                                                                    #region Show normal transaction received.
+                                                                    else if (type == "RECV")
                                                                     {
-                                                                        invoke = () =>
-                                                                            TransactionHistoryWalletForm
-                                                                                    .listViewNormalSendTransactionHistory
-                                                                                    .Items[
-                                                                                        TransactionHistoryWalletForm
-                                                                                            .listViewNormalSendTransactionHistory
-                                                                                            .Items.Count - 1].BackColor =
-                                                                                Color.FromArgb(0, 255, 153);
-                                                                        TransactionHistoryWalletForm
-                                                                            .listViewNormalSendTransactionHistory
-                                                                            .BeginInvoke(invoke);
-                                                                    }
+                                                                        int minShow = (CurrentTransactionHistoryPageNormalReceive - 1) * MaxTransactionPerPage;
+                                                                        int maxShow = CurrentTransactionHistoryPageNormalReceive * MaxTransactionPerPage;
 
+                                                                        if (TotalTransactionNormalReceived >= minShow && TotalTransactionNormalReceived < maxShow && !_normalTransactionLoaded)
+                                                                        {
 
-                                                                }
-                                                                if (_normalTransactionLoaded && CurrentTransactionHistoryPageNormalSend == 1)
-                                                                {
-                                                                    string[] row =
-                                                                    {
-                                                                        (TotalTransactionNormalSend+1).ToString(), dateTimeSend.ToString(),
-                                                                        type, hash, "" + amount, "" + fee, wallet,
-                                                                        dateTimeRecv.ToString(), blockchainHeight
-                                                                    };
-                                                                    var listViewItem = new ListViewItem(row);
-
-
-                                                                    MethodInvoker invoke = () =>
-                                                                        TransactionHistoryWalletForm
-                                                                            .listViewNormalSendTransactionHistory.Items
-                                                                            .Insert(0, listViewItem);
-                                                                    TransactionHistoryWalletForm
-                                                                        .listViewNormalSendTransactionHistory
-                                                                        .BeginInvoke(invoke);
-
-
-                                                                }
-
-
-                                                                if (TotalTransactionNormalSend == minShow)
-                                                                {
-                                                                    void Invoker() =>
-                                                                        TransactionHistoryWalletForm.AutoResizeColumns(
-                                                                            TransactionHistoryWalletForm
-                                                                                .listViewNormalSendTransactionHistory);
-
-                                                                    TransactionHistoryWalletForm
-                                                                        .listViewNormalSendTransactionHistory
-                                                                        .BeginInvoke((MethodInvoker)Invoker);
-                                                                }
-
-
-                                                                TotalTransactionNormalSend++;
-                                                            }
-                                                            #endregion
-                                                            #region Show normal transaction received.
-                                                            else if (type == "RECV")
-                                                            {
-                                                                int minShow = (CurrentTransactionHistoryPageNormalReceive - 1) * MaxTransactionPerPage;
-                                                                int maxShow = CurrentTransactionHistoryPageNormalReceive * MaxTransactionPerPage;
-
-                                                                if (TotalTransactionNormalReceived >= minShow && TotalTransactionNormalReceived < maxShow && !_normalTransactionLoaded)
-                                                                {
-
-                                                                    string[] row =
-                                                                    {
+                                                                            string[] row =
+                                                                            {
                                                                         (TotalTransactionNormalReceived+1).ToString(),
                                                                         dateTimeSend.ToString(),
                                                                         type, hash, "" + amount, "" + fee, wallet,
                                                                         dateTimeRecv.ToString(), blockchainHeight
                                                                     };
-                                                                    var listViewItem = new ListViewItem(row);
+                                                                            var listViewItem = new ListViewItem(row);
 
 
 
-                                                                    MethodInvoker invoke = () =>
-                                                                        TransactionHistoryWalletForm
-                                                                            .listViewNormalReceivedTransactionHistory.Items
-                                                                            .Add(listViewItem);
-                                                                    TransactionHistoryWalletForm
-                                                                        .listViewNormalReceivedTransactionHistory
-                                                                        .BeginInvoke(invoke);
-
-                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >
-                                                                        ClassUtils.DateUnixTimeNowSecond())
-                                                                    {
-                                                                        invoke = () =>
+                                                                            MethodInvoker invoke = () =>
+                                                                                TransactionHistoryWalletForm
+                                                                                    .listViewNormalReceivedTransactionHistory.Items
+                                                                                    .Add(listViewItem);
                                                                             TransactionHistoryWalletForm
-                                                                                    .listViewNormalReceivedTransactionHistory
-                                                                                    .Items[
-                                                                                        TransactionHistoryWalletForm
+                                                                                .listViewNormalReceivedTransactionHistory
+                                                                                .BeginInvoke(invoke);
+
+                                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >
+                                                                                ClassUtils.DateUnixTimeNowSecond())
+                                                                            {
+                                                                                invoke = () =>
+                                                                                    TransactionHistoryWalletForm
                                                                                             .listViewNormalReceivedTransactionHistory
-                                                                                            .Items.Count - 1].BackColor =
-                                                                                Color.FromArgb(255, 153, 102);
-                                                                        TransactionHistoryWalletForm
-                                                                            .listViewNormalReceivedTransactionHistory
-                                                                            .BeginInvoke(invoke);
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        invoke = () =>
-                                                                            TransactionHistoryWalletForm
+                                                                                            .Items[
+                                                                                                TransactionHistoryWalletForm
+                                                                                                    .listViewNormalReceivedTransactionHistory
+                                                                                                    .Items.Count - 1].BackColor =
+                                                                                        Color.FromArgb(255, 153, 102);
+                                                                                TransactionHistoryWalletForm
                                                                                     .listViewNormalReceivedTransactionHistory
-                                                                                    .Items[
-                                                                                        TransactionHistoryWalletForm
+                                                                                    .BeginInvoke(invoke);
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                invoke = () =>
+                                                                                    TransactionHistoryWalletForm
                                                                                             .listViewNormalReceivedTransactionHistory
-                                                                                            .Items.Count - 1].BackColor =
-                                                                                Color.FromArgb(0, 255, 153);
-                                                                        TransactionHistoryWalletForm
-                                                                            .listViewNormalReceivedTransactionHistory
-                                                                            .BeginInvoke(invoke);
-                                                                    }
+                                                                                            .Items[
+                                                                                                TransactionHistoryWalletForm
+                                                                                                    .listViewNormalReceivedTransactionHistory
+                                                                                                    .Items.Count - 1].BackColor =
+                                                                                        Color.FromArgb(0, 255, 153);
+                                                                                TransactionHistoryWalletForm
+                                                                                    .listViewNormalReceivedTransactionHistory
+                                                                                    .BeginInvoke(invoke);
+                                                                            }
 
 
-                                                                }
+                                                                        }
 
-                                                                if (_normalTransactionLoaded && CurrentTransactionHistoryPageNormalReceive == 1)
-                                                                {
-                                                                    string[] row =
-                                                                    {
+                                                                        if (_normalTransactionLoaded && CurrentTransactionHistoryPageNormalReceive == 1)
+                                                                        {
+                                                                            string[] row =
+                                                                            {
                                                                         (TotalTransactionNormalReceived+1).ToString(),
                                                                         dateTimeSend.ToString(),
                                                                         type, hash, "" + amount, "" + fee, wallet,
                                                                         dateTimeRecv.ToString(), blockchainHeight
                                                                     };
-                                                                    var listViewItem = new ListViewItem(row);
+                                                                            var listViewItem = new ListViewItem(row);
 
-                                                                    MethodInvoker invoke = () =>
-                                                                        TransactionHistoryWalletForm
-                                                                            .listViewNormalReceivedTransactionHistory.Items
-                                                                            .Insert(0, listViewItem);
-                                                                    TransactionHistoryWalletForm
-                                                                        .listViewNormalReceivedTransactionHistory
-                                                                        .BeginInvoke(invoke);
-
-
-                                                                }
-                                                                if (TotalTransactionNormalReceived == minShow)
-                                                                {
-                                                                    void Invoker() =>
-                                                                        TransactionHistoryWalletForm.AutoResizeColumns(
+                                                                            MethodInvoker invoke = () =>
+                                                                                TransactionHistoryWalletForm
+                                                                                    .listViewNormalReceivedTransactionHistory.Items
+                                                                                    .Insert(0, listViewItem);
                                                                             TransactionHistoryWalletForm
-                                                                                .listViewNormalReceivedTransactionHistory);
-
-                                                                    TransactionHistoryWalletForm
-                                                                        .listViewNormalReceivedTransactionHistory
-                                                                        .BeginInvoke((MethodInvoker)Invoker);
-                                                                }
-
-                                                                TotalTransactionNormalReceived++;
-                                                            }
-                                                            #endregion
-                                                        }
-                                                    }
-                                                    catch (Exception error)
-                                                    {
-                                                        Log.WriteLine(
-                                                            "Error on transactions show date: " + error.Message +
-                                                            " for timestamp recv: " + timestamp + " timestamp send: " +
-                                                            timestampRecv);
-                                                    }
-                                                }
-                                            }
-
-                                            TotalTransactionRead = ListTransactionShowed.Count;
-                                            _normalTransactionLoaded = true;
-
-                                        }
-                                        #endregion
-
-                                        #region Update transaction normal send color
-
-                                        for (int i = 0;
-                                        i < TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items
-                                            .Count;
-                                        i++)
-                                        {
-                                            var i1 = i;
-
-                                            void MethodInvoker()
-                                            {
-                                                try
-                                                {
-                                                    if (i1 < TransactionHistoryWalletForm
-                                                            .listViewNormalSendTransactionHistory.Items.Count)
-                                                    {
-                                                        if (TransactionHistoryWalletForm
-                                                                .listViewNormalSendTransactionHistory.Items[i1] != null)
-                                                        {
-
-                                                            if (CurrentTransactionHistoryPageNormalSend == 1)
-                                                            {
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewNormalSendTransactionHistory.Items[i1].SubItems[0].Text = "" + (i1 + 1);
-                                                            }
-                                                            var transactionWalletDateRecv = DateTime.Parse(
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewNormalSendTransactionHistory.Items[i1]
-                                                                    .SubItems[7]
-                                                                    .Text.ToString());
-
-                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
-                                                                ClassUtils.DateUnixTimeNowSecond())
-                                                            {
+                                                                                .listViewNormalReceivedTransactionHistory
+                                                                                .BeginInvoke(invoke);
 
 
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewNormalSendTransactionHistory.Items[i1]
-                                                                    .BackColor = Color.FromArgb(255, 153, 102);
+                                                                        }
+                                                                        if (TotalTransactionNormalReceived == minShow)
+                                                                        {
+                                                                            void Invoker() =>
+                                                                                TransactionHistoryWalletForm.AutoResizeColumns(
+                                                                                    TransactionHistoryWalletForm
+                                                                                        .listViewNormalReceivedTransactionHistory);
 
+                                                                            TransactionHistoryWalletForm
+                                                                                .listViewNormalReceivedTransactionHistory
+                                                                                .BeginInvoke((MethodInvoker)Invoker);
+                                                                        }
 
-                                                            }
-                                                            else
-                                                            {
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewNormalSendTransactionHistory.Items[i1]
-                                                                    .BackColor = Color.FromArgb(0, 255, 153);
-                                                            }
-
-
-
-                                                        }
-
-                                                    }
-                                                }
-                                                catch
-                                                {
-
-                                                }
-
-                                            }
-
-                                            BeginInvoke((MethodInvoker)MethodInvoker);
-                                        }
-
-                                        #endregion
-
-                                        #region Update transaction anonymity received color
-
-                                        for (int i = 0;
-                                            i < TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory
-                                                .Items.Count;
-                                            i++)
-                                        {
-                                            var i1 = i;
-
-                                            void MethodInvoker()
-                                            {
-                                                try
-                                                {
-                                                    if (i1 < TransactionHistoryWalletForm
-                                                            .listViewAnonymityReceivedTransactionHistory.Items.Count)
-                                                    {
-                                                        if (TransactionHistoryWalletForm
-                                                                .listViewAnonymityReceivedTransactionHistory.Items[i1] !=
-                                                            null)
-                                                        {
-                                                            if (CurrentTransactionHistoryPageAnonymousReceived == 1)
-                                                            {
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewAnonymityReceivedTransactionHistory.Items[i1]
-                                                                    .SubItems[0].Text = "" + (i1 + 1);
-                                                            }
-                                                            var transactionWalletDateRecv = DateTime.Parse(
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewAnonymityReceivedTransactionHistory.Items[i1]
-                                                                    .SubItems[7]
-                                                                    .Text.ToString());
-                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
-                                                                ClassUtils.DateUnixTimeNowSecond())
-                                                            {
-                                                                if (TransactionHistoryWalletForm
-                                                                        .listViewAnonymityReceivedTransactionHistory
-                                                                        .Items[i1].BackColor !=
-                                                                    Color.FromArgb(255, 153, 102))
-                                                                {
-                                                                    try
-                                                                    {
-                                                                        TransactionHistoryWalletForm
-                                                                                .listViewAnonymityReceivedTransactionHistory
-                                                                                .Items[i1].BackColor =
-                                                                            Color.FromArgb(255, 153, 102);
+                                                                        TotalTransactionNormalReceived++;
                                                                     }
-                                                                    catch
-                                                                    {
-                                                                        i = TransactionHistoryWalletForm
-                                                                            .listViewAnonymityReceivedTransactionHistory
-                                                                            .Items.Count;
-                                                                    }
+                                                                    #endregion
                                                                 }
                                                             }
-                                                            else
+                                                            catch (Exception error)
                                                             {
-                                                                if (TransactionHistoryWalletForm
-                                                                        .listViewAnonymityReceivedTransactionHistory
-                                                                        .Items[i1].BackColor != Color.FromArgb(0, 255, 153))
-                                                                {
-                                                                    try
-                                                                    {
-                                                                        TransactionHistoryWalletForm
-                                                                                .listViewAnonymityReceivedTransactionHistory
-                                                                                .Items[i1].BackColor =
-                                                                            Color.FromArgb(0, 255, 153);
-                                                                    }
-                                                                    catch
-                                                                    {
-                                                                        i = TransactionHistoryWalletForm
-                                                                            .listViewAnonymityReceivedTransactionHistory
-                                                                            .Items.Count;
-                                                                    }
-                                                                }
+                                                                Log.WriteLine(
+                                                                    "Error on transactions show date: " + error.Message +
+                                                                    " for timestamp recv: " + timestamp + " timestamp send: " +
+                                                                    timestampRecv);
                                                             }
-
-
                                                         }
                                                     }
+
+                                                    TotalTransactionRead = ListTransactionShowed.Count;
+                                                    _normalTransactionLoaded = true;
+
                                                 }
-                                                catch
+                                                #endregion
+
+                                                #region Update transaction normal send color
+
+                                                for (int i = 0;
+                                                i < TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items
+                                                    .Count;
+                                                i++)
                                                 {
-                                                }
-                                            }
+                                                    var i1 = i;
 
-                                            BeginInvoke((MethodInvoker)MethodInvoker);
-                                        }
-
-                                        #endregion
-
-                                        #region Update transaction block reward color
-
-                                        for (int i = 0;
-                                            i < TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items
-                                                .Count;
-                                            i++)
-                                        {
-                                            var i1 = i;
-
-                                            void MethodInvoker()
-                                            {
-
-                                                try
-                                                {
-                                                    if (i1 < TransactionHistoryWalletForm
-                                                            .listViewBlockRewardTransactionHistory.Items.Count)
+                                                    void MethodInvoker()
                                                     {
-                                                        if (TransactionHistoryWalletForm
-                                                                .listViewBlockRewardTransactionHistory.Items[i1] != null)
+                                                        try
                                                         {
-                                                            if (CurrentTransactionHistoryPageBlockReward == 1)
-                                                            {
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewBlockRewardTransactionHistory.Items[i1]
-                                                                    .SubItems[0].Text = "" + (i1 + 1);
-                                                            }
-                                                            var transactionWalletDateRecv = DateTime.Parse(
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewBlockRewardTransactionHistory.Items[i1]
-                                                                    .SubItems[7]
-                                                                    .Text.ToString());
-                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
-                                                                ClassUtils.DateUnixTimeNowSecond())
+                                                            if (i1 < TransactionHistoryWalletForm
+                                                                    .listViewNormalSendTransactionHistory.Items.Count)
                                                             {
                                                                 if (TransactionHistoryWalletForm
-                                                                        .listViewBlockRewardTransactionHistory.Items[i1]
-                                                                        .BackColor != Color.FromArgb(255, 153, 102))
+                                                                        .listViewNormalSendTransactionHistory.Items[i1] != null)
                                                                 {
-                                                                    try
+
+                                                                    if (CurrentTransactionHistoryPageNormalSend == 1)
                                                                     {
                                                                         TransactionHistoryWalletForm
-                                                                            .listViewBlockRewardTransactionHistory.Items[i1]
+                                                                            .listViewNormalSendTransactionHistory.Items[i1].SubItems[0].Text = "" + (i1 + 1);
+                                                                    }
+                                                                    var transactionWalletDateRecv = DateTime.Parse(
+                                                                        TransactionHistoryWalletForm
+                                                                            .listViewNormalSendTransactionHistory.Items[i1]
+                                                                            .SubItems[7]
+                                                                            .Text.ToString());
+
+                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
+                                                                        ClassUtils.DateUnixTimeNowSecond())
+                                                                    {
+
+
+                                                                        TransactionHistoryWalletForm
+                                                                            .listViewNormalSendTransactionHistory.Items[i1]
                                                                             .BackColor = Color.FromArgb(255, 153, 102);
+
+
                                                                     }
-                                                                    catch
-                                                                    {
-                                                                        i = TransactionHistoryWalletForm
-                                                                            .listViewBlockRewardTransactionHistory.Items
-                                                                            .Count;
-                                                                    }
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                if (TransactionHistoryWalletForm
-                                                                        .listViewBlockRewardTransactionHistory.Items[i1]
-                                                                        .BackColor != Color.FromArgb(0, 255, 153))
-                                                                {
-                                                                    try
+                                                                    else
                                                                     {
                                                                         TransactionHistoryWalletForm
-                                                                            .listViewBlockRewardTransactionHistory.Items[i1]
+                                                                            .listViewNormalSendTransactionHistory.Items[i1]
                                                                             .BackColor = Color.FromArgb(0, 255, 153);
                                                                     }
-                                                                    catch
-                                                                    {
-                                                                        i = TransactionHistoryWalletForm
-                                                                            .listViewBlockRewardTransactionHistory.Items
-                                                                            .Count;
-                                                                    }
-                                                                }
-                                                            }
 
+
+
+                                                                }
+
+                                                            }
+                                                        }
+                                                        catch
+                                                        {
 
                                                         }
+
                                                     }
+
+                                                    BeginInvoke((MethodInvoker)MethodInvoker);
                                                 }
-                                                catch
+
+                                                #endregion
+
+                                                #region Update transaction anonymity received color
+
+                                                for (int i = 0;
+                                                    i < TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory
+                                                        .Items.Count;
+                                                    i++)
                                                 {
-                                                }
-                                            }
+                                                    var i1 = i;
 
-                                            BeginInvoke((MethodInvoker)MethodInvoker);
-                                        }
-
-                                        #endregion
-
-                                        #region Update normal transaction received color.
-
-                                        for (int i = 0;
-                                            i < TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items
-                                                .Count;
-                                            i++)
-                                        {
-                                            var i1 = i;
-
-                                            void MethodInvoker()
-                                            {
-
-                                                try
-                                                {
-                                                    if (i1 < TransactionHistoryWalletForm
-                                                            .listViewNormalReceivedTransactionHistory.Items.Count)
+                                                    void MethodInvoker()
                                                     {
-                                                        if (TransactionHistoryWalletForm
-                                                                .listViewNormalReceivedTransactionHistory.Items[i1] != null)
+                                                        try
                                                         {
-                                                            if (CurrentTransactionHistoryPageNormalReceive == 1)
-                                                            {
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewNormalReceivedTransactionHistory.Items[i1]
-                                                                    .SubItems[0]
-                                                                    .Text = "" + (i1 + 1);
-                                                            }
-                                                            var transactionWalletDateRecv = DateTime.Parse(
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewNormalReceivedTransactionHistory.Items[i1]
-                                                                    .SubItems[7]
-                                                                    .Text.ToString());
-                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
-                                                                ClassUtils.DateUnixTimeNowSecond())
+                                                            if (i1 < TransactionHistoryWalletForm
+                                                                    .listViewAnonymityReceivedTransactionHistory.Items.Count)
                                                             {
                                                                 if (TransactionHistoryWalletForm
-                                                                        .listViewNormalReceivedTransactionHistory.Items[i1]
-                                                                        .BackColor != Color.FromArgb(255, 153, 102))
+                                                                        .listViewAnonymityReceivedTransactionHistory.Items[i1] !=
+                                                                    null)
                                                                 {
-                                                                    try
+                                                                    if (CurrentTransactionHistoryPageAnonymousReceived == 1)
                                                                     {
                                                                         TransactionHistoryWalletForm
-                                                                                .listViewNormalReceivedTransactionHistory
-                                                                                .Items[i1].BackColor =
-                                                                            Color.FromArgb(255, 153, 102);
+                                                                            .listViewAnonymityReceivedTransactionHistory.Items[i1]
+                                                                            .SubItems[0].Text = "" + (i1 + 1);
                                                                     }
-                                                                    catch
-                                                                    {
-                                                                        i = TransactionHistoryWalletForm
-                                                                            .listViewNormalReceivedTransactionHistory.Items
-                                                                            .Count;
-                                                                    }
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                if (TransactionHistoryWalletForm
-                                                                        .listViewNormalReceivedTransactionHistory.Items[i1]
-                                                                        .BackColor != Color.FromArgb(0, 255, 153))
-                                                                {
-                                                                    try
-                                                                    {
+                                                                    var transactionWalletDateRecv = DateTime.Parse(
                                                                         TransactionHistoryWalletForm
-                                                                                .listViewNormalReceivedTransactionHistory
-                                                                                .Items[i1].BackColor =
-                                                                            Color.FromArgb(0, 255, 153);
-                                                                    }
-                                                                    catch
+                                                                            .listViewAnonymityReceivedTransactionHistory.Items[i1]
+                                                                            .SubItems[7]
+                                                                            .Text.ToString());
+                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
+                                                                        ClassUtils.DateUnixTimeNowSecond())
                                                                     {
-                                                                        i = TransactionHistoryWalletForm
-                                                                            .listViewNormalReceivedTransactionHistory.Items
-                                                                            .Count;
-                                                                    }
-                                                                }
-                                                            }
-
-
-                                                        }
-                                                    }
-                                                }
-                                                catch
-                                                {
-                                                }
-                                            }
-
-                                            BeginInvoke((MethodInvoker)MethodInvoker);
-                                        }
-
-                                        #endregion
-
-
-                                        #region Update transaction anonymity sent color
-
-                                        for (int i = 0;
-                                            i < TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory
-                                                .Items.Count;
-                                            i++)
-                                        {
-                                            var i1 = i;
-
-                                            void MethodInvoker()
-                                            {
-                                                try
-                                                {
-                                                    if (i1 < TransactionHistoryWalletForm
-                                                            .listViewAnonymitySendTransactionHistory.Items.Count)
-                                                    {
-                                                        if (TransactionHistoryWalletForm
-                                                                .listViewAnonymitySendTransactionHistory.Items[i1] !=
-                                                            null)
-                                                        {
-                                                            if (CurrentTransactionHistoryPageAnonymousSend == 1)
-                                                            {
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewAnonymitySendTransactionHistory.Items[i1]
-                                                                    .SubItems[0].Text = "" + (i1 + 1);
-                                                            }
-                                                            var transactionWalletDateRecv = DateTime.Parse(
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewAnonymitySendTransactionHistory.Items[i1]
-                                                                    .SubItems[7]
-                                                                    .Text.ToString());
-                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
-                                                                ClassUtils.DateUnixTimeNowSecond())
-                                                            {
-                                                                if (TransactionHistoryWalletForm
-                                                                        .listViewAnonymitySendTransactionHistory
-                                                                        .Items[i1].BackColor !=
-                                                                    Color.FromArgb(255, 153, 102))
-                                                                {
-                                                                    try
-                                                                    {
-                                                                        TransactionHistoryWalletForm
-                                                                                .listViewAnonymitySendTransactionHistory
-                                                                                .Items[i1].BackColor =
-                                                                            Color.FromArgb(255, 153, 102);
-                                                                    }
-                                                                    catch
-                                                                    {
-                                                                        i = TransactionHistoryWalletForm
-                                                                            .listViewAnonymitySendTransactionHistory
-                                                                            .Items.Count;
-                                                                    }
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                if (TransactionHistoryWalletForm
-                                                                        .listViewAnonymitySendTransactionHistory
-                                                                        .Items[i1].BackColor != Color.FromArgb(0, 255, 153))
-                                                                {
-                                                                    try
-                                                                    {
-                                                                        TransactionHistoryWalletForm
-                                                                                .listViewAnonymitySendTransactionHistory
-                                                                                .Items[i1].BackColor =
-                                                                            Color.FromArgb(0, 255, 153);
-                                                                    }
-                                                                    catch
-                                                                    {
-                                                                        i = TransactionHistoryWalletForm
-                                                                            .listViewAnonymitySendTransactionHistory
-                                                                            .Items.Count;
-                                                                    }
-                                                                }
-                                                            }
-
-
-                                                        }
-                                                    }
-                                                }
-                                                catch
-                                                {
-                                                }
-                                            }
-
-                                            BeginInvoke((MethodInvoker)MethodInvoker);
-                                        }
-
-                                        #endregion
-                                    }
-                                    else
-                                    {
-                                        TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
-                                    }
-
-
-                                    if (ListAnonymousTransactionShowed.Count ==
-                                        ClassWalletTransactionAnonymityCache.ListTransaction.Count &&
-                                        ClassWalletTransactionAnonymityCache.ListTransaction.Count ==
-                                        ClassWalletObject.TotalTransactionInSyncAnonymity &&
-                                        ClassWalletTransactionCache.ListTransaction.Count ==
-                                        ClassWalletObject.TotalTransactionInSync)
-                                    {
-                                        if (ListTransactionShowed.Count ==
-                                            ClassWalletTransactionCache.ListTransaction.Count)
-                                        {
-                                            if (ClassWalletTransactionAnonymityCache.ListTransaction.Count ==
-                                                ClassWalletObject.TotalTransactionInSyncAnonymity)
-                                            {
-                                                if (ClassWalletTransactionCache.ListTransaction.Count ==
-                                                    ClassWalletObject.TotalTransactionInSync)
-                                                {
-                                                    TransactionHistoryWalletForm.HideWaitingSyncTransactionPanel();
-                                                }
-                                            }
-                                        }
-
-
-                                        #region Show transaction anonymity sent with the unique wallet anonymity id of the wallet
-                                        if (TotalAnonymityTransactionRead != ListAnonymousTransactionShowed.Count)
-                                        {
-
-
-                                            for (int i = ListAnonymousTransactionShowed.Count - 1;
-                                                i >= TotalAnonymityTransactionRead;
-                                                i--)
-                                            {
-                                                string[] splitTransaction = ListAnonymousTransactionShowed[i].Split(new[] { "#" }, StringSplitOptions.None);
-                                                string type = splitTransaction[0];
-                                                string hash = splitTransaction[1];
-                                                string wallet = splitTransaction[2];
-                                                Decimal amount = Decimal.Parse(
-                                                    splitTransaction[3].ToString(Program.GlobalCultureInfo),
-                                                    NumberStyles.Currency, Program.GlobalCultureInfo);
-                                                Decimal fee = Decimal.Parse(
-                                                    splitTransaction[4].ToString(Program.GlobalCultureInfo),
-                                                    NumberStyles.Currency, Program.GlobalCultureInfo);
-                                                string timestamp = splitTransaction[5];
-                                                if (ClassConnectorSetting.MAJOR_UPDATE_1)
-                                                {
-                                                    string timestampRecv = splitTransaction[6];
-                                                    string blockchainHeight = splitTransaction[7];
-
-                                                    blockchainHeight = blockchainHeight.Replace("{", "");
-                                                    blockchainHeight = blockchainHeight.Replace("}", "");
-                                                    if (blockchainHeight.Contains(";"))
-                                                    {
-                                                        var splitBlockchainHeight =
-                                                            blockchainHeight.Split(new[] { ";" },
-                                                                StringSplitOptions.None);
-                                                        blockchainHeight = string.Empty;
-                                                        foreach (var height in splitBlockchainHeight)
-                                                        {
-                                                            var blockId =
-                                                                height.Split(new[] { "~" }, StringSplitOptions.None)[0];
-
-                                                            blockchainHeight += blockId + " ";
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        blockchainHeight = blockchainHeight.Split(new[] { "~" },
-                                                            StringSplitOptions.None)[0];
-                                                    }
-
-
-                                                    DateTime dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                    dateTimeSend = dateTimeSend.AddSeconds(long.Parse(timestamp));
-                                                    dateTimeSend = dateTimeSend.ToLocalTime();
-
-                                                    DateTime dateTimeRecv;
-                                                    try
-                                                    {
-                                                        dateTimeRecv = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                        dateTimeRecv =
-                                                            dateTimeRecv.AddSeconds(long.Parse(timestampRecv));
-                                                        dateTimeRecv = dateTimeRecv.ToLocalTime();
-
-                                                        int minShow = (CurrentTransactionHistoryPageAnonymousSend - 1) * MaxTransactionPerPage;
-                                                        int maxShow = CurrentTransactionHistoryPageAnonymousSend * MaxTransactionPerPage;
-
-                                                        if (TotalTransactionAnonymousSend >= minShow && TotalTransactionAnonymousSend < maxShow && !_anonymousTransactionLoaded)
-                                                        {
-                                                            string[] row =
-                                                            {
-                                                                (TotalTransactionAnonymousSend+1).ToString(), dateTimeSend.ToString(),
-                                                                type, hash, "" + amount, "" + fee, wallet,
-                                                                dateTimeRecv.ToString(), blockchainHeight
-                                                            };
-                                                            var listViewItem = new ListViewItem(row);
-
-
-                                                            MethodInvoker invoke = () =>
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewAnonymitySendTransactionHistory.Items
-                                                                    .Add(listViewItem);
-                                                            TransactionHistoryWalletForm
-                                                                .listViewAnonymitySendTransactionHistory
-                                                                .BeginInvoke(invoke);
-
-                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >
-                                                                ClassUtils.DateUnixTimeNowSecond())
-                                                            {
-                                                                invoke = () =>
-                                                                    TransactionHistoryWalletForm
-                                                                            .listViewAnonymitySendTransactionHistory
-                                                                            .Items[
+                                                                        if (TransactionHistoryWalletForm
+                                                                                .listViewAnonymityReceivedTransactionHistory
+                                                                                .Items[i1].BackColor !=
+                                                                            Color.FromArgb(255, 153, 102))
+                                                                        {
+                                                                            try
+                                                                            {
                                                                                 TransactionHistoryWalletForm
-                                                                                    .listViewAnonymitySendTransactionHistory
-                                                                                    .Items
-                                                                                    .Count - 1].BackColor =
-                                                                        Color.FromArgb(255, 153, 102);
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewAnonymitySendTransactionHistory
-                                                                    .BeginInvoke(invoke);
-                                                            }
-                                                            else
-                                                            {
-                                                                invoke = () =>
-                                                                    TransactionHistoryWalletForm
-                                                                            .listViewAnonymitySendTransactionHistory
-                                                                            .Items[
+                                                                                        .listViewAnonymityReceivedTransactionHistory
+                                                                                        .Items[i1].BackColor =
+                                                                                    Color.FromArgb(255, 153, 102);
+                                                                            }
+                                                                            catch
+                                                                            {
+                                                                                i = TransactionHistoryWalletForm
+                                                                                    .listViewAnonymityReceivedTransactionHistory
+                                                                                    .Items.Count;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (TransactionHistoryWalletForm
+                                                                                .listViewAnonymityReceivedTransactionHistory
+                                                                                .Items[i1].BackColor != Color.FromArgb(0, 255, 153))
+                                                                        {
+                                                                            try
+                                                                            {
                                                                                 TransactionHistoryWalletForm
-                                                                                    .listViewAnonymitySendTransactionHistory
-                                                                                    .Items
-                                                                                    .Count - 1].BackColor =
-                                                                        Color.FromArgb(0, 255, 153);
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewAnonymitySendTransactionHistory
-                                                                    .BeginInvoke(invoke);
+                                                                                        .listViewAnonymityReceivedTransactionHistory
+                                                                                        .Items[i1].BackColor =
+                                                                                    Color.FromArgb(0, 255, 153);
+                                                                            }
+                                                                            catch
+                                                                            {
+                                                                                i = TransactionHistoryWalletForm
+                                                                                    .listViewAnonymityReceivedTransactionHistory
+                                                                                    .Items.Count;
+                                                                            }
+                                                                        }
+                                                                    }
+
+
+                                                                }
                                                             }
-
-
                                                         }
-                                                        if (_anonymousTransactionLoaded && CurrentTransactionHistoryPageAnonymousSend == 1)
+                                                        catch
                                                         {
-                                                            string[] row =
-                                                            {
-                                                                (TotalTransactionAnonymousSend+1).ToString(), dateTimeSend.ToString(),
-                                                                type, hash, "" + amount, "" + fee, wallet,
-                                                                dateTimeRecv.ToString(), blockchainHeight
-                                                            };
-                                                            var listViewItem = new ListViewItem(row);
-
-
-                                                            MethodInvoker invoke = () =>
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewAnonymitySendTransactionHistory.Items
-                                                                    .Insert(0, listViewItem);
-                                                            TransactionHistoryWalletForm
-                                                                .listViewAnonymitySendTransactionHistory
-                                                                .BeginInvoke(invoke);
-
-
                                                         }
-                                                        if (TotalTransactionAnonymousSend == minShow)
-                                                        {
-                                                            void Invoker() =>
-                                                                TransactionHistoryWalletForm.AutoResizeColumns(
-                                                                    TransactionHistoryWalletForm
-                                                                        .listViewAnonymitySendTransactionHistory);
-
-                                                            TransactionHistoryWalletForm
-                                                                .listViewAnonymitySendTransactionHistory
-                                                                .BeginInvoke((MethodInvoker)Invoker);
-                                                        }
-
-                                                        TotalTransactionAnonymousSend++;
                                                     }
-                                                    catch (Exception error)
-                                                    {
-                                                        Log.WriteLine(
-                                                            "Error on transactions show date: " + error.Message +
-                                                            " for timestamp recv: " + timestamp + " timestamp send: " +
-                                                            timestampRecv);
-                                                    }
+
+                                                    BeginInvoke((MethodInvoker)MethodInvoker);
                                                 }
-                                            }
 
-                                            TotalAnonymityTransactionRead = ListAnonymousTransactionShowed.Count;
-                                            _anonymousTransactionLoaded = true;
+                                                #endregion
 
-                                        }
+                                                #region Update transaction block reward color
 
-                                        #region Update transaction anonymity send color.
-
-                                        for (int i = 0;
-                                        i < TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items
-                                            .Count;
-                                        i++)
-                                        {
-                                            var i1 = i;
-
-                                            void MethodInvoker()
-                                            {
-
-                                                try
+                                                for (int i = 0;
+                                                    i < TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items
+                                                        .Count;
+                                                    i++)
                                                 {
-                                                    if (i1 < TransactionHistoryWalletForm
-                                                            .listViewAnonymitySendTransactionHistory.Items.Count)
+                                                    var i1 = i;
+
+                                                    void MethodInvoker()
                                                     {
-                                                        if (TransactionHistoryWalletForm
-                                                                .listViewAnonymitySendTransactionHistory.Items[i1] != null)
+
+                                                        try
                                                         {
-                                                            if (CurrentTransactionHistoryPageAnonymousSend == 1)
-                                                            {
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewAnonymitySendTransactionHistory.Items[i1]
-                                                                    .SubItems[0]
-                                                                    .Text = "" + (i1 + 1);
-                                                            }
-                                                            var transactionWalletDateRecv = DateTime.Parse(
-                                                                TransactionHistoryWalletForm
-                                                                    .listViewAnonymitySendTransactionHistory.Items[i1]
-                                                                    .SubItems[7]
-                                                                    .Text.ToString());
-                                                            if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
-                                                                ClassUtils.DateUnixTimeNowSecond())
+                                                            if (i1 < TransactionHistoryWalletForm
+                                                                    .listViewBlockRewardTransactionHistory.Items.Count)
                                                             {
                                                                 if (TransactionHistoryWalletForm
-                                                                        .listViewAnonymitySendTransactionHistory.Items[i1]
-                                                                        .BackColor != Color.FromArgb(255, 153, 102))
+                                                                        .listViewBlockRewardTransactionHistory.Items[i1] != null)
                                                                 {
-                                                                    try
+                                                                    if (CurrentTransactionHistoryPageBlockReward == 1)
                                                                     {
                                                                         TransactionHistoryWalletForm
-                                                                            .listViewAnonymitySendTransactionHistory
-                                                                            .Items[i1]
-                                                                            .BackColor = Color.FromArgb(255, 153, 102);
+                                                                            .listViewBlockRewardTransactionHistory.Items[i1]
+                                                                            .SubItems[0].Text = "" + (i1 + 1);
                                                                     }
-                                                                    catch
+                                                                    var transactionWalletDateRecv = DateTime.Parse(
+                                                                        TransactionHistoryWalletForm
+                                                                            .listViewBlockRewardTransactionHistory.Items[i1]
+                                                                            .SubItems[7]
+                                                                            .Text.ToString());
+                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
+                                                                        ClassUtils.DateUnixTimeNowSecond())
                                                                     {
-                                                                        i = TransactionHistoryWalletForm
-                                                                            .listViewAnonymitySendTransactionHistory.Items
-                                                                            .Count;
+                                                                        if (TransactionHistoryWalletForm
+                                                                                .listViewBlockRewardTransactionHistory.Items[i1]
+                                                                                .BackColor != Color.FromArgb(255, 153, 102))
+                                                                        {
+                                                                            try
+                                                                            {
+                                                                                TransactionHistoryWalletForm
+                                                                                    .listViewBlockRewardTransactionHistory.Items[i1]
+                                                                                    .BackColor = Color.FromArgb(255, 153, 102);
+                                                                            }
+                                                                            catch
+                                                                            {
+                                                                                i = TransactionHistoryWalletForm
+                                                                                    .listViewBlockRewardTransactionHistory.Items
+                                                                                    .Count;
+                                                                            }
+                                                                        }
                                                                     }
+                                                                    else
+                                                                    {
+                                                                        if (TransactionHistoryWalletForm
+                                                                                .listViewBlockRewardTransactionHistory.Items[i1]
+                                                                                .BackColor != Color.FromArgb(0, 255, 153))
+                                                                        {
+                                                                            try
+                                                                            {
+                                                                                TransactionHistoryWalletForm
+                                                                                    .listViewBlockRewardTransactionHistory.Items[i1]
+                                                                                    .BackColor = Color.FromArgb(0, 255, 153);
+                                                                            }
+                                                                            catch
+                                                                            {
+                                                                                i = TransactionHistoryWalletForm
+                                                                                    .listViewBlockRewardTransactionHistory.Items
+                                                                                    .Count;
+                                                                            }
+                                                                        }
+                                                                    }
+
+
                                                                 }
-                                                                else
+                                                            }
+                                                        }
+                                                        catch
+                                                        {
+                                                        }
+                                                    }
+
+                                                    BeginInvoke((MethodInvoker)MethodInvoker);
+                                                }
+
+                                                #endregion
+
+                                                #region Update normal transaction received color.
+
+                                                for (int i = 0;
+                                                    i < TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items
+                                                        .Count;
+                                                    i++)
+                                                {
+                                                    var i1 = i;
+
+                                                    void MethodInvoker()
+                                                    {
+
+                                                        try
+                                                        {
+                                                            if (i1 < TransactionHistoryWalletForm
+                                                                    .listViewNormalReceivedTransactionHistory.Items.Count)
+                                                            {
+                                                                if (TransactionHistoryWalletForm
+                                                                        .listViewNormalReceivedTransactionHistory.Items[i1] != null)
                                                                 {
-                                                                    if (TransactionHistoryWalletForm
+                                                                    if (CurrentTransactionHistoryPageNormalReceive == 1)
+                                                                    {
+                                                                        TransactionHistoryWalletForm
+                                                                            .listViewNormalReceivedTransactionHistory.Items[i1]
+                                                                            .SubItems[0]
+                                                                            .Text = "" + (i1 + 1);
+                                                                    }
+                                                                    var transactionWalletDateRecv = DateTime.Parse(
+                                                                        TransactionHistoryWalletForm
+                                                                            .listViewNormalReceivedTransactionHistory.Items[i1]
+                                                                            .SubItems[7]
+                                                                            .Text.ToString());
+                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
+                                                                        ClassUtils.DateUnixTimeNowSecond())
+                                                                    {
+                                                                        if (TransactionHistoryWalletForm
+                                                                                .listViewNormalReceivedTransactionHistory.Items[i1]
+                                                                                .BackColor != Color.FromArgb(255, 153, 102))
+                                                                        {
+                                                                            try
+                                                                            {
+                                                                                TransactionHistoryWalletForm
+                                                                                        .listViewNormalReceivedTransactionHistory
+                                                                                        .Items[i1].BackColor =
+                                                                                    Color.FromArgb(255, 153, 102);
+                                                                            }
+                                                                            catch
+                                                                            {
+                                                                                i = TransactionHistoryWalletForm
+                                                                                    .listViewNormalReceivedTransactionHistory.Items
+                                                                                    .Count;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (TransactionHistoryWalletForm
+                                                                                .listViewNormalReceivedTransactionHistory.Items[i1]
+                                                                                .BackColor != Color.FromArgb(0, 255, 153))
+                                                                        {
+                                                                            try
+                                                                            {
+                                                                                TransactionHistoryWalletForm
+                                                                                        .listViewNormalReceivedTransactionHistory
+                                                                                        .Items[i1].BackColor =
+                                                                                    Color.FromArgb(0, 255, 153);
+                                                                            }
+                                                                            catch
+                                                                            {
+                                                                                i = TransactionHistoryWalletForm
+                                                                                    .listViewNormalReceivedTransactionHistory.Items
+                                                                                    .Count;
+                                                                            }
+                                                                        }
+                                                                    }
+
+
+                                                                }
+                                                            }
+                                                        }
+                                                        catch
+                                                        {
+                                                        }
+                                                    }
+
+                                                    BeginInvoke((MethodInvoker)MethodInvoker);
+                                                }
+
+                                                #endregion
+
+                                                #region Update transaction anonymity sent color
+
+                                                for (int i = 0;
+                                                    i < TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory
+                                                        .Items.Count;
+                                                    i++)
+                                                {
+                                                    var i1 = i;
+
+                                                    void MethodInvoker()
+                                                    {
+                                                        try
+                                                        {
+                                                            if (i1 < TransactionHistoryWalletForm
+                                                                    .listViewAnonymitySendTransactionHistory.Items.Count)
+                                                            {
+                                                                if (TransactionHistoryWalletForm
+                                                                        .listViewAnonymitySendTransactionHistory.Items[i1] !=
+                                                                    null)
+                                                                {
+                                                                    if (CurrentTransactionHistoryPageAnonymousSend == 1)
+                                                                    {
+                                                                        TransactionHistoryWalletForm
                                                                             .listViewAnonymitySendTransactionHistory.Items[i1]
-                                                                            .BackColor != Color.FromArgb(0, 255, 153))
+                                                                            .SubItems[0].Text = "" + (i1 + 1);
+                                                                    }
+                                                                    var transactionWalletDateRecv = DateTime.Parse(
+                                                                        TransactionHistoryWalletForm
+                                                                            .listViewAnonymitySendTransactionHistory.Items[i1]
+                                                                            .SubItems[7]
+                                                                            .Text.ToString());
+                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
+                                                                        ClassUtils.DateUnixTimeNowSecond())
                                                                     {
-                                                                        try
+                                                                        if (TransactionHistoryWalletForm
+                                                                                .listViewAnonymitySendTransactionHistory
+                                                                                .Items[i1].BackColor !=
+                                                                            Color.FromArgb(255, 153, 102))
                                                                         {
-                                                                            TransactionHistoryWalletForm
-                                                                                .listViewAnonymitySendTransactionHistory.Items[i1]
-                                                                                .BackColor = Color.FromArgb(0, 255, 153);
+                                                                            try
+                                                                            {
+                                                                                TransactionHistoryWalletForm
+                                                                                        .listViewAnonymitySendTransactionHistory
+                                                                                        .Items[i1].BackColor =
+                                                                                    Color.FromArgb(255, 153, 102);
+                                                                            }
+                                                                            catch
+                                                                            {
+                                                                                i = TransactionHistoryWalletForm
+                                                                                    .listViewAnonymitySendTransactionHistory
+                                                                                    .Items.Count;
+                                                                            }
                                                                         }
-                                                                        catch
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (TransactionHistoryWalletForm
+                                                                                .listViewAnonymitySendTransactionHistory
+                                                                                .Items[i1].BackColor != Color.FromArgb(0, 255, 153))
                                                                         {
-                                                                            i = TransactionHistoryWalletForm
-                                                                                .listViewAnonymitySendTransactionHistory.Items
-                                                                                .Count;
+                                                                            try
+                                                                            {
+                                                                                TransactionHistoryWalletForm
+                                                                                        .listViewAnonymitySendTransactionHistory
+                                                                                        .Items[i1].BackColor =
+                                                                                    Color.FromArgb(0, 255, 153);
+                                                                            }
+                                                                            catch
+                                                                            {
+                                                                                i = TransactionHistoryWalletForm
+                                                                                    .listViewAnonymitySendTransactionHistory
+                                                                                    .Items.Count;
+                                                                            }
+                                                                        }
+                                                                    }
+
+
+                                                                }
+                                                            }
+                                                        }
+                                                        catch
+                                                        {
+                                                        }
+                                                    }
+
+                                                    BeginInvoke((MethodInvoker)MethodInvoker);
+                                                }
+
+                                                #endregion
+                                            }
+                                            else
+                                            {
+                                                if (!TransactionHistoryWalletForm.IsShowedWaitingTransaction)
+                                                {
+                                                    TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
+                                                }
+                                            }
+
+
+                                            if (ListAnonymousTransactionShowed.Count ==
+                                                ClassWalletTransactionAnonymityCache.ListTransaction.Count &&
+                                                ClassWalletTransactionAnonymityCache.ListTransaction.Count ==
+                                                ClassWalletObject.TotalTransactionInSyncAnonymity &&
+                                                ClassWalletTransactionCache.ListTransaction.Count ==
+                                                ClassWalletObject.TotalTransactionInSync)
+                                            {
+                                                if (ListTransactionShowed.Count ==
+                                                    ClassWalletTransactionCache.ListTransaction.Count)
+                                                {
+                                                    if (ClassWalletTransactionAnonymityCache.ListTransaction.Count ==
+                                                        ClassWalletObject.TotalTransactionInSyncAnonymity)
+                                                    {
+                                                        if (ClassWalletTransactionCache.ListTransaction.Count ==
+                                                            ClassWalletObject.TotalTransactionInSync)
+                                                        {
+                                                            if (TransactionHistoryWalletForm.IsShowedWaitingTransaction)
+                                                            {
+                                                                TransactionHistoryWalletForm.HideWaitingSyncTransactionPanel();
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+
+                                                #region Show transaction anonymity sent with the unique wallet anonymity id of the wallet
+                                                if (TotalAnonymityTransactionRead != ListAnonymousTransactionShowed.Count)
+                                                {
+
+
+                                                    for (int i = ListAnonymousTransactionShowed.Count - 1;
+                                                        i >= TotalAnonymityTransactionRead;
+                                                        i--)
+                                                    {
+                                                        string[] splitTransaction = ListAnonymousTransactionShowed[i].Split(new[] { "#" }, StringSplitOptions.None);
+                                                        string type = splitTransaction[0];
+                                                        string hash = splitTransaction[1];
+                                                        string wallet = splitTransaction[2];
+                                                        Decimal amount = Decimal.Parse(
+                                                            splitTransaction[3].ToString(Program.GlobalCultureInfo),
+                                                            NumberStyles.Currency, Program.GlobalCultureInfo);
+                                                        Decimal fee = Decimal.Parse(
+                                                            splitTransaction[4].ToString(Program.GlobalCultureInfo),
+                                                            NumberStyles.Currency, Program.GlobalCultureInfo);
+                                                        string timestamp = splitTransaction[5];
+                                                        if (ClassConnectorSetting.MAJOR_UPDATE_1)
+                                                        {
+                                                            string timestampRecv = splitTransaction[6];
+                                                            string blockchainHeight = splitTransaction[7];
+
+                                                            blockchainHeight = blockchainHeight.Replace("{", "");
+                                                            blockchainHeight = blockchainHeight.Replace("}", "");
+                                                            if (blockchainHeight.Contains(";"))
+                                                            {
+                                                                var splitBlockchainHeight =
+                                                                    blockchainHeight.Split(new[] { ";" },
+                                                                        StringSplitOptions.None);
+                                                                blockchainHeight = string.Empty;
+                                                                foreach (var height in splitBlockchainHeight)
+                                                                {
+                                                                    var blockId =
+                                                                        height.Split(new[] { "~" }, StringSplitOptions.None)[0];
+
+                                                                    blockchainHeight += blockId + " ";
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                blockchainHeight = blockchainHeight.Split(new[] { "~" },
+                                                                    StringSplitOptions.None)[0];
+                                                            }
+
+
+                                                            DateTime dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                            dateTimeSend = dateTimeSend.AddSeconds(long.Parse(timestamp));
+                                                            dateTimeSend = dateTimeSend.ToLocalTime();
+
+                                                            DateTime dateTimeRecv;
+                                                            try
+                                                            {
+                                                                dateTimeRecv = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                                dateTimeRecv =
+                                                                    dateTimeRecv.AddSeconds(long.Parse(timestampRecv));
+                                                                dateTimeRecv = dateTimeRecv.ToLocalTime();
+
+                                                                int minShow = (CurrentTransactionHistoryPageAnonymousSend - 1) * MaxTransactionPerPage;
+                                                                int maxShow = CurrentTransactionHistoryPageAnonymousSend * MaxTransactionPerPage;
+
+                                                                if (TotalTransactionAnonymousSend >= minShow && TotalTransactionAnonymousSend < maxShow && !_anonymousTransactionLoaded)
+                                                                {
+                                                                    string[] row =
+                                                                    {
+                                                                (TotalTransactionAnonymousSend+1).ToString(), dateTimeSend.ToString(),
+                                                                type, hash, "" + amount, "" + fee, wallet,
+                                                                dateTimeRecv.ToString(), blockchainHeight
+                                                            };
+                                                                    var listViewItem = new ListViewItem(row);
+
+
+                                                                    MethodInvoker invoke = () =>
+                                                                        TransactionHistoryWalletForm
+                                                                            .listViewAnonymitySendTransactionHistory.Items
+                                                                            .Add(listViewItem);
+                                                                    TransactionHistoryWalletForm
+                                                                        .listViewAnonymitySendTransactionHistory
+                                                                        .BeginInvoke(invoke);
+
+                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >
+                                                                        ClassUtils.DateUnixTimeNowSecond())
+                                                                    {
+                                                                        invoke = () =>
+                                                                            TransactionHistoryWalletForm
+                                                                                    .listViewAnonymitySendTransactionHistory
+                                                                                    .Items[
+                                                                                        TransactionHistoryWalletForm
+                                                                                            .listViewAnonymitySendTransactionHistory
+                                                                                            .Items
+                                                                                            .Count - 1].BackColor =
+                                                                                Color.FromArgb(255, 153, 102);
+                                                                        TransactionHistoryWalletForm
+                                                                            .listViewAnonymitySendTransactionHistory
+                                                                            .BeginInvoke(invoke);
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        invoke = () =>
+                                                                            TransactionHistoryWalletForm
+                                                                                    .listViewAnonymitySendTransactionHistory
+                                                                                    .Items[
+                                                                                        TransactionHistoryWalletForm
+                                                                                            .listViewAnonymitySendTransactionHistory
+                                                                                            .Items
+                                                                                            .Count - 1].BackColor =
+                                                                                Color.FromArgb(0, 255, 153);
+                                                                        TransactionHistoryWalletForm
+                                                                            .listViewAnonymitySendTransactionHistory
+                                                                            .BeginInvoke(invoke);
+                                                                    }
+
+
+                                                                }
+                                                                if (_anonymousTransactionLoaded && CurrentTransactionHistoryPageAnonymousSend == 1)
+                                                                {
+                                                                    string[] row =
+                                                                    {
+                                                                (TotalTransactionAnonymousSend+1).ToString(), dateTimeSend.ToString(),
+                                                                type, hash, "" + amount, "" + fee, wallet,
+                                                                dateTimeRecv.ToString(), blockchainHeight
+                                                            };
+                                                                    var listViewItem = new ListViewItem(row);
+
+
+                                                                    MethodInvoker invoke = () =>
+                                                                        TransactionHistoryWalletForm
+                                                                            .listViewAnonymitySendTransactionHistory.Items
+                                                                            .Insert(0, listViewItem);
+                                                                    TransactionHistoryWalletForm
+                                                                        .listViewAnonymitySendTransactionHistory
+                                                                        .BeginInvoke(invoke);
+
+
+                                                                }
+                                                                if (TotalTransactionAnonymousSend == minShow)
+                                                                {
+                                                                    void Invoker() =>
+                                                                        TransactionHistoryWalletForm.AutoResizeColumns(
+                                                                            TransactionHistoryWalletForm
+                                                                                .listViewAnonymitySendTransactionHistory);
+
+                                                                    TransactionHistoryWalletForm
+                                                                        .listViewAnonymitySendTransactionHistory
+                                                                        .BeginInvoke((MethodInvoker)Invoker);
+                                                                }
+
+                                                                TotalTransactionAnonymousSend++;
+                                                            }
+                                                            catch (Exception error)
+                                                            {
+                                                                Log.WriteLine(
+                                                                    "Error on transactions show date: " + error.Message +
+                                                                    " for timestamp recv: " + timestamp + " timestamp send: " +
+                                                                    timestampRecv);
+                                                            }
+                                                        }
+                                                    }
+
+                                                    TotalAnonymityTransactionRead = ListAnonymousTransactionShowed.Count;
+                                                    _anonymousTransactionLoaded = true;
+
+                                                }
+
+                                                #region Update transaction anonymity send color.
+
+                                                for (int i = 0;
+                                                i < TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items
+                                                    .Count;
+                                                i++)
+                                                {
+                                                    var i1 = i;
+
+                                                    void MethodInvoker()
+                                                    {
+
+                                                        try
+                                                        {
+                                                            if (i1 < TransactionHistoryWalletForm
+                                                                    .listViewAnonymitySendTransactionHistory.Items.Count)
+                                                            {
+                                                                if (TransactionHistoryWalletForm
+                                                                        .listViewAnonymitySendTransactionHistory.Items[i1] != null)
+                                                                {
+                                                                    if (CurrentTransactionHistoryPageAnonymousSend == 1)
+                                                                    {
+                                                                        TransactionHistoryWalletForm
+                                                                            .listViewAnonymitySendTransactionHistory.Items[i1]
+                                                                            .SubItems[0]
+                                                                            .Text = "" + (i1 + 1);
+                                                                    }
+                                                                    var transactionWalletDateRecv = DateTime.Parse(
+                                                                        TransactionHistoryWalletForm
+                                                                            .listViewAnonymitySendTransactionHistory.Items[i1]
+                                                                            .SubItems[7]
+                                                                            .Text.ToString());
+                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(transactionWalletDateRecv) >
+                                                                        ClassUtils.DateUnixTimeNowSecond())
+                                                                    {
+                                                                        if (TransactionHistoryWalletForm
+                                                                                .listViewAnonymitySendTransactionHistory.Items[i1]
+                                                                                .BackColor != Color.FromArgb(255, 153, 102))
+                                                                        {
+                                                                            try
+                                                                            {
+                                                                                TransactionHistoryWalletForm
+                                                                                    .listViewAnonymitySendTransactionHistory
+                                                                                    .Items[i1]
+                                                                                    .BackColor = Color.FromArgb(255, 153, 102);
+                                                                            }
+                                                                            catch
+                                                                            {
+                                                                                i = TransactionHistoryWalletForm
+                                                                                    .listViewAnonymitySendTransactionHistory.Items
+                                                                                    .Count;
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            if (TransactionHistoryWalletForm
+                                                                                    .listViewAnonymitySendTransactionHistory.Items[i1]
+                                                                                    .BackColor != Color.FromArgb(0, 255, 153))
+                                                                            {
+                                                                                try
+                                                                                {
+                                                                                    TransactionHistoryWalletForm
+                                                                                        .listViewAnonymitySendTransactionHistory.Items[i1]
+                                                                                        .BackColor = Color.FromArgb(0, 255, 153);
+                                                                                }
+                                                                                catch
+                                                                                {
+                                                                                    i = TransactionHistoryWalletForm
+                                                                                        .listViewAnonymitySendTransactionHistory.Items
+                                                                                        .Count;
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
                                                             }
                                                         }
+                                                        catch
+                                                        {
+                                                            StopUpdateTransactionHistory(false, false);
+                                                        }
                                                     }
+
+                                                    BeginInvoke((MethodInvoker)MethodInvoker);
                                                 }
-                                                catch
-                                                {
-                                                    StopUpdateTransactionHistory(false, false);
-                                                }
+
+                                                #endregion
+
+                                                #endregion
+                                            }
+                                            else
+                                            {
+                                                TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
                                             }
 
-                                            BeginInvoke((MethodInvoker)MethodInvoker);
+                                            if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                                            {
+                                                break;
+                                            }
+
+                                            if (TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Count +
+                                                TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items
+                                                    .Count +
+                                                TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Count +
+                                                TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Count >
+                                                ClassWalletTransactionCache.ListTransaction.Count)
+                                            {
+                                                _anonymousTransactionLoaded = false;
+                                                _normalTransactionLoaded = false;
+                                                StopUpdateTransactionHistory(false, false);
+                                            }
+
+                                            if (TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Count >
+                                                ClassWalletTransactionAnonymityCache.ListTransaction.Count)
+                                            {
+                                                _anonymousTransactionLoaded = false;
+                                                _normalTransactionLoaded = false;
+                                                StopUpdateTransactionHistory(false, false);
+                                            }
+
                                         }
-
-                                        #endregion
-
-                                        #endregion
                                     }
                                     else
                                     {
-                                        TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
+                                        if (TransactionHistoryWalletForm.IsShowed)
+                                        {
+                                            if (!TransactionHistoryWalletForm.IsShowedWaitingTransaction)
+                                            {
+                                                TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
+                                            }
+                                        }
                                     }
-
-                                    if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
-                                    {
-                                        break;
-                                    }
-
-                                    if (TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Count +
-                                        TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items
-                                            .Count +
-                                        TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Count +
-                                        TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Count >
-                                        ClassWalletTransactionCache.ListTransaction.Count)
-                                    {
-                                        _anonymousTransactionLoaded = false;
-                                        _normalTransactionLoaded = false;
-                                        StopUpdateTransactionHistory(false, false);
-                                    }
-
-                                    if (TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Count >
-                                        ClassWalletTransactionAnonymityCache.ListTransaction.Count)
-                                    {
-                                        _anonymousTransactionLoaded = false;
-                                        _normalTransactionLoaded = false;
-                                        StopUpdateTransactionHistory(false, false);
-                                    }
-
                                 }
-
+                                else
+                                {
+                                    if (TransactionHistoryWalletForm.IsShowed)
+                                    {
+                                        if (!TransactionHistoryWalletForm.IsShowedWaitingTransaction)
+                                        {
+                                            TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
+                                        }
+                                    }
+                                }
 
                                 await Task.Delay(ThreadUpdateTransactionWalletInterval);
                             }
@@ -3166,90 +3195,95 @@ namespace Xiropht_Wallet
 
                                 if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
                                 {
-
-                                    if (ListTransactionHashShowed.Count < ClassWalletTransactionCache.ListTransaction.Count)
-                                    {
-                                        MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = false;
-                                        BeginInvoke(invokeLockButton);
-
-
-                                        for (int i = ListTransactionHashShowed.Count;
-                                        i < ClassWalletTransactionCache.ListTransaction.Count;
-                                        i++)
-                                        {
-                                            if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
-                                            {
-
-
-                                                if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
-                                                {
-                                                    ListTransactionShowed.Clear();
-                                                    ListAnonymousTransactionShowed.Clear();
-                                                    ListTransactionHashShowed.Clear();
-                                                    ListAnonymousTransactionHashShowed.Clear();
-                                                    StopUpdateTransactionHistory(true, true);
-                                                    break;
-                                                }
-                                                if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
-                                                {
-                                                    if (i < ClassWalletTransactionCache.ListTransaction.Count)
-                                                    {
-                                                        string decryptedTransaction = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael, ClassWalletTransactionCache.ListTransaction[i], ClassWalletObject.WalletConnect.WalletAddress + ClassWalletObject.WalletConnect.WalletKey, ClassWalletNetworkSetting.KeySize); // AES
-
-                                                        if (decryptedTransaction == ClassAlgoErrorEnumeration.AlgoError)
-                                                        {
-                                                            TransactionHistoryWalletForm.ResyncTransaction();
-                                                            ClassWalletTransactionCache.RemoveWalletCache(ClassWalletObject.WalletConnect.WalletAddress);
-                                                            await Task.Factory.StartNew(() => StopAndRestartTransactionHistory()).ConfigureAwait(false);
-                                                            break;
-                                                        }
-                                                        else
-                                                        {
-                                                            var transactionHashDecrypted = decryptedTransaction.Split(new[] { "#" }, StringSplitOptions.None)[1];
-                                                            if (!ListTransactionHashShowed.ContainsKey(transactionHashDecrypted))
-                                                            {
-                                                                if (!ListTransactionShowed.ContainsKey(ListTransactionShowed.Count) && !ListTransactionShowed.ContainsValue(decryptedTransaction))
-                                                                {
-                                                                    ListTransactionHashShowed.Add(transactionHashDecrypted, transactionHashDecrypted);
-                                                                    ListTransactionShowed.Add(ListTransactionShowed.Count, decryptedTransaction);
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
-                                                    {
-                                                        UpdateLabelSyncInformation(
-                                                        "Total transactions loaded and decrypted: " +
-                                                        (ListTransactionShowed.Count +
-                                                         ListAnonymousTransactionShowed.Count) + "/" +
-                                                        (ClassWalletTransactionCache.ListTransaction.Count +
-                                                         ClassWalletTransactionAnonymityCache.ListTransaction.Count));
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    UpdateLabelSyncInformation("Total transactions downloaded: " + (ClassWalletTransactionCache.ListTransaction.Count +
-                                                                                 ClassWalletTransactionAnonymityCache.ListTransaction.Count) + "/" +
-                                                                                 (ClassWalletObject.TotalTransactionInSync + ClassWalletObject.TotalTransactionInSyncAnonymity));
-                                                }
-                                            }
-                                        }
-                                        invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = true;
-                                        BeginInvoke(invokeLockButton);
-                                    }
-                                    else
-                                    {
-                                        MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = true;
-                                        BeginInvoke(invokeLockButton);
-                                    }
-
-                                 
-                                    if (ListAnonymousTransactionHashShowed.Count < ClassWalletTransactionAnonymityCache.ListTransaction.Count)
+                                    if (ClassWalletObject.TotalTransactionInSyncAnonymity == ClassWalletTransactionAnonymityCache.ListTransaction.Count)
                                     {
                                         if (ClassWalletObject.TotalTransactionInSync == ClassWalletTransactionCache.ListTransaction.Count)
                                         {
-                                            if (ClassWalletObject.TotalTransactionInSyncAnonymity == ClassWalletTransactionAnonymityCache.ListTransaction.Count)
+                                            if (ListTransactionHashShowed.Count < ClassWalletTransactionCache.ListTransaction.Count)
                                             {
+                                                MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = false;
+                                                BeginInvoke(invokeLockButton);
+
+
+                                                for (int i = ListTransactionHashShowed.Count;
+                                                i < ClassWalletTransactionCache.ListTransaction.Count;
+                                                i++)
+                                                {
+                                                    if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
+                                                    {
+
+
+                                                        if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                                                        {
+                                                            ListTransactionShowed.Clear();
+                                                            ListAnonymousTransactionShowed.Clear();
+                                                            ListTransactionHashShowed.Clear();
+                                                            ListAnonymousTransactionHashShowed.Clear();
+                                                            StopUpdateTransactionHistory(true, true);
+                                                            break;
+                                                        }
+                                                        if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
+                                                        {
+                                                            if (i < ClassWalletTransactionCache.ListTransaction.Count)
+                                                            {
+                                                                string decryptedTransaction = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael, ClassWalletTransactionCache.ListTransaction[i], ClassWalletObject.WalletConnect.WalletAddress + ClassWalletObject.WalletConnect.WalletKey, ClassWalletNetworkSetting.KeySize); // AES
+
+                                                                if (decryptedTransaction == ClassAlgoErrorEnumeration.AlgoError)
+                                                                {
+                                                                    TransactionHistoryWalletForm.ResyncTransaction();
+                                                                    ClassWalletTransactionCache.RemoveWalletCache(ClassWalletObject.WalletConnect.WalletAddress);
+                                                                    await Task.Factory.StartNew(() => StopAndRestartTransactionHistory()).ConfigureAwait(false);
+                                                                    break;
+                                                                }
+                                                                else
+                                                                {
+                                                                    var transactionHashDecrypted = decryptedTransaction.Split(new[] { "#" }, StringSplitOptions.None)[1];
+                                                                    if (!ListTransactionHashShowed.ContainsKey(transactionHashDecrypted))
+                                                                    {
+                                                                        if (!ListTransactionShowed.ContainsKey(ListTransactionShowed.Count) && !ListTransactionShowed.ContainsValue(decryptedTransaction))
+                                                                        {
+                                                                            ListTransactionHashShowed.Add(transactionHashDecrypted, transactionHashDecrypted);
+                                                                            ListTransactionShowed.Add(ListTransactionShowed.Count, decryptedTransaction);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
+                                                            {
+                                                                UpdateLabelSyncInformation(
+                                                                "Total transactions loaded and decrypted: " +
+                                                                (ListTransactionShowed.Count +
+                                                                 ListAnonymousTransactionShowed.Count) + "/" +
+                                                                (ClassWalletTransactionCache.ListTransaction.Count +
+                                                                 ClassWalletTransactionAnonymityCache.ListTransaction.Count));
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            UpdateLabelSyncInformation("Total transactions downloaded: " + (ClassWalletTransactionCache.ListTransaction.Count +
+                                                                                         ClassWalletTransactionAnonymityCache.ListTransaction.Count) + "/" +
+                                                                                         (ClassWalletObject.TotalTransactionInSync + ClassWalletObject.TotalTransactionInSyncAnonymity));
+                                                        }
+                                                    }
+                                                }
+                                                invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = true;
+                                                BeginInvoke(invokeLockButton);
+                                            }
+                                            else
+                                            {
+                                                MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = true;
+                                                BeginInvoke(invokeLockButton);
+                                            }
+                                        }
+                                    }
+
+                                    if (ClassWalletObject.TotalTransactionInSyncAnonymity == ClassWalletTransactionAnonymityCache.ListTransaction.Count)
+                                    {
+                                        if (ClassWalletObject.TotalTransactionInSync == ClassWalletTransactionCache.ListTransaction.Count)
+                                        {
+                                            if (ListAnonymousTransactionHashShowed.Count < ClassWalletTransactionAnonymityCache.ListTransaction.Count)
+                                            {
+
                                                 MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = false;
                                                 BeginInvoke(invokeLockButton);
 
@@ -3320,15 +3354,15 @@ namespace Xiropht_Wallet
                                                 }
                                                 invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = true;
                                                 BeginInvoke(invokeLockButton);
+
+                                            }
+                                            else
+                                            {
+                                                MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = true;
+                                                BeginInvoke(invokeLockButton);
                                             }
                                         }
                                     }
-                                    else
-                                    {
-                                        MethodInvoker invokeLockButton = () => SendTransactionWalletForm.buttonSendTransaction.Enabled = true;
-                                        BeginInvoke(invokeLockButton);
-                                    }
-
                                     if (!ClassWalletObject.InSyncTransaction &&
                                         !ClassWalletObject.InSyncTransactionAnonymity &&
                                         (ListTransactionShowed.Count + ListAnonymousTransactionShowed.Count) ==
