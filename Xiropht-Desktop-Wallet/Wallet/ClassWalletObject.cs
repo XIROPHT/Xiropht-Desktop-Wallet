@@ -1346,108 +1346,46 @@ namespace Xiropht_Wallet.Wallet
                 case ClassSeedNodeCommand.ClassReceiveSeedEnumeration.WalletSendRemoteNode:
                     if (!WalletOnUseSync && !EnableReceivePacketRemoteNode)
                     {
-                        if (ClassRemoteNodeChecker.ListRemoteNodeChecked == null)
+                        try
                         {
-                            ClassRemoteNodeChecker.ListRemoteNodeChecked = new List<Tuple<string, int>>();
-                        }
-                        LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
-
-                        if (ListRemoteNodeBanned.Count > 0)
-                        {
-                            foreach (var seedNodeIp in ClassConnectorSetting.SeedNodeIp)
+                            if (ClassRemoteNodeChecker.ListRemoteNodeChecked == null)
                             {
-                                if (ListRemoteNodeBanned.ContainsKey(seedNodeIp.Key))
+                                ClassRemoteNodeChecker.ListRemoteNodeChecked = new List<Tuple<string, int>>();
+                            }
+                            LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
+
+                            if (ListRemoteNodeBanned.Count > 0)
+                            {
+                                foreach (var seedNodeIp in ClassConnectorSetting.SeedNodeIp)
                                 {
-                                    ListRemoteNodeBanned[seedNodeIp.Key] = 0;
+                                    if (ListRemoteNodeBanned.ContainsKey(seedNodeIp.Key))
+                                    {
+                                        ListRemoteNodeBanned[seedNodeIp.Key] = 0;
+                                    }
                                 }
                             }
-                        }
 
-                        bool noPublicNode = false;
-                        if (!SettingManualRemoteNode)
-                        {
-                            if (WalletSyncMode == (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
+                            bool noPublicNode = false;
+                            if (!SettingManualRemoteNode)
                             {
-
-                                foreach (var remoteNodeObj in packet.Split(new[] { "|" }, StringSplitOptions.None))
+                                if (WalletSyncMode == (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
                                 {
-                                    if (remoteNodeObj != null)
+
+                                    foreach (var remoteNodeObj in packet.Split(new[] { "|" }, StringSplitOptions.None))
                                     {
-                                        if (!string.IsNullOrEmpty(remoteNodeObj))
+                                        if (remoteNodeObj != null)
                                         {
-                                            if (remoteNodeObj != "WALLET-SEND-REMOTE-NODE")
+                                            if (!string.IsNullOrEmpty(remoteNodeObj))
                                             {
-                                                var remoteNode = remoteNodeObj.Replace("WALLET-SEND-REMOTE-NODE", "");
-
-                                                remoteNode = remoteNode.Replace("|", "");
-                                                if (remoteNode != "NONE")
+                                                if (remoteNodeObj != "WALLET-SEND-REMOTE-NODE")
                                                 {
-                                                    if (!ListRemoteNodeBanned.ContainsKey(remoteNode))
-                                                    {
-                                                        if (!ClassRemoteNodeChecker.CheckRemoteNodeHostExist(remoteNode))
-                                                        {
-                                                            if (!SeedNodeConnectorWallet.ReturnStatus())
-                                                            {
-                                                                await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
-                                                                return;
-                                                            }
-                                                            else
-                                                            {
-                                                                if (WalletOnUseSync)
-                                                                {
-                                                                    return;
-                                                                }
-                                                            }
-                                                            ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
-                                                                "Start to check remote node host: " + remoteNode);
-#if DEBUG
-                                                                Log.WriteLine("Start to check remote node host: " + remoteNode);
-#endif
-                                                            switch (await ClassRemoteNodeChecker.CheckNewRemoteNodeHostAsync(remoteNode))
-                                                            {
-                                                                case ClassRemoteNodeStatus.StatusAlive:
-                                                                    ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
-                                                                        "Remote node host: " + remoteNode +
-                                                                        " is alive and already exist on the list.");
-#if DEBUG
-                                                                        Log.WriteLine(
-                                                                            "Remote node host: " + remoteNode +
-                                                                            " is alive and already exist on the list.");
-#endif
-                                                                    break;
-                                                                case ClassRemoteNodeStatus.StatusNew:
-                                                                    ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
-                                                                        "Remote node host: " + remoteNode +
-                                                                        " is alive and included on the list.");
-#if DEBUG
-                                                                        Log.WriteLine(
-                                                                            "Remote node host: " + remoteNode +
-                                                                            " is alive and included on the list.");
-#endif
-                                                                    break;
-                                                                case ClassRemoteNodeStatus.StatusDead:
-                                                                    ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
-                                                                        "Remote node host: " + remoteNode + " is dead.");
-#if DEBUG
-                                                                        Log.WriteLine("Remote node host: " + remoteNode + " is dead.");
-#endif
-                                                                    InsertBanRemoteNode(remoteNode);
-                                                                    break;
-                                                            }
-                                                        }
-#if DEBUG
-                                                            else
-                                                            {
-                                                                Log.WriteLine("Remote node host: " + remoteNode + " already exist.");
-                                                            }
-#endif
-                                                    }
-                                                    else
-                                                    {
+                                                    var remoteNode = remoteNodeObj.Replace("WALLET-SEND-REMOTE-NODE", "");
 
-                                                        if (ListRemoteNodeBanned[remoteNode] + ClassConnectorSetting.MaxRemoteNodeBanTime < ClassUtils.DateUnixTimeNowSecond())
+                                                    remoteNode = remoteNode.Replace("|", "");
+                                                    if (remoteNode != "NONE")
+                                                    {
+                                                        if (!ListRemoteNodeBanned.ContainsKey(remoteNode))
                                                         {
-
                                                             if (!ClassRemoteNodeChecker.CheckRemoteNodeHostExist(remoteNode))
                                                             {
                                                                 if (!SeedNodeConnectorWallet.ReturnStatus())
@@ -1465,7 +1403,7 @@ namespace Xiropht_Wallet.Wallet
                                                                 ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
                                                                     "Start to check remote node host: " + remoteNode);
 #if DEBUG
-                                                                    Log.WriteLine("Start to check remote node host: " + remoteNode);
+                                                                Log.WriteLine("Start to check remote node host: " + remoteNode);
 #endif
                                                                 switch (await ClassRemoteNodeChecker.CheckNewRemoteNodeHostAsync(remoteNode))
                                                                 {
@@ -1474,276 +1412,346 @@ namespace Xiropht_Wallet.Wallet
                                                                             "Remote node host: " + remoteNode +
                                                                             " is alive and already exist on the list.");
 #if DEBUG
-                                                                            Log.WriteLine(
-                                                                                "Remote node host: " + remoteNode +
-                                                                                " is alive and already exist on the list.");
+                                                                        Log.WriteLine(
+                                                                            "Remote node host: " + remoteNode +
+                                                                            " is alive and already exist on the list.");
 #endif
-                                                                        if (ListRemoteNodeTotalDisconnect.ContainsKey(remoteNode))
-                                                                        {
-                                                                            ListRemoteNodeTotalDisconnect[remoteNode] = 0;
-                                                                        }
                                                                         break;
                                                                     case ClassRemoteNodeStatus.StatusNew:
                                                                         ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
                                                                             "Remote node host: " + remoteNode +
                                                                             " is alive and included on the list.");
 #if DEBUG
-                                                                            Log.WriteLine(
-                                                                                "Remote node host: " + remoteNode +
-                                                                                " is alive and included on the list.");
+                                                                        Log.WriteLine(
+                                                                            "Remote node host: " + remoteNode +
+                                                                            " is alive and included on the list.");
 #endif
-                                                                        if (ListRemoteNodeTotalDisconnect.ContainsKey(remoteNode))
-                                                                        {
-                                                                            ListRemoteNodeTotalDisconnect[remoteNode] = 0;
-                                                                        }
                                                                         break;
                                                                     case ClassRemoteNodeStatus.StatusDead:
                                                                         ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
                                                                             "Remote node host: " + remoteNode + " is dead.");
 #if DEBUG
-                                                                            Log.WriteLine("Remote node host: " + remoteNode + " is dead.");
+                                                                        Log.WriteLine("Remote node host: " + remoteNode + " is dead.");
 #endif
                                                                         InsertBanRemoteNode(remoteNode);
                                                                         break;
                                                                 }
                                                             }
 #if DEBUG
+                                                            else
+                                                            {
+                                                                Log.WriteLine("Remote node host: " + remoteNode + " already exist.");
+                                                            }
+#endif
+                                                        }
+                                                        else
+                                                        {
+
+                                                            if (ListRemoteNodeBanned[remoteNode] + ClassConnectorSetting.MaxRemoteNodeBanTime < ClassUtils.DateUnixTimeNowSecond())
+                                                            {
+
+                                                                if (!ClassRemoteNodeChecker.CheckRemoteNodeHostExist(remoteNode))
+                                                                {
+                                                                    if (!SeedNodeConnectorWallet.ReturnStatus())
+                                                                    {
+                                                                        await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+                                                                        return;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (WalletOnUseSync)
+                                                                        {
+                                                                            return;
+                                                                        }
+                                                                    }
+                                                                    ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
+                                                                        "Start to check remote node host: " + remoteNode);
+#if DEBUG
+                                                                    Log.WriteLine("Start to check remote node host: " + remoteNode);
+#endif
+                                                                    switch (await ClassRemoteNodeChecker.CheckNewRemoteNodeHostAsync(remoteNode))
+                                                                    {
+                                                                        case ClassRemoteNodeStatus.StatusAlive:
+                                                                            ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
+                                                                                "Remote node host: " + remoteNode +
+                                                                                " is alive and already exist on the list.");
+#if DEBUG
+                                                                            Log.WriteLine(
+                                                                                "Remote node host: " + remoteNode +
+                                                                                " is alive and already exist on the list.");
+#endif
+                                                                            if (ListRemoteNodeTotalDisconnect.ContainsKey(remoteNode))
+                                                                            {
+                                                                                ListRemoteNodeTotalDisconnect[remoteNode] = 0;
+                                                                            }
+                                                                            break;
+                                                                        case ClassRemoteNodeStatus.StatusNew:
+                                                                            ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
+                                                                                "Remote node host: " + remoteNode +
+                                                                                " is alive and included on the list.");
+#if DEBUG
+                                                                            Log.WriteLine(
+                                                                                "Remote node host: " + remoteNode +
+                                                                                " is alive and included on the list.");
+#endif
+                                                                            if (ListRemoteNodeTotalDisconnect.ContainsKey(remoteNode))
+                                                                            {
+                                                                                ListRemoteNodeTotalDisconnect[remoteNode] = 0;
+                                                                            }
+                                                                            break;
+                                                                        case ClassRemoteNodeStatus.StatusDead:
+                                                                            ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(
+                                                                                "Remote node host: " + remoteNode + " is dead.");
+#if DEBUG
+                                                                            Log.WriteLine("Remote node host: " + remoteNode + " is dead.");
+#endif
+                                                                            InsertBanRemoteNode(remoteNode);
+                                                                            break;
+                                                                    }
+                                                                }
+#if DEBUG
                                                                 else
                                                                 {
                                                                     Log.WriteLine("Remote node host: " + remoteNode + " already exist.");
                                                                 }
 #endif
-                                                        }
+                                                            }
 #if DEBUG
                                                         else
                                                         {
                                                             Log.WriteLine("Remote node host: " + remoteNode + " is banned.");
                                                         }
 #endif
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        noPublicNode = true;
                                                     }
                                                 }
-                                                else
-                                                {
-                                                    noPublicNode = true;
-                                                }
                                             }
                                         }
                                     }
                                 }
-                            }
 
-                            ClassRemoteNodeChecker.ListRemoteNodeChecked.Add(new Tuple<string, int>(SeedNodeConnectorWallet.ReturnCurrentSeedNodeHost(), 30));
-                            ClassRemoteNodeChecker.ListRemoteNodeChecked.Distinct();
+                                ClassRemoteNodeChecker.ListRemoteNodeChecked.Add(new Tuple<string, int>(SeedNodeConnectorWallet.ReturnCurrentSeedNodeHost(), 30));
+                                ClassRemoteNodeChecker.ListRemoteNodeChecked.Distinct();
 
-                            if (ListWalletConnectToRemoteNode == null)
-                            {
-                                ListWalletConnectToRemoteNode = new List<ClassWalletConnectToRemoteNode>();
-                            }
-
-                            if (ClassRemoteNodeChecker.ListRemoteNodeChecked.Count > 0)
-                            {
-                                try
-                                {
-                                    for (int i = 0; i < ListWalletConnectToRemoteNode.Count; i++)
-                                    {
-                                        if (i < ListWalletConnectToRemoteNode.Count)
-                                        {
-                                            if (ListWalletConnectToRemoteNode[i] != null)
-                                            {
-                                                ListWalletConnectToRemoteNode[i].DisconnectRemoteNodeClient();
-                                            }
-                                        }
-                                    }
-                                    ListWalletConnectToRemoteNode.Clear();
-                                }
-                                catch
+                                if (ListWalletConnectToRemoteNode == null)
                                 {
                                     ListWalletConnectToRemoteNode = new List<ClassWalletConnectToRemoteNode>();
                                 }
 
-                                ListWalletConnectToRemoteNode.Add(
-                                    new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                        .ObjectTransaction));
-                                ListWalletConnectToRemoteNode.Add(
-                                    new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                        .ObjectSupply));
-                                ListWalletConnectToRemoteNode.Add(
-                                    new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                        .ObjectCirculating));
-                                ListWalletConnectToRemoteNode.Add(
-                                    new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                        .ObjectFee));
-                                ListWalletConnectToRemoteNode.Add(
-                                    new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                        .ObjectBlockMined));
-                                ListWalletConnectToRemoteNode.Add(
-                                    new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                        .ObjectDifficulty));
-                                ListWalletConnectToRemoteNode.Add(
-                                    new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                        .ObjectRate));
-                                ListWalletConnectToRemoteNode.Add(
-                                    new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                        .ObjectPendingTransaction));
-                                ListWalletConnectToRemoteNode.Add(
-                                    new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                        .ObjectAskWalletTransaction));
-                                ListWalletConnectToRemoteNode.Add(
-                                    new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                        .ObjectAskBlock));
-                                ListWalletConnectToRemoteNode.Add(
-                                    new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                        .ObjectAskLastBlockFound));
-                                ListWalletConnectToRemoteNode.Add(
-                                    new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
-                                        .ObjectAskWalletAnonymityTransaction));
-
-
-                                if (WalletSyncMode == (int)ClassWalletSyncMode.WALLET_SYNC_DEFAULT || noPublicNode) // Seed node sync.
+                                if (ClassRemoteNodeChecker.ListRemoteNodeChecked.Count > 0)
                                 {
-                                    int randomSeedNode = ClassUtils.GetRandomBetween(0, ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
-
-                                    for(int i = 0; i < ListWalletConnectToRemoteNode.Count; i++)
+                                    try
                                     {
-                                        if (i < ListWalletConnectToRemoteNode.Count)
+                                        for (int i = 0; i < ListWalletConnectToRemoteNode.Count; i++)
                                         {
-                                            if (ListWalletConnectToRemoteNode[i] != null)
+                                            if (i < ListWalletConnectToRemoteNode.Count)
                                             {
-                                                if (!await ListWalletConnectToRemoteNode[i].ConnectToRemoteNodeAsync(SeedNodeConnectorWallet.ReturnCurrentSeedNodeHost(), ClassConnectorSetting.RemoteNodePort))
+                                                if (ListWalletConnectToRemoteNode[i] != null)
                                                 {
-                                                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
-                                                    return;
+                                                    ListWalletConnectToRemoteNode[i].DisconnectRemoteNodeClient();
                                                 }
-                                                if (!SeedNodeConnectorWallet.ReturnStatus())
+                                            }
+                                        }
+                                        ListWalletConnectToRemoteNode.Clear();
+                                    }
+                                    catch
+                                    {
+                                        ListWalletConnectToRemoteNode = new List<ClassWalletConnectToRemoteNode>();
+                                    }
+
+                                    ListWalletConnectToRemoteNode.Add(
+                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                            .ObjectTransaction));
+                                    ListWalletConnectToRemoteNode.Add(
+                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                            .ObjectSupply));
+                                    ListWalletConnectToRemoteNode.Add(
+                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                            .ObjectCirculating));
+                                    ListWalletConnectToRemoteNode.Add(
+                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                            .ObjectFee));
+                                    ListWalletConnectToRemoteNode.Add(
+                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                            .ObjectBlockMined));
+                                    ListWalletConnectToRemoteNode.Add(
+                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                            .ObjectDifficulty));
+                                    ListWalletConnectToRemoteNode.Add(
+                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                            .ObjectRate));
+                                    ListWalletConnectToRemoteNode.Add(
+                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                            .ObjectPendingTransaction));
+                                    ListWalletConnectToRemoteNode.Add(
+                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                            .ObjectAskWalletTransaction));
+                                    ListWalletConnectToRemoteNode.Add(
+                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                            .ObjectAskBlock));
+                                    ListWalletConnectToRemoteNode.Add(
+                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                            .ObjectAskLastBlockFound));
+                                    ListWalletConnectToRemoteNode.Add(
+                                        new ClassWalletConnectToRemoteNode(ClassWalletConnectToRemoteNodeObject
+                                            .ObjectAskWalletAnonymityTransaction));
+
+
+                                    if (WalletSyncMode == (int)ClassWalletSyncMode.WALLET_SYNC_DEFAULT || noPublicNode) // Seed node sync.
+                                    {
+                                        int randomSeedNode = ClassUtils.GetRandomBetween(0, ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
+
+                                        for (int i = 0; i < ListWalletConnectToRemoteNode.Count; i++)
+                                        {
+                                            if (i < ListWalletConnectToRemoteNode.Count)
+                                            {
+                                                if (ListWalletConnectToRemoteNode[i] != null)
                                                 {
-                                                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
-                                                    return;
-                                                }
-                                                else
-                                                {
-                                                    if (WalletOnUseSync)
+                                                    if (!await ListWalletConnectToRemoteNode[i].ConnectToRemoteNodeAsync(SeedNodeConnectorWallet.ReturnCurrentSeedNodeHost(), ClassConnectorSetting.RemoteNodePort))
                                                     {
                                                         await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
                                                         return;
+                                                    }
+                                                    if (!SeedNodeConnectorWallet.ReturnStatus())
+                                                    {
+                                                        await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+                                                        return;
+                                                    }
+                                                    else
+                                                    {
+                                                        if (WalletOnUseSync)
+                                                        {
+                                                            await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+                                                            return;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                    else if (WalletSyncMode == (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE) // Public remote node sync.
+                                    {
+                                        var randomNodeId = ClassUtils.GetRandomBetween(0, ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
+                                        string randomNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNodeId].Item1;
+
+                                        for (int i = 0; i < ListWalletConnectToRemoteNode.Count; i++)
+                                        {
+                                            if (i < ListWalletConnectToRemoteNode.Count)
+                                            {
+                                                if (ListWalletConnectToRemoteNode[i] != null)
+                                                {
+                                                    if (!await ListWalletConnectToRemoteNode[i].ConnectToRemoteNodeAsync(randomNode, ClassConnectorSetting.RemoteNodePort))
+                                                    {
+                                                        InsertBanRemoteNode(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNodeId].Item1);
+                                                        await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+                                                        return;
+                                                    }
+                                                    if (!SeedNodeConnectorWallet.ReturnStatus())
+                                                    {
+                                                        await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+                                                        return;
+                                                    }
+                                                    else
+                                                    {
+                                                        if (WalletOnUseSync)
+                                                        {
+                                                            await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+                                                            return;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else if (WalletSyncMode == (int)ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE) // Manual sync mode
+                                    {
+                                        for (int i = 0; i < ListWalletConnectToRemoteNode.Count; i++)
+                                        {
+                                            if (i < ListWalletConnectToRemoteNode.Count)
+                                            {
+                                                if (ListWalletConnectToRemoteNode[i] != null)
+                                                {
+                                                    if (!await ListWalletConnectToRemoteNode[0].ConnectToRemoteNodeAsync(WalletSyncHostname, ClassConnectorSetting.RemoteNodePort))
+                                                    {
+                                                        await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+                                                        return;
+                                                    }
+                                                    if (!SeedNodeConnectorWallet.ReturnStatus())
+                                                    {
+                                                        await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+                                                        return;
+                                                    }
+                                                    else
+                                                    {
+                                                        if (WalletOnUseSync)
+                                                        {
+                                                            await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+                                                            return;
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
                                     }
 
-                                }
-                                else if (WalletSyncMode == (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE) // Public remote node sync.
-                                {
-                                    var randomNodeId = ClassUtils.GetRandomBetween(0, ClassRemoteNodeChecker.ListRemoteNodeChecked.Count - 1);
-                                    string randomNode = ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNodeId].Item1;
-
-                                    for(int i = 0; i < ListWalletConnectToRemoteNode.Count; i++)
-                                    {
-                                        if (i < ListWalletConnectToRemoteNode.Count)
-                                        {
-                                            if (ListWalletConnectToRemoteNode[i] != null)
-                                            {
-                                                if (!await ListWalletConnectToRemoteNode[i].ConnectToRemoteNodeAsync(randomNode, ClassConnectorSetting.RemoteNodePort))
-                                                {
-                                                    InsertBanRemoteNode(ClassRemoteNodeChecker.ListRemoteNodeChecked[randomNodeId].Item1);
-                                                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
-                                                    return;
-                                                }
-                                                if (!SeedNodeConnectorWallet.ReturnStatus())
-                                                {
-                                                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
-                                                    return;
-                                                }
-                                                else
-                                                {
-                                                    if (WalletOnUseSync)
-                                                    {
-                                                        await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
-                                                        return;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                else if (WalletSyncMode == (int)ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE) // Manual sync mode
-                                {
-                                    for(int i = 0; i < ListWalletConnectToRemoteNode.Count; i++)
-                                    {
-                                        if (i < ListWalletConnectToRemoteNode.Count)
-                                        {
-                                            if (ListWalletConnectToRemoteNode[i] != null)
-                                            {
-                                                if (!await ListWalletConnectToRemoteNode[0].ConnectToRemoteNodeAsync(WalletSyncHostname, ClassConnectorSetting.RemoteNodePort))
-                                                {
-                                                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
-                                                    return;
-                                                }
-                                                if (!SeedNodeConnectorWallet.ReturnStatus())
-                                                {
-                                                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
-                                                    return;
-                                                }
-                                                else
-                                                {
-                                                    if (WalletOnUseSync)
-                                                    {
-                                                        await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
-                                                        return;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                WalletCheckMaxSupply = 1;
-                                WalletCheckCoinCirculating = 1;
-                                WalletCheckTotalTransactionFee = 1;
-                                WalletCheckTotalBlockMined = 1;
-                                WalletCheckNetworkHashrate = 1;
-                                WalletCheckNetworkDifficulty = 1;
-                                WalletCheckTotalPendingTransaction = 1;
-                                WalletCheckBlockPerId = 1;
-                                EnableReceivePacketRemoteNode = true;
-                                WalletOnUseSync = true;
+                                    WalletCheckMaxSupply = 1;
+                                    WalletCheckCoinCirculating = 1;
+                                    WalletCheckTotalTransactionFee = 1;
+                                    WalletCheckTotalBlockMined = 1;
+                                    WalletCheckNetworkHashrate = 1;
+                                    WalletCheckNetworkDifficulty = 1;
+                                    WalletCheckTotalPendingTransaction = 1;
+                                    WalletCheckBlockPerId = 1;
+                                    EnableReceivePacketRemoteNode = true;
+                                    WalletOnUseSync = true;
 #if DEBUG
                                         Log.WriteLine("Enable receive packet remote node list.");
 #endif
-                                ListenRemoteNodeNetworkAsync();
+                                    ListenRemoteNodeNetworkAsync();
 #if DEBUG
                                         Log.WriteLine("Enable send packet remote node list.");
 #endif
-                                SendRemoteNodeNetworkAsync();
+                                    SendRemoteNodeNetworkAsync();
 
 #if DEBUG
                                         Log.WriteLine("Enable check packet remote node list.");
 #endif
 
-                                CheckRemoteNodeNetwork();
-                                var remoteNodeMessageSync = "Wallet sync with remote node:";
-                                var tmplistNodeSync = new List<string>();
-                                for (var i = 0; i < ListWalletConnectToRemoteNode.Count - 1; i++)
-                                {
-                                    if (!tmplistNodeSync.Contains(ListWalletConnectToRemoteNode[i]
-                                        .RemoteNodeHost))
+                                    CheckRemoteNodeNetwork();
+                                    var remoteNodeMessageSync = "Wallet sync with remote node:";
+                                    var tmplistNodeSync = new List<string>();
+                                    for (var i = 0; i < ListWalletConnectToRemoteNode.Count - 1; i++)
                                     {
-                                        tmplistNodeSync.Add(ListWalletConnectToRemoteNode[i].RemoteNodeHost);
-                                        remoteNodeMessageSync += " " + ListWalletConnectToRemoteNode[i].RemoteNodeHost;
+                                        if (!tmplistNodeSync.Contains(ListWalletConnectToRemoteNode[i]
+                                            .RemoteNodeHost))
+                                        {
+                                            tmplistNodeSync.Add(ListWalletConnectToRemoteNode[i].RemoteNodeHost);
+                                            remoteNodeMessageSync += " " + ListWalletConnectToRemoteNode[i].RemoteNodeHost;
+                                        }
                                     }
+
+                                    ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(remoteNodeMessageSync);
+
                                 }
-
-                                ClassFormPhase.WalletXiropht.UpdateLabelSyncInformation(remoteNodeMessageSync);
-
-                            }
-                            else
-                            {
+                                else
+                                {
 #if DEBUG
                                     Log.WriteLine("No public remote node available.");
 #endif
+                                }
                             }
                         }
+                        catch
+                        {
+                            DisconnectWholeRemoteNodeSync(true, true);
+                        }
                     }
+
                     break;
                 case ClassSeedNodeCommand.ClassReceiveSeedEnumeration.WalletResultMaxSupply:
                     if (splitPacket[1] != "1")
