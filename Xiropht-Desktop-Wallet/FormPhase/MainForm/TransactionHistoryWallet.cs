@@ -37,7 +37,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     ClassWalletObject.InSyncTransaction = false;
                     ClassWalletObject.InSyncTransactionAnonymity = false;
                     ClassWalletObject.BlockTransactionSync = false;
-                    ClassWalletObject.DisconnectWholeRemoteNodeSync(true, true);
+                    ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
                     ClassFormPhase.WalletXiropht.EnableUpdateTransactionWallet = false;
                     ClassFormPhase.WalletXiropht.StopAndRestartTransactionHistory();
                 }
@@ -115,13 +115,15 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             listViewAnonymityReceivedTransactionHistory.Hide();
             listViewAnonymitySendTransactionHistory.Hide();
             listViewNormalReceivedTransactionHistory.Hide();
-            UpdateStyles();
+            Refresh();
         }
 
         public void ShowWaitingSyncTransactionPanel()
         {
-            void MethodInvoker()
+
+            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
             {
+                _panelWaitingSync.Visible = true;
                 _panelWaitingSync.Show();
                 _panelWaitingSync.BringToFront();
                 _panelWaitingSync.Width = (int)(Width / 1.5f);
@@ -138,17 +140,24 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     X = _panelWaitingSync.Width / 2 - _labelWaitingText.Width / 2,
                     Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
                 };
-                Refresh();
                 IsShowedWaitingTransaction = true;
-            }
+                Refresh();
 
-            BeginInvoke((MethodInvoker)MethodInvoker);
+            });
+
         }
 
         public void HideWaitingSyncTransactionPanel()
         {
-            MethodInvoker invoke = () => { _panelWaitingSync.Refresh(); _panelWaitingSync.Hide(); Refresh(); IsShowedWaitingTransaction = false; };
-            BeginInvoke(invoke);
+
+            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+            {
+                _panelWaitingSync.Visible = false;
+                _panelWaitingSync.Hide();
+                IsShowedWaitingTransaction = false;
+                Refresh();
+            });
+
         }
 
         protected override void OnResize(EventArgs e)

@@ -64,7 +64,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             if (ClassBlockCache.RemoveWalletBlockCache())
             {
                 ClassFormPhase.WalletXiropht.ListBlockHashShowed.Clear();
-                ClassWalletObject.DisconnectWholeRemoteNodeSync(true, true);
+                ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
             }
 
         }

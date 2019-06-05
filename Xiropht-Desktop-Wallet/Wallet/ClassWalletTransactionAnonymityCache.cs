@@ -223,7 +223,7 @@ namespace Xiropht_Wallet.Wallet
                                 ClassWalletObject.ListRemoteNodeBanned[ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost] = ClassUtils.DateUnixTimeNowSecond();
                             }
                         }
-                        ClassWalletObject.DisconnectWholeRemoteNodeSync(true, true);
+                        ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
                     }
                     else
                     {
@@ -262,7 +262,7 @@ namespace Xiropht_Wallet.Wallet
                             ClassWalletObject.ListRemoteNodeBanned[ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost] = ClassUtils.DateUnixTimeNowSecond();
                         }
                     }
-                    ClassWalletObject.DisconnectWholeRemoteNodeSync(true, true);
+                    ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
                 }
             }
             catch

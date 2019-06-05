@@ -2636,6 +2636,7 @@ namespace Xiropht_Wallet
 
                                                 #endregion
 
+
                                                 #region Update transaction anonymity sent color
 
                                                 for (int i = 0;
@@ -2728,10 +2729,7 @@ namespace Xiropht_Wallet
                                             }
                                             else
                                             {
-                                                if (!TransactionHistoryWalletForm.IsShowedWaitingTransaction)
-                                                {
-                                                    TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
-                                                }
+                                                TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
                                             }
 
 
@@ -2751,10 +2749,7 @@ namespace Xiropht_Wallet
                                                         if (ClassWalletTransactionCache.ListTransaction.Count ==
                                                             ClassWalletObject.TotalTransactionInSync)
                                                         {
-                                                            if (TransactionHistoryWalletForm.IsShowedWaitingTransaction)
-                                                            {
-                                                                TransactionHistoryWalletForm.HideWaitingSyncTransactionPanel();
-                                                            }
+                                                            TransactionHistoryWalletForm.HideWaitingSyncTransactionPanel();
                                                         }
                                                     }
                                                 }
@@ -3048,26 +3043,6 @@ namespace Xiropht_Wallet
 
                                         }
                                     }
-                                    else
-                                    {
-                                        if (TransactionHistoryWalletForm.IsShowed)
-                                        {
-                                            if (!TransactionHistoryWalletForm.IsShowedWaitingTransaction)
-                                            {
-                                                TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
-                                            }
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if (TransactionHistoryWalletForm.IsShowed)
-                                    {
-                                        if (!TransactionHistoryWalletForm.IsShowedWaitingTransaction)
-                                        {
-                                            TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
-                                        }
-                                    }
                                 }
 
                                 await Task.Delay(ThreadUpdateTransactionWalletInterval);
@@ -3101,6 +3076,10 @@ namespace Xiropht_Wallet
                                              ClassWalletTransactionAnonymityCache.ListTransaction.Count) + "/" +
                                             (ClassWalletObject.TotalTransactionInSync +
                                              ClassWalletObject.TotalTransactionInSyncAnonymity));
+                                        if (TransactionHistoryWalletForm.IsShowed)
+                                        {
+                                            TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
+                                        }
                                     }
                                 }
                                 else if (ClassFormPhase.FormPhase != ClassFormPhaseEnumeration.TransactionHistory && ClassFormPhase.FormPhase != ClassFormPhaseEnumeration.BlockExplorer)
@@ -3242,8 +3221,8 @@ namespace Xiropht_Wallet
                                                                     {
                                                                         if (!ListTransactionShowed.ContainsKey(ListTransactionShowed.Count) && !ListTransactionShowed.ContainsValue(decryptedTransaction))
                                                                         {
-                                                                            ListTransactionHashShowed.Add(transactionHashDecrypted, transactionHashDecrypted);
                                                                             ListTransactionShowed.Add(ListTransactionShowed.Count, decryptedTransaction);
+                                                                            ListTransactionHashShowed.Add(transactionHashDecrypted, transactionHashDecrypted);
                                                                         }
                                                                     }
                                                                 }
@@ -3263,6 +3242,10 @@ namespace Xiropht_Wallet
                                                             UpdateLabelSyncInformation("Total transactions downloaded: " + (ClassWalletTransactionCache.ListTransaction.Count +
                                                                                          ClassWalletTransactionAnonymityCache.ListTransaction.Count) + "/" +
                                                                                          (ClassWalletObject.TotalTransactionInSync + ClassWalletObject.TotalTransactionInSyncAnonymity));
+                                                            if (TransactionHistoryWalletForm.IsShowed)
+                                                            {
+                                                                TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -3327,8 +3310,8 @@ namespace Xiropht_Wallet
                                                                     {
                                                                         if (!ListAnonymousTransactionShowed.ContainsKey(ListAnonymousTransactionShowed.Count) && !ListAnonymousTransactionShowed.ContainsValue(decryptedTransaction))
                                                                         {
-                                                                            ListAnonymousTransactionHashShowed.Add(transactionHashDecrypted, transactionHashDecrypted);
                                                                             ListAnonymousTransactionShowed.Add(ListAnonymousTransactionShowed.Count, decryptedTransaction);
+                                                                            ListAnonymousTransactionHashShowed.Add(transactionHashDecrypted, transactionHashDecrypted);
                                                                         }
                                                                     }
                                                                 }
@@ -3349,6 +3332,10 @@ namespace Xiropht_Wallet
                                                             UpdateLabelSyncInformation("Total transactions downloaded: " + (ClassWalletTransactionCache.ListTransaction.Count +
                                                                                          ClassWalletTransactionAnonymityCache.ListTransaction.Count) + "/" +
                                                                                          (ClassWalletObject.TotalTransactionInSync + ClassWalletObject.TotalTransactionInSyncAnonymity));
+                                                            if (TransactionHistoryWalletForm.IsShowed)
+                                                            {
+                                                                TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -3379,6 +3366,7 @@ namespace Xiropht_Wallet
                                                  ClassWalletObject.TotalTransactionInSyncAnonymity));
                                         }
                                     }
+
 
                                 }
                             }

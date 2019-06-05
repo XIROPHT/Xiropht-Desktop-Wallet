@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Xiropht_Wallet.FormPhase.ParallelForm;
 
@@ -26,7 +27,7 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void ShowPinForm()
         {
-            new Thread(delegate ()
+            Task.Factory.StartNew(() =>
             {
                 try
                 {
@@ -54,12 +55,12 @@ namespace Xiropht_Wallet.FormPhase
                 {
                     PinFormShowed = false;
                 }
-            }).Start();
+            }).ConfigureAwait(false);
         }
 
         public static void HidePinForm()
         {
-            new Thread(delegate ()
+            Task.Factory.StartNew(() =>
             {
                 try
                 {
@@ -72,7 +73,7 @@ namespace Xiropht_Wallet.FormPhase
                 catch
                 {
                 }
-            }).Start();
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void ShowWaitingForm()
         {
-            new Thread(delegate ()
+            Task.Factory.StartNew(() =>
             {
                 if (!WaitingFormShowed)
                 {
@@ -113,7 +114,7 @@ namespace Xiropht_Wallet.FormPhase
                     ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
 #endif
                 }
-            }).Start();
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -121,30 +122,25 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void HideWaitingForm()
         {
-            new Thread(delegate ()
+            Task.Factory.StartNew(() =>
             {
                 if (WaitingFormShowed)
                 {
                     WaitingFormShowed = false;
                     try
                     {
-                        if (WaitingForm.InvokeRequired)
+                        ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
                         {
-                            WaitingForm.Invoke((Action)delegate { WaitingForm.Refresh();  WaitingForm.Hide(); WaitingForm.Refresh();  });
-                        }
-                        else
-                        {
-                            WaitingForm.Refresh();
                             WaitingForm.Hide();
-                            WaitingForm.Refresh();
-                        }
+
+                        });
                     }
                     catch
                     {
 
                     }
                 }
-            }).Start();
+            }).ConfigureAwait(false);
         }
 
 
@@ -153,7 +149,7 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void ShowWaitingReconnectForm()
         {
-            new Thread(delegate ()
+            Task.Factory.StartNew(() =>
             {
                 if (!WaitingFormReconnectShowed)
                 {
@@ -181,7 +177,7 @@ namespace Xiropht_Wallet.FormPhase
                         WaitingFormReconnectShowed = false;
                     }
                 }
-            }).Start();
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -189,7 +185,7 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void HideWaitingReconnectForm()
         {
-            new Thread(delegate ()
+            Task.Factory.StartNew(() =>
             {
                 if (WaitingFormReconnectShowed)
                 {
@@ -203,7 +199,7 @@ namespace Xiropht_Wallet.FormPhase
 
                     }
                 }
-            }).Start();
+            }).ConfigureAwait(false);
         }
 
 
@@ -212,7 +208,7 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void ShowWaitingForm2()
         {
-            new Thread(delegate ()
+            Task.Factory.StartNew(() =>
             {
                 if (!WaitingForm2Showed)
                 {
@@ -233,7 +229,7 @@ namespace Xiropht_Wallet.FormPhase
                    });
 #endif
                 }
-            }).Start();
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -241,14 +237,14 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void HideWaitingForm2()
         {
-            new Thread(delegate ()
+            Task.Factory.StartNew(() =>
             {
                 if (WaitingForm2Showed)
                 {
                     WaitingForm2Showed = false;
                     WaitingForm2.Invoke((MethodInvoker)delegate () { WaitingForm2.Hide(); WaitingForm2.Refresh(); });
                 }
-            }).Start();
+            }).ConfigureAwait(false);
         }
 
 
@@ -257,7 +253,7 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void ShowWaitingCreateWalletForm()
         {
-            new Thread(delegate ()
+            Task.Factory.StartNew(() =>
             {
                 if (!WaitingCreateWalletFormShowed)
                 {
@@ -278,7 +274,7 @@ namespace Xiropht_Wallet.FormPhase
                    });
 #endif
                 }
-            }).Start();
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -286,7 +282,7 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void HideWaitingCreateWalletForm()
         {
-            new Thread(delegate ()
+            Task.Factory.StartNew(() =>
             {
                 if (WaitingCreateWalletFormShowed)
                 {
@@ -295,7 +291,7 @@ namespace Xiropht_Wallet.FormPhase
                     WaitingCreateWalletForm.Invoke((MethodInvoker)delegate { WaitingCreateWalletForm.Hide(); });
 
                 }
-            }).Start();
+            }).ConfigureAwait(false);
         }
     }
 }
