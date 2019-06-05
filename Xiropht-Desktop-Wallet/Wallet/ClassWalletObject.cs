@@ -1041,15 +1041,17 @@ namespace Xiropht_Wallet.Wallet
                     break;
 
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.AmountNotValid:
-                    ClassParallelForm.HideWaitingForm();
 
 #if WINDOWS
+                    ClassParallelForm.HideWaitingForm();
                     ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                     new Thread(delegate ()
                     {
+                        Thread.Sleep(100);
+                        ClassParallelForm.HideWaitingForm();
                         MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
                             ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_INVALID_AMOUNT_TITLE_TEXT"),
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1062,15 +1064,17 @@ namespace Xiropht_Wallet.Wallet
 #endif
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.AmountInsufficient:
-                    ClassParallelForm.HideWaitingForm();
 #if WINDOWS
+                    ClassParallelForm.HideWaitingForm();
                     ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                     new Thread(delegate ()
                     {
-                       MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        Thread.Sleep(100);
+                        ClassParallelForm.HideWaitingForm();
+                        MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
                             ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_TITLE_TEXT"),
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                         ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
@@ -1082,13 +1086,15 @@ namespace Xiropht_Wallet.Wallet
 #endif
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.FeeInsufficient:
-                    ClassParallelForm.HideWaitingForm();
 #if WINDOWS
+                    ClassParallelForm.HideWaitingForm();
                     ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_CONTENT_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                     new Thread(delegate ()
                     {
+                        Thread.Sleep(100);
+                        ClassParallelForm.HideWaitingForm();
                         MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_CONTENT_TEXT"),
                             ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_FEE_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                         ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
@@ -1100,14 +1106,16 @@ namespace Xiropht_Wallet.Wallet
 #endif
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletSendTransactionBusy:
-                    ClassParallelForm.HideWaitingForm();
 #if WINDOWS
+                    ClassParallelForm.HideWaitingForm();
                     ClassFormPhase.MessageBoxInterface(
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
                     new Thread(delegate ()
                     {
+                        Thread.Sleep(100);
+                        ClassParallelForm.HideWaitingForm();
                         MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
                             ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
                             ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1119,17 +1127,20 @@ namespace Xiropht_Wallet.Wallet
 #endif
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletReceiveTransactionBusy:
-                    ClassParallelForm.HideWaitingForm();
                     var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
                     dateTime = dateTime.AddSeconds(int.Parse(splitPacket[1]));
                     dateTime = dateTime.ToLocalTime();
 #if WINDOWS
-                    ClassFormPhase.MessageBoxInterface(
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                        ClassParallelForm.HideWaitingForm();
+                        ClassFormPhase.MessageBoxInterface(
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
                     new Thread(delegate ()
                     {
+                        Thread.Sleep(100);
+                        ClassParallelForm.HideWaitingForm();
                         MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
                             ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_CONTENT_TEXT"),
                             ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_BUSY_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1142,20 +1153,21 @@ namespace Xiropht_Wallet.Wallet
 #endif
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.TransactionAccepted:
-                    ClassParallelForm.HideWaitingForm();
 #if WINDOWS
-                    new Thread(delegate ()
-                    {
-                        if (ClassFormPhase.MessageBoxInterface(
-                          ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_CONTENT_TEXT") + Environment.NewLine + "Hash: " + splitPacket[1].ToLower(),
-                          ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question) == DialogResult.OK)
-                        {
+                   
+                        ClassParallelForm.HideWaitingForm();
 
-                        }
-                    }).Start();
+                    if (ClassFormPhase.MessageBoxInterface(
+                      ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_CONTENT_TEXT") + Environment.NewLine + "Hash: " + splitPacket[1].ToLower(),
+                      ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question) == DialogResult.OK)
+                    {
+
+                    }
 #else
                     new Thread(delegate ()
                     {
+                         Thread.Sleep(100);
+                        ClassParallelForm.HideWaitingForm();
                         MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_CONTENT_TEXT") + Environment.NewLine + "Hash: " + splitPacket[1].ToLower(), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ACCEPTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                         ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
                     }).Start();
@@ -1166,14 +1178,17 @@ namespace Xiropht_Wallet.Wallet
 #endif
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.AddressNotValid:
-                    ClassParallelForm.HideWaitingForm();
 #if WINDOWS
+
+                    ClassParallelForm.HideWaitingForm();
                     ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_TITLE_TEXT"),
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
                     new Thread(delegate ()
                     {
+                        Thread.Sleep(100);
+                        ClassParallelForm.HideWaitingForm();
                         MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
                             ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_ADDRESS_NOT_VALID_TITLE_TEXT"),
                             MessageBoxButtons.OK, MessageBoxIcon.Warning);

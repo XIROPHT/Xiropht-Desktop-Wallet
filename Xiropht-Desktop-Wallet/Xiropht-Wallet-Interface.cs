@@ -3229,12 +3229,26 @@ namespace Xiropht_Wallet
                                                             }
                                                             if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
                                                             {
-                                                                UpdateLabelSyncInformation(
-                                                                "Total transactions loaded and decrypted: " +
-                                                                (ListTransactionShowed.Count +
-                                                                 ListAnonymousTransactionShowed.Count) + "/" +
-                                                                (ClassWalletTransactionCache.ListTransaction.Count +
-                                                                 ClassWalletTransactionAnonymityCache.ListTransaction.Count));
+                                                                if ((ListTransactionShowed.Count +
+                                                                     ListAnonymousTransactionShowed.Count) > (ClassWalletTransactionCache.ListTransaction.Count +
+                                                                     ClassWalletTransactionAnonymityCache.ListTransaction.Count))
+                                                                {
+                                                                    ListTransactionShowed.Clear();
+                                                                    ListAnonymousTransactionShowed.Clear();
+                                                                    ListTransactionHashShowed.Clear();
+                                                                    ListAnonymousTransactionHashShowed.Clear();
+                                                                    StopUpdateTransactionHistory(true, true);
+                                                                    await Task.Factory.StartNew(() => StopAndRestartTransactionHistory()).ConfigureAwait(false);
+                                                                }
+                                                                else
+                                                                {
+                                                                    UpdateLabelSyncInformation(
+                                                                        "Total transactions loaded and decrypted: " +
+                                                                        (ListTransactionShowed.Count +
+                                                                         ListAnonymousTransactionShowed.Count) + "/" +
+                                                                        (ClassWalletTransactionCache.ListTransaction.Count +
+                                                                         ClassWalletTransactionAnonymityCache.ListTransaction.Count));
+                                                                }
                                                             }
                                                         }
                                                         else
@@ -3318,12 +3332,26 @@ namespace Xiropht_Wallet
                                                             }
                                                             if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncBlock && !ClassWalletObject.InSyncTransactionAnonymity)
                                                             {
-                                                                UpdateLabelSyncInformation(
-                                                                    "Total transactions loaded and decrypted: " +
-                                                                    (ListTransactionShowed.Count +
-                                                                     ListAnonymousTransactionShowed.Count) + "/" +
-                                                                    (ClassWalletTransactionCache.ListTransaction.Count +
-                                                                     ClassWalletTransactionAnonymityCache.ListTransaction.Count));
+                                                                if ((ListTransactionShowed.Count +
+                                                                     ListAnonymousTransactionShowed.Count) > (ClassWalletTransactionCache.ListTransaction.Count +
+                                                                     ClassWalletTransactionAnonymityCache.ListTransaction.Count))
+                                                                {
+                                                                    ListTransactionShowed.Clear();
+                                                                    ListAnonymousTransactionShowed.Clear();
+                                                                    ListTransactionHashShowed.Clear();
+                                                                    ListAnonymousTransactionHashShowed.Clear();
+                                                                    StopUpdateTransactionHistory(true, true);
+                                                                    await Task.Factory.StartNew(() => StopAndRestartTransactionHistory()).ConfigureAwait(false);
+                                                                }
+                                                                else
+                                                                {
+                                                                    UpdateLabelSyncInformation(
+                                                                        "Total transactions loaded and decrypted: " +
+                                                                        (ListTransactionShowed.Count +
+                                                                         ListAnonymousTransactionShowed.Count) + "/" +
+                                                                        (ClassWalletTransactionCache.ListTransaction.Count +
+                                                                         ClassWalletTransactionAnonymityCache.ListTransaction.Count));
+                                                                }
                                                             }
 
                                                         }
@@ -3373,6 +3401,11 @@ namespace Xiropht_Wallet
                             catch (Exception error)
                             {
                                 Log.WriteLine("Error on transactions update: " + error.Message);
+                                ListTransactionShowed.Clear();
+                                ListAnonymousTransactionShowed.Clear();
+                                ListTransactionHashShowed.Clear();
+                                ListAnonymousTransactionHashShowed.Clear();
+                                StopUpdateTransactionHistory(true, true);
                                 await Task.Factory.StartNew(() => StopAndRestartTransactionHistory()).ConfigureAwait(false);
                                 break;
                             }
