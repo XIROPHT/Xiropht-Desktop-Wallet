@@ -3194,10 +3194,6 @@ namespace Xiropht_Wallet
 
                                                         if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                                                         {
-                                                            ListTransactionShowed.Clear();
-                                                            ListAnonymousTransactionShowed.Clear();
-                                                            ListTransactionHashShowed.Clear();
-                                                            ListAnonymousTransactionHashShowed.Clear();
                                                             StopUpdateTransactionHistory(true, true);
                                                             break;
                                                         }
@@ -3211,8 +3207,7 @@ namespace Xiropht_Wallet
                                                                 {
                                                                     TransactionHistoryWalletForm.ResyncTransaction();
                                                                     ClassWalletTransactionCache.RemoveWalletCache(ClassWalletObject.WalletConnect.WalletAddress);
-                                                                    await Task.Factory.StartNew(() => StopAndRestartTransactionHistory()).ConfigureAwait(false);
-                                                                    break;
+                                                                    StopUpdateTransactionHistory(true, true);
                                                                 }
                                                                 else
                                                                 {
@@ -3233,21 +3228,25 @@ namespace Xiropht_Wallet
                                                                      ListAnonymousTransactionShowed.Count) > (ClassWalletTransactionCache.ListTransaction.Count +
                                                                      ClassWalletTransactionAnonymityCache.ListTransaction.Count))
                                                                 {
-                                                                    ListTransactionShowed.Clear();
-                                                                    ListAnonymousTransactionShowed.Clear();
-                                                                    ListTransactionHashShowed.Clear();
-                                                                    ListAnonymousTransactionHashShowed.Clear();
                                                                     StopUpdateTransactionHistory(true, true);
-                                                                    await Task.Factory.StartNew(() => StopAndRestartTransactionHistory()).ConfigureAwait(false);
                                                                 }
                                                                 else
                                                                 {
-                                                                    UpdateLabelSyncInformation(
-                                                                        "Total transactions loaded and decrypted: " +
-                                                                        (ListTransactionShowed.Count +
-                                                                         ListAnonymousTransactionShowed.Count) + "/" +
-                                                                        (ClassWalletTransactionCache.ListTransaction.Count +
-                                                                         ClassWalletTransactionAnonymityCache.ListTransaction.Count));
+                                                                    if ((ListTransactionShowed.Count +
+                                                                         ListAnonymousTransactionShowed.Count) > (ClassWalletTransactionCache.ListTransaction.Count +
+                                                                         ClassWalletTransactionAnonymityCache.ListTransaction.Count))
+                                                                    {
+                                                                        StopUpdateTransactionHistory(true, true);
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        UpdateLabelSyncInformation(
+                                                                            "Total transactions loaded and decrypted: " +
+                                                                            (ListTransactionShowed.Count +
+                                                                             ListAnonymousTransactionShowed.Count) + "/" +
+                                                                            (ClassWalletTransactionCache.ListTransaction.Count +
+                                                                             ClassWalletTransactionAnonymityCache.ListTransaction.Count));
+                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -3293,10 +3292,6 @@ namespace Xiropht_Wallet
 
                                                         if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                                                         {
-                                                            ListTransactionShowed.Clear();
-                                                            ListAnonymousTransactionShowed.Clear();
-                                                            ListTransactionHashShowed.Clear();
-                                                            ListAnonymousTransactionHashShowed.Clear();
                                                             StopUpdateTransactionHistory(true, true);
                                                             break;
                                                         }
@@ -3336,12 +3331,7 @@ namespace Xiropht_Wallet
                                                                      ListAnonymousTransactionShowed.Count) > (ClassWalletTransactionCache.ListTransaction.Count +
                                                                      ClassWalletTransactionAnonymityCache.ListTransaction.Count))
                                                                 {
-                                                                    ListTransactionShowed.Clear();
-                                                                    ListAnonymousTransactionShowed.Clear();
-                                                                    ListTransactionHashShowed.Clear();
-                                                                    ListAnonymousTransactionHashShowed.Clear();
                                                                     StopUpdateTransactionHistory(true, true);
-                                                                    await Task.Factory.StartNew(() => StopAndRestartTransactionHistory()).ConfigureAwait(false);
                                                                 }
                                                                 else
                                                                 {
@@ -3401,13 +3391,7 @@ namespace Xiropht_Wallet
                             catch (Exception error)
                             {
                                 Log.WriteLine("Error on transactions update: " + error.Message);
-                                ListTransactionShowed.Clear();
-                                ListAnonymousTransactionShowed.Clear();
-                                ListTransactionHashShowed.Clear();
-                                ListAnonymousTransactionHashShowed.Clear();
                                 StopUpdateTransactionHistory(true, true);
-                                await Task.Factory.StartNew(() => StopAndRestartTransactionHistory()).ConfigureAwait(false);
-                                break;
                             }
 
                             if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
