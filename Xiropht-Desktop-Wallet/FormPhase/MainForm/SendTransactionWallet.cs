@@ -288,7 +288,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         }
                     }
                 }
-            }, CancellationToken.None, TaskCreationOptions.None, PriorityScheduler.Lowest).ConfigureAwait(false);
+            }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Current).ConfigureAwait(false);
         }
 
         private void CheckBoxHideWalletAddress_Click(object sender, EventArgs e)

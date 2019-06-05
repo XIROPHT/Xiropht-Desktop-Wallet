@@ -30,9 +30,14 @@
         {
 #if WINDOWS
             this.textBoxPathWallet = new MetroFramework.Controls.MetroTextBox();
-            this.buttonSearchNewWalletFile = new MetroFramework.Controls.MetroButton();
-#else
+#endif
+#if LINUX
             this.textBoxPathWallet = new System.Windows.Forms.TextBox();
+#endif
+#if WINDOWS
+            this.buttonSearchNewWalletFile = new MetroFramework.Controls.MetroButton();
+#endif
+#if LINUX
             this.buttonSearchNewWalletFile = new System.Windows.Forms.Button();
 #endif
             this.labelTextRestore = new System.Windows.Forms.Label();
@@ -43,16 +48,6 @@
             this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.buttonRestoreYourWallet = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // labelTextRestore
-            // 
-            this.labelTextRestore.AutoSize = true;
-            this.labelTextRestore.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTextRestore.Location = new System.Drawing.Point(312, 27);
-            this.labelTextRestore.Name = "labelTextRestore";
-            this.labelTextRestore.Size = new System.Drawing.Size(120, 13);
-            this.labelTextRestore.TabIndex = 0;
-            this.labelTextRestore.Text = "Restore your wallet:";
             // 
             // textBoxPathWallet
             // 
@@ -89,15 +84,6 @@
             this.textBoxPathWallet.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
 #endif
             // 
-            // labelCreateSelectSavingPathWallet
-            // 
-            this.labelCreateSelectSavingPathWallet.AutoSize = true;
-            this.labelCreateSelectSavingPathWallet.Location = new System.Drawing.Point(253, 151);
-            this.labelCreateSelectSavingPathWallet.Name = "labelCreateSelectSavingPathWallet";
-            this.labelCreateSelectSavingPathWallet.Size = new System.Drawing.Size(228, 13);
-            this.labelCreateSelectSavingPathWallet.TabIndex = 24;
-            this.labelCreateSelectSavingPathWallet.Text = "Select the path directory for restore your wallet:";
-            // 
             // buttonSearchNewWalletFile
             // 
             this.buttonSearchNewWalletFile.Location = new System.Drawing.Point(496, 168);
@@ -109,6 +95,25 @@
             this.buttonSearchNewWalletFile.UseSelectable = true;
 #endif
             this.buttonSearchNewWalletFile.Click += new System.EventHandler(this.buttonSearchNewWalletFile_Click);
+            // 
+            // labelTextRestore
+            // 
+            this.labelTextRestore.AutoSize = true;
+            this.labelTextRestore.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTextRestore.Location = new System.Drawing.Point(312, 27);
+            this.labelTextRestore.Name = "labelTextRestore";
+            this.labelTextRestore.Size = new System.Drawing.Size(120, 13);
+            this.labelTextRestore.TabIndex = 0;
+            this.labelTextRestore.Text = "Restore your wallet:";
+            // 
+            // labelCreateSelectSavingPathWallet
+            // 
+            this.labelCreateSelectSavingPathWallet.AutoSize = true;
+            this.labelCreateSelectSavingPathWallet.Location = new System.Drawing.Point(253, 151);
+            this.labelCreateSelectSavingPathWallet.Name = "labelCreateSelectSavingPathWallet";
+            this.labelCreateSelectSavingPathWallet.Size = new System.Drawing.Size(228, 13);
+            this.labelCreateSelectSavingPathWallet.TabIndex = 24;
+            this.labelCreateSelectSavingPathWallet.Text = "Select the path directory for restore your wallet:";
             // 
             // textBoxPrivateKey
             // 
@@ -187,7 +192,7 @@
 
 #if WINDOWS
         private MetroFramework.Controls.MetroTextBox textBoxPathWallet;
-        public MetroFramework.Controls.MetroButton buttonSearchNewWalletFile;
+        private MetroFramework.Controls.MetroButton buttonSearchNewWalletFile;
 #else
         private System.Windows.Forms.TextBox textBoxPathWallet;
         public System.Windows.Forms.Button buttonSearchNewWalletFile;

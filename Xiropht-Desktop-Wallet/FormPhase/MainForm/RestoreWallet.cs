@@ -66,7 +66,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             if (await ClassWalletObject.InitializationWalletConnection(string.Empty, walletPassword, string.Empty, ClassWalletPhase.Create))
             {
 
-                ClassWalletObject.ListenSeedNodeNetworkForWalletAsync();
+                ClassWalletObject.ListenSeedNodeNetworkForWallet();
 
                 ClassWalletObject.WalletDataCreationPath = walletPath;
 
