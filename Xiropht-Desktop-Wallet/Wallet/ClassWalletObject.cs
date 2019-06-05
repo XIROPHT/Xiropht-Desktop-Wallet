@@ -1679,7 +1679,7 @@ namespace Xiropht_Wallet.Wallet
                                             {
                                                 if (ListWalletConnectToRemoteNode[i] != null)
                                                 {
-                                                    if (!await ListWalletConnectToRemoteNode[0].ConnectToRemoteNodeAsync(WalletSyncHostname, ClassConnectorSetting.RemoteNodePort))
+                                                    if (!await ListWalletConnectToRemoteNode[i].ConnectToRemoteNodeAsync(WalletSyncHostname, ClassConnectorSetting.RemoteNodePort))
                                                     {
                                                         await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSync(true, true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
                                                         return;
