@@ -165,7 +165,7 @@ namespace Xiropht_Wallet
                             MainWalletForm.Show();
                             MainWalletForm.Refresh();
                             HideWalletAddressQRCode();
-
+                            Refresh();
                         };
 
                         BeginInvoke(invoke);
@@ -179,7 +179,7 @@ namespace Xiropht_Wallet
                             CreateWalletForm.Show();
                             CreateWalletForm.Refresh();
                             HideWalletAddressQRCode();
-
+                            Refresh();
                         };
                         BeginInvoke(invoke);
                         break;
@@ -192,7 +192,7 @@ namespace Xiropht_Wallet
                             OpenWalletForm.Show();
                             OpenWalletForm.Refresh();
                             HideWalletAddressQRCode();
-
+                            Refresh();
                         };
                         BeginInvoke(invoke);
                         break;
@@ -204,6 +204,7 @@ namespace Xiropht_Wallet
                             OverviewWalletForm.Parent = panelMainForm;
                             OverviewWalletForm.Show();
                             OverviewWalletForm.Refresh();
+                            Refresh();
                         };
                         BeginInvoke(invoke);
                         break;
@@ -215,6 +216,7 @@ namespace Xiropht_Wallet
                             SendTransactionWalletForm.Parent = panelMainForm;
                             SendTransactionWalletForm.Show();
                             SendTransactionWalletForm.Refresh();
+                            Refresh();
                         };
                         BeginInvoke(invoke);
                         break;
@@ -236,6 +238,7 @@ namespace Xiropht_Wallet
                             buttonFirstPage.Show();
                             buttonLastPage.Show();
                             labelNoticeCurrentPage.Show();
+                            Refresh();
                         };
                         BeginInvoke(invoke);
                         break;
@@ -254,6 +257,7 @@ namespace Xiropht_Wallet
                             buttonLastPage.Show();
                             labelNoticeCurrentPage.Show();
                             labelNoticeCurrentPage.Text = "" + CurrentBlockExplorerPage;
+                            Refresh();
                         };
                         BeginInvoke(invoke);
                         break;
@@ -265,6 +269,7 @@ namespace Xiropht_Wallet
                             RestoreWalletForm.Parent = panelMainForm;
                             RestoreWalletForm.Show();
                             RestoreWalletForm.Refresh();
+                            Refresh();
                         };
                         BeginInvoke(invoke);
                         break;
@@ -276,13 +281,11 @@ namespace Xiropht_Wallet
                             ContactWalletForm.Parent = panelMainForm;
                             ContactWalletForm.Show();
                             ContactWalletForm.Refresh();
+                            Refresh();
                         };
                         BeginInvoke(invoke);
                         break;
                 }
-
-                invoke = () => Refresh();
-                BeginInvoke(invoke);
             }
         }
 
@@ -321,6 +324,7 @@ namespace Xiropht_Wallet
 
                 labelNoticeCurrentPage.Hide();
 
+                Refresh();
             });
         }
 
@@ -1928,6 +1932,10 @@ namespace Xiropht_Wallet
                                                 {
                                                     if (WalletTransactionHistoryRunning)
                                                     {
+                                                        if (TransactionHistoryWalletForm.IsShowed)
+                                                        {
+                                                            TransactionHistoryWalletForm.ShowWaitingSyncTransactionPanel();
+                                                        }
                                                         if (!ClassWalletObject.InSyncTransaction && !ClassWalletObject.InSyncTransactionAnonymity)
                                                         {
                                                             if (!ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
@@ -3426,7 +3434,7 @@ namespace Xiropht_Wallet
 
 
 
-                            await Task.Delay(ThreadUpdateTransactionWalletInterval);
+                            await Task.Delay(100);
                         }
                         ListAnonymousTransactionShowed.Clear();
                         ListTransactionShowed.Clear();
@@ -3441,7 +3449,7 @@ namespace Xiropht_Wallet
                         {
                             StopUpdateTransactionHistory(true, true);
                         }
-                    });
+                    }, ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current);
                 }
             }
             catch
@@ -3600,7 +3608,7 @@ namespace Xiropht_Wallet
 
                         await Task.Delay(ThreadUpdateTransactionWalletInterval);
                     }
-                });
+                }, ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current);
             }
         }
 
@@ -4863,6 +4871,20 @@ namespace Xiropht_Wallet
             buttonPreviousPage.ForeColor = Color.Black;
             ContactWalletForm.buttonAddContact.ForeColor = Color.Black;
             pictureBoxLogo.BackColor = background;
+        }
+
+        private void exportTransactionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!ClassWalletObject.WalletClosed)
+            {
+                if (ClassWalletObject.WalletConnect != null)
+                {
+                    if (ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
+                    {
+
+                    }
+                }
+            }
         }
     }
 }

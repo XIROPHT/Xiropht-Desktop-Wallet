@@ -120,44 +120,46 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public void ShowWaitingSyncTransactionPanel()
         {
-
-            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+            if (!IsShowedWaitingTransaction)
             {
-                _panelWaitingSync.Visible = true;
-                _panelWaitingSync.Show();
-                _panelWaitingSync.BringToFront();
-                _panelWaitingSync.Width = (int)(Width / 1.5f);
-                _panelWaitingSync.Height = (int)(Height / 5.5f);
-                _panelWaitingSync.Location = new Point()
+                ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
                 {
-                    X = ClassFormPhase.WalletXiropht.TransactionHistoryWalletForm.Width / 2 -
-                        _panelWaitingSync.Width / 2,
-                    Y = ClassFormPhase.WalletXiropht.TransactionHistoryWalletForm.Height / 2 -
-                        _panelWaitingSync.Height / 2
-                };
-                _labelWaitingText.Location = new Point()
-                {
-                    X = _panelWaitingSync.Width / 2 - _labelWaitingText.Width / 2,
-                    Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
-                };
-                IsShowedWaitingTransaction = true;
-                Refresh();
+                    _panelWaitingSync.Visible = true;
+                    _panelWaitingSync.Show();
+                    _panelWaitingSync.BringToFront();
+                    _panelWaitingSync.Width = (int)(Width / 1.5f);
+                    _panelWaitingSync.Height = (int)(Height / 5.5f);
+                    _panelWaitingSync.Location = new Point()
+                    {
+                        X = ClassFormPhase.WalletXiropht.TransactionHistoryWalletForm.Width / 2 -
+                            _panelWaitingSync.Width / 2,
+                        Y = ClassFormPhase.WalletXiropht.TransactionHistoryWalletForm.Height / 2 -
+                            _panelWaitingSync.Height / 2
+                    };
+                    _labelWaitingText.Location = new Point()
+                    {
+                        X = _panelWaitingSync.Width / 2 - _labelWaitingText.Width / 2,
+                        Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
+                    };
+                    IsShowedWaitingTransaction = true;
+                    Refresh();
 
-            });
-
+                });
+            }
         }
 
         public void HideWaitingSyncTransactionPanel()
         {
-
-            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+            if (IsShowedWaitingTransaction)
             {
-                _panelWaitingSync.Visible = false;
-                _panelWaitingSync.Hide();
-                IsShowedWaitingTransaction = false;
-                Refresh();
-            });
-
+                ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                {
+                    _panelWaitingSync.Visible = false;
+                    _panelWaitingSync.Hide();
+                    IsShowedWaitingTransaction = false;
+                    Refresh();
+                });
+            }
         }
 
         protected override void OnResize(EventArgs e)

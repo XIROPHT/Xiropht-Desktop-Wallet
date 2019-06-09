@@ -12,7 +12,7 @@ namespace Xiropht_Wallet
         /// <summary>
         /// Nettoyage des ressources utilisées.
         /// </summary>
-        /// <param name="disposing">true si les ressources managées doivent être supprimées ; sinon, false.</param>
+        /// <param name="disposing">true si les ressources managées doivent être supprimées ; sinon, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -529,7 +529,7 @@ namespace Xiropht_Wallet
 
         }
 
-#endregion
+        #endregion
 
         private System.Windows.Forms.MenuStrip menuStripMenu;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
@@ -578,4 +578,3 @@ namespace Xiropht_Wallet
         private System.Windows.Forms.PictureBox pictureBoxQRCodeWallet;
     }
 }
-
