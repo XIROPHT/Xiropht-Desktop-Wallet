@@ -734,6 +734,7 @@ namespace Xiropht_Wallet.Wallet
 
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.CreatePhase:
+
                     ClassParallelForm.HideWaitingForm();
                     ClassParallelForm.HideWaitingCreateWalletForm();
 
@@ -756,7 +757,6 @@ namespace Xiropht_Wallet.Wallet
                     }).ConfigureAwait(false);
 
 #endif
-                        await Task.Factory.StartNew(delegate { FullDisconnection(true); }, WalletCancellationToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(false);
                     }
                     else
                     {
@@ -810,6 +810,7 @@ namespace Xiropht_Wallet.Wallet
                         });
 
                     }
+                    await Task.Factory.StartNew(delegate { FullDisconnection(true); }, WalletCancellationToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(false);
 
                     break;
 
@@ -838,7 +839,6 @@ namespace Xiropht_Wallet.Wallet
                         }).ConfigureAwait(false);
 
 #endif
-                        await Task.Factory.StartNew(delegate { FullDisconnection(true); }, WalletCancellationToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(false);
                     }
                     else
                     {
@@ -888,6 +888,7 @@ namespace Xiropht_Wallet.Wallet
                         });
 
                     }
+                    await Task.Factory.StartNew(delegate { FullDisconnection(true); }, WalletCancellationToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(false);
 
                     break;
                 case ClassWalletCommand.ClassWalletReceiveEnumeration.RightPhase:
