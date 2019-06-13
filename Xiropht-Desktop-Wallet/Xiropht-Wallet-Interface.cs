@@ -4634,10 +4634,10 @@ namespace Xiropht_Wallet
                     }
 #endif
 #if LINUX
-                if (MessageBox.Show(this, "Do you want to research by wallet address?", "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
-                {
-                    useContactName = true;
-                }
+                    if (MessageBox.Show(this, "Do you want to research by wallet address?", "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                    {
+                        useWalletAddress = true;
+                    }
 #endif
                     if (!useWalletAddress)
                     {
@@ -4650,10 +4650,10 @@ namespace Xiropht_Wallet
                             }
 #endif
 #if LINUX
-                    if (MessageBox.Show(this, "Do you want to research by contact name?", "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
-                    {
-                        useContactName = true;
-                    }
+                            if (MessageBox.Show(this, "Do you want to research by contact name?", "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                            {
+                                useContactName = true;
+                            }
 #endif
                         }
                     }
@@ -4669,10 +4669,10 @@ namespace Xiropht_Wallet
                         }
 #endif
 #if LINUX
-                    if (MessageBox.Show(this, "Do you want to research by contact name?", "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
-                    {
-                        useContactName = true;
-                    }
+                        if (MessageBox.Show(this, "Do you want to research by contact name?", "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                        {
+                            useContactName = true;
+                        }
 #endif
                     }
                 }
@@ -4742,7 +4742,7 @@ namespace Xiropht_Wallet
                                 ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #endif
 #if LINUX
-                            MessageBox.Show(this, elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBox.Show(this, elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #endif
                             }
                         }
@@ -4780,7 +4780,7 @@ namespace Xiropht_Wallet
                             ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #endif
 #if LINUX
-                        MessageBox.Show(this, elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show(this, elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #endif
                             walletResearchElementForm.Dispose();
                         }

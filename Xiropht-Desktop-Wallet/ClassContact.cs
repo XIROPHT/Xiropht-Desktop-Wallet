@@ -51,7 +51,7 @@ namespace Xiropht_Wallet
                             break;
                         }
                     }
-                    if(errorRead) // Replace file corrupted by a cleaned one.
+                    if (errorRead) // Replace file corrupted by a cleaned one.
                     {
                         ListContactWallet.Clear(); // Clean dictionnary just in case.
 #if DEBUG
