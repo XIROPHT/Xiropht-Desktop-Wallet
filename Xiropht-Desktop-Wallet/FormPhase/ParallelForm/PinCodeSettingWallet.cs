@@ -14,7 +14,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
 
         private void PinCodeSetting_Load(object sender, EventArgs e)
         {
-            if (ClassWalletObject.WalletPinDisabled) // Pin disabled
+            if (ClassFormPhase.WalletXiropht.ClassWalletObject.WalletPinDisabled) // Pin disabled
             {
                 labelPinCodeStatus.Text = ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SETTING_MENU_LABEL_STATUS_DISABLED_TEXT");
                 buttonChangePinCodeStatus.Text = ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SETTING_MENU_BUTTON_STATUS_ENABLE_TEXT");
@@ -33,17 +33,17 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
 
         private void ButtonChangePinCodeStatus_Click(object sender, EventArgs e)
         {
-            if (ClassWalletObject.WalletPinDisabled) // Pin disabled
+            if (ClassFormPhase.WalletXiropht.ClassWalletObject.WalletPinDisabled) // Pin disabled
             {
-                ClassWalletObject.WalletConnect.SendPacketWallet(
+                ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
                     ClassWalletCommand.ClassWalletSendEnumeration.DisablePinCode + "|" + textBoxWalletOldPassword.Text +
-                    "|" + textBoxPinCode.Text + "|1", ClassWalletObject.Certificate, true);
+                    "|" + textBoxPinCode.Text + "|1", ClassFormPhase.WalletXiropht.ClassWalletObject.Certificate, true);
             }
             else
             {
-                ClassWalletObject.WalletConnect.SendPacketWallet(
+                ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
                     ClassWalletCommand.ClassWalletSendEnumeration.DisablePinCode + "|" + textBoxWalletOldPassword.Text +
-                    "|" + textBoxPinCode.Text + "|0", ClassWalletObject.Certificate, true);
+                    "|" + textBoxPinCode.Text + "|0", ClassFormPhase.WalletXiropht.ClassWalletObject.Certificate, true);
             }
 
             textBoxWalletOldPassword.Text = "";

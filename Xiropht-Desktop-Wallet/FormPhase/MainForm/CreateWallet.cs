@@ -91,7 +91,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             if (InCreation)
             {
-                ClassWalletObject.FullDisconnection(true);
+                ClassFormPhase.WalletXiropht.ClassWalletObject.FullDisconnection(true);
                 InCreation = false;
             }
 
@@ -99,22 +99,25 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             {
                 if (textBoxSelectWalletPassword.Text != "")
                 {
-                    if (await ClassWalletObject
-                        .InitializationWalletConnection("", textBoxSelectWalletPassword.Text, "",
+                    if (ClassFormPhase.WalletXiropht.ClassWalletObject != null)
+                    {
+                        ClassFormPhase.WalletXiropht.InitializationWalletObject();
+                    }
+                    if (await ClassFormPhase.WalletXiropht.ClassWalletObject.InitializationWalletConnection("", textBoxSelectWalletPassword.Text, "",
                             ClassWalletPhase.Create))
                     {
-                        ClassWalletObject.WalletNewPassword = textBoxSelectWalletPassword.Text;
-                        ClassWalletObject.ListenSeedNodeNetworkForWallet();
+                        ClassFormPhase.WalletXiropht.ClassWalletObject.WalletNewPassword = textBoxSelectWalletPassword.Text;
+                        ClassFormPhase.WalletXiropht.ClassWalletObject.ListenSeedNodeNetworkForWallet();
 
                         InCreation = true;
-                        ClassWalletObject.WalletDataCreationPath = textBoxPathWallet.Text;
+                        ClassFormPhase.WalletXiropht.ClassWalletObject.WalletDataCreationPath = textBoxPathWallet.Text;
 
                         await Task.Factory.StartNew(async delegate ()
                         {
-                            if (await ClassWalletObject.WalletConnect.SendPacketWallet(ClassWalletObject.Certificate, string.Empty, false))
+                            if (await ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(ClassFormPhase.WalletXiropht.ClassWalletObject.Certificate, string.Empty, false))
                             {
                                 await Task.Delay(100);
-                                if (!await ClassWalletObject
+                                if (!await ClassFormPhase.WalletXiropht.ClassWalletObject
                                     .SendPacketWalletToSeedNodeNetwork(
                                         ClassWalletCommand.ClassWalletSendEnumeration.CreatePhase + "|" +
                                         textBoxSelectWalletPassword.Text))

@@ -27,18 +27,18 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public void ResyncTransaction()
         {
-            ClassWalletObject.BlockTransactionSync = true;
+            ClassFormPhase.WalletXiropht.ClassWalletObject.BlockTransactionSync = true;
             ClassFormPhase.WalletXiropht.StopUpdateTransactionHistory(true, true);
-            if (ClassWalletTransactionCache.RemoveWalletCache(ClassWalletObject.WalletConnect.WalletAddress))
+            if (ClassWalletTransactionCache.RemoveWalletCache(ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress))
             {
-                if (ClassWalletTransactionAnonymityCache.RemoveWalletCache(ClassWalletObject.WalletConnect.WalletAddress))
+                if (ClassWalletTransactionAnonymityCache.RemoveWalletCache(ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress))
                 {
                     ClassWalletTransactionCache.ListTransaction.Clear();
                     ClassWalletTransactionAnonymityCache.ListTransaction.Clear();
-                    ClassWalletObject.InSyncTransaction = false;
-                    ClassWalletObject.InSyncTransactionAnonymity = false;
-                    ClassWalletObject.BlockTransactionSync = false;
-                    ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
+                    ClassFormPhase.WalletXiropht.ClassWalletObject.InSyncTransaction = false;
+                    ClassFormPhase.WalletXiropht.ClassWalletObject.InSyncTransactionAnonymity = false;
+                    ClassFormPhase.WalletXiropht.ClassWalletObject.BlockTransactionSync = false;
+                    ClassFormPhase.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
                 }
             }
         }

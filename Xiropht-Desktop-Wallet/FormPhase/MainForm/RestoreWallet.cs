@@ -60,17 +60,21 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             textBoxPathWallet.Text = string.Empty;
             textBoxPrivateKey.Text = string.Empty;
 
-            if (await ClassWalletObject.InitializationWalletConnection(string.Empty, walletPassword, string.Empty, ClassWalletPhase.Create))
+            if (ClassFormPhase.WalletXiropht.ClassWalletObject != null)
+            {
+                ClassFormPhase.WalletXiropht.InitializationWalletObject();
+            }
+            if (await ClassFormPhase.WalletXiropht.ClassWalletObject.InitializationWalletConnection(string.Empty, walletPassword, string.Empty, ClassWalletPhase.Restore))
             {
 
-                ClassWalletObject.ListenSeedNodeNetworkForWallet();
+                ClassFormPhase.WalletXiropht.ClassWalletObject.ListenSeedNodeNetworkForWallet();
 
-                ClassWalletObject.WalletDataCreationPath = walletPath;
+                ClassFormPhase.WalletXiropht.ClassWalletObject.WalletDataCreationPath = walletPath;
 
                 await Task.Factory.StartNew(async () =>
                  {
 
-                     if (await ClassWalletObject.WalletConnect.SendPacketWallet(ClassWalletObject.Certificate, string.Empty, false))
+                     if (await ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(ClassFormPhase.WalletXiropht.ClassWalletObject.Certificate, string.Empty, false))
                      {
 
                          string requestRestoreQrCodeEncrypted = null;
@@ -80,11 +84,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                              requestRestoreQrCodeEncrypted = walletRestoreFunctions.GenerateQRCodeKeyEncryptedRepresentation(walletKey, walletPassword);
                              if (requestRestoreQrCodeEncrypted != null)
                              {
-                                 ClassWalletObject.WalletNewPassword = walletPassword;
-                                 ClassWalletObject.WalletPrivateKeyEncryptedQRCode = walletKey;
-                                 await Task.Delay(100);
+                                 ClassFormPhase.WalletXiropht.ClassWalletObject.WalletNewPassword = walletPassword;
+                                 ClassFormPhase.WalletXiropht.ClassWalletObject.WalletPrivateKeyEncryptedQRCode = walletKey;
 
-                                 if (!await ClassWalletObject.SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassWalletCommand.ClassWalletSendEnumeration.AskPhase + "|" + requestRestoreQrCodeEncrypted, ClassWalletObject.Certificate, false, true))
+                                 await Task.Delay(100);
+                                 if (!await ClassFormPhase.WalletXiropht.ClassWalletObject.SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassWalletCommand.ClassWalletSendEnumeration.AskPhase + "|" + requestRestoreQrCodeEncrypted, ClassFormPhase.WalletXiropht.ClassWalletObject.Certificate, false, true))
                                  {
 #if WINDOWS
                                     ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);

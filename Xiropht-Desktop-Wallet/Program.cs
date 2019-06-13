@@ -47,14 +47,13 @@ namespace Xiropht_Wallet
             ClassMemory.CleanMemory();
 #endif
 
-            bool firstStart = ClassWalletSetting.LoadSetting(); // Load the setting file.
             ClassTranslation.InitializationLanguage(); // Initialization of language system.
             ClassContact.InitializationContactList(); // Initialization of contact system.
 #if WINDOWS
             Application.EnableVisualStyles();
 #endif
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new WalletXiropht(firstStart)); // Start the main interface.
+            Application.Run(new WalletXiropht()); // Start the main interface.
 
 
         }

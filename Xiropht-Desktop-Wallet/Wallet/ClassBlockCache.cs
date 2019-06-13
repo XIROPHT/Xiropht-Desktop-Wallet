@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Xiropht_Wallet.FormPhase;
 
 namespace Xiropht_Wallet.Wallet
 {
@@ -84,12 +85,12 @@ namespace Xiropht_Wallet.Wallet
                     Directory.CreateDirectory(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory));
                 }
                     OnLoad = false;
-                    ClassWalletObject.TotalBlockInSync = ListBlock.Count;
-                }, ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                    ClassFormPhase.WalletXiropht.ClassWalletObject.TotalBlockInSync = ListBlock.Count;
+                }, ClassFormPhase.WalletXiropht.ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
             }
             catch
             {
-                ClassWalletObject.TotalBlockInSync = 0;
+                ClassFormPhase.WalletXiropht.ClassWalletObject.TotalBlockInSync = 0;
                 ListBlock.Clear();
                 OnLoad = false;
             }

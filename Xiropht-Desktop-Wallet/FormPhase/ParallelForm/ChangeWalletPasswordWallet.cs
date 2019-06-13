@@ -14,10 +14,10 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            ClassWalletObject.WalletNewPassword = textBoxWalletNewPassword.Text;
-            ClassWalletObject.WalletConnect.SendPacketWallet(
+            ClassFormPhase.WalletXiropht.ClassWalletObject.WalletNewPassword = textBoxWalletNewPassword.Text;
+            ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
                 ClassWalletCommand.ClassWalletSendEnumeration.ChangePassword + "|" + textBoxWalletOldPassword.Text +
-                "|" + textBoxPinCode.Text + "|" + textBoxWalletNewPassword.Text + "", ClassWalletObject.Certificate,
+                "|" + textBoxPinCode.Text + "|" + textBoxWalletNewPassword.Text + "", ClassFormPhase.WalletXiropht.ClassWalletObject.Certificate,
                 true);
             textBoxPinCode.Text = "";
             textBoxWalletNewPassword.Text = "";

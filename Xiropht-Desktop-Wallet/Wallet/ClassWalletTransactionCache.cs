@@ -49,7 +49,7 @@ namespace Xiropht_Wallet.Wallet
                             {
                                 byte[] AesKeyIv = null;
                                 byte[] AesSalt = null;
-                                using (PasswordDeriveBytes password = new PasswordDeriveBytes(ClassWalletObject.WalletConnect.WalletAddress + ClassWalletObject.WalletConnect.WalletKey, ClassUtils.GetByteArrayFromString(ClassUtils.FromHex((ClassWalletObject.WalletConnect.WalletAddress + ClassWalletObject.WalletConnect.WalletKey).Substring(0, 8)))))
+                                using (PasswordDeriveBytes password = new PasswordDeriveBytes(ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress + ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletKey, ClassUtils.GetByteArrayFromString(ClassUtils.FromHex((ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress + ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletKey).Substring(0, 8)))))
                                 {
                                     AesKeyIv = password.GetBytes(ClassConnectorSetting.MAJOR_UPDATE_1_SECURITY_CERTIFICATE_SIZE / 8);
                                     AesSalt = password.GetBytes(16);
@@ -112,7 +112,7 @@ namespace Xiropht_Wallet.Wallet
                                     }
                                 }
                                 listTransactionEncrypted.Clear();
-                                ClassWalletObject.TotalTransactionInSync = ListTransaction.Count;
+                                ClassFormPhase.WalletXiropht.ClassWalletObject.TotalTransactionInSync = ListTransaction.Count;
                                 AesKeyIv = null;
                                 AesSalt = null;
                             }
@@ -133,14 +133,14 @@ namespace Xiropht_Wallet.Wallet
                                                   walletAddress));
                         }
 
-                        ClassWalletObject.TotalTransactionInSync = ListTransaction.Count;
+                        ClassFormPhase.WalletXiropht.ClassWalletObject.TotalTransactionInSync = ListTransaction.Count;
                         OnLoad = false;
 
-                    }, ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                    }, ClassFormPhase.WalletXiropht.ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
                 }
                 catch
                 {
-                    ClassWalletObject.TotalTransactionInSync = 0;
+                    ClassFormPhase.WalletXiropht.ClassWalletObject.TotalTransactionInSync = 0;
                     ListTransaction.Clear();
                     OnLoad = false;
                 }
@@ -231,7 +231,14 @@ namespace Xiropht_Wallet.Wallet
         /// </summary>
         public static void ClearWalletCache()
         {
-            ListTransaction.Clear();
+            try
+            {
+                ListTransaction.Clear();
+            }
+            catch
+            {
+
+            }
         }
 
         /// <summary>
@@ -261,10 +268,10 @@ namespace Xiropht_Wallet.Wallet
                     var amountAndFeeDecrypted = ClassAlgoErrorEnumeration.AlgoError;
                     if (type == "SEND")
                         amountAndFeeDecrypted = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael,
-                                realFeeAmountSend, ClassWalletObject.WalletConnect.WalletAddress + ClassWalletObject.WalletConnect.WalletKey, ClassWalletNetworkSetting.KeySize); // AES
+                                realFeeAmountSend, ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress + ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletKey, ClassWalletNetworkSetting.KeySize); // AES
                     else if (type == "RECV")
                         amountAndFeeDecrypted = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael,
-                                realFeeAmountRecv, ClassWalletObject.WalletConnect.WalletAddress + ClassWalletObject.WalletConnect.WalletKey, ClassWalletNetworkSetting.KeySize); // AES
+                                realFeeAmountRecv, ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress + ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletKey, ClassWalletNetworkSetting.KeySize); // AES
 
                     if (amountAndFeeDecrypted != ClassAlgoErrorEnumeration.AlgoError)
                     {
@@ -281,22 +288,22 @@ namespace Xiropht_Wallet.Wallet
                                                     amountDecrypted + "#" + feeDecrypted + "#" + timestamp + "#" +
                                                     timestampRecv + "#" + blockchainHeight;
 
-                        var finalTransactionEncrypted = ClassAlgo.GetEncryptedResultManual(ClassAlgoEnumeration.Rijndael, finalTransaction, ClassWalletObject.WalletConnect.WalletAddress + ClassWalletObject.WalletConnect.WalletKey, ClassWalletNetworkSetting.KeySize); // AES
+                        var finalTransactionEncrypted = ClassAlgo.GetEncryptedResultManual(ClassAlgoEnumeration.Rijndael, finalTransaction, ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress + ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletKey, ClassWalletNetworkSetting.KeySize); // AES
 
                         if (finalTransactionEncrypted == ClassAlgoErrorEnumeration.AlgoError) // Ban bad remote node.
                         {
-                            if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
+                            if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(ClassFormPhase.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
                             {
-                                if (!ClassWalletObject.ListRemoteNodeBanned.ContainsKey(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
+                                if (!ClassFormPhase.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned.ContainsKey(ClassFormPhase.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
                                 {
-                                    ClassWalletObject.ListRemoteNodeBanned.Add(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost, ClassUtils.DateUnixTimeNowSecond());
+                                    ClassFormPhase.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned.Add(ClassFormPhase.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost, ClassUtils.DateUnixTimeNowSecond());
                                 }
                                 else
                                 {
-                                    ClassWalletObject.ListRemoteNodeBanned[ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost] = ClassUtils.DateUnixTimeNowSecond();
+                                    ClassFormPhase.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned[ClassFormPhase.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost] = ClassUtils.DateUnixTimeNowSecond();
                                 }
                             }
-                            ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
+                            ClassFormPhase.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
                         }
                         else
                         {
@@ -317,12 +324,12 @@ namespace Xiropht_Wallet.Wallet
                             ListTransaction.Add(hashTransaction, transactionObject);
 
 
-                            await SaveWalletCache(ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted);
+                            await SaveWalletCache(ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted);
 
 #if DEBUG
                             Log.WriteLine("Total transactions downloaded: " +
                                                ListTransaction.Count + "/" +
-                                               ClassWalletObject.TotalTransactionInSync + ".");
+                                               ClassFormPhase.WalletXiropht.ClassWalletObject.TotalTransactionInSync + ".");
 #endif
 
                         }
@@ -333,18 +340,18 @@ namespace Xiropht_Wallet.Wallet
                     Log.WriteLine("Can't decrypt transaction: " + transaction + " result: " +
                                   amountAndFeeDecrypted);
 #endif
-                        if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
+                        if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(ClassFormPhase.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
                         {
-                            if (!ClassWalletObject.ListRemoteNodeBanned.ContainsKey(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
+                            if (!ClassFormPhase.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned.ContainsKey(ClassFormPhase.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
                             {
-                                ClassWalletObject.ListRemoteNodeBanned.Add(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost, ClassUtils.DateUnixTimeNowSecond());
+                                ClassFormPhase.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned.Add(ClassFormPhase.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost, ClassUtils.DateUnixTimeNowSecond());
                             }
                             else
                             {
-                                ClassWalletObject.ListRemoteNodeBanned[ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost] = ClassUtils.DateUnixTimeNowSecond();
+                                ClassFormPhase.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned[ClassFormPhase.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost] = ClassUtils.DateUnixTimeNowSecond();
                             }
                         }
-                        ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
+                        ClassFormPhase.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
                     }
                 }
                 else
@@ -352,21 +359,21 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                     Log.WriteLine("Wallet transaction hash: "+ hashTransaction+" already exist on database.");
 #endif
-                    if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
+                    if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(ClassFormPhase.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
                     {
-                        if (!ClassWalletObject.ListRemoteNodeBanned.ContainsKey(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
+                        if (!ClassFormPhase.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned.ContainsKey(ClassFormPhase.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
                         {
-                            ClassWalletObject.ListRemoteNodeBanned.Add(ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost, ClassUtils.DateUnixTimeNowSecond());
+                            ClassFormPhase.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned.Add(ClassFormPhase.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost, ClassUtils.DateUnixTimeNowSecond());
                         }
                         else
                         {
-                            ClassWalletObject.ListRemoteNodeBanned[ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost] = ClassUtils.DateUnixTimeNowSecond();
+                            ClassFormPhase.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned[ClassFormPhase.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost] = ClassUtils.DateUnixTimeNowSecond();
                         }
                     }
-                    ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
+                    ClassFormPhase.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
                 }
             }
-            ClassWalletObject.InReceiveTransaction = false;
+            ClassFormPhase.WalletXiropht.ClassWalletObject.InReceiveTransaction = false;
         }
     }
 }

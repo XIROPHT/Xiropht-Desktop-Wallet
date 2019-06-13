@@ -48,6 +48,7 @@ namespace Xiropht_Wallet
         public BlockExplorerWallet BlockWalletForm;
         public RestoreWallet RestoreWalletForm;
         public ContactWallet ContactWalletForm;
+        public ClassWalletObject ClassWalletObject;
 
         /// <summary>
         /// Form resize objects
@@ -110,9 +111,9 @@ namespace Xiropht_Wallet
         /// <summary>
         /// Constructor.
         /// </summary>
-        public WalletXiropht(bool firstStart)
+        public WalletXiropht()
         {
-            _firstStart = firstStart;
+
             ClassFormPhase.WalletXiropht = this;
             MainWalletForm = new MainWallet();
             OpenWalletForm = new OpenWallet();
@@ -125,6 +126,20 @@ namespace Xiropht_Wallet
             ContactWalletForm = new ContactWallet();
             InitializeComponent();
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
+            InitializationWalletObject();
+
+        }
+
+        public void InitializationWalletObject()
+        {
+            if (ClassWalletObject != null)
+            {
+                ClassFormPhase.WalletXiropht.ClassWalletObject.FullDisconnection(true, true);
+                ClassWalletObject.Dispose();
+                ClassWalletObject = null;
+            }
+            ClassWalletObject = new ClassWalletObject();
+            _firstStart = ClassWalletSetting.LoadSetting(); // Load the setting file.
         }
 
         /// <summary>
@@ -943,10 +958,17 @@ namespace Xiropht_Wallet
         /// </summary>
         public void HideWalletAddressQRCode()
         {
-            pictureBoxQRCodeWallet.Image = null;
-            pictureBoxQRCodeWallet.Invalidate();
-            pictureBoxQRCodeWallet.BringToFront();
-            pictureBoxQRCodeWallet.BackgroundImage = null;
+            try
+            {
+                pictureBoxQRCodeWallet.Image = null;
+                pictureBoxQRCodeWallet.Invalidate();
+                pictureBoxQRCodeWallet.BringToFront();
+                pictureBoxQRCodeWallet.BackgroundImage = null;
+            }
+            catch
+            {
+
+            }
         }
 
         /// <summary>

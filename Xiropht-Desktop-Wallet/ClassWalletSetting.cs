@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Xiropht_Wallet.FormPhase;
 using Xiropht_Wallet.Wallet;
 
 namespace Xiropht_Wallet
@@ -16,7 +17,7 @@ namespace Xiropht_Wallet
             string syncModeSetting = "SYNC-MODE-SETTING=";
             string syncModeManualHostSetting = "SYNC-MODE-MANUAL-HOST-SETTING=";
 
-            switch (ClassWalletObject.WalletSyncMode)
+            switch (ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncMode)
             {
                 case 0:
                     syncModeSetting += "0";
@@ -28,7 +29,7 @@ namespace Xiropht_Wallet
                     break;
                 case 2:
                     syncModeSetting += "2";
-                    syncModeManualHostSetting += ClassWalletObject.WalletSyncHostname;
+                    syncModeManualHostSetting += ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncHostname;
                     break;
                 default:
                     syncModeSetting += "0";
@@ -41,11 +42,12 @@ namespace Xiropht_Wallet
                 File.Create(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile)).Close();
             }
 
-            StreamWriter writer = new StreamWriter(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile), false);
-            writer.WriteLine(syncModeSetting);
-            writer.WriteLine(syncModeManualHostSetting);
-            writer.WriteLine("CURRENT-WALLET-LANGUAGE="+ClassTranslation.CurrentLanguage);
-            writer.Close();
+            using (StreamWriter writer = new StreamWriter(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile), false))
+            {
+                writer.WriteLine(syncModeSetting);
+                writer.WriteLine(syncModeManualHostSetting);
+                writer.WriteLine("CURRENT-WALLET-LANGUAGE=" + ClassTranslation.CurrentLanguage);
+            }
         }
 
         /// <summary>
@@ -60,39 +62,41 @@ namespace Xiropht_Wallet
             }
             else
             {
-                StreamReader reader = new StreamReader(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile));
-                string line;
-                int counterLine = 0;
-                while ((line = reader.ReadLine()) != null)
+                using (StreamReader reader = new StreamReader(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + _walletSettingFile)))
                 {
-                    if (line.Contains("SYNC-MODE-SETTING="))
+                    string line;
+                    int counterLine = 0;
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        if (line.Replace("SYNC-MODE-SETTING=", "") == "0")
+                        if (line.Contains("SYNC-MODE-SETTING="))
                         {
-                            ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_DEFAULT;
+                            if (line.Replace("SYNC-MODE-SETTING=", "") == "0")
+                            {
+                                ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_DEFAULT;
+                            }
+                            else if (line.Replace("SYNC-MODE-SETTING=", "") == "1")
+                            {
+                                ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE;
+                            }
+                            else if (line.Replace("SYNC-MODE-SETTING=", "") == "2")
+                            {
+                                ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE;
+                            }
                         }
-                        else if (line.Replace("SYNC-MODE-SETTING=", "") == "1")
+                        else if (line.Contains("SYNC-MODE-MANUAL-HOST-SETTING="))
                         {
-                            ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE;
+                            ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncHostname = line.Replace("SYNC-MODE-MANUAL-HOST-SETTING=", "");
                         }
-                        else if (line.Replace("SYNC-MODE-SETTING=", "") == "2")
+                        else if (line.Contains("CURRENT-WALLET-LANGUAGE="))
                         {
-                            ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE;
+                            ClassTranslation.CurrentLanguage = line.Replace("CURRENT-WALLET-LANGUAGE=", "").ToLower();
                         }
+                        counterLine++;
                     }
-                    else if (line.Contains("SYNC-MODE-MANUAL-HOST-SETTING="))
+                    if (counterLine == 0)
                     {
-                        ClassWalletObject.WalletSyncHostname = line.Replace("SYNC-MODE-MANUAL-HOST-SETTING=", "");
+                        return true;
                     }
-                    else if (line.Contains("CURRENT-WALLET-LANGUAGE="))
-                    {
-                        ClassTranslation.CurrentLanguage = line.Replace("CURRENT-WALLET-LANGUAGE=", "").ToLower();
-                    }
-                    counterLine++;
-                }
-                if (counterLine == 0)
-                {
-                    return true;
                 }
             }
             return false;

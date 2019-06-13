@@ -25,12 +25,12 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             {
                 new Thread(async delegate ()
                 {
-                    if (!await ClassWalletObject.WalletConnect
+                    if (!await ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect
                         .SendPacketWallet(
                             ClassWalletCommand.ClassWalletSendEnumeration.PinPhase + "|" + textBoxPinCode.Text,
-                            ClassWalletObject.Certificate, true))
+                            ClassFormPhase.WalletXiropht.ClassWalletObject.Certificate, true))
                     {
-                        ClassWalletObject.FullDisconnection(true);
+                        ClassFormPhase.WalletXiropht.ClassWalletObject.FullDisconnection(true);
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS
                     ClassFormPhase.MessageBoxInterface(
@@ -154,12 +154,12 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             {
                 new Thread(async delegate()
                 {
-                    if (!await ClassWalletObject.WalletConnect
+                    if (!await ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect
                         .SendPacketWallet(
                             ClassWalletCommand.ClassWalletSendEnumeration.PinPhase + "|" + textBoxPinCode.Text,
-                            ClassWalletObject.Certificate, true))
+                            ClassFormPhase.WalletXiropht.ClassWalletObject.Certificate, true))
                     {
-                        ClassWalletObject.FullDisconnection(true);
+                        ClassFormPhase.WalletXiropht.ClassWalletObject.FullDisconnection(true);
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS
                     ClassFormPhase.MessageBoxInterface(

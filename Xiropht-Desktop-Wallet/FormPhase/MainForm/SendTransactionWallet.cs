@@ -74,17 +74,17 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
                                     if (checkBoxHideWalletAddress.Checked)
                                     {
-                                        await ClassWalletObject.WalletConnect.SendPacketWallet(
+                                        await ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
                                                     ClassWalletCommand.ClassWalletSendEnumeration.SendTransaction + "|" +
-                                                    destination + "|" + amountSend + "|" + feeSend + "|1", ClassWalletObject.Certificate, true);
+                                                    destination + "|" + amountSend + "|" + feeSend + "|1", ClassFormPhase.WalletXiropht.ClassWalletObject.Certificate, true);
 
 
                                     }
                                     else
                                     {
-                                        await ClassWalletObject.WalletConnect.SendPacketWallet(
+                                        await ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
                                             ClassWalletCommand.ClassWalletSendEnumeration.SendTransaction + "|" +
-                                            destination + "|" + amountSend + "|" + feeSend + "|0", ClassWalletObject.Certificate, true);
+                                            destination + "|" + amountSend + "|" + feeSend + "|0", ClassFormPhase.WalletXiropht.ClassWalletObject.Certificate, true);
                                     }
 
                                     MethodInvoker invoke = () =>
@@ -163,7 +163,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             try
             {
-                string newTotalAmount = ClassWalletObject.WalletConnect.WalletAmount;
+                string newTotalAmount = ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletAmount;
                 Decimal amount = Decimal.Parse(newTotalAmount, NumberStyles.Any,
                     Program.GlobalCultureInfo);
                 if (amount >= totalAmount)
@@ -214,16 +214,16 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 while (true)
                 {
                     await Task.Delay(100);
-                    if (ClassWalletObject.SeedNodeConnectorWallet != null)
+                    if (ClassFormPhase.WalletXiropht.ClassWalletObject.SeedNodeConnectorWallet != null)
                     {
-                        if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                        if (ClassFormPhase.WalletXiropht.ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                         {
                             MethodInvoker invoke;
                             if (!string.IsNullOrEmpty(textBoxFee.Text))
                             {
                                 if (Decimal.TryParse(textBoxFee.Text.Replace(".", ","), out var feeAmount))
                                 {
-                                    Decimal timePendingFromFee = ClassWalletObject.RemoteNodeTotalPendingTransactionInNetwork;
+                                    Decimal timePendingFromFee = ClassFormPhase.WalletXiropht.ClassWalletObject.RemoteNodeTotalPendingTransactionInNetwork;
 
 
                                     if (timePendingFromFee <= 0)

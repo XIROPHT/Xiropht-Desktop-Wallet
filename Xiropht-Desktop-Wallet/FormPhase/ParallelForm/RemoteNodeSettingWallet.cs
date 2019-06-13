@@ -19,28 +19,28 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         {
             if (radioButtonEnableSeedNodeSync.Checked)
             {
-                ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_DEFAULT;
+                ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_DEFAULT;
             }
             else if (radioButtonEnablePublicRemoteNodeSync.Checked)
             {
-                ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE;
+                ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE;
             }
             else if (radioButtonEnableManualRemoteNodeSync.Checked)
             {
-                ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE;
-                ClassWalletObject.WalletSyncHostname = textBoxRemoteNodeHost.Text;
+                ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE;
+                ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncHostname = textBoxRemoteNodeHost.Text;
             }
 
             ClassWalletSetting.SaveSetting();
 
 
-            if (ClassWalletObject.WalletConnect != null)
+            if (ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect != null)
             {
-                if (!string.IsNullOrEmpty(ClassWalletObject.WalletConnect.WalletPhase))
+                if (!string.IsNullOrEmpty(ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletPhase))
                 {
-                    if (!ClassWalletObject.WalletClosed)
+                    if (!ClassFormPhase.WalletXiropht.ClassWalletObject.WalletClosed)
                     {
-                        ClassWalletObject.FullDisconnection(true);
+                        ClassFormPhase.WalletXiropht.ClassWalletObject.FullDisconnection(true);
                         ClassFormPhase.WalletXiropht.SwitchForm(ClassFormPhaseEnumeration.OpenWallet);
 #if WINDOWS
                         MetroMessageBox.Show(this, ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_SAVE_SETTING_TEXT"));
@@ -83,7 +83,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             labelNoticeRemoteNodeHost.Text = ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_USE_MANUAL_NODE_HOSTNAME_TEXT");
             labelNoticePublicNodeInformation.Text = ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_USE_REMOTE_NODE_INFORMATION_TEXT");
             labelNoticePrivateRemoteNode.Text = ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_USE_MANUAL_NODE_INFORMATION_TEXT");
-            switch(ClassWalletObject.WalletSyncMode)
+            switch(ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncMode)
             {
                 case (int)ClassWalletSyncMode.WALLET_SYNC_DEFAULT:
                     radioButtonEnableSeedNodeSync.Checked = true;
@@ -99,7 +99,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                     radioButtonEnableSeedNodeSync.Checked = false;
                     radioButtonEnablePublicRemoteNodeSync.Checked = false;
                     radioButtonEnableManualRemoteNodeSync.Checked = true;
-                    textBoxRemoteNodeHost.Text = ClassWalletObject.WalletSyncHostname;
+                    textBoxRemoteNodeHost.Text = ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncHostname;
                     break;
             }
 

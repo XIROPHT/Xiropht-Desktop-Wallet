@@ -60,7 +60,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         var streamReaderWalletFile = new StreamReader(openWalletFile.FileName);
                         _walletFileData = streamReaderWalletFile.ReadToEnd();
                         streamReaderWalletFile.Close();
-                        ClassWalletObject.WalletLastPathFile = openWalletFile.FileName;
+                        ClassFormPhase.WalletXiropht.ClassWalletObject.WalletLastPathFile = openWalletFile.FileName;
                     }
                     catch
                     {
@@ -95,7 +95,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
             Task.Factory.StartNew(async delegate ()
             {
-
+                if (ClassFormPhase.WalletXiropht.ClassWalletObject != null)
+                {
+                    ClassFormPhase.WalletXiropht.InitializationWalletObject();
+                }
                 try
                 {
                     bool error = false;
@@ -103,20 +106,20 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     string passwordEncrypted = ClassAlgo.GetEncryptedResultManual(ClassAlgoEnumeration.Rijndael,
                         textBoxPasswordWallet.Text, textBoxPasswordWallet.Text, ClassWalletNetworkSetting.KeySize);
 
-                    ClassWalletObject.WalletDataDecrypted = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael,
+                    ClassFormPhase.WalletXiropht.ClassWalletObject.WalletDataDecrypted = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael,
                         _walletFileData, passwordEncrypted, ClassWalletNetworkSetting.KeySize); // AES
-                    if (ClassWalletObject.WalletDataDecrypted == ClassAlgoErrorEnumeration.AlgoError)
+                    if (ClassFormPhase.WalletXiropht.ClassWalletObject.WalletDataDecrypted == ClassAlgoErrorEnumeration.AlgoError)
                     {
                         error = true;
                     }
 
                     if (error)
                     {
-                        ClassWalletObject.WalletDataDecrypted = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael,
+                        ClassFormPhase.WalletXiropht.ClassWalletObject.WalletDataDecrypted = ClassAlgo.GetDecryptedResultManual(ClassAlgoEnumeration.Rijndael,
                             _walletFileData, textBoxPasswordWallet.Text, ClassWalletNetworkSetting.KeySize); // AES
                     }
 
-                    if (ClassWalletObject.WalletDataDecrypted == ClassAlgoErrorEnumeration.AlgoError)
+                    if (ClassFormPhase.WalletXiropht.ClassWalletObject.WalletDataDecrypted == ClassAlgoErrorEnumeration.AlgoError)
                     {
 #if WINDOWS
                         ClassFormPhase.MessageBoxInterface(
@@ -131,10 +134,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     }
 
                     var splitWalletFileDecrypted =
-                        ClassWalletObject.WalletDataDecrypted.Split(new[] { "\n" }, StringSplitOptions.None);
+                        ClassFormPhase.WalletXiropht.ClassWalletObject.WalletDataDecrypted.Split(new[] { "\n" }, StringSplitOptions.None);
                     string walletAddress = splitWalletFileDecrypted[0];
                     string walletKey = splitWalletFileDecrypted[1];
-                    if (!await ClassWalletObject.InitializationWalletConnection(walletAddress, textBoxPasswordWallet.Text,
+                    if (!await ClassFormPhase.WalletXiropht.ClassWalletObject.InitializationWalletConnection(walletAddress, textBoxPasswordWallet.Text,
                     walletKey, ClassWalletPhase.Login))
                     {
                         MethodInvoker invoker = () => textBoxPasswordWallet.Text = "";
@@ -154,14 +157,14 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     MethodInvoker invoke = () => textBoxPasswordWallet.Text = "";
                     BeginInvoke(invoke);
 
-                    ClassWalletObject.ListenSeedNodeNetworkForWallet();
+                    ClassFormPhase.WalletXiropht.ClassWalletObject.ListenSeedNodeNetworkForWallet();
 
 
-                    if (await ClassWalletObject.WalletConnect.SendPacketWallet(ClassWalletObject.Certificate, string.Empty, false))
+                    if (await ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(ClassFormPhase.WalletXiropht.ClassWalletObject.Certificate, string.Empty, false))
                     {
                         await Task.Delay(100);
-                        await ClassWalletObject.WalletConnect.SendPacketWallet(
-                            ClassConnectorSettingEnumeration.WalletLoginType + "|" + ClassWalletObject.WalletConnect.WalletAddress, ClassWalletObject.Certificate, true);
+                        await ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
+                            ClassConnectorSettingEnumeration.WalletLoginType + "|" + ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress, ClassFormPhase.WalletXiropht.ClassWalletObject.Certificate, true);
                         _walletFileData = string.Empty;
                         _fileSelectedPath = string.Empty;
                         invoke = () => labelOpenFileSelected.Text = ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_LABEL_FILE_SELECTED_TEXT");
