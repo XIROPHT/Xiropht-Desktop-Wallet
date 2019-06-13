@@ -4788,32 +4788,46 @@ namespace Xiropht_Wallet
                 }
                 else // Search by contact name
                 {
-                    bool contactTransactionFound = false;
-                    var walletResearchElementForm = new SearchWalletExplorer
+                    if (ClassContact.ListContactWallet.ContainsKey(elementToSearch.ToLower()))
                     {
-                        StartPosition = FormStartPosition.CenterParent
-                    };
-                    foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction)
-                    {
-                        if (ClassContact.CheckContactNameFromWalletAddress(transactionObject.Value.TransactionWalletAddress))
+                        bool contactTransactionFound = false;
+                        string walletAddressFromContactName = ClassContact.GetWalletAddressFromContactName(elementToSearch);
+                        var walletResearchElementForm = new SearchWalletExplorer
                         {
-                            contactTransactionFound = true;
-                            walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement());
-                        }
-                    }
-
-                    foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction)
-                    {
-                        if (ClassContact.CheckContactNameFromWalletAddress(transactionObject.Value.TransactionWalletAddress))
+                            StartPosition = FormStartPosition.CenterParent
+                        };
+                        foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction)
                         {
-                            contactTransactionFound = true;
-                            walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement());
+                            if (transactionObject.Value.TransactionWalletAddress == walletAddressFromContactName)
+                            {
+                                contactTransactionFound = true;
+                                walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement());
+                            }
                         }
-                    }
 
-                    if (contactTransactionFound)
-                    {
-                        walletResearchElementForm.ShowDialog(this);
+                        foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction)
+                        {
+                            if (transactionObject.Value.TransactionWalletAddress == walletAddressFromContactName)
+                            {
+                                contactTransactionFound = true;
+                                walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement());
+                            }
+                        }
+
+                        if (contactTransactionFound)
+                        {
+                            walletResearchElementForm.ShowDialog(this);
+                        }
+                        else
+                        {
+#if WINDOWS
+                            ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#endif
+#if LINUX
+                            MessageBox.Show(this, elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#endif
+                            walletResearchElementForm.Dispose();
+                        }
                     }
                     else
                     {
@@ -4821,9 +4835,8 @@ namespace Xiropht_Wallet
                         ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #endif
 #if LINUX
-                    MessageBox.Show(this, elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show(this, elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #endif
-                        walletResearchElementForm.Dispose();
                     }
                 }
             }
