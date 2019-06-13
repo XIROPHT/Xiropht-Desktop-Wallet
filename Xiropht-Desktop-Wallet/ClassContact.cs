@@ -147,6 +147,19 @@ namespace Xiropht_Wallet
         }
 
         /// <summary>
+        /// Get contact name from wallet address.
+        /// </summary>
+        /// <param name="walletContactInfo"></param>
+        public static string GetWalletAddressFromContactName(string contactName)
+        {
+            if (ListContactWallet.ContainsKey(contactName.ToLower()))
+            {
+                return ListContactWallet[contactName.ToLower()].Item2;
+            }
+            return contactName;
+        }
+
+        /// <summary>
         /// Check if wallet address exist.
         /// </summary>
         /// <param name="walletContactInfo"></param>

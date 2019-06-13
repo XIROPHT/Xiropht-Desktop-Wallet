@@ -272,17 +272,17 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         {
                             found = true;
 
-                            if (ClassContact.ListContactWallet.ContainsKey(item.SubItems[ix].Text))
+                            if (ClassContact.CheckContactNameFromWalletAddress(item.SubItems[ix].Text))
                             {
-                                Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2);
+                                Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS
                                 Task.Factory.StartNew(() =>
-                                        ClassFormPhase.MessageBoxInterface(ClassContact.ListContactWallet[item.SubItems[ix].Text] + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+                                        ClassFormPhase.MessageBoxInterface(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
 #else
-                                LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2);
+                                LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
                                 Task.Factory.StartNew(() =>
                                 {
-                                    MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                    MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
                                     BeginInvoke(invoker);
                                 }).ConfigureAwait(false);
 #endif
@@ -323,17 +323,17 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
                     if (item.SubItems[ix].Bounds.Contains(e.Location))
                     {
-                        if (ClassContact.ListContactWallet.ContainsKey(item.SubItems[ix].Text))
+                        if (ClassContact.CheckContactNameFromWalletAddress(item.SubItems[ix].Text))
                         {
-                            Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2);
+                            Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS
                             Task.Factory.StartNew(() =>
-                                    ClassFormPhase.MessageBoxInterface(ClassContact.ListContactWallet[item.SubItems[ix].Text] + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+                                    ClassFormPhase.MessageBoxInterface(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
 #else
-                                LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2);
+                                LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
                                 Task.Factory.StartNew(() =>
                                 {
-                                    MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                    MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
                                     BeginInvoke(invoker);
                                 }).ConfigureAwait(false);
 #endif
@@ -371,17 +371,17 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
                     if (item.SubItems[ix].Bounds.Contains(e.Location))
                     {
-                        if (ClassContact.ListContactWallet.ContainsKey(item.SubItems[ix].Text))
+                        if (ClassContact.CheckContactNameFromWalletAddress(item.SubItems[ix].Text))
                         {
-                            Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2);
+                            Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS
                             Task.Factory.StartNew(() =>
-                                    ClassFormPhase.MessageBoxInterface(ClassContact.ListContactWallet[item.SubItems[ix].Text] + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+                                    ClassFormPhase.MessageBoxInterface(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
 #else
-                                LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2);
+                                LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
                                 Task.Factory.StartNew(() =>
                                 {
-                                    MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                    MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
                                     BeginInvoke(invoker);
                                 }).ConfigureAwait(false);
 #endif
@@ -419,17 +419,17 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
                     if (item.SubItems[ix].Bounds.Contains(e.Location))
                     {
-                        if (ClassContact.ListContactWallet.ContainsKey(item.SubItems[ix].Text))
+                        if (ClassContact.CheckContactNameFromWalletAddress(item.SubItems[ix].Text))
                         {
-                            Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2);
+                            Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS
                             Task.Factory.StartNew(() =>
-                                    ClassFormPhase.MessageBoxInterface(ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+                                    ClassFormPhase.MessageBoxInterface(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
 #else
-                            LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2);
+                            LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
                             Task.Factory.StartNew(() =>
                             {
-                                MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
                                 BeginInvoke(invoker);
                             }).ConfigureAwait(false);
 #endif
@@ -467,17 +467,17 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
                     if (item.SubItems[ix].Bounds.Contains(e.Location))
                     {
-                        if (ClassContact.ListContactWallet.ContainsKey(item.SubItems[ix].Text))
+                        if (ClassContact.CheckContactNameFromWalletAddress(item.SubItems[ix].Text))
                         {
-                            Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2);
+                            Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS
                             Task.Factory.StartNew(() =>
-                                    ClassFormPhase.MessageBoxInterface(ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+                                    ClassFormPhase.MessageBoxInterface(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
 #else
-                                LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2);
+                                LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
                                 Task.Factory.StartNew(() =>
                                 {
-                                    MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                    MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
                                     BeginInvoke(invoker);
                                 }).ConfigureAwait(false);
 #endif

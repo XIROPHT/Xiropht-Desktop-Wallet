@@ -104,7 +104,6 @@
             this.listViewBlockExplorer.TabIndex = 0;
             this.listViewBlockExplorer.UseCompatibleStateImageBehavior = false;
             this.listViewBlockExplorer.View = System.Windows.Forms.View.Details;
-            this.listViewBlockExplorer.SelectedIndexChanged += new System.EventHandler(this.listViewBlockExplorer_SelectedIndexChanged);
             this.listViewBlockExplorer.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewBlockExplorer_MouseClick);
             // 
             // columnHeaderBlockId

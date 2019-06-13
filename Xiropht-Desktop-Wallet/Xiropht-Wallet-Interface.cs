@@ -3171,16 +3171,12 @@ namespace Xiropht_Wallet
 
                                                 BeginInvoke((MethodInvoker)Invoker);
 
-                                                BlockWalletForm.SortingBlockExplorer();
-
                                             }
                                             else
                                             {
                                                 void Invoker() => BlockWalletForm.listViewBlockExplorer.Items.Insert(0, listViewItem);
 
                                                 BeginInvoke((MethodInvoker)Invoker);
-
-                                                BlockWalletForm.SortingBlockExplorer();
 
                                             }
                                             TotalBlockRead++;
@@ -3206,7 +3202,13 @@ namespace Xiropht_Wallet
                                     }
                                 }
 
-
+                                if (BlockWalletForm.IsShowed)
+                                {
+                                    if (BlockWalletForm.listViewBlockExplorer.Items.Count > 0)
+                                    {
+                                        BlockWalletForm.SortingBlockExplorer();
+                                    }
+                                }
                             }
                             catch (Exception error)
                             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -35,7 +36,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             for (int i = 0; i < cc.Count; i++)
             {
                 int colWidth = TextRenderer.MeasureText(cc[i].Text, lv.Font).Width + 30;
-                if (colWidth > cc[i].Width || cc[i].Text == "Fee" || cc[i].Text == "Amount")
+                if (colWidth > cc[i].Width)
                 {
                     cc[i].Width = colWidth + 30;
                 }
@@ -57,6 +58,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             }
         }
 
+        /// <summary>
+        /// Force to resync blocks.
+        /// </summary>
         public void ResyncBlock()
         {
             if (ClassBlockCache.RemoveWalletBlockCache())
@@ -64,13 +68,13 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 ClassFormPhase.WalletXiropht.ListBlockHashShowed.Clear();
                 ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
             }
-
         }
 
         private void Block_Load(object sender, EventArgs e)
         {
             IsShowed = true;
             UpdateStyles();
+            listViewBlockExplorer.ListViewItemSorter = new ListViewComparer(0, SortOrder.Descending);
 
             ClassFormPhase.WalletXiropht.ResizeWalletInterface();
         }
@@ -80,10 +84,6 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             UpdateStyles();
         }
 
-        private void listViewBlockExplorer_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void listViewBlockExplorer_MouseClick(object sender, MouseEventArgs e)
         {
@@ -122,17 +122,19 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         }
 
 
-        private ColumnHeader SortingColumn = null;
 
         /// <summary>
         /// Sort block explorer by block id
         /// </summary>
         public void SortingBlockExplorer()
         {
-            listViewBlockExplorer.Sorting = SortOrder.Descending;
+
 
             MethodInvoker invoke = () => listViewBlockExplorer.Sort();
             listViewBlockExplorer.BeginInvoke(invoke);
         }
     }
+
+
+
 }
