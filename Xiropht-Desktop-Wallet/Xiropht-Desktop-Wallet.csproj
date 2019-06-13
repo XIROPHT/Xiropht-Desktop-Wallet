@@ -231,6 +231,12 @@
     <Compile Include="FormPhase\ParallelForm\RemoteNodeSettingWallet.Designer.cs">
       <DependentUpon>RemoteNodeSettingWallet.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormPhase\ParallelForm\SearchWalletExplorer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhase\ParallelForm\SearchWalletExplorer.Designer.cs">
+      <DependentUpon>SearchWalletExplorer.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormPhase\ParallelForm\WaitingFormReconnectWallet.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -256,6 +262,7 @@
       <DependentUpon>WaitingCreateWalletForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Wallet\ClassBlockCache.cs" />
+    <Compile Include="Wallet\ClassBlockObject.cs" />
     <Compile Include="Wallet\ClassWalletTransactionAnonymityCache.cs" />
     <Compile Include="Wallet\ClassWalletTransactionCache.cs" />
     <Compile Include="Xiropht-Wallet-Interface.cs">
@@ -318,6 +325,9 @@
     <EmbeddedResource Include="FormPhase\ParallelForm\RemoteNodeSettingWallet.resx">
       <DependentUpon>RemoteNodeSettingWallet.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormPhase\ParallelForm\SearchWalletExplorer.resx">
+      <DependentUpon>SearchWalletExplorer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormPhase\ParallelForm\WaitingFormReconnectWallet.resx">
       <DependentUpon>WaitingFormReconnectWallet.cs</DependentUpon>
     </EmbeddedResource>
@@ -356,6 +366,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo-web-profil.ico" />
+    <Compile Include="Wallet\ClassWalletTransactionObject.cs" />
     <None Include="Resources\logo-web-transparent.png" />
     <None Include="Resources\logo-web-profil.png" />
   </ItemGroup>

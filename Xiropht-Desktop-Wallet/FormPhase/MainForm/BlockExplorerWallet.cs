@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Xiropht_Wallet.Wallet;
 
@@ -13,9 +13,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         public BlockExplorerWallet()
         {
             InitializeComponent();
-            SetStyle(ControlStyles.UserPaint, true);
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            SetStyle(ControlStyles.DoubleBuffer, true);
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
             DoubleBuffered = true;
             AutoScroll = true;
         }
@@ -85,6 +83,56 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private void listViewBlockExplorer_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void listViewBlockExplorer_MouseClick(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                ListViewItem item = listViewBlockExplorer.GetItemAt(0, e.Y);
+
+                bool found = false;
+                if (item == null) return;
+                for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
+                    if (item.SubItems[ix].Bounds.Contains(e.Location))
+                    {
+                        if (!found)
+                        {
+                            found = true;
+                            Clipboard.SetText(item.SubItems[ix].Text);
+#if WINDOWS
+                            Task.Factory.StartNew(() =>
+                                    ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+#else
+                            LinuxClipboard.SetText(item.SubItems[ix].Text);
+                            Task.Factory.StartNew(() =>
+                            {
+                                MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                BeginInvoke(invoker);
+                            }).ConfigureAwait(false);
+#endif
+                            return;
+                        }
+                    }
+            }
+            catch
+            {
+
+            }
+        }
+
+
+        private ColumnHeader SortingColumn = null;
+
+        /// <summary>
+        /// Sort block explorer by block id
+        /// </summary>
+        public void SortingBlockExplorer()
+        {
+            listViewBlockExplorer.Sorting = SortOrder.Descending;
+
+            MethodInvoker invoke = () => listViewBlockExplorer.Sort();
+            listViewBlockExplorer.BeginInvoke(invoke);
         }
     }
 }

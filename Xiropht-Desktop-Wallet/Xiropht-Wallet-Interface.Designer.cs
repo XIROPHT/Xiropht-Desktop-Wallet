@@ -72,6 +72,8 @@ namespace Xiropht_Wallet
             this.buttonContactWallet = new System.Windows.Forms.Button();
             this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.pictureBoxQRCodeWallet = new System.Windows.Forms.PictureBox();
+            this.buttonResearch = new System.Windows.Forms.Button();
+            this.textBoxResearch = new System.Windows.Forms.TextBox();
             this.panelMainForm = new Xiropht_Wallet.FormCustom.ClassPanel();
             this.panelControlWallet = new Xiropht_Wallet.FormCustom.ClassPanel();
             this.labelNoticeTotalPendingTransactionOnReceive = new System.Windows.Forms.Label();
@@ -331,7 +333,7 @@ namespace Xiropht_Wallet
             // buttonPreviousPage
             // 
             this.buttonPreviousPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonPreviousPage.Location = new System.Drawing.Point(519, 679);
+            this.buttonPreviousPage.Location = new System.Drawing.Point(735, 679);
             this.buttonPreviousPage.Name = "buttonPreviousPage";
             this.buttonPreviousPage.Size = new System.Drawing.Size(75, 23);
             this.buttonPreviousPage.TabIndex = 8;
@@ -342,7 +344,7 @@ namespace Xiropht_Wallet
             // labelNoticeCurrentPage
             // 
             this.labelNoticeCurrentPage.AutoSize = true;
-            this.labelNoticeCurrentPage.Location = new System.Drawing.Point(610, 683);
+            this.labelNoticeCurrentPage.Location = new System.Drawing.Point(826, 683);
             this.labelNoticeCurrentPage.Name = "labelNoticeCurrentPage";
             this.labelNoticeCurrentPage.Size = new System.Drawing.Size(13, 13);
             this.labelNoticeCurrentPage.TabIndex = 9;
@@ -352,7 +354,7 @@ namespace Xiropht_Wallet
             // buttonNextPage
             // 
             this.buttonNextPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonNextPage.Location = new System.Drawing.Point(640, 679);
+            this.buttonNextPage.Location = new System.Drawing.Point(856, 679);
             this.buttonNextPage.Name = "buttonNextPage";
             this.buttonNextPage.Size = new System.Drawing.Size(75, 23);
             this.buttonNextPage.TabIndex = 7;
@@ -363,7 +365,7 @@ namespace Xiropht_Wallet
             // buttonLastPage
             // 
             this.buttonLastPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonLastPage.Location = new System.Drawing.Point(721, 679);
+            this.buttonLastPage.Location = new System.Drawing.Point(937, 679);
             this.buttonLastPage.Name = "buttonLastPage";
             this.buttonLastPage.Size = new System.Drawing.Size(75, 23);
             this.buttonLastPage.TabIndex = 10;
@@ -374,7 +376,7 @@ namespace Xiropht_Wallet
             // buttonFirstPage
             // 
             this.buttonFirstPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonFirstPage.Location = new System.Drawing.Point(438, 679);
+            this.buttonFirstPage.Location = new System.Drawing.Point(654, 679);
             this.buttonFirstPage.Name = "buttonFirstPage";
             this.buttonFirstPage.Size = new System.Drawing.Size(75, 23);
             this.buttonFirstPage.TabIndex = 11;
@@ -431,6 +433,28 @@ namespace Xiropht_Wallet
             this.pictureBoxQRCodeWallet.Size = new System.Drawing.Size(84, 84);
             this.pictureBoxQRCodeWallet.TabIndex = 16;
             this.pictureBoxQRCodeWallet.TabStop = false;
+            // 
+            // buttonResearch
+            // 
+            this.buttonResearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonResearch.Location = new System.Drawing.Point(220, 678);
+            this.buttonResearch.Name = "buttonResearch";
+            this.buttonResearch.Size = new System.Drawing.Size(75, 23);
+            this.buttonResearch.TabIndex = 11;
+            this.buttonResearch.Text = "Search";
+            this.buttonResearch.UseVisualStyleBackColor = true;
+            this.buttonResearch.Visible = false;
+            this.buttonResearch.Click += new System.EventHandler(this.buttonResearch_Click);
+            // 
+            // textBoxResearch
+            // 
+            this.textBoxResearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxResearch.Location = new System.Drawing.Point(301, 680);
+            this.textBoxResearch.Name = "textBoxResearch";
+            this.textBoxResearch.Size = new System.Drawing.Size(347, 20);
+            this.textBoxResearch.TabIndex = 11;
+            this.textBoxResearch.Visible = false;
+            this.textBoxResearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxResearch_KeyDown);
             // 
             // panelMainForm
             // 
@@ -505,6 +529,8 @@ namespace Xiropht_Wallet
             this.Controls.Add(this.metroButtonSendTransactionWallet);
             this.Controls.Add(this.metroButtonTransactionWallet);
             this.Controls.Add(this.metroButtonBlockExplorerWallet);
+            this.Controls.Add(this.buttonResearch);
+            this.Controls.Add(this.textBoxResearch);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStripMenu;
             this.Name = "WalletXiropht";
@@ -576,5 +602,9 @@ namespace Xiropht_Wallet
         private System.Windows.Forms.PictureBox pictureBoxLogo;
         private System.Windows.Forms.ToolStripMenuItem darkToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBoxQRCodeWallet;
+
+        private System.Windows.Forms.Button buttonResearch;
+        private System.Windows.Forms.TextBox textBoxResearch;
+
     }
 }

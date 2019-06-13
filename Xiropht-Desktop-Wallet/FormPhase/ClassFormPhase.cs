@@ -99,9 +99,9 @@ namespace Xiropht_Wallet.FormPhase
             void Invoke() => WalletXiropht.panelControlWallet.Visible = false;
             WalletXiropht.BeginInvoke((MethodInvoker) Invoke);
             SwitchFormPhase(ClassFormPhaseEnumeration.Main);
-            ClassParallelForm.HidePinForm();
-            ClassParallelForm.HideWaitingForm();
-            ClassParallelForm.HideWaitingCreateWalletForm();
+            ClassParallelForm.HidePinFormAsync();
+            ClassParallelForm.HideWaitingFormAsync();
+            ClassParallelForm.HideWaitingCreateWalletFormAsync();
         }
 
 #if WINDOWS
@@ -113,13 +113,10 @@ namespace Xiropht_Wallet.FormPhase
         /// <param name="title"></param>
         /// <param name="button"></param>
         /// <param name="icon"></param>
-        public static DialogResult MessageBoxInterface(string text, string title, MessageBoxButtons button, MessageBoxIcon icon, bool targetMainInterface = false)
+        public static DialogResult MessageBoxInterface(string text, string title, MessageBoxButtons button, MessageBoxIcon icon)
         {
-            if (!targetMainInterface)
-            {
-                return MetroMessageBox.Show(WalletXiropht, text, title, button, icon);
-            }
-            return MessageBox.Show(text, title, button, icon);
+
+            return MetroMessageBox.Show(WalletXiropht, text, title, button, icon);
         }
 
 #endif

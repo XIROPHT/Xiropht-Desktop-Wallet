@@ -109,26 +109,19 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         InCreation = true;
                         ClassWalletObject.WalletDataCreationPath = textBoxPathWallet.Text;
 
-                        new Thread(async delegate ()
+                        await Task.Factory.StartNew(async delegate ()
                         {
-                            Stopwatch packetSpeedCalculator = new Stopwatch();
-                            packetSpeedCalculator.Start();
-                            if (await ClassWalletObject.WalletConnect
-                                    .SendPacketWallet(ClassWalletObject.Certificate, string.Empty, false))
+                            if (await ClassWalletObject.WalletConnect.SendPacketWallet(ClassWalletObject.Certificate, string.Empty, false))
                             {
-                                packetSpeedCalculator.Stop();
-                                if (packetSpeedCalculator.ElapsedMilliseconds > 0)
-                                {
-                                    Thread.Sleep((int)packetSpeedCalculator.ElapsedMilliseconds);
-                                }
+                                await Task.Delay(100);
                                 if (!await ClassWalletObject
                                     .SendPacketWalletToSeedNodeNetwork(
                                         ClassWalletCommand.ClassWalletSendEnumeration.CreatePhase + "|" +
                                         textBoxSelectWalletPassword.Text))
                                 {
 #if WINDOWS
-                                ClassFormPhase.MessageBoxInterface(
-                                    ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    ClassFormPhase.MessageBoxInterface(
+                                        ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                                    MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
                                         ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"));
@@ -138,19 +131,20 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
                                 void MethodInvoker() => textBoxSelectWalletPassword.Text = "";
                                 BeginInvoke((MethodInvoker)MethodInvoker);
+
                             }
                             else
                             {
 #if WINDOWS
-                            ClassFormPhase.MessageBoxInterface(
-                               ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                ClassFormPhase.MessageBoxInterface(
+                                   ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                                 MethodInvoker invoke = () => MessageBox.Show(ClassFormPhase.WalletXiropht,
                                     ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"));
                                 ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
 #endif
                             }
-                        }).Start();
+                        }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current);
                     }
                 }
             }

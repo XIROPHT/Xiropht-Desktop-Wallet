@@ -93,7 +93,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 return;
             }
 
-            new Thread(async delegate ()
+            Task.Factory.StartNew(async delegate ()
             {
 
                 try
@@ -156,16 +156,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
                     ClassWalletObject.ListenSeedNodeNetworkForWallet();
 
-                    Stopwatch packetSpeedCalculator = new Stopwatch();
-                    packetSpeedCalculator.Start();
+
                     if (await ClassWalletObject.WalletConnect.SendPacketWallet(ClassWalletObject.Certificate, string.Empty, false))
                     {
-
-                        packetSpeedCalculator.Stop();
-                        if (packetSpeedCalculator.ElapsedMilliseconds > 0)
-                        {
-                            Thread.Sleep((int)packetSpeedCalculator.ElapsedMilliseconds);
-                        }
+                        await Task.Delay(100);
                         await ClassWalletObject.WalletConnect.SendPacketWallet(
                             ClassConnectorSettingEnumeration.WalletLoginType + "|" + ClassWalletObject.WalletConnect.WalletAddress, ClassWalletObject.Certificate, true);
                         _walletFileData = string.Empty;
@@ -186,7 +180,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_WRONG_PASSWORD_WRITTED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #endif
                 }
-            }).Start();
+            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current);
         }
 
         /// <summary>

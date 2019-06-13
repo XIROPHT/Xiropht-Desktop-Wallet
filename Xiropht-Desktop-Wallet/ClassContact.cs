@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Xiropht_Wallet
 {
     public class ClassContact
     {
-        public static Dictionary<string, string> ListContactWallet = new Dictionary<string, string>();
+        public static Dictionary<string, Tuple<string, string>> ListContactWallet = new Dictionary<string, Tuple<string, string>>();
         private static string ContactFileName = "\\contact.xirdb";
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace Xiropht_Wallet
                             var contactWalletAddress = splitContactLine[1];
                             if (!ListContactWallet.ContainsKey(contactName))
                             {
-                                ListContactWallet.Add(contactName, contactWalletAddress);
+                                ListContactWallet.Add(contactName.ToLower(), new Tuple<string, string>(contactName, contactWalletAddress));
                             }
 #if DEBUG
                             else
@@ -70,21 +71,32 @@ namespace Xiropht_Wallet
         /// <returns></returns>
         public static bool InsertContact(string name, string walletAddress)
         {
-            if (ListContactWallet.ContainsKey(name))
+            if (ListContactWallet.ContainsKey(name.ToLower()))
             {
 #if DEBUG
                 Log.WriteLine("Contact name: " + name + " already exist.");
 #endif
                 return false;
             }
-            if (ListContactWallet.ContainsValue(walletAddress))
+            foreach (var contactList in ListContactWallet)
             {
+                if (contactList.Value.Item2.ToLower() == walletAddress.ToLower())
+                {
 #if DEBUG
                 Log.WriteLine("Contact wallet address: " + walletAddress + " already exist.");
 #endif
-                return false;
+                    return false;
+                }
+
+                if (contactList.Value.Item1.ToLower() == name.ToLower())
+                {
+#if DEBUG
+                Log.WriteLine("Contact wallet address: " + walletAddress + " already exist.");
+#endif
+                    return false;
+                }
             }
-            ListContactWallet.Add(name, walletAddress);
+            ListContactWallet.Add(name.ToLower(), new Tuple<string, string>(name, walletAddress));
             using (StreamWriter writerContact = new StreamWriter(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + ContactFileName), true))
             {
                 writerContact.WriteLine(name + "|" + walletAddress);
@@ -98,9 +110,9 @@ namespace Xiropht_Wallet
         /// <param name="name"></param>
         public static void RemoveContact(string name)
         {
-            if (ListContactWallet.ContainsKey(name))
+            if (ListContactWallet.ContainsKey(name.ToLower()))
             {
-                ListContactWallet.Remove(name);
+                ListContactWallet.Remove(name.ToLower());
             }
 
             File.Create(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + ContactFileName)).Close(); // Create and close the file for don't make in busy permissions.
@@ -109,9 +121,53 @@ namespace Xiropht_Wallet
             {
                 using (StreamWriter writerContact = new StreamWriter(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + ContactFileName), true))
                 {
-                    writerContact.WriteLine(contact.Key + "|" + contact.Value);
+                    writerContact.WriteLine(contact.Value.Item1 + "|" + contact.Value.Item2);
                 }
             }
+        }
+
+        /// <summary>
+        /// Get contact name from wallet address.
+        /// </summary>
+        /// <param name="walletContactInfo"></param>
+        public static string GetContactNameFromWalletAddress(string walletContactInfo)
+        {
+            foreach (var contact in ListContactWallet.ToArray())
+            {
+                if (contact.Value.Item2 == walletContactInfo) // Compare with wallet address
+                {
+                    return contact.Value.Item1;
+                }
+                if (contact.Value.Item1.ToLower() == walletContactInfo.ToLower()) // Compare with contact name
+                {
+                    return contact.Value.Item1;
+                }
+            }
+            return walletContactInfo;
+        }
+
+        /// <summary>
+        /// Check if wallet address exist.
+        /// </summary>
+        /// <param name="walletContactInfo"></param>
+        public static bool CheckContactNameFromWalletAddress(string walletContactInfo)
+        {
+            if (ListContactWallet.ContainsKey(walletContactInfo.ToLower())) // Compare with contact name
+            {
+                return true;
+            }
+            foreach (var contact in ListContactWallet.ToArray())
+            {
+                if (contact.Value.Item2 == walletContactInfo) // Compare with wallet address
+                {
+                    return true;
+                }
+                if (contact.Value.Item1.ToLower() == walletContactInfo.ToLower()) // Compare with contact name
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

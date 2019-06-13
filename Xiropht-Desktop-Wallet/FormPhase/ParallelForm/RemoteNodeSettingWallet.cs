@@ -3,6 +3,7 @@ using MetroFramework;
 #endif
 using System;
 using System.Windows.Forms;
+using Xiropht_Connector_All.Wallet;
 using Xiropht_Wallet.Wallet;
 
 namespace Xiropht_Wallet.FormPhase.ParallelForm
@@ -31,13 +32,25 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             }
 
             ClassWalletSetting.SaveSetting();
-            ClassWalletObject.FullDisconnection(true);
-            ClassFormPhase.WalletXiropht.SwitchForm(ClassFormPhaseEnumeration.OpenWallet);
+
+
+            if (ClassWalletObject.WalletConnect != null)
+            {
+                if (!string.IsNullOrEmpty(ClassWalletObject.WalletConnect.WalletPhase))
+                {
+                    if (!ClassWalletObject.WalletClosed)
+                    {
+                        ClassWalletObject.FullDisconnection(true);
+                        ClassFormPhase.WalletXiropht.SwitchForm(ClassFormPhaseEnumeration.OpenWallet);
 #if WINDOWS
-            MetroMessageBox.Show(this, ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_SAVE_SETTING_TEXT"));
+                        MetroMessageBox.Show(this, ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_SAVE_SETTING_TEXT"));
 #else
-            MessageBox.Show(this, ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_SAVE_SETTING_TEXT"));
+                    MessageBox.Show(this, ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_SAVE_SETTING_TEXT"));
 #endif
+                    }
+                }
+            }
+
             Close();
         }
 

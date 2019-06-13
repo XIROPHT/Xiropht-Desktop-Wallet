@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows.Forms;
 using Xiropht_Wallet.FormPhase.ParallelForm;
 
@@ -25,9 +23,9 @@ namespace Xiropht_Wallet.FormPhase
         /// <summary>
         /// Show pin form only if he is not showed.
         /// </summary>
-        public static void ShowPinForm()
+        public static async void ShowPinFormAsync()
         {
-            Task.Factory.StartNew(() =>
+            await Task.Factory.StartNew(() =>
             {
                 try
                 {
@@ -58,30 +56,30 @@ namespace Xiropht_Wallet.FormPhase
             }).ConfigureAwait(false);
         }
 
-        public static void HidePinForm()
+        public static async void HidePinFormAsync()
         {
-            Task.Factory.StartNew(() =>
-            {
-                try
-                {
-                    if (PinFormShowed)
-                    {
-                        ClassFormPhase.WalletXiropht.BeginInvoke((MethodInvoker)delegate { PinForm.Hide(); });
-                        PinFormShowed = false;
-                    }
-                }
-                catch
-                {
-                }
-            }).ConfigureAwait(false);
+            await Task.Factory.StartNew(() =>
+             {
+                 try
+                 {
+                     if (PinFormShowed)
+                     {
+                         ClassFormPhase.WalletXiropht.BeginInvoke((MethodInvoker)delegate { PinForm.Hide(); });
+                         PinFormShowed = false;
+                     }
+                 }
+                 catch
+                 {
+                 }
+             }).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Show waiting form network.
         /// </summary>
-        public static void ShowWaitingForm()
+        public static async void ShowWaitingFormAsync()
         {
-            Task.Factory.StartNew(() =>
+            await Task.Factory.StartNew(() =>
             {
                 if (!WaitingFormShowed)
                 {
@@ -91,7 +89,7 @@ namespace Xiropht_Wallet.FormPhase
                     {
                         if (WaitingForm.Visible)
                         {
-                            HideWaitingForm();
+                            HideWaitingFormAsync();
                         }
                         ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
                         {
@@ -120,20 +118,18 @@ namespace Xiropht_Wallet.FormPhase
         /// <summary>
         /// Hide waiting form.
         /// </summary>
-        public static void HideWaitingForm()
+        public static async void HideWaitingFormAsync()
         {
-            Task.Factory.StartNew(() =>
+            await Task.Factory.StartNew(() =>
             {
                 if (WaitingFormShowed)
                 {
                     WaitingFormShowed = false;
                     try
                     {
-                        ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
-                        {
-                            WaitingForm.Hide();
 
-                        });
+                        MethodInvoker invoke = () => WaitingForm.Hide();
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
                     }
                     catch
                     {
@@ -147,9 +143,9 @@ namespace Xiropht_Wallet.FormPhase
         /// <summary>
         /// Show waiting reconnect form network.
         /// </summary>
-        public static void ShowWaitingReconnectForm()
+        public static async void ShowWaitingReconnectFormAsync()
         {
-            Task.Factory.StartNew(() =>
+            await Task.Factory.StartNew(() =>
             {
                 if (!WaitingFormReconnectShowed)
                 {
@@ -183,32 +179,32 @@ namespace Xiropht_Wallet.FormPhase
         /// <summary>
         /// Hide waiting reconnect form.
         /// </summary>
-        public static void HideWaitingReconnectForm()
+        public static async void HideWaitingReconnectFormAsync()
         {
-            Task.Factory.StartNew(() =>
-            {
-                if (WaitingFormReconnectShowed)
-                {
-                    WaitingFormReconnectShowed = false;
-                    try
-                    {
-                        WaitingFormReconnect.Invoke((MethodInvoker)delegate { WaitingFormReconnect.Hide(); WaitingFormReconnect.Refresh(); });
-                    }
-                    catch
-                    {
+            await Task.Factory.StartNew(() =>
+             {
+                 if (WaitingFormReconnectShowed)
+                 {
+                     WaitingFormReconnectShowed = false;
+                     try
+                     {
+                         WaitingFormReconnect.Invoke((MethodInvoker)delegate { WaitingFormReconnect.Hide(); WaitingFormReconnect.Refresh(); });
+                     }
+                     catch
+                     {
 
-                    }
-                }
-            }).ConfigureAwait(false);
+                     }
+                 }
+             }).ConfigureAwait(false);
         }
 
 
         /// <summary>
         /// Show waiting form network.
         /// </summary>
-        public static void ShowWaitingForm2()
+        public static async void ShowWaitingForm2Async()
         {
-            Task.Factory.StartNew(() =>
+            await Task.Factory.StartNew(() =>
             {
                 if (!WaitingForm2Showed)
                 {
@@ -235,9 +231,9 @@ namespace Xiropht_Wallet.FormPhase
         /// <summary>
         /// Hide waiting form.
         /// </summary>
-        public static void HideWaitingForm2()
+        public static async Task HideWaitingForm2Async()
         {
-            Task.Factory.StartNew(() =>
+            await Task.Factory.StartNew(() =>
             {
                 if (WaitingForm2Showed)
                 {
@@ -251,9 +247,9 @@ namespace Xiropht_Wallet.FormPhase
         /// <summary>
         /// Show waiting dialog of create wallet.
         /// </summary>
-        public static void ShowWaitingCreateWalletForm()
+        public static async void ShowWaitingCreateWalletFormAsync()
         {
-            Task.Factory.StartNew(() =>
+            await Task.Factory.StartNew(() =>
             {
                 if (!WaitingCreateWalletFormShowed)
                 {
@@ -280,9 +276,9 @@ namespace Xiropht_Wallet.FormPhase
         /// <summary>
         /// Hide waiting dialog of create wallet.
         /// </summary>
-        public static void HideWaitingCreateWalletForm()
+        public static async void HideWaitingCreateWalletFormAsync()
         {
-            Task.Factory.StartNew(() =>
+            await Task.Factory.StartNew(() =>
             {
                 if (WaitingCreateWalletFormShowed)
                 {

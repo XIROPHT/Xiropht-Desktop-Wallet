@@ -105,6 +105,7 @@
             this.listViewBlockExplorer.UseCompatibleStateImageBehavior = false;
             this.listViewBlockExplorer.View = System.Windows.Forms.View.Details;
             this.listViewBlockExplorer.SelectedIndexChanged += new System.EventHandler(this.listViewBlockExplorer_SelectedIndexChanged);
+            this.listViewBlockExplorer.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewBlockExplorer_MouseClick);
             // 
             // columnHeaderBlockId
             // 
@@ -146,7 +147,7 @@
             this.columnHeaderBlockTransactionHash.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeaderBlockTransactionHash.Width = 134;
             // 
-            // BlockExplorer
+            // BlockExplorerWallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -156,7 +157,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "BlockExplorer";
+            this.Name = "BlockExplorerWallet";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Block";

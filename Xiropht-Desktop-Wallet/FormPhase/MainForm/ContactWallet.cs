@@ -48,7 +48,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 {
                     foreach (var contact in ClassContact.ListContactWallet)
                     {
-                        string[] objectContact = { contact.Key, contact.Value, "X" };
+                        string[] objectContact = { contact.Value.Item1, contact.Value.Item2, "X" };
                         ListViewItem itemContact = new ListViewItem(objectContact);
                         listViewExContact.Items.Add(itemContact);
                     }

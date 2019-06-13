@@ -20,11 +20,17 @@ namespace Xiropht_Wallet
             {
                 long memory = GC.GetTotalMemory(false);
                 double megabyte = ConvertBytesToMegabytes(memory);
-
+#if DEBUG
+                Log.WriteLine("Clean memory done. Total Memory to clean up: " + megabyte + " MB");
+#endif
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
-                Log.WriteLine("Clean memory done. Total Memory Cleaned: " + megabyte + " MB");
+                memory = GC.GetTotalMemory(false);
+                megabyte = ConvertBytesToMegabytes(memory);
+#if DEBUG
+                Log.WriteLine("Clean memory done. Total Memory cleaned: " + megabyte + " MB");
+#endif
                 Thread.Sleep(60000);
             }
         }

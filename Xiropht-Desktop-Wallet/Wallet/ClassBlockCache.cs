@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -8,7 +9,8 @@ namespace Xiropht_Wallet.Wallet
     {
         private const string WalletBlockCacheDirectory = "/Blockchain/";
         private const string WalletBlockCacheFileExtension = ".xirblock";
-        public static List<string> ListBlock;
+        public static Dictionary<string, ClassBlockObject> ListBlock;
+        public static bool OnLoad;
 
         /// <summary>
         /// Load block in cache.
@@ -22,39 +24,74 @@ namespace Xiropht_Wallet.Wallet
             }
             else
             {
-                ListBlock = new List<string>();
+                ListBlock = new Dictionary<string, ClassBlockObject>();
             }
-
-            if (Directory.Exists(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory + "\\")))
+            ListBlock.Clear();
+            OnLoad = true;
+            try
             {
-                if (
-                    File.Exists(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory +
-                                "/blockchain" + WalletBlockCacheFileExtension)))
+                Task.Factory.StartNew(() =>
                 {
-
-                    int counter = 0;
-                    using (FileStream fs = File.Open(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory +
-                                                     "/blockchain" + WalletBlockCacheFileExtension), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                    using (BufferedStream bs = new BufferedStream(fs))
-                    using (StreamReader sr = new StreamReader(bs))
+                    if (Directory.Exists(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory + "\\")))
+                {
+                    if (
+                        File.Exists(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory +
+                                    "/blockchain" + WalletBlockCacheFileExtension)))
                     {
-                        string line;
-                        while ((line = sr.ReadLine()) != null)
+
+                        int counter = 0;
+                        using (FileStream fs = File.Open(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory + "/blockchain" + WalletBlockCacheFileExtension), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                        using (BufferedStream bs = new BufferedStream(fs))
+                        using (StreamReader sr = new StreamReader(bs))
                         {
-                            ListBlock.Add(line);
-                            counter++;
+                            string line;
+                            while ((line = sr.ReadLine()) != null)
+                            {
+                                var blockLine = line.Split(new[] { "#" }, StringSplitOptions.None);
+                                if (!ListBlock.ContainsKey(blockLine[1]))
+                                {
+                                    ClassBlockObject blockObject = new ClassBlockObject
+                                    {
+                                        BlockHeight = blockLine[0],
+                                        BlockHash = blockLine[1],
+                                        BlockTransactionHash = blockLine[2],
+                                        BlockTimestampCreate = blockLine[3],
+                                        BlockTimestampFound = blockLine[4],
+                                        BlockDifficulty = blockLine[5],
+                                        BlockReward = blockLine[6]
+                                    };
+
+                                    ListBlock.Add(blockLine[1], blockObject);
+                                    counter++;
+                                }
+#if DEBUG
+                            else
+                            {
+                                Log.WriteLine("Duplicate block line: " + line);
+                            }
+#endif
+                            }
                         }
                     }
                 }
-            }
-            else
-            {
-                if (Directory.Exists(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory)) == false)
+                    else
                 {
+                    if (Directory.Exists(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory)) == false)
+                    {
+                        Directory.CreateDirectory(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory));
+                    }
+
                     Directory.CreateDirectory(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory));
                 }
-
-                Directory.CreateDirectory(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory));
+                    OnLoad = false;
+                    ClassWalletObject.TotalBlockInSync = ListBlock.Count;
+                }, ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+            }
+            catch
+            {
+                ClassWalletObject.TotalBlockInSync = 0;
+                ListBlock.Clear();
+                OnLoad = false;
             }
         }
 

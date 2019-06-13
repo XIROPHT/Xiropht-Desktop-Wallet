@@ -70,7 +70,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 #endif
                                 {
 
-                                    ClassParallelForm.ShowWaitingForm();
+                                    ClassParallelForm.ShowWaitingFormAsync();
 
                                     if (checkBoxHideWalletAddress.Checked)
                                     {
