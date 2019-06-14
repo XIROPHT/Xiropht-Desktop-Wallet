@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Xiropht_Wallet.FormPhase.ParallelForm;
 
@@ -112,7 +113,7 @@ namespace Xiropht_Wallet.FormPhase
                     ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
 #endif
                 }
-            }).ConfigureAwait(false);
+            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
         }
 
         /// <summary>

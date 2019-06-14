@@ -25,6 +25,8 @@ using Xiropht_Wallet.Threading;
 using ZXing.QrCode;
 using ZXing;
 using System.Linq;
+using System.IO;
+using System.Text;
 
 namespace Xiropht_Wallet
 {
@@ -5452,6 +5454,185 @@ namespace Xiropht_Wallet
 
             }
             return "NOT FOUND";
+        }
+
+        /// <summary>
+        /// Export every tx synced into a CSV file.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void transactionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ClassWalletObject.WalletConnect != null)
+            {
+                if (ClassWalletObject.SeedNodeConnectorWallet != null)
+                {
+                    if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() && ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create && ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Restore)
+                    {
+                        string csvPath = string.Empty;
+                        using (var saveFileDialogWallet = new SaveFileDialog()
+                        {
+                            InitialDirectory = System.AppDomain.CurrentDomain.BaseDirectory,
+                            Filter = @"CSV File (*.csv) | *.csv",
+                            FilterIndex = 2,
+                            RestoreDirectory = true,
+                            FileName = "transaction_" + DateTimeOffset.Now.ToUnixTimeSeconds() + ".csv"
+                        })
+                        {
+                            if (saveFileDialogWallet.ShowDialog() == DialogResult.OK)
+                            {
+                                if (saveFileDialogWallet.FileName != "")
+                                {
+                                    csvPath = saveFileDialogWallet.FileName;
+
+
+                                    if (ClassWalletTransactionCache.ListTransaction != null && ClassWalletTransactionAnonymityCache.ListTransaction != null)
+                                    {
+                                        int totalTransaction = ClassWalletTransactionCache.ListTransaction.Count + ClassWalletTransactionAnonymityCache.ListTransaction.Count;
+
+                                        if (totalTransaction > 0)
+                                        {
+                                            bool startExport = false;
+
+#if WINDOWS
+                                            if (ClassFormPhase.MessageBoxInterface("Do you want to export "+totalTransaction+" transaction(s)?", "Export Transaction", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                                            {
+                                                startExport = true;
+                                            }
+#endif
+#if LINUX
+                                            if (MessageBox.Show(this, "Do you want to export " + totalTransaction + " transaction(s)?", "Export Transaction", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                                            {
+                                                startExport = true;
+                                            }
+#endif
+                                            if (startExport)
+                                            {
+
+                                                File.Create(csvPath).Close();
+
+
+                                                using (var writer = new StreamWriter(csvPath))
+                                                {
+
+                                                    writer.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\"",
+                                                                               ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COLUMN_TYPE"),
+                                                                               ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COLUMN_HASH"),
+                                                                               ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COLUMN_ADDRESS"),
+                                                                               ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COLUMN_AMOUNT"),
+                                                                               ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COLUMN_FEE"),
+                                                                               ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COLUMN_BLOCK_HEIGHT_SRC"),
+                                                                               ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COLUMN_DATE"),
+                                                                               ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COLUMN_DATE_RECEIVED")
+                                                                              ));
+
+                                                    if (ClassWalletTransactionCache.ListTransaction.Count > 0)
+                                                    {
+                                                        foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction)
+                                                        {
+                                                            DateTime dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                            dateTimeSend = dateTimeSend.AddSeconds(transactionObject.Value.TransactionTimestampSend);
+                                                            dateTimeSend = dateTimeSend.ToLocalTime();
+                                                            DateTime dateTimeRecv = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                            dateTimeRecv = dateTimeRecv.AddSeconds(transactionObject.Value.TransactionTimestampRecv);
+                                                            dateTimeRecv = dateTimeRecv.ToLocalTime();
+
+                                                            var transactionResult = string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\"",
+                                                                transactionObject.Value.TransactionType,
+                                                                transactionObject.Value.TransactionHash,
+                                                                transactionObject.Value.TransactionWalletAddress,
+                                                                transactionObject.Value.TransactionAmount,
+                                                                transactionObject.Value.TransactionFee,
+                                                                transactionObject.Value.TransactionBlockchainHeight,
+                                                                dateTimeSend.ToString(CultureInfo.InvariantCulture),
+                                                                dateTimeRecv.ToString(CultureInfo.InvariantCulture)
+                                                            );
+
+                                                            writer.WriteLine(transactionResult);
+                                                        }
+                                                    }
+
+                                                    if (ClassWalletTransactionAnonymityCache.ListTransaction.Count > 0)
+                                                    {
+                                                        foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction)
+                                                        {
+                                                            DateTime dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                            dateTimeSend = dateTimeSend.AddSeconds(transactionObject.Value.TransactionTimestampSend);
+                                                            dateTimeSend = dateTimeSend.ToLocalTime();
+                                                            DateTime dateTimeRecv = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                            dateTimeRecv = dateTimeRecv.AddSeconds(transactionObject.Value.TransactionTimestampRecv);
+                                                            dateTimeRecv = dateTimeRecv.ToLocalTime();
+
+                                                            var transactionResult = string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\"",
+                                                                transactionObject.Value.TransactionType,
+                                                                transactionObject.Value.TransactionHash,
+                                                                transactionObject.Value.TransactionWalletAddress,
+                                                                transactionObject.Value.TransactionAmount,
+                                                                transactionObject.Value.TransactionFee,
+                                                                transactionObject.Value.TransactionBlockchainHeight,
+                                                                dateTimeSend.ToString(CultureInfo.InvariantCulture),
+                                                                dateTimeRecv.ToString(CultureInfo.InvariantCulture)
+                                                            );
+
+                                                            writer.WriteLine(transactionResult);
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                        else
+                                        {
+#if WINDOWS
+                                            ClassFormPhase.MessageBoxInterface("Their is no transaction to export", "Export Transaction", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+#endif
+#if LINUX
+                                            MessageBox.Show(this, "Their is no transaction to export", "Export Transaction", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+#endif
+                                        }
+                                    }
+                                    else
+                                    {
+#if WINDOWS
+                                        ClassFormPhase.MessageBoxInterface("Their is no transaction to export", "Export Transaction", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+#endif
+#if LINUX
+                                        MessageBox.Show(this, "Their is no transaction to export", "Export Transaction", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+#endif
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+#if WINDOWS
+                        ClassFormPhase.MessageBoxInterface("You need to be connected to your wallet for export transaction.", "Export System", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+#endif
+#if LINUX
+                        MessageBox.Show(this, "You need to be connected to your wallet for export transaction.", "Export System", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+#endif
+                    }
+                }
+                else
+                {
+#if WINDOWS
+                    ClassFormPhase.MessageBoxInterface("You need to be connected to your wallet for export transaction.", "Export System", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+#endif
+#if LINUX
+                        MessageBox.Show(this, "You need to be connected to your wallet for export transaction.", "Export System", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+#endif
+                }
+            }
+            else
+            {
+#if WINDOWS
+                ClassFormPhase.MessageBoxInterface("You need to be connected to your wallet for export transaction.", "Export System", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+#endif
+#if LINUX
+                        MessageBox.Show(this, "You need to be connected to your wallet for export transaction.", "Export System", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+#endif
+            }
         }
     }
 }

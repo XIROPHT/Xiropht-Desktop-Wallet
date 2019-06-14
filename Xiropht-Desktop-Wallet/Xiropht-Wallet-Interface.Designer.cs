@@ -79,6 +79,8 @@ namespace Xiropht_Wallet
             this.labelNoticeTotalPendingTransactionOnReceive = new System.Windows.Forms.Label();
             this.labelNoticeWalletBalance = new System.Windows.Forms.Label();
             this.labelNoticeWalletAddress = new System.Windows.Forms.Label();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.transactionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxQRCodeWallet)).BeginInit();
@@ -93,7 +95,8 @@ namespace Xiropht_Wallet
             this.languageToolStripMenuItem,
             this.settingToolStripMenuItem,
             this.helpToolStripMenuItem,
-            this.themeToolStripMenuItem});
+            this.themeToolStripMenuItem,
+            this.exportToolStripMenuItem});
             this.menuStripMenu.Location = new System.Drawing.Point(20, 60);
             this.menuStripMenu.Name = "menuStripMenu";
             this.menuStripMenu.Size = new System.Drawing.Size(992, 24);
@@ -505,6 +508,21 @@ namespace Xiropht_Wallet
             this.labelNoticeWalletAddress.Text = "Wallet Address:";
             this.labelNoticeWalletAddress.Click += new System.EventHandler(this.labelNoticeWalletAddress_Click);
             // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.transactionToolStripMenuItem});
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.exportToolStripMenuItem.Text = "Export";
+            // 
+            // transactionToolStripMenuItem
+            // 
+            this.transactionToolStripMenuItem.Name = "transactionToolStripMenuItem";
+            this.transactionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.transactionToolStripMenuItem.Text = "Transaction";
+            this.transactionToolStripMenuItem.Click += new System.EventHandler(this.transactionToolStripMenuItem_Click);
+            // 
             // WalletXiropht
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -605,6 +623,7 @@ namespace Xiropht_Wallet
 
         private System.Windows.Forms.Button buttonResearch;
         private System.Windows.Forms.TextBox textBoxResearch;
-
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem transactionToolStripMenuItem;
     }
 }
