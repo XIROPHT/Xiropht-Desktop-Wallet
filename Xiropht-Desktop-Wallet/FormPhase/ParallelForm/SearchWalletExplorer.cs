@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Xiropht_Wallet.FormPhase.ParallelForm
@@ -102,6 +103,25 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         {
             richTextBoxResearchResult.AppendText(text + "\n");
         }
+
+        #region To finish 
+        private void richTextBoxResearchResult_MouseClick(object sender, MouseEventArgs e)
+        {
+            /*
+            int index = richTextBoxResearchResult.SelectionStart;
+            int lineIndex = richTextBoxResearchResult.GetLineFromCharIndex(index);
+            if (richTextBoxResearchResult.Lines[lineIndex].Contains("Page"))
+            {
+                if (int.TryParse(richTextBoxResearchResult.Lines[lineIndex].Replace("Page ", ""), out var pageNumber))
+                {
+                    if (ClassFormPhase.MessageBoxInterface("Do you want to reach the page: "+pageNumber+" on your transaction history?", "Research System", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                    {
+
+                    }
+                }
+            }*/
+        }
+        #endregion
 
     }
 

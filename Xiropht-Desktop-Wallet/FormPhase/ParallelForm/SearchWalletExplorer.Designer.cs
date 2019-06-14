@@ -41,6 +41,7 @@
             this.richTextBoxResearchResult.Size = new System.Drawing.Size(960, 416);
             this.richTextBoxResearchResult.TabIndex = 0;
             this.richTextBoxResearchResult.Text = "";
+            this.richTextBoxResearchResult.MouseClick += new System.Windows.Forms.MouseEventHandler(this.richTextBoxResearchResult_MouseClick);
             // 
             // SearchWalletExplorer
             // 

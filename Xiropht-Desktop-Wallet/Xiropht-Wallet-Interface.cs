@@ -89,6 +89,8 @@ namespace Xiropht_Wallet
         /// Objects transaction history & block explorer
         /// </summary>
         public Dictionary<int, string> ListBlockHashShowed = new Dictionary<int, string>();
+        public Dictionary<string, int> ListTransactionShowed = new Dictionary<string, int>();
+
         public int TotalTransactionRead;
         public int TotalAnonymityTransactionRead;
         public int TotalBlockRead;
@@ -1962,6 +1964,7 @@ namespace Xiropht_Wallet
                                                         {
                                                             if (TotalTransactionRead != ClassWalletTransactionCache.ListTransaction.Count)
                                                             {
+
                                                                 for (int i = ClassWalletTransactionCache.ListTransaction.Count - 1; i >= TotalTransactionRead;
                                                                 i--)
                                                                 {
@@ -1980,6 +1983,7 @@ namespace Xiropht_Wallet
                                                                         dateTimeRecv =
                                                                                 dateTimeRecv.AddSeconds(transactionObject.Value.TransactionTimestampRecv);
                                                                         dateTimeRecv = dateTimeRecv.ToLocalTime();
+
 
                                                                         #region show anonymous transaction received
                                                                         if (transactionObject.Value.TransactionWalletAddress == "ANONYMOUS")
@@ -2671,6 +2675,9 @@ namespace Xiropht_Wallet
 
                                 if (TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Count > 0)
                                 {
+                                    MethodInvoker update = () => TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.BeginUpdate();
+                                    TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.BeginInvoke(update);
+
                                     for (int i = 0; i < TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Count; i++)
                                     {
                                         var i1 = i;
@@ -2739,6 +2746,9 @@ namespace Xiropht_Wallet
 
                                         BeginInvoke((MethodInvoker)MethodInvoker);
                                     }
+
+                                    update = () => TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.EndUpdate();
+                                    TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.BeginInvoke(update);
                                 }
                                 #endregion
 
@@ -2746,6 +2756,9 @@ namespace Xiropht_Wallet
 
                                 if (TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Count > 0)
                                 {
+                                    MethodInvoker update = () => TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.BeginUpdate();
+                                    TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.BeginInvoke(update);
+
                                     for (int i = 0; i < TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Count; i++)
                                     {
                                         var i1 = i;
@@ -2828,6 +2841,9 @@ namespace Xiropht_Wallet
 
                                         BeginInvoke((MethodInvoker)MethodInvoker);
                                     }
+
+                                    update = () => TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.EndUpdate();
+                                    TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.BeginInvoke(update);
                                 }
 
                                 #endregion
@@ -2836,6 +2852,9 @@ namespace Xiropht_Wallet
 
                                 if (TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Count > 0)
                                 {
+                                    MethodInvoker update = () => TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.BeginUpdate();
+                                    TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.BeginInvoke(update);
+
                                     for (int i = 0; i < TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Count; i++)
                                     {
 
@@ -2914,6 +2933,9 @@ namespace Xiropht_Wallet
 
                                         BeginInvoke((MethodInvoker)MethodInvoker);
                                     }
+
+                                    update = () => TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.EndUpdate();
+                                    TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.BeginInvoke(update);
                                 }
 
                                 #endregion
@@ -2922,6 +2944,9 @@ namespace Xiropht_Wallet
 
                                 if (TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Count > 0)
                                 {
+                                    MethodInvoker update = () => TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.BeginUpdate();
+                                    TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.BeginInvoke(update);
+
                                     for (int i = 0; i < TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Count; i++)
                                     {
 
@@ -3015,6 +3040,9 @@ namespace Xiropht_Wallet
 
                                         BeginInvoke((MethodInvoker)MethodInvoker);
                                     }
+
+                                    update = () => TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.EndUpdate();
+                                    TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.BeginInvoke(update);
                                 }
                                 #endregion
 
@@ -3022,6 +3050,9 @@ namespace Xiropht_Wallet
 
                                 if (TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Count > 0)
                                 {
+                                    MethodInvoker update = () => TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.BeginUpdate();
+                                    TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.BeginInvoke(update);
+
                                     for (int i = 0; i < TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Count; i++)
                                     {
 
@@ -3114,6 +3145,9 @@ namespace Xiropht_Wallet
 
                                         BeginInvoke((MethodInvoker)MethodInvoker);
                                     }
+
+                                    update = () => TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.EndUpdate();
+                                    TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.BeginInvoke(update);
                                 }
                                 #endregion
 
@@ -3314,7 +3348,7 @@ namespace Xiropht_Wallet
                     TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
                 };
                 BeginInvoke(invoke);
-
+                ListTransactionShowed.Clear();
             }
             if (switchPage)
             {
@@ -3343,7 +3377,6 @@ namespace Xiropht_Wallet
                 };
                 BeginInvoke(invoke);
 
-
             }
             else
             {
@@ -3369,6 +3402,7 @@ namespace Xiropht_Wallet
                     TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
                 };
                 BeginInvoke(invoke);
+                ListTransactionShowed.Clear();
             }
         }
 
@@ -4702,11 +4736,39 @@ namespace Xiropht_Wallet
                 {
                     if (!useWalletAddress) // Usually when the user target a transaction hash.
                     {
+
+                        decimal transactionSendNormalCounter = 0;
+                        decimal transactionRecvNormalCounter = 0;
+                        decimal transactionSendAnonymousCounter = 0;
+                        decimal transactionBlockRewardCounter = 0;
+                        decimal transactionRecvAnonymousCounter = 0;
+
+
                         foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction)
                         {
                             if (!elementFound)
                             {
-                                if (transactionObject.Value.TransactionHash.Contains(elementToSearch))
+                                switch (transactionObject.Value.TransactionType)
+                                {
+                                    case "SEND":
+                                        transactionSendNormalCounter++;
+                                        break;
+                                    case "RECV":
+                                        if (transactionObject.Value.TransactionWalletAddress.Contains("BLOCKCHAIN["))
+                                        {
+                                            transactionBlockRewardCounter++;
+                                        }
+                                        else if (transactionObject.Value.TransactionWalletAddress == "ANONYMOUS")
+                                        {
+                                            transactionRecvAnonymousCounter++;
+                                        }
+                                        else
+                                        {
+                                            transactionRecvNormalCounter++;
+                                        }
+                                        break;
+                                }
+                                if (transactionObject.Value.TransactionHash == elementToSearch)
                                 {
                                     elementFound = true;
                                 }
@@ -4723,10 +4785,89 @@ namespace Xiropht_Wallet
                             {
                                 StartPosition = FormStartPosition.CenterParent
                             };
-                            walletResearchElementForm.AppendText(ClassWalletTransactionCache.ListTransaction.ElementAt(elementIdFound).Value.ConcatTransactionElement());
+
+                            var transactionObject = ClassWalletTransactionCache.ListTransaction.ElementAt(elementIdFound);
+                            decimal pageNumber = 1;
+
+                            switch (transactionObject.Value.TransactionType)
+                            {
+                                case "SEND":
+                                    decimal totalPage = Math.Ceiling((decimal)(TotalTransactionNormalSend / MaxTransactionPerPage)) + 1;
+
+                                    decimal target = (TotalTransactionNormalSend - transactionSendNormalCounter);
+                                    for (int i = 0; i < totalPage; i++)
+                                    {
+                                        if (target >= i * MaxTransactionPerPage && target <= (i + 1) * MaxTransactionPerPage)
+                                        {
+#if DEBUG
+                                            Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                            pageNumber = (i + 1);
+                                        }
+                                    }
+                                    break;
+                                case "RECV":
+                                    if (transactionObject.Value.TransactionWalletAddress.Contains("BLOCKCHAIN["))
+                                    {
+                                        totalPage = Math.Ceiling((decimal)(TotalTransactionBlockReward / MaxTransactionPerPage)) + 1;
+
+                                        target = (TotalTransactionBlockReward - transactionBlockRewardCounter);
+                                        for (int i = 0; i < totalPage; i++)
+                                        {
+                                            if (target >= i * MaxTransactionPerPage && target <= (i + 1) * MaxTransactionPerPage)
+                                            {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                pageNumber = (i + 1);
+                                            }
+                                        }
+                                    }
+                                    else if (transactionObject.Value.TransactionWalletAddress == "ANONYMOUS")
+                                    {
+                                        totalPage = Math.Ceiling((decimal)(TotalTransactionAnonymousReceived / MaxTransactionPerPage)) + 1;
+
+                                        target = (TotalTransactionAnonymousReceived - transactionRecvAnonymousCounter);
+                                        for (int i = 0; i < totalPage; i++)
+                                        {
+                                            if (target >= i * MaxTransactionPerPage && target <= (i + 1) * MaxTransactionPerPage)
+                                            {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                pageNumber = (i + 1);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        totalPage = Math.Ceiling((decimal)(TotalTransactionNormalReceived / MaxTransactionPerPage)) + 1;
+
+                                        target = (TotalTransactionNormalReceived - transactionRecvNormalCounter);
+                                        for (int i = 0; i < totalPage; i++)
+                                        {
+                                            if (target >= i * MaxTransactionPerPage && target <= (i + 1) * MaxTransactionPerPage)
+                                            {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                pageNumber = (i + 1);
+                                            }
+                                        }
+                                    }
+                                    break;
+                            }
+                            if (pageNumber < 1)
+                            {
+                                pageNumber = 1;
+                            }
+
+
+
+                            walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
                             walletResearchElementForm.ShowDialog(this);
 #if DEBUG
-                        Log.WriteLine("Element found: " + ClassBlockCache.ListBlock.ElementAt(elementIdFound).Value.ConcatBlockElement());
+                            Log.WriteLine("Element found: " + ClassBlockCache.ListBlock.ElementAt(elementIdFound).Value.ConcatBlockElement());
 #endif
                         }
                         else
@@ -4736,6 +4877,7 @@ namespace Xiropht_Wallet
                             {
                                 if (!elementFound)
                                 {
+                                    transactionSendAnonymousCounter++;
                                     if (transactionObject.Value.TransactionHash.Contains(elementToSearch))
                                     {
                                         elementFound = true;
@@ -4748,11 +4890,31 @@ namespace Xiropht_Wallet
                             }
                             if (elementFound)
                             {
+                                var transactionObject = ClassWalletTransactionAnonymityCache.ListTransaction.ElementAt(elementIdFound);
+                                decimal pageNumber = 0;
+
+                                decimal totalPage = Math.Ceiling((decimal)(TotalTransactionAnonymousSend / MaxTransactionPerPage)) + 1;
+
+                                decimal target = (TotalTransactionAnonymousSend - transactionSendAnonymousCounter);
+                                for (int i = 0; i < totalPage; i++)
+                                {
+                                    if (target >= i * MaxTransactionPerPage && target <= (i + 1) * MaxTransactionPerPage)
+                                    {
+#if DEBUG
+                                        Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                        pageNumber = (i + 1);
+                                    }
+                                }
+                                if (pageNumber < 1)
+                                {
+                                    pageNumber = 1;
+                                }
                                 var walletResearchElementForm = new SearchWalletExplorer
                                 {
                                     StartPosition = FormStartPosition.CenterParent
                                 };
-                                walletResearchElementForm.AppendText(ClassWalletTransactionAnonymityCache.ListTransaction.ElementAt(elementIdFound).Value.ConcatTransactionElement());
+                                walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
                                 walletResearchElementForm.ShowDialog(this);
 #if DEBUG
                             Log.WriteLine("Element found: " + ClassBlockCache.ListBlock.ElementAt(elementIdFound).Value.ConcatBlockElement());
@@ -4771,25 +4933,148 @@ namespace Xiropht_Wallet
                     }
                     else // Search by wallet address
                     {
+                        decimal transactionSendNormalCounter = 0;
+                        decimal transactionRecvNormalCounter = 0;
+                        decimal transactionSendAnonymousCounter = 0;
+                        decimal transactionBlockRewardCounter = 0;
+                        decimal transactionRecvAnonymousCounter = 0;
+
                         bool walletAddressTransactionFound = false;
                         var walletResearchElementForm = new SearchWalletExplorer
                         {
                             StartPosition = FormStartPosition.CenterParent
                         };
+
                         foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction)
                         {
+                            switch (transactionObject.Value.TransactionType)
+                            {
+                                case "SEND":
+                                    transactionSendNormalCounter++;
+                                    break;
+                                case "RECV":
+                                    if (transactionObject.Value.TransactionWalletAddress.Contains("BLOCKCHAIN["))
+                                    {
+                                        transactionBlockRewardCounter++;
+                                    }
+                                    else if (transactionObject.Value.TransactionWalletAddress == "ANONYMOUS")
+                                    {
+                                        transactionRecvAnonymousCounter++;
+                                    }
+                                    else
+                                    {
+                                        transactionRecvNormalCounter++;
+                                    }
+                                    break;
+                            }
                             if (transactionObject.Value.TransactionWalletAddress == elementToSearch)
                             {
                                 walletAddressTransactionFound = true;
-                                walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement());
+                                decimal pageNumber = 1;
+
+                                switch (transactionObject.Value.TransactionType)
+                                {
+                                    case "SEND":
+                                        decimal totalPage = Math.Ceiling((decimal)(TotalTransactionNormalSend / MaxTransactionPerPage)) + 1;
+
+                                        decimal target = (TotalTransactionNormalSend - transactionSendNormalCounter);
+                                        for (int i = 0; i < totalPage; i++)
+                                        {
+                                            if (target >= i * MaxTransactionPerPage && target <= (i + 1) * MaxTransactionPerPage)
+                                            {
+#if DEBUG
+                                            Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                pageNumber = (i + 1);
+                                            }
+                                        }
+                                        break;
+                                    case "RECV":
+                                        if (transactionObject.Value.TransactionWalletAddress.Contains("BLOCKCHAIN["))
+                                        {
+                                            totalPage = Math.Ceiling((decimal)(TotalTransactionBlockReward / MaxTransactionPerPage)) + 1;
+
+                                            target = (TotalTransactionBlockReward - transactionBlockRewardCounter);
+                                            for (int i = 0; i < totalPage; i++)
+                                            {
+                                                if (target >= i * MaxTransactionPerPage && target <= (i + 1) * MaxTransactionPerPage)
+                                                {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                    pageNumber = (i + 1);
+                                                }
+                                            }
+                                        }
+                                        else if (transactionObject.Value.TransactionWalletAddress == "ANONYMOUS")
+                                        {
+                                            totalPage = Math.Ceiling((decimal)(TotalTransactionAnonymousReceived / MaxTransactionPerPage)) + 1;
+
+                                            target = (TotalTransactionAnonymousReceived - transactionRecvAnonymousCounter);
+                                            for (int i = 0; i < totalPage; i++)
+                                            {
+                                                if (target >= i * MaxTransactionPerPage && target <= (i + 1) * MaxTransactionPerPage)
+                                                {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                    pageNumber = (i + 1);
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            totalPage = Math.Ceiling((decimal)(TotalTransactionNormalReceived / MaxTransactionPerPage)) + 1;
+
+                                            target = (TotalTransactionNormalReceived - transactionRecvNormalCounter);
+                                            for (int i = 0; i < totalPage; i++)
+                                            {
+                                                if (target >= i * MaxTransactionPerPage && target <= (i + 1) * MaxTransactionPerPage)
+                                                {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                    pageNumber = (i + 1);
+                                                }
+                                            }
+                                        }
+                                        break;
+                                }
+                                if (pageNumber < 1)
+                                {
+                                    pageNumber = 1;
+                                }
+                                walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
                             }
                         }
+
                         foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction)
                         {
+                            TotalTransactionAnonymousSend++;
+
                             if (transactionObject.Value.TransactionWalletAddress == elementToSearch)
                             {
                                 walletAddressTransactionFound = true;
-                                walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement());
+                                decimal pageNumber = 0;
+
+                                decimal totalPage = Math.Ceiling((decimal)(TotalTransactionAnonymousSend / MaxTransactionPerPage)) + 1;
+
+                                decimal target = (TotalTransactionAnonymousSend - transactionSendAnonymousCounter);
+                                for (int i = 0; i < totalPage; i++)
+                                {
+                                    if (target >= i * MaxTransactionPerPage && target <= (i + 1) * MaxTransactionPerPage)
+                                    {
+#if DEBUG
+                                        Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                        pageNumber = (i + 1);
+                                    }
+                                }
+                                if (pageNumber < 1)
+                                {
+                                    pageNumber = 1;
+                                }
+                                walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
                             }
                         }
                         if (walletAddressTransactionFound)
@@ -4812,27 +5097,150 @@ namespace Xiropht_Wallet
                 {
                     if (ClassContact.ListContactWallet.ContainsKey(elementToSearch.ToLower()))
                     {
+
+                        decimal transactionSendNormalCounter = 0;
+                        decimal transactionRecvNormalCounter = 0;
+                        decimal transactionSendAnonymousCounter = 0;
+                        decimal transactionBlockRewardCounter = 0;
+                        decimal transactionRecvAnonymousCounter = 0;
+
                         bool contactTransactionFound = false;
                         string walletAddressFromContactName = ClassContact.GetWalletAddressFromContactName(elementToSearch);
                         var walletResearchElementForm = new SearchWalletExplorer
                         {
                             StartPosition = FormStartPosition.CenterParent
                         };
+
+
                         foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction)
                         {
+                            switch (transactionObject.Value.TransactionType)
+                            {
+                                case "SEND":
+                                    transactionSendNormalCounter++;
+                                    break;
+                                case "RECV":
+                                    if (transactionObject.Value.TransactionWalletAddress.Contains("BLOCKCHAIN["))
+                                    {
+                                        transactionBlockRewardCounter++;
+                                    }
+                                    else if (transactionObject.Value.TransactionWalletAddress == "ANONYMOUS")
+                                    {
+                                        transactionRecvAnonymousCounter++;
+                                    }
+                                    else
+                                    {
+                                        transactionRecvNormalCounter++;
+                                    }
+                                    break;
+                            }
                             if (transactionObject.Value.TransactionWalletAddress == walletAddressFromContactName)
                             {
                                 contactTransactionFound = true;
-                                walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement());
+                                decimal pageNumber = 1;
+
+                                switch (transactionObject.Value.TransactionType)
+                                {
+                                    case "SEND":
+                                        decimal totalPage = Math.Ceiling((decimal)(TotalTransactionNormalSend / MaxTransactionPerPage)) + 1;
+
+                                        decimal target = (TotalTransactionNormalSend - transactionSendNormalCounter);
+                                        for (int i = 0; i < totalPage; i++)
+                                        {
+                                            if (target >= i * MaxTransactionPerPage && target <= (i + 1) * MaxTransactionPerPage)
+                                            {
+#if DEBUG
+                                            Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                pageNumber = (i + 1);
+                                            }
+                                        }
+                                        break;
+                                    case "RECV":
+                                        if (transactionObject.Value.TransactionWalletAddress.Contains("BLOCKCHAIN["))
+                                        {
+                                            totalPage = Math.Ceiling((decimal)(TotalTransactionBlockReward / MaxTransactionPerPage)) + 1;
+
+                                            target = (TotalTransactionBlockReward - transactionBlockRewardCounter);
+                                            for (int i = 0; i < totalPage; i++)
+                                            {
+                                                if (target >= i * MaxTransactionPerPage && target <= (i + 1) * MaxTransactionPerPage)
+                                                {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                    pageNumber = (i + 1);
+                                                }
+                                            }
+                                        }
+                                        else if (transactionObject.Value.TransactionWalletAddress == "ANONYMOUS")
+                                        {
+                                            totalPage = Math.Ceiling((decimal)(TotalTransactionAnonymousReceived / MaxTransactionPerPage)) + 1;
+
+                                            target = (TotalTransactionAnonymousReceived - transactionRecvAnonymousCounter);
+                                            for (int i = 0; i < totalPage; i++)
+                                            {
+                                                if (target >= i * MaxTransactionPerPage && target <= (i + 1) * MaxTransactionPerPage)
+                                                {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                    pageNumber = (i + 1);
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            totalPage = Math.Ceiling((decimal)(TotalTransactionNormalReceived / MaxTransactionPerPage)) + 1;
+
+                                            target = (TotalTransactionNormalReceived - transactionRecvNormalCounter);
+                                            for (int i = 0; i < totalPage; i++)
+                                            {
+                                                if (target >= i * MaxTransactionPerPage && target <= (i + 1) * MaxTransactionPerPage)
+                                                {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                    pageNumber = (i + 1);
+                                                }
+                                            }
+                                        }
+                                        break;
+                                }
+                                if (pageNumber < 1)
+                                {
+                                    pageNumber = 1;
+                                }
+                                walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
                             }
                         }
 
                         foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction)
                         {
+                            TotalTransactionAnonymousSend++;
                             if (transactionObject.Value.TransactionWalletAddress == walletAddressFromContactName)
                             {
                                 contactTransactionFound = true;
-                                walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement());
+                                decimal pageNumber = 0;
+
+                                decimal totalPage = Math.Ceiling((decimal)(TotalTransactionAnonymousSend / MaxTransactionPerPage)) + 1;
+
+                                decimal target = (TotalTransactionAnonymousSend - transactionSendAnonymousCounter);
+                                for (int i = 0; i < totalPage; i++)
+                                {
+                                    if (target >= i * MaxTransactionPerPage && target <= (i + 1) * MaxTransactionPerPage)
+                                    {
+#if DEBUG
+                                        Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                        pageNumber = (i + 1);
+                                    }
+                                }
+                                if (pageNumber < 1)
+                                {
+                                    pageNumber = 1;
+                                }
+                                walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
                             }
                         }
 
