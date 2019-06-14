@@ -3372,12 +3372,12 @@ namespace Xiropht_Wallet
                     TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Clear();
                     TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Clear();
 
-                                // Transaction anonymity
-                                TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
+                    // Transaction anonymity
+                    TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
                     TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Clear();
 
-                                // Transaction block reward
-                                TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
+                    // Transaction block reward
+                    TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
                 };
                 BeginInvoke(invoke);
                 ListTransactionShowed.Clear();
@@ -3400,12 +3400,12 @@ namespace Xiropht_Wallet
                     TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Clear();
                     TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Clear();
 
-                                // Transaction anonymity
-                                TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
+                    // Transaction anonymity
+                    TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
                     TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Clear();
 
-                                // Transaction block reward
-                                TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
+                    // Transaction block reward
+                    TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
                 };
                 BeginInvoke(invoke);
 
@@ -3427,11 +3427,11 @@ namespace Xiropht_Wallet
                 {
                     TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Clear();
                     TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Clear();
-                                // Transaction anonymity
-                                TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
+                    // Transaction anonymity
+                    TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
                     TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Clear();
-                                // Transaction block reward
-                                TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
+                    // Transaction block reward
+                    TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
                 };
                 BeginInvoke(invoke);
                 ListTransactionShowed.Clear();
@@ -4775,7 +4775,7 @@ namespace Xiropht_Wallet
                     ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #endif
 #if LINUX
-                MessageBox.Show(this, elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(this, elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #endif
                 }
             }
@@ -5495,7 +5495,7 @@ namespace Xiropht_Wallet
                                             bool startExport = false;
 
 #if WINDOWS
-                                            if (ClassFormPhase.MessageBoxInterface("Do you want to export "+totalTransaction+" transaction(s)?", "Export Transaction", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                                            if (ClassFormPhase.MessageBoxInterface("Do you want to export " + totalTransaction + " transaction(s)?", "Export Transaction", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                                             {
                                                 startExport = true;
                                             }
@@ -5579,6 +5579,13 @@ namespace Xiropht_Wallet
                                                     }
                                                 }
 
+#if WINDOWS
+                                                ClassFormPhase.MessageBoxInterface("Export Complete.", "Export System", MessageBoxButtons.OK, MessageBoxIcon.Information);
+#endif
+#if LINUX
+                                                MessageBox.Show(this, "Export Complete.", "Export System", MessageBoxButtons.OK, MessageBoxIcon.Information);
+#endif
+
                                             }
                                         }
                                         else
@@ -5620,7 +5627,7 @@ namespace Xiropht_Wallet
                     ClassFormPhase.MessageBoxInterface("You need to be connected to your wallet for export transaction.", "Export System", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 #endif
 #if LINUX
-                        MessageBox.Show(this, "You need to be connected to your wallet for export transaction.", "Export System", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(this, "You need to be connected to your wallet for export transaction.", "Export System", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 #endif
                 }
             }
@@ -5630,7 +5637,7 @@ namespace Xiropht_Wallet
                 ClassFormPhase.MessageBoxInterface("You need to be connected to your wallet for export transaction.", "Export System", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 #endif
 #if LINUX
-                        MessageBox.Show(this, "You need to be connected to your wallet for export transaction.", "Export System", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, "You need to be connected to your wallet for export transaction.", "Export System", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 #endif
             }
         }
