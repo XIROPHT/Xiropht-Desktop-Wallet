@@ -1076,7 +1076,7 @@ namespace Xiropht_Wallet
             {
                 Height = BaseInterfaceHeight;
             }
-            Refresh();
+            //Refresh();
         }
 
         /// <summary>
@@ -1086,7 +1086,9 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void WalletXiropht_Resize(object sender, EventArgs e)
         {
+#if WINDOWS
             ResizeWalletInterface();
+#endif
         }
 
         /// <summary>
@@ -1880,7 +1882,7 @@ namespace Xiropht_Wallet
                                             catch (Exception error)
                                             {
 #if DEBUG
-                                                Log.WriteLine("Error on seed node list: " + error.Message);
+                                                            Log.WriteLine("Error on seed node list: " + error.Message);
 #endif
                                             }
                                         }
@@ -1927,7 +1929,7 @@ namespace Xiropht_Wallet
                             catch (Exception error)
                             {
 #if DEBUG
-                                Log.WriteLine("Error on listing remote node connection: " + error.Message);
+                                            Log.WriteLine("Error on listing remote node connection: " + error.Message);
 #endif
                                 StopUpdateTransactionHistory(true, true);
                                 errorSyncList = true;
@@ -2009,10 +2011,10 @@ namespace Xiropht_Wallet
 
                                                                                         string[] row =
                                                                                         {
-                                                                                            (TotalTransactionAnonymousReceived+1).ToString(),
-                                                                                            dateTimeSend.ToString(),
-                                                                                            transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, transactionObject.Value.TransactionWalletAddress,
-                                                                                            dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
+                                                                                                        (TotalTransactionAnonymousReceived+1).ToString(),
+                                                                                                        dateTimeSend.ToString(),
+                                                                                                        transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, transactionObject.Value.TransactionWalletAddress,
+                                                                                                        dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
                                                                                         };
                                                                                         var listViewItem = new ListViewItem(row);
                                                                                         MethodInvoker invoke = () =>
@@ -2062,10 +2064,10 @@ namespace Xiropht_Wallet
                                                                                 {
                                                                                     string[] row =
                                                                                     {
-                                                                                    (TotalTransactionAnonymousReceived+1).ToString(),
-                                                                                            dateTimeSend.ToString(),
-                                                                                            transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, transactionObject.Value.TransactionWalletAddress,
-                                                                                            dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
+                                                                                                (TotalTransactionAnonymousReceived+1).ToString(),
+                                                                                                        dateTimeSend.ToString(),
+                                                                                                        transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, transactionObject.Value.TransactionWalletAddress,
+                                                                                                        dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
                                                                                 };
                                                                                     var listViewItem = new ListViewItem(row);
                                                                                     MethodInvoker invoke = () =>
@@ -2107,10 +2109,10 @@ namespace Xiropht_Wallet
                                                                                 {
                                                                                     string[] row =
                                                                                         {
-                                                                                (TotalTransactionBlockReward+1).ToString(),
-                                                                                            dateTimeSend.ToString(),
-                                                                                            transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, transactionObject.Value.TransactionWalletAddress,
-                                                                                            dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
+                                                                                            (TotalTransactionBlockReward+1).ToString(),
+                                                                                                        dateTimeSend.ToString(),
+                                                                                                        transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, transactionObject.Value.TransactionWalletAddress,
+                                                                                                        dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
                                                                                 };
                                                                                     var listViewItem = new ListViewItem(row);
 
@@ -2161,10 +2163,10 @@ namespace Xiropht_Wallet
                                                                                 {
                                                                                     string[] row =
                                                                                         {
-                                                                                (TotalTransactionBlockReward+1).ToString(),
-                                                                                    dateTimeSend.ToString(),
-                                                                                            transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, transactionObject.Value.TransactionWalletAddress,
-                                                                                            dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
+                                                                                            (TotalTransactionBlockReward+1).ToString(),
+                                                                                                dateTimeSend.ToString(),
+                                                                                                        transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, transactionObject.Value.TransactionWalletAddress,
+                                                                                                        dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
                                                                                 };
                                                                                     var listViewItem = new ListViewItem(row);
 
@@ -2213,10 +2215,10 @@ namespace Xiropht_Wallet
                                                                                         }
                                                                                         string[] row =
                                                                                         {
-                                                                                             (TotalTransactionNormalSend+1).ToString(),
-                                                                                             dateTimeSend.ToString(),
-                                                                                             transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, walletAddress,
-                                                                                             dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
+                                                                                                         (TotalTransactionNormalSend+1).ToString(),
+                                                                                                         dateTimeSend.ToString(),
+                                                                                                         transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, walletAddress,
+                                                                                                         dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
                                                                                         };
                                                                                         var listViewItem = new ListViewItem(row);
 
@@ -2271,10 +2273,10 @@ namespace Xiropht_Wallet
                                                                                         }
                                                                                         string[] row =
                                                                                         {
-                                                                                                (TotalTransactionNormalSend+1).ToString(),
-                                                                                                dateTimeSend.ToString(),
-                                                                                                transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, walletAddress,
-                                                                                                dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
+                                                                                                            (TotalTransactionNormalSend+1).ToString(),
+                                                                                                            dateTimeSend.ToString(),
+                                                                                                            transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, walletAddress,
+                                                                                                            dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
                                                                                         };
                                                                                         var listViewItem = new ListViewItem(row);
 
@@ -2324,9 +2326,9 @@ namespace Xiropht_Wallet
                                                                                         }
                                                                                         string[] row =
                                                                                         {
-                                                                                            (TotalTransactionNormalReceived+1).ToString(), dateTimeSend.ToString(),
-                                                                                            transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, walletAddress,
-                                                                                            dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
+                                                                                                        (TotalTransactionNormalReceived+1).ToString(), dateTimeSend.ToString(),
+                                                                                                        transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, walletAddress,
+                                                                                                        dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
                                                                                         };
                                                                                         var listViewItem = new ListViewItem(row);
 
@@ -2383,10 +2385,10 @@ namespace Xiropht_Wallet
                                                                                         }
                                                                                         string[] row =
                                                                                         {
-                                                                                                (TotalTransactionNormalReceived+1).ToString(),
-                                                                                                dateTimeSend.ToString(),
-                                                                                                transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, walletAddress,
-                                                                                                dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
+                                                                                                            (TotalTransactionNormalReceived+1).ToString(),
+                                                                                                            dateTimeSend.ToString(),
+                                                                                                            transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, walletAddress,
+                                                                                                            dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
                                                                                         };
                                                                                         var listViewItem = new ListViewItem(row);
 
@@ -2440,10 +2442,10 @@ namespace Xiropht_Wallet
 
 
                                                     if (
-                                                        ClassWalletTransactionAnonymityCache.ListTransaction.Count ==
-                                                        ClassWalletObject.TotalTransactionInSyncAnonymity &&
-                                                        ClassWalletTransactionCache.ListTransaction.Count ==
-                                                        ClassWalletObject.TotalTransactionInSync)
+                                            ClassWalletTransactionAnonymityCache.ListTransaction.Count ==
+                                            ClassWalletObject.TotalTransactionInSyncAnonymity &&
+                                            ClassWalletTransactionCache.ListTransaction.Count ==
+                                            ClassWalletObject.TotalTransactionInSync)
                                                     {
 
                                                         if (ClassWalletTransactionAnonymityCache.ListTransaction.Count ==
@@ -2499,10 +2501,10 @@ namespace Xiropht_Wallet
                                                                                 }
                                                                                 string[] row =
                                                                                     {
-                                                                                            (TotalTransactionAnonymousSend+1).ToString(),
-                                                                                            dateTimeSend.ToString(),
-                                                                                            transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, walletAddress,
-                                                                                            dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
+                                                                                                        (TotalTransactionAnonymousSend+1).ToString(),
+                                                                                                        dateTimeSend.ToString(),
+                                                                                                        transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, walletAddress,
+                                                                                                        dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
                                                                                     };
                                                                                 var listViewItem = new ListViewItem(row);
 
@@ -2560,10 +2562,10 @@ namespace Xiropht_Wallet
 
                                                                                 string[] row =
                                                                                     {
-                                                                                            (TotalTransactionAnonymousSend+1).ToString(),
-                                                                                            dateTimeSend.ToString(),
-                                                                                            transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, walletAddress,
-                                                                                            dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
+                                                                                                        (TotalTransactionAnonymousSend+1).ToString(),
+                                                                                                        dateTimeSend.ToString(),
+                                                                                                        transactionObject.Value.TransactionType, transactionObject.Value.TransactionHash, "" + transactionObject.Value.TransactionAmount, "" + transactionObject.Value.TransactionFee, walletAddress,
+                                                                                                        dateTimeRecv.ToString(), transactionObject.Value.TransactionBlockchainHeight.ToString()
                                                                                     };
 
                                                                                 var listViewItem = new ListViewItem(row);
@@ -2651,7 +2653,7 @@ namespace Xiropht_Wallet
                                 catch (Exception error)
                                 {
 #if DEBUG
-                                    Log.WriteLine("Error on showing transaction history: " + error.Message);
+                                                Log.WriteLine("Error on showing transaction history: " + error.Message);
 #endif
                                     StopUpdateTransactionHistory(true, true);
 
@@ -2682,9 +2684,10 @@ namespace Xiropht_Wallet
 
                                 if (TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Count > 0)
                                 {
+#if WINDOWS
                                     MethodInvoker update = () => TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.BeginUpdate();
                                     TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.BeginInvoke(update);
-
+#endif
                                     for (int i = 0; i < TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Count; i++)
                                     {
                                         var i1 = i;
@@ -2754,8 +2757,10 @@ namespace Xiropht_Wallet
                                         BeginInvoke((MethodInvoker)MethodInvoker);
                                     }
 
+#if WINDOWS
                                     update = () => TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.EndUpdate();
                                     TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.BeginInvoke(update);
+#endif
                                 }
                                 #endregion
 
@@ -2763,9 +2768,10 @@ namespace Xiropht_Wallet
 
                                 if (TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Count > 0)
                                 {
+#if WINDOWS
                                     MethodInvoker update = () => TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.BeginUpdate();
                                     TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.BeginInvoke(update);
-
+#endif
                                     for (int i = 0; i < TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Count; i++)
                                     {
                                         var i1 = i;
@@ -2849,8 +2855,10 @@ namespace Xiropht_Wallet
                                         BeginInvoke((MethodInvoker)MethodInvoker);
                                     }
 
+#if WINDOWS
                                     update = () => TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.EndUpdate();
                                     TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.BeginInvoke(update);
+#endif
                                 }
 
                                 #endregion
@@ -2859,9 +2867,11 @@ namespace Xiropht_Wallet
 
                                 if (TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Count > 0)
                                 {
+#if WINDOWS
+
                                     MethodInvoker update = () => TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.BeginUpdate();
                                     TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.BeginInvoke(update);
-
+#endif
                                     for (int i = 0; i < TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Count; i++)
                                     {
 
@@ -2940,9 +2950,11 @@ namespace Xiropht_Wallet
 
                                         BeginInvoke((MethodInvoker)MethodInvoker);
                                     }
+#if WINDOWS
 
                                     update = () => TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.EndUpdate();
                                     TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.BeginInvoke(update);
+#endif
                                 }
 
                                 #endregion
@@ -2951,9 +2963,11 @@ namespace Xiropht_Wallet
 
                                 if (TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Count > 0)
                                 {
+#if WINDOWS
+
                                     MethodInvoker update = () => TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.BeginUpdate();
                                     TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.BeginInvoke(update);
-
+#endif
                                     for (int i = 0; i < TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Count; i++)
                                     {
 
@@ -3048,8 +3062,11 @@ namespace Xiropht_Wallet
                                         BeginInvoke((MethodInvoker)MethodInvoker);
                                     }
 
+#if WINDOWS
+
                                     update = () => TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.EndUpdate();
                                     TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.BeginInvoke(update);
+#endif
                                 }
                                 #endregion
 
@@ -3057,9 +3074,10 @@ namespace Xiropht_Wallet
 
                                 if (TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Count > 0)
                                 {
+#if WINDOWS
                                     MethodInvoker update = () => TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.BeginUpdate();
                                     TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.BeginInvoke(update);
-
+#endif
                                     for (int i = 0; i < TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Count; i++)
                                     {
 
@@ -3153,8 +3171,10 @@ namespace Xiropht_Wallet
                                         BeginInvoke((MethodInvoker)MethodInvoker);
                                     }
 
+#if WINDOWS
                                     update = () => TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.EndUpdate();
                                     TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.BeginInvoke(update);
+#endif
                                 }
                                 #endregion
 
@@ -3197,86 +3217,89 @@ namespace Xiropht_Wallet
                         {
                             try
                             {
-                                int minShow = ((CurrentBlockExplorerPage - 1) * MaxBlockPerPage);
-                                int maxShow = (CurrentBlockExplorerPage * MaxBlockPerPage);
-
-                                for (int i = minShow; i < maxShow; i++)
+                                if (!ClassWalletObject.InSyncBlock)
                                 {
+                                    int minShow = ((CurrentBlockExplorerPage - 1) * MaxBlockPerPage);
+                                    int maxShow = (CurrentBlockExplorerPage * MaxBlockPerPage);
 
-                                    if (i < ClassBlockCache.ListBlock.Count)
+                                    for (int i = minShow; i < maxShow; i++)
                                     {
-                                        int blockTarget = (ClassBlockCache.ListBlock.Count - 1) - i;
-                                        var blockObject = ClassBlockCache.ListBlock.ElementAt(blockTarget).Value;
-                                        int blockId = int.Parse(blockObject.BlockHeight);
-                                        if (!ListBlockHashShowed.ContainsKey(blockId))
+
+                                        if (i < ClassBlockCache.ListBlock.Count)
                                         {
-                                            ListBlockHashShowed.Add(blockId, blockObject.BlockHash);
-
-                                            DateTime dateTimeCreate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                            dateTimeCreate = dateTimeCreate.AddSeconds(int.Parse(blockObject.BlockTimestampCreate));
-                                            dateTimeCreate = dateTimeCreate.ToLocalTime();
-                                            DateTime dateTimeFound = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                            dateTimeFound = dateTimeFound.AddSeconds(int.Parse(blockObject.BlockTimestampFound));
-                                            dateTimeFound = dateTimeFound.ToLocalTime();
-
-                                            string[] row =
+                                            int blockTarget = (ClassBlockCache.ListBlock.Count - 1) - i;
+                                            var blockObject = ClassBlockCache.ListBlock.ElementAt(blockTarget).Value;
+                                            int blockId = int.Parse(blockObject.BlockHeight);
+                                            if (!ListBlockHashShowed.ContainsKey(blockId))
                                             {
-                                                    blockObject.BlockHeight, blockObject.BlockHash,
-                                                    blockObject.BlockReward, blockObject.BlockDifficulty, dateTimeCreate.ToString(CultureInfo.InvariantCulture),
-                                                    dateTimeFound.ToString(CultureInfo.InvariantCulture), blockObject.BlockTransactionHash
+                                                ListBlockHashShowed.Add(blockId, blockObject.BlockHash);
+
+                                                DateTime dateTimeCreate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                dateTimeCreate = dateTimeCreate.AddSeconds(int.Parse(blockObject.BlockTimestampCreate));
+                                                dateTimeCreate = dateTimeCreate.ToLocalTime();
+                                                DateTime dateTimeFound = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                dateTimeFound = dateTimeFound.AddSeconds(int.Parse(blockObject.BlockTimestampFound));
+                                                dateTimeFound = dateTimeFound.ToLocalTime();
+
+                                                string[] row =
+                                                {
+                                                                blockObject.BlockHeight, blockObject.BlockHash,
+                                                                blockObject.BlockReward, blockObject.BlockDifficulty, dateTimeCreate.ToString(CultureInfo.InvariantCulture),
+                                                                dateTimeFound.ToString(CultureInfo.InvariantCulture), blockObject.BlockTransactionHash
                                             };
-                                            var listViewItem = new ListViewItem(row);
+                                                var listViewItem = new ListViewItem(row);
 
 
-                                            if (TotalBlockRead < maxShow)
+                                                if (TotalBlockRead < maxShow)
+                                                {
+                                                    void Invoker() => BlockWalletForm.listViewBlockExplorer.Items.Add(listViewItem);
+
+                                                    BeginInvoke((MethodInvoker)Invoker);
+
+                                                }
+                                                else
+                                                {
+                                                    void Invoker() => BlockWalletForm.listViewBlockExplorer.Items.Insert(0, listViewItem);
+
+                                                    BeginInvoke((MethodInvoker)Invoker);
+
+                                                }
+                                                TotalBlockRead++;
+
+                                            }
+                                        }
+
+                                        if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.BlockExplorer)
+                                        {
+                                            if (ClassWalletObject.InSyncBlock)
                                             {
-                                                void Invoker() => BlockWalletForm.listViewBlockExplorer.Items.Add(listViewItem);
-
-                                                BeginInvoke((MethodInvoker)Invoker);
-
+                                                UpdateLabelSyncInformation(
+                                                    "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count + "/" +
+                                                    ClassWalletObject.TotalBlockInSync + ".");
                                             }
                                             else
                                             {
-                                                void Invoker() => BlockWalletForm.listViewBlockExplorer.Items.Insert(0, listViewItem);
-
-                                                BeginInvoke((MethodInvoker)Invoker);
-
+                                                UpdateLabelSyncInformation(
+                                                    "Total blocks loaded: " + ClassBlockCache.ListBlock.Count + "/" +
+                                                    ClassWalletObject.TotalBlockInSync + ".");
                                             }
-                                            TotalBlockRead++;
 
                                         }
                                     }
 
-                                    if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.BlockExplorer)
+                                    if (BlockWalletForm.IsShowed)
                                     {
-                                        if (ClassWalletObject.InSyncBlock)
+                                        if (BlockWalletForm.listViewBlockExplorer.Items.Count > 0)
                                         {
-                                            UpdateLabelSyncInformation(
-                                                "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count + "/" +
-                                                ClassWalletObject.TotalBlockInSync + ".");
+                                            BlockWalletForm.SortingBlockExplorer();
                                         }
-                                        else
-                                        {
-                                            UpdateLabelSyncInformation(
-                                                "Total blocks loaded: " + ClassBlockCache.ListBlock.Count + "/" +
-                                                ClassWalletObject.TotalBlockInSync + ".");
-                                        }
-
-                                    }
-                                }
-
-                                if (BlockWalletForm.IsShowed)
-                                {
-                                    if (BlockWalletForm.listViewBlockExplorer.Items.Count > 0)
-                                    {
-                                        BlockWalletForm.SortingBlockExplorer();
                                     }
                                 }
                             }
                             catch (Exception error)
                             {
 #if DEBUG
-                            Log.WriteLine("Error loading blocks: " + error.Message);
+                                        Log.WriteLine("Error loading blocks: " + error.Message);
 #endif
                                 await Task.Factory.StartNew(() => StopUpdateBlockHistory(false, false), CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current);
                             }
@@ -3347,12 +3370,12 @@ namespace Xiropht_Wallet
                     TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Clear();
                     TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Clear();
 
-                    // Transaction anonymity
-                    TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
+                                // Transaction anonymity
+                                TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
                     TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Clear();
 
-                    // Transaction block reward
-                    TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
+                                // Transaction block reward
+                                TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
                 };
                 BeginInvoke(invoke);
                 ListTransactionShowed.Clear();
@@ -3375,12 +3398,12 @@ namespace Xiropht_Wallet
                     TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Clear();
                     TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Clear();
 
-                    // Transaction anonymity
-                    TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
+                                // Transaction anonymity
+                                TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
                     TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Clear();
 
-                    // Transaction block reward
-                    TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
+                                // Transaction block reward
+                                TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
                 };
                 BeginInvoke(invoke);
 
@@ -3402,11 +3425,11 @@ namespace Xiropht_Wallet
                 {
                     TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Clear();
                     TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Clear();
-                    // Transaction anonymity
-                    TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
+                                // Transaction anonymity
+                                TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
                     TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Clear();
-                    // Transaction block reward
-                    TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
+                                // Transaction block reward
+                                TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
                 };
                 BeginInvoke(invoke);
                 ListTransactionShowed.Clear();
@@ -3446,7 +3469,6 @@ namespace Xiropht_Wallet
         /// </summary>
         public void ResizeWalletInterface()
         {
-#if WINDOWS
             try
             {
                 void MethodInvoker()
@@ -4524,7 +4546,6 @@ namespace Xiropht_Wallet
             catch
             {
             }
-#endif
         }
 
         #endregion

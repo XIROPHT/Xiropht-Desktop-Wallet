@@ -717,7 +717,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void Transaction_Resize(object sender, EventArgs e)
         {
-            UpdateStyles();
+            Refresh();
         }
 
 
@@ -813,7 +813,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void timerRefresh_Tick(object sender, EventArgs e)
         {
-#if LINUX
+#if WINDOWS
             foreach (Control control in Controls)
             {
                 control.Refresh();
