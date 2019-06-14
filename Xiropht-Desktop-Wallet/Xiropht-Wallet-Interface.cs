@@ -59,6 +59,7 @@ namespace Xiropht_Wallet
         public int BaseInterfaceHeight;
         public List<Tuple<Size, Point>> ListControlSizeBase = new List<Tuple<Size, Point>>();
         public List<Tuple<Size, Point>> ListControlSizeMain = new List<Tuple<Size, Point>>();
+        public List<Tuple<Size, Point>> ListControlSizePanelWallet = new List<Tuple<Size, Point>>();
         public List<Tuple<Size, Point>> ListControlSizeBlock = new List<Tuple<Size, Point>>();
         public List<Tuple<Size, Point>> ListControlSizeCreateWallet = new List<Tuple<Size, Point>>();
         public List<Tuple<Size, Point>> ListControlSizeOpenWallet = new List<Tuple<Size, Point>>();
@@ -457,6 +458,16 @@ namespace Xiropht_Wallet
                     if (i < Controls.Count)
                     {
                         ListControlSizeBase.Add(new Tuple<Size, Point>(Controls[i].Size, Controls[i].Location));
+                    }
+                }
+            }
+            if (ListControlSizePanelWallet.Count == 0)
+            {
+                for (int i = 0; i < panelControlWallet.Controls.Count; i++)
+                {
+                    if (i < panelControlWallet.Controls.Count)
+                    {
+                        ListControlSizePanelWallet.Add(new Tuple<Size, Point>(panelControlWallet.Controls[i].Size, panelControlWallet.Controls[i].Location));
                     }
                 }
             }
@@ -898,8 +909,7 @@ namespace Xiropht_Wallet
         private void TimerRefresh_Tick(object sender, EventArgs e)
         {
             Refresh();
-#if WINDOWS
-            /*if (Width < BaseInterfaceWidth)
+            if (Width < BaseInterfaceWidth)
             {
                 Width = BaseInterfaceWidth;
             }
@@ -915,8 +925,7 @@ namespace Xiropht_Wallet
             else if (Height == BaseInterfaceHeight)
             {
                 Height += 10;
-            }*/
-#endif
+            }
             if (ClassFormPhase.WalletXiropht != null) // Get list of all controls of each menu.
             {
                 MainWalletForm.GetListControl();
@@ -1058,8 +1067,7 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void WalletXiropht_SizeChanged(object sender, EventArgs e)
         {
-#if WINDOWS
-          /*  if (Width < BaseInterfaceWidth)
+            if (Width < BaseInterfaceWidth)
             {
                 Width = BaseInterfaceWidth;
             }
@@ -1067,9 +1075,8 @@ namespace Xiropht_Wallet
             if (Height < BaseInterfaceHeight)
             {
                 Height = BaseInterfaceHeight;
-            }*/
-#endif
-            //Refresh();
+            }
+            Refresh();
         }
 
         /// <summary>
@@ -3444,13 +3451,13 @@ namespace Xiropht_Wallet
             {
                 void MethodInvoker()
                 {
-                    /*if (Height > BaseInterfaceHeight || Width > BaseInterfaceWidth)
-                    {*/
+                    if (Height > BaseInterfaceHeight || Width > BaseInterfaceWidth)
+                    {
                         if (ClassFormPhase.WalletXiropht != null)
                         {
-                            /*if ((CurrentInterfaceWidth != Width && Width >= BaseInterfaceWidth) ||
+                            if ((CurrentInterfaceWidth != Width && Width >= BaseInterfaceWidth) ||
                                 (CurrentInterfaceHeight != Height && Height >= BaseInterfaceHeight))
-                            {*/
+                            {
 
                                 #region Update Width
 
@@ -3534,6 +3541,47 @@ namespace Xiropht_Wallet
                                         }
                                     }
                                 }
+
+                                if (ListControlSizePanelWallet.Count > 0)
+                                {
+                                    for (int i = 0; i < ListControlSizePanelWallet.Count; i++)
+                                    {
+                                        if (i < ListControlSizePanelWallet.Count)
+                                        {
+                                            if (i < panelControlWallet.Controls.Count)
+                                            {
+                                                var i1 = i;
+                                                var currentWidth = BaseInterfaceWidth;
+
+                                                float ratioWidth = ((float)Width / currentWidth);
+                                                float controlWitdh = ListControlSizePanelWallet[i1].Item1.Width * ratioWidth;
+                                                float controlLocationX = ListControlSizePanelWallet[i1].Item2.X * ratioWidth;
+                                                float controlLocationY = panelControlWallet.Controls[i1].Location.Y;
+                                                if (panelControlWallet.Controls[i1] is Label
+#if WINDOWS
+                                                            ||
+                                                    panelControlWallet.Controls[i1] is MetroLabel
+#endif
+                                                        )
+                                                {
+                                                    panelControlWallet.Controls[i1].Font =
+                                                        new Font(panelControlWallet.Controls[i1].Font.FontFamily,
+                                                            (((float)panelControlWallet.Width * 1.0014f) / 100),
+                                                            panelControlWallet.Controls[i1].Font.Style);
+                                                    panelControlWallet.Controls[i1].Location =
+                                                        new Point((int)controlLocationX, (int)controlLocationY);
+                                                }
+                                                else
+                                                {
+                                                    panelControlWallet.Controls[i1].Width = (int)controlWitdh;
+                                                    panelControlWallet.Controls[i1].Location =
+                                                        new Point((int)controlLocationX, (int)controlLocationY);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
 
                                 if (ListControlSizeOpenWallet.Count > 0)
                                 {
@@ -3929,6 +3977,27 @@ namespace Xiropht_Wallet
                                     }
                                 }
 
+                                for (int i = 0; i < ListControlSizePanelWallet.Count; i++)
+                                {
+                                    if (i < ListControlSizePanelWallet.Count)
+                                    {
+                                        if (i < panelControlWallet.Controls.Count)
+                                        {
+                                            var i1 = i;
+                                            var currentHeight = BaseInterfaceHeight;
+
+                                            float ratioHeight = ((float)Height / currentHeight);
+                                            float controlWitdh = ListControlSizePanelWallet[i1].Item1.Height * ratioHeight;
+                                            float controlLocationX = panelControlWallet.Controls[i1].Location.X;
+                                            float controlLocationY = ListControlSizePanelWallet[i1].Item2.Y * ratioHeight;
+                                            panelControlWallet.Controls[i1].Height = (int)controlWitdh;
+                                            panelControlWallet.Controls[i1].Location = new Point((int)controlLocationX,
+                                                (int)controlLocationY);
+                                        }
+                                    }
+                                }
+
+
                                 for (int i = 0; i < ListControlSizeOpenWallet.Count; i++)
                                 {
                                     if (i < ListControlSizeOpenWallet.Count)
@@ -4000,7 +4069,6 @@ namespace Xiropht_Wallet
                                         }
                                     }
                                 }
-
 
                                 for (int i = 0; i < ListControlSizeSendTransaction.Count; i++)
                                 {
@@ -4134,7 +4202,7 @@ namespace Xiropht_Wallet
                                 RestoreWalletForm.Size = panelMainForm.Size;
                                 ContactWalletForm.Size = panelMainForm.Size;
                             }
-                            /*else
+                            else
                             {
                                 if (Height < BaseInterfaceHeight)
                                 {
@@ -4145,10 +4213,10 @@ namespace Xiropht_Wallet
                                 {
                                     Width = BaseInterfaceWidth;
                                 }
-                            }*/
-                       // }
-                    /*}*/
-                    /*else // Restore interface size.
+                            }
+                        }
+                    }
+                    else // Restore interface size.
                     {
                         if (ClassFormPhase.WalletXiropht != null)
                         {
@@ -4196,6 +4264,32 @@ namespace Xiropht_Wallet
                                                     new Font(MainWalletForm.Controls[i].Font.FontFamily,
                                                         ((float)(MainWalletForm.Width * 1.0014f) / 100),
                                                         MainWalletForm.Controls[i].Font.Style);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (ListControlSizePanelWallet.Count > 0)
+                            {
+                                for (int i = 0; i < ListControlSizePanelWallet.Count; i++)
+                                {
+                                    if (i < ListControlSizePanelWallet.Count)
+                                    {
+                                        if (i < panelControlWallet.Controls.Count)
+                                        {
+                                            panelControlWallet.Controls[i].Size = ListControlSizePanelWallet[i].Item1;
+                                            panelControlWallet.Controls[i].Location = ListControlSizePanelWallet[i].Item2;
+                                            if (panelControlWallet.Controls[i] is Label
+#if WINDOWS
+                                               || panelControlWallet.Controls[i] is MetroLabel
+#endif
+                                                )
+                                            {
+                                                panelControlWallet.Controls[i].Font =
+                                                    new Font(panelControlWallet.Controls[i].Font.FontFamily,
+                                                        ((float)(panelControlWallet.Width * 1.0014f) / 100),
+                                                        panelControlWallet.Controls[i].Font.Style);
                                             }
                                         }
                                     }
@@ -4423,7 +4517,7 @@ namespace Xiropht_Wallet
                         Width = BaseInterfaceWidth;
                         CurrentInterfaceWidth = Width;
                     }
-                    */
+
                 }
                 BeginInvoke((MethodInvoker)MethodInvoker);
             }
