@@ -399,7 +399,7 @@ namespace Xiropht_Wallet
             // 
             this.linkLabelWebsite.AutoSize = true;
             this.linkLabelWebsite.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabelWebsite.Location = new System.Drawing.Point(880, 736);
+            this.linkLabelWebsite.Location = new System.Drawing.Point(850, 736);
             this.linkLabelWebsite.Name = "linkLabelWebsite";
             this.linkLabelWebsite.Size = new System.Drawing.Size(129, 15);
             this.linkLabelWebsite.TabIndex = 13;

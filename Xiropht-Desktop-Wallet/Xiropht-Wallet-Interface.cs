@@ -899,7 +899,7 @@ namespace Xiropht_Wallet
         {
             Refresh();
 #if WINDOWS
-            if (Width < BaseInterfaceWidth)
+            /*if (Width < BaseInterfaceWidth)
             {
                 Width = BaseInterfaceWidth;
             }
@@ -915,7 +915,7 @@ namespace Xiropht_Wallet
             else if (Height == BaseInterfaceHeight)
             {
                 Height += 10;
-            }
+            }*/
 #endif
             if (ClassFormPhase.WalletXiropht != null) // Get list of all controls of each menu.
             {
@@ -1059,7 +1059,7 @@ namespace Xiropht_Wallet
         private void WalletXiropht_SizeChanged(object sender, EventArgs e)
         {
 #if WINDOWS
-            if (Width < BaseInterfaceWidth)
+          /*  if (Width < BaseInterfaceWidth)
             {
                 Width = BaseInterfaceWidth;
             }
@@ -1067,7 +1067,7 @@ namespace Xiropht_Wallet
             if (Height < BaseInterfaceHeight)
             {
                 Height = BaseInterfaceHeight;
-            }
+            }*/
 #endif
             //Refresh();
         }
@@ -3444,13 +3444,13 @@ namespace Xiropht_Wallet
             {
                 void MethodInvoker()
                 {
-                    if (Height > BaseInterfaceHeight || Width > BaseInterfaceWidth)
-                    {
+                    /*if (Height > BaseInterfaceHeight || Width > BaseInterfaceWidth)
+                    {*/
                         if (ClassFormPhase.WalletXiropht != null)
                         {
-                            if ((CurrentInterfaceWidth != Width && Width >= BaseInterfaceWidth) ||
+                            /*if ((CurrentInterfaceWidth != Width && Width >= BaseInterfaceWidth) ||
                                 (CurrentInterfaceHeight != Height && Height >= BaseInterfaceHeight))
-                            {
+                            {*/
 
                                 #region Update Width
 
@@ -4134,7 +4134,7 @@ namespace Xiropht_Wallet
                                 RestoreWalletForm.Size = panelMainForm.Size;
                                 ContactWalletForm.Size = panelMainForm.Size;
                             }
-                            else
+                            /*else
                             {
                                 if (Height < BaseInterfaceHeight)
                                 {
@@ -4145,10 +4145,10 @@ namespace Xiropht_Wallet
                                 {
                                     Width = BaseInterfaceWidth;
                                 }
-                            }
-                        }
-                    }
-                    else // Restore interface size.
+                            }*/
+                       // }
+                    /*}*/
+                    /*else // Restore interface size.
                     {
                         if (ClassFormPhase.WalletXiropht != null)
                         {
@@ -4423,6 +4423,7 @@ namespace Xiropht_Wallet
                         Width = BaseInterfaceWidth;
                         CurrentInterfaceWidth = Width;
                     }
+                    */
                 }
                 BeginInvoke((MethodInvoker)MethodInvoker);
             }
