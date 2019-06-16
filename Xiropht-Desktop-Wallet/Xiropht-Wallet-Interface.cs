@@ -4815,7 +4815,7 @@ namespace Xiropht_Wallet
 #endif
                     if (!useWalletAddress)
                     {
-                        if (elementToSearch.Length != ClassConnectorSetting.MaxTransactionHashSize)
+                        if (elementToSearch.Length < 100)
                         {
 #if WINDOWS
                             if (ClassFormPhase.MessageBoxInterface("Do you want to research by contact name?", "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
@@ -4834,7 +4834,7 @@ namespace Xiropht_Wallet
                 }
                 else
                 {
-                    if (elementToSearch.Length != ClassConnectorSetting.MaxTransactionHashSize)
+                    if (elementToSearch.Length < 100)
                     {
 #if WINDOWS
                         if (ClassFormPhase.MessageBoxInterface("Do you want to research by contact name?", "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
