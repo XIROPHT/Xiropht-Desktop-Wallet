@@ -182,5 +182,19 @@ namespace Xiropht_Wallet
             }
             return false;
         }
+
+
+        /// <summary>
+        /// Check if wallet address exist.
+        /// </summary>
+        /// <param name="walletContactInfo"></param>
+        public static bool CheckContactName(string walletContactInfo)
+        {
+            if (ListContactWallet.ContainsKey(walletContactInfo.ToLower())) // Compare with contact name
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

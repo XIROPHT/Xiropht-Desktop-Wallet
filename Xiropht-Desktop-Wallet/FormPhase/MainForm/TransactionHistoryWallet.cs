@@ -272,7 +272,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         {
                             found = true;
 
-                            if (ClassContact.CheckContactNameFromWalletAddress(item.SubItems[ix].Text))
+
+                            if (ClassContact.CheckContactName(item.SubItems[ix].Text))
                             {
                                 Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS
@@ -323,7 +324,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
                     if (item.SubItems[ix].Bounds.Contains(e.Location))
                     {
-                        if (ClassContact.CheckContactNameFromWalletAddress(item.SubItems[ix].Text))
+                        if (ClassContact.CheckContactName(item.SubItems[ix].Text))
                         {
                             Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS
@@ -371,7 +372,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
                     if (item.SubItems[ix].Bounds.Contains(e.Location))
                     {
-                        if (ClassContact.CheckContactNameFromWalletAddress(item.SubItems[ix].Text))
+                        if (ClassContact.CheckContactName(item.SubItems[ix].Text))
                         {
                             Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS
@@ -419,7 +420,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
                     if (item.SubItems[ix].Bounds.Contains(e.Location))
                     {
-                        if (ClassContact.CheckContactNameFromWalletAddress(item.SubItems[ix].Text))
+                        if (ClassContact.CheckContactName(item.SubItems[ix].Text))
                         {
                             Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS
@@ -467,7 +468,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
                     if (item.SubItems[ix].Bounds.Contains(e.Location))
                     {
-                        if (ClassContact.CheckContactNameFromWalletAddress(item.SubItems[ix].Text))
+                        if (ClassContact.CheckContactName(item.SubItems[ix].Text))
                         {
                             Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS

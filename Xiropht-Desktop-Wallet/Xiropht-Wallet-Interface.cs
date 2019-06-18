@@ -81,6 +81,7 @@ namespace Xiropht_Wallet
         private const int ThreadUpdateNetworkStatsInterval = 1000;
         private const int MaxTransactionPerPage = 100;
         private const int MaxBlockPerPage = 100;
+        private const int MinSizeTransactionHash = 100;
 
         /// <summary>
         /// Boolean objects
@@ -2686,10 +2687,7 @@ namespace Xiropht_Wallet
 
                                 if (TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Count > 0)
                                 {
-#if WINDOWS
-                                    MethodInvoker update = () => TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.BeginUpdate();
-                                    TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.BeginInvoke(update);
-#endif
+
                                     for (int i = 0; i < TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Count; i++)
                                     {
                                         var i1 = i;
@@ -2759,10 +2757,6 @@ namespace Xiropht_Wallet
                                         BeginInvoke((MethodInvoker)MethodInvoker);
                                     }
 
-#if WINDOWS
-                                    update = () => TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.EndUpdate();
-                                    TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.BeginInvoke(update);
-#endif
                                 }
                                 #endregion
 
@@ -2770,10 +2764,7 @@ namespace Xiropht_Wallet
 
                                 if (TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Count > 0)
                                 {
-#if WINDOWS
-                                    MethodInvoker update = () => TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.BeginUpdate();
-                                    TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.BeginInvoke(update);
-#endif
+
                                     for (int i = 0; i < TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Count; i++)
                                     {
                                         var i1 = i;
@@ -2856,11 +2847,6 @@ namespace Xiropht_Wallet
 
                                         BeginInvoke((MethodInvoker)MethodInvoker);
                                     }
-
-#if WINDOWS
-                                    update = () => TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.EndUpdate();
-                                    TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.BeginInvoke(update);
-#endif
                                 }
 
                                 #endregion
@@ -2869,11 +2855,6 @@ namespace Xiropht_Wallet
 
                                 if (TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Count > 0)
                                 {
-#if WINDOWS
-
-                                    MethodInvoker update = () => TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.BeginUpdate();
-                                    TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.BeginInvoke(update);
-#endif
                                     for (int i = 0; i < TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Count; i++)
                                     {
 
@@ -2952,24 +2933,13 @@ namespace Xiropht_Wallet
 
                                         BeginInvoke((MethodInvoker)MethodInvoker);
                                     }
-#if WINDOWS
-
-                                    update = () => TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.EndUpdate();
-                                    TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.BeginInvoke(update);
-#endif
                                 }
 
                                 #endregion
 
                                 #region Update normal transaction received color.
-
                                 if (TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Count > 0)
                                 {
-#if WINDOWS
-
-                                    MethodInvoker update = () => TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.BeginUpdate();
-                                    TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.BeginInvoke(update);
-#endif
                                     for (int i = 0; i < TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Count; i++)
                                     {
 
@@ -3063,12 +3033,6 @@ namespace Xiropht_Wallet
 
                                         BeginInvoke((MethodInvoker)MethodInvoker);
                                     }
-
-#if WINDOWS
-
-                                    update = () => TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.EndUpdate();
-                                    TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.BeginInvoke(update);
-#endif
                                 }
                                 #endregion
 
@@ -3076,10 +3040,6 @@ namespace Xiropht_Wallet
 
                                 if (TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Count > 0)
                                 {
-#if WINDOWS
-                                    MethodInvoker update = () => TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.BeginUpdate();
-                                    TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.BeginInvoke(update);
-#endif
                                     for (int i = 0; i < TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Count; i++)
                                     {
 
@@ -3172,11 +3132,6 @@ namespace Xiropht_Wallet
 
                                         BeginInvoke((MethodInvoker)MethodInvoker);
                                     }
-
-#if WINDOWS
-                                    update = () => TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.EndUpdate();
-                                    TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.BeginInvoke(update);
-#endif
                                 }
                                 #endregion
 
@@ -4815,7 +4770,7 @@ namespace Xiropht_Wallet
 #endif
                     if (!useWalletAddress)
                     {
-                        if (elementToSearch.Length < 100)
+                        if (elementToSearch.Length < MinSizeTransactionHash)
                         {
 #if WINDOWS
                             if (ClassFormPhase.MessageBoxInterface("Do you want to research by contact name?", "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
@@ -4834,7 +4789,7 @@ namespace Xiropht_Wallet
                 }
                 else
                 {
-                    if (elementToSearch.Length < 100)
+                    if (elementToSearch.Length < MinSizeTransactionHash)
                     {
 #if WINDOWS
                         if (ClassFormPhase.MessageBoxInterface("Do you want to research by contact name?", "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
