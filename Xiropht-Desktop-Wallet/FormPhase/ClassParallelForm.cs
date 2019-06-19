@@ -209,14 +209,16 @@ namespace Xiropht_Wallet.FormPhase
             {
                 if (!WaitingForm2Showed)
                 {
-                    WaitingForm2Showed = true;
-#if WINDOWS
-                    ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                    try
                     {
-                        WaitingForm2.StartPosition = FormStartPosition.CenterParent;
-                        WaitingForm2.TopMost = false;
-                        WaitingForm2.ShowDialog(ClassFormPhase.WalletXiropht);
-                    });
+                        WaitingForm2Showed = true;
+#if WINDOWS
+                        ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                        {
+                            WaitingForm2.StartPosition = FormStartPosition.CenterParent;
+                            WaitingForm2.TopMost = false;
+                            WaitingForm2.ShowDialog(ClassFormPhase.WalletXiropht);
+                        });
 #else
                     ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
                    {
@@ -225,6 +227,11 @@ namespace Xiropht_Wallet.FormPhase
                        WaitingForm2.Show(ClassFormPhase.WalletXiropht);
                    });
 #endif
+                    }
+                    catch
+                    {
+
+                    }
                 }
             }).ConfigureAwait(false);
         }
@@ -236,10 +243,17 @@ namespace Xiropht_Wallet.FormPhase
         {
             await Task.Factory.StartNew(() =>
             {
-                if (WaitingForm2Showed)
+                try
                 {
-                    WaitingForm2Showed = false;
-                    WaitingForm2.Invoke((MethodInvoker)delegate () { WaitingForm2.Hide(); WaitingForm2.Refresh(); });
+                    if (WaitingForm2Showed)
+                    {
+                        WaitingForm2Showed = false;
+                        WaitingForm2.Invoke((MethodInvoker)delegate () { WaitingForm2.Hide(); WaitingForm2.Refresh(); });
+                    }
+                }
+                catch
+                {
+
                 }
             }).ConfigureAwait(false);
         }
@@ -252,16 +266,18 @@ namespace Xiropht_Wallet.FormPhase
         {
             await Task.Factory.StartNew(() =>
             {
-                if (!WaitingCreateWalletFormShowed)
+                try
                 {
-                    WaitingCreateWalletFormShowed = true;
-#if WINDOWS
-                    ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                    if (!WaitingCreateWalletFormShowed)
                     {
-                        WaitingCreateWalletForm.StartPosition = FormStartPosition.CenterParent;
-                        WaitingCreateWalletForm.TopMost = false;
-                        WaitingCreateWalletForm.ShowDialog(ClassFormPhase.WalletXiropht);
-                    });
+                        WaitingCreateWalletFormShowed = true;
+#if WINDOWS
+                        ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                        {
+                            WaitingCreateWalletForm.StartPosition = FormStartPosition.CenterParent;
+                            WaitingCreateWalletForm.TopMost = false;
+                            WaitingCreateWalletForm.ShowDialog(ClassFormPhase.WalletXiropht);
+                        });
 #else
                     ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
                    {
@@ -270,6 +286,11 @@ namespace Xiropht_Wallet.FormPhase
                        WaitingCreateWalletForm.Show(ClassFormPhase.WalletXiropht);
                    });
 #endif
+                    }
+                }
+                catch
+                {
+
                 }
             }).ConfigureAwait(false);
         }
@@ -281,11 +302,17 @@ namespace Xiropht_Wallet.FormPhase
         {
             await Task.Factory.StartNew(() =>
             {
-                if (WaitingCreateWalletFormShowed)
+                try
                 {
-                    WaitingCreateWalletFormShowed = false;
+                    if (WaitingCreateWalletFormShowed)
+                    {
+                        WaitingCreateWalletFormShowed = false;
 
-                    WaitingCreateWalletForm.Invoke((MethodInvoker)delegate { WaitingCreateWalletForm.Hide(); });
+                        WaitingCreateWalletForm.Invoke((MethodInvoker)delegate { WaitingCreateWalletForm.Hide(); });
+                    }
+                }
+                catch
+                {
 
                 }
             }).ConfigureAwait(false);

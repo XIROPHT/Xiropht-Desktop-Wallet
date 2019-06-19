@@ -1634,7 +1634,7 @@ namespace Xiropht_Wallet
         /// <param name="info"></param>
         public void UpdateOverviewLabelNetworkDifficulty(string info)
         {
-
+            
             void MethodInvoker()
             {
                 try
@@ -1714,8 +1714,15 @@ namespace Xiropht_Wallet
         /// <param name="info"></param>
         public void UpdateLabelSyncInformation(string info)
         {
-            void MethodInvoker() => labelSyncInformation.Text = info;
-            BeginInvoke((MethodInvoker)MethodInvoker);
+            try
+            {
+                void MethodInvoker() => labelSyncInformation.Text = info;
+                BeginInvoke((MethodInvoker)MethodInvoker);
+            }
+            catch
+            {
+
+            }
         }
 
         /// <summary>
@@ -1750,25 +1757,32 @@ namespace Xiropht_Wallet
         /// </summary>
         public void CleanSyncInterfaceWallet()
         {
-            MethodInvoker invoke = () =>
+            try
+            {
+                MethodInvoker invoke = () =>
+                {
+
+                    labelNoticeWalletAddress.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_ADDRESS_TEXT");
+                    labelNoticeWalletBalance.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT");
+                    OverviewWalletForm.labelTextCoinMaxSupply.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_COIN_MAX_SUPPLY_TEXT") + " In Sync";
+                    OverviewWalletForm.labelTextCoinCirculating.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_COIN_CIRCULATING_TEXT") + " In Sync";
+                    OverviewWalletForm.labelTextTransactionFee.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TRANSACTION_FEE_ACCUMULATED_TEXT") + " In Sync";
+                    OverviewWalletForm.labelTextCoinMined.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_COIN_MINED_TEXT") + " In Sync";
+                    OverviewWalletForm.labelTextBlockchainHeight.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_BLOCKCHAIN_HEIGHT_TEXT") + " In Sync";
+                    OverviewWalletForm.labelTextTotalBlockMined.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_BLOCK_MINED_TEXT") + " In Sync";
+                    OverviewWalletForm.labelTextTotalBlockLeft.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_BLOCK_LEFT_TEXT") + " In Sync";
+                    OverviewWalletForm.labelTextNetworkDifficulty.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_NETWORK_DIFFICULTY_TEXT") + " In Sync";
+                    OverviewWalletForm.labelTextNetworkHashrate.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_NETWORK_HASHRATE_TEXT") + " In Sync";
+                    OverviewWalletForm.labelTextLastBlockFound.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_LAST_BLOCK_FOUND_TEXT") + " In Sync";
+                    labelSyncInformation.Text = "Sync & Wallet disconnected.";
+                    labelNoticeTotalPendingTransactionOnReceive.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_TOTAL_PENDING_TRANSACTION_ON_RECEIVE_TEXT");
+                };
+                BeginInvoke(invoke);
+            }
+            catch
             {
 
-                labelNoticeWalletAddress.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_ADDRESS_TEXT");
-                labelNoticeWalletBalance.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT");
-                OverviewWalletForm.labelTextCoinMaxSupply.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_COIN_MAX_SUPPLY_TEXT") + " In Sync";
-                OverviewWalletForm.labelTextCoinCirculating.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_COIN_CIRCULATING_TEXT") + " In Sync";
-                OverviewWalletForm.labelTextTransactionFee.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TRANSACTION_FEE_ACCUMULATED_TEXT") + " In Sync";
-                OverviewWalletForm.labelTextCoinMined.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_COIN_MINED_TEXT") + " In Sync";
-                OverviewWalletForm.labelTextBlockchainHeight.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_BLOCKCHAIN_HEIGHT_TEXT") + " In Sync";
-                OverviewWalletForm.labelTextTotalBlockMined.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_BLOCK_MINED_TEXT") + " In Sync";
-                OverviewWalletForm.labelTextTotalBlockLeft.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_TOTAL_BLOCK_LEFT_TEXT") + " In Sync";
-                OverviewWalletForm.labelTextNetworkDifficulty.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_NETWORK_DIFFICULTY_TEXT") + " In Sync";
-                OverviewWalletForm.labelTextNetworkHashrate.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_NETWORK_HASHRATE_TEXT") + " In Sync";
-                OverviewWalletForm.labelTextLastBlockFound.Text = ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_LABEL_LAST_BLOCK_FOUND_TEXT") + " In Sync";
-                labelSyncInformation.Text = "Sync & Wallet disconnected.";
-                labelNoticeTotalPendingTransactionOnReceive.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_TOTAL_PENDING_TRANSACTION_ON_RECEIVE_TEXT");
-            };
-            BeginInvoke(invoke);
+            }
         }
 
         /// <summary>

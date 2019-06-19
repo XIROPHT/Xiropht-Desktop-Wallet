@@ -358,16 +358,19 @@ namespace Xiropht_Wallet.Wallet
             {
                 ClassFormPhase.WalletXiropht.HideWalletAddressQRCode();
 
-                if (!WalletClosed && !WalletInReconnect || manualDisconnection)
+                if ((!WalletClosed && !WalletInReconnect) || manualDisconnection)
                 {
-                    if (manualDisconnection)
+                    if (manualDisconnection || WalletConnect.WalletPhase == ClassWalletPhase.Create || WalletConnect.WalletPhase == ClassWalletPhase.Restore)
                     {
                         try
                         {
-                            if (!WalletCancellationToken.IsCancellationRequested)
+                            if (WalletCancellationToken != null)
                             {
-                                WalletCancellationToken.Cancel();
-                                WalletCancellationToken.Dispose();
+                                if (!WalletCancellationToken.IsCancellationRequested)
+                                {
+                                    WalletCancellationToken.Cancel();
+                                    WalletCancellationToken.Dispose();
+                                }
                             }
                         }
                         catch
@@ -390,7 +393,7 @@ namespace Xiropht_Wallet.Wallet
                         {
 
                         }
-                        WalletSyncCancellationToken = new CancellationTokenSource();
+
                         if (!obsolete)
                         {
                             try

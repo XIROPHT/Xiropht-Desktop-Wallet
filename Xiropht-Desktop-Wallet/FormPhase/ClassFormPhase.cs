@@ -96,12 +96,19 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void HideWalletMenu()
         {
-            void Invoke() => WalletXiropht.panelControlWallet.Visible = false;
-            WalletXiropht.BeginInvoke((MethodInvoker) Invoke);
-            SwitchFormPhase(ClassFormPhaseEnumeration.Main);
-            ClassParallelForm.HidePinFormAsync();
-            ClassParallelForm.HideWaitingFormAsync();
-            ClassParallelForm.HideWaitingCreateWalletFormAsync();
+            try
+            {
+                void Invoke() => WalletXiropht.panelControlWallet.Visible = false;
+                WalletXiropht.BeginInvoke((MethodInvoker)Invoke);
+                SwitchFormPhase(ClassFormPhaseEnumeration.Main);
+                ClassParallelForm.HidePinFormAsync();
+                ClassParallelForm.HideWaitingFormAsync();
+                ClassParallelForm.HideWaitingCreateWalletFormAsync();
+            }
+            catch
+            {
+
+            }
         }
 
 #if WINDOWS
