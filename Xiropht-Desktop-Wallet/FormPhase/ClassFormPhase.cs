@@ -1,5 +1,6 @@
 ﻿#if WINDOWS
 using MetroFramework;
+using System;
 #endif
 using System.Windows.Forms;
 using Xiropht_Connector_All.Setting;
@@ -50,7 +51,7 @@ namespace Xiropht_Wallet.FormPhase
         /// </summary>
         public static void ShowWalletMenu()
         {
-          WalletXiropht.BeginInvoke((MethodInvoker) delegate { WalletXiropht.panelControlWallet.Visible = true; });
+            WalletXiropht.BeginInvoke((MethodInvoker)delegate { WalletXiropht.panelControlWallet.Visible = true; });
         }
 
         /// <summary>
@@ -124,6 +125,7 @@ namespace Xiropht_Wallet.FormPhase
         {
 
             return MetroMessageBox.Show(WalletXiropht, text, title, button, icon);
+
         }
 
 #endif

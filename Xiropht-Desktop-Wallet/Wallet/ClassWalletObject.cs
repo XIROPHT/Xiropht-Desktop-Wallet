@@ -676,8 +676,6 @@ namespace Xiropht_Wallet.Wallet
             WalletConnect.WalletPhase = phase;
         }
 
-
-
         /// <summary>
         ///     Listen seed node network.
         /// </summary>
@@ -738,7 +736,7 @@ namespace Xiropht_Wallet.Wallet
 
                                                     }
 
-                                                    HandleWalletPacketAsync(packetEach.Replace("*", ""));
+                                                    await HandleWalletPacketAsync(packetEach.Replace("*", ""));
 
 #if DEBUG
                                             Log.WriteLine("Packet wallet received: " + packetEach.Replace("*", ""));
@@ -779,11 +777,11 @@ namespace Xiropht_Wallet.Wallet
         /// <summary>
         ///     Enable keep alive packet for wallet.
         /// </summary>
-        private async void EnableKeepAliveWalletAsync()
+        private void EnableKeepAliveWalletAsync()
         {
             try
             {
-                await Task.Factory.StartNew(async () =>
+                Task.Factory.StartNew(async () =>
                 {
                     await Task.Delay(2000);
                     try
@@ -818,7 +816,7 @@ namespace Xiropht_Wallet.Wallet
         ///     Handle packet wallet.
         /// </summary>
         /// <param name="packet"></param>
-        private async void HandleWalletPacketAsync(string packet)
+        private async Task HandleWalletPacketAsync(string packet)
         {
 
             try

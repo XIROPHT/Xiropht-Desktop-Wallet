@@ -8,16 +8,16 @@ namespace Xiropht_Wallet.FormPhase
     public class ClassParallelForm
     {
         public static bool PinFormShowed;
-        public static PinFormWallet PinForm = new PinFormWallet();
         public static bool WaitingFormShowed;
-        public static WaitingForm WaitingForm = new WaitingForm();
         public static bool WaitingCreateWalletFormShowed;
-        public static WaitingCreateWalletForm WaitingCreateWalletForm = new WaitingCreateWalletForm();
-
         public static bool WaitingForm2Showed;
-        public static WaitingForm WaitingForm2 = new WaitingForm();
-
         public static bool WaitingFormReconnectShowed;
+
+
+        public static PinFormWallet PinForm = new PinFormWallet();
+        public static WaitingForm WaitingForm = new WaitingForm();
+        public static WaitingCreateWalletForm WaitingCreateWalletForm = new WaitingCreateWalletForm();
+        public static WaitingForm WaitingForm2 = new WaitingForm();
         public static WaitingFormReconnect WaitingFormReconnect = new WaitingFormReconnect();
 
 
@@ -30,49 +30,55 @@ namespace Xiropht_Wallet.FormPhase
             {
                 try
                 {
-                    if (!PinFormShowed)
+                    if (PinForm != null)
                     {
-                        PinFormShowed = true;
-#if WINDOWS
-                        ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                        if (!PinFormShowed)
                         {
-                            PinForm.StartPosition = FormStartPosition.CenterParent;
-                            PinForm.TopMost = false;
-                            PinForm.ShowDialog(ClassFormPhase.WalletXiropht);
-                        });
+                            PinFormShowed = true;
+#if WINDOWS
+                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            {
+                                PinForm.StartPosition = FormStartPosition.CenterParent;
+                                PinForm.TopMost = false;
+                                PinForm.ShowDialog(ClassFormPhase.WalletXiropht);
+                            });
 #else
-                        ClassFormPhase.WalletXiropht.BeginInvoke((MethodInvoker)delegate ()
-                       {
-                           PinForm.StartPosition = FormStartPosition.CenterParent;
-                           PinForm.TopMost = true;
-                           PinForm.Show(ClassFormPhase.WalletXiropht);
-                       });
+                            ClassFormPhase.WalletXiropht.BeginInvoke((MethodInvoker)delegate ()
+                           {
+                               PinForm.StartPosition = FormStartPosition.CenterParent;
+                               PinForm.TopMost = true;
+                               PinForm.Show(ClassFormPhase.WalletXiropht);
+                           });
 #endif
+                        }
                     }
                 }
                 catch
                 {
                     PinFormShowed = false;
                 }
-            }).ConfigureAwait(false);
+            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
         }
 
         public static async void HidePinFormAsync()
         {
             await Task.Factory.StartNew(() =>
              {
-                 try
+                 if (PinForm != null)
                  {
-                     if (PinFormShowed)
+                     try
                      {
-                         ClassFormPhase.WalletXiropht.BeginInvoke((MethodInvoker)delegate { PinForm.Hide(); });
-                         PinFormShowed = false;
+                         if (PinFormShowed)
+                         {
+                             ClassFormPhase.WalletXiropht.BeginInvoke((MethodInvoker)delegate { PinForm.Hide(); });
+                             PinFormShowed = false;
+                         }
+                     }
+                     catch
+                     {
                      }
                  }
-                 catch
-                 {
-                 }
-             }).ConfigureAwait(false);
+             }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -82,36 +88,39 @@ namespace Xiropht_Wallet.FormPhase
         {
             await Task.Factory.StartNew(() =>
             {
-                if (!WaitingFormShowed)
+                if (WaitingForm != null)
                 {
-                    WaitingFormShowed = true;
-#if WINDOWS
-                    try
+                    if (!WaitingFormShowed)
                     {
-                        if (WaitingForm.Visible)
+                        WaitingFormShowed = true;
+#if WINDOWS
+                        try
                         {
-                            HideWaitingFormAsync();
+                            if (WaitingForm.Visible)
+                            {
+                                HideWaitingFormAsync();
+                            }
+                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            {
+                                WaitingForm.StartPosition = FormStartPosition.CenterParent;
+                                WaitingForm.TopMost = false;
+                                WaitingForm.ShowDialog(ClassFormPhase.WalletXiropht);
+                            });
                         }
-                        ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                        catch
+                        {
+
+                        }
+#else
+                        MethodInvoker invoke = () =>
                         {
                             WaitingForm.StartPosition = FormStartPosition.CenterParent;
-                            WaitingForm.TopMost = false;
-                            WaitingForm.ShowDialog(ClassFormPhase.WalletXiropht);
-                        });
-                    }
-                    catch
-                    {
-
-                    }
-#else
-                    MethodInvoker invoke = () =>
-                    {
-                        WaitingForm.StartPosition = FormStartPosition.CenterParent;
-                        WaitingForm.TopMost = true;
-                        WaitingForm.Show(ClassFormPhase.WalletXiropht);
-                    };
-                    ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                            WaitingForm.TopMost = true;
+                            WaitingForm.Show(ClassFormPhase.WalletXiropht);
+                        };
+                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
 #endif
+                    }
                 }
             }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
         }
@@ -123,21 +132,24 @@ namespace Xiropht_Wallet.FormPhase
         {
             await Task.Factory.StartNew(() =>
             {
-                if (WaitingFormShowed)
+                if (WaitingForm != null)
                 {
-                    WaitingFormShowed = false;
-                    try
+                    if (WaitingFormShowed)
                     {
+                        WaitingFormShowed = false;
+                        try
+                        {
 
-                        MethodInvoker invoke = () => WaitingForm.Hide();
-                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
-                    }
-                    catch
-                    {
+                            MethodInvoker invoke = () => WaitingForm.Hide();
+                            ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                        }
+                        catch
+                        {
 
+                        }
                     }
                 }
-            }).ConfigureAwait(false);
+            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
         }
 
 
@@ -148,33 +160,36 @@ namespace Xiropht_Wallet.FormPhase
         {
             await Task.Factory.StartNew(() =>
             {
-                if (!WaitingFormReconnectShowed)
+                if (WaitingFormReconnect != null)
                 {
-                    WaitingFormReconnectShowed = true;
-                    try
+                    if (!WaitingFormReconnectShowed)
                     {
-#if WINDOWS
-                        ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                        WaitingFormReconnectShowed = true;
+                        try
                         {
-                            WaitingFormReconnect.StartPosition = FormStartPosition.CenterParent;
-                            WaitingFormReconnect.TopMost = false;
-                            WaitingFormReconnect.ShowDialog(ClassFormPhase.WalletXiropht);
-                        });
+#if WINDOWS
+                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            {
+                                WaitingFormReconnect.StartPosition = FormStartPosition.CenterParent;
+                                WaitingFormReconnect.TopMost = false;
+                                WaitingFormReconnect.ShowDialog(ClassFormPhase.WalletXiropht);
+                            });
 #else
-                    ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
-                    {
-                        WaitingFormReconnect.StartPosition = FormStartPosition.CenterParent;
-                        WaitingFormReconnect.TopMost = true;
-                        WaitingFormReconnect.Show(ClassFormPhase.WalletXiropht);
-                    });
+                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            {
+                                WaitingFormReconnect.StartPosition = FormStartPosition.CenterParent;
+                                WaitingFormReconnect.TopMost = true;
+                                WaitingFormReconnect.Show(ClassFormPhase.WalletXiropht);
+                            });
 #endif
-                    }
-                    catch
-                    {
-                        WaitingFormReconnectShowed = false;
+                        }
+                        catch
+                        {
+                            WaitingFormReconnectShowed = false;
+                        }
                     }
                 }
-            }).ConfigureAwait(false);
+            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -184,19 +199,22 @@ namespace Xiropht_Wallet.FormPhase
         {
             await Task.Factory.StartNew(() =>
              {
-                 if (WaitingFormReconnectShowed)
+                 if (WaitingFormReconnect != null)
                  {
-                     WaitingFormReconnectShowed = false;
-                     try
+                     if (WaitingFormReconnectShowed)
                      {
-                         WaitingFormReconnect.Invoke((MethodInvoker)delegate { WaitingFormReconnect.Hide(); WaitingFormReconnect.Refresh(); });
-                     }
-                     catch
-                     {
+                         WaitingFormReconnectShowed = false;
+                         try
+                         {
+                             WaitingFormReconnect.Invoke((MethodInvoker)delegate { WaitingFormReconnect.Hide(); WaitingFormReconnect.Refresh(); });
+                         }
+                         catch
+                         {
 
+                         }
                      }
                  }
-             }).ConfigureAwait(false);
+             }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
         }
 
 
@@ -207,33 +225,36 @@ namespace Xiropht_Wallet.FormPhase
         {
             await Task.Factory.StartNew(() =>
             {
-                if (!WaitingForm2Showed)
+                if (WaitingForm2 != null)
                 {
-                    try
+                    if (!WaitingForm2Showed)
                     {
-                        WaitingForm2Showed = true;
-#if WINDOWS
-                        ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                        try
                         {
-                            WaitingForm2.StartPosition = FormStartPosition.CenterParent;
-                            WaitingForm2.TopMost = false;
-                            WaitingForm2.ShowDialog(ClassFormPhase.WalletXiropht);
-                        });
+                            WaitingForm2Showed = true;
+#if WINDOWS
+                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            {
+                                WaitingForm2.StartPosition = FormStartPosition.CenterParent;
+                                WaitingForm2.TopMost = false;
+                                WaitingForm2.ShowDialog(ClassFormPhase.WalletXiropht);
+                            });
 #else
-                    ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
-                   {
-                       WaitingForm2.StartPosition = FormStartPosition.CenterParent;
-                       WaitingForm2.TopMost = true;
-                       WaitingForm2.Show(ClassFormPhase.WalletXiropht);
-                   });
+                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                           {
+                               WaitingForm2.StartPosition = FormStartPosition.CenterParent;
+                               WaitingForm2.TopMost = true;
+                               WaitingForm2.Show(ClassFormPhase.WalletXiropht);
+                           });
 #endif
-                    }
-                    catch
-                    {
+                        }
+                        catch
+                        {
 
+                        }
                     }
                 }
-            }).ConfigureAwait(false);
+            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -245,17 +266,20 @@ namespace Xiropht_Wallet.FormPhase
             {
                 try
                 {
-                    if (WaitingForm2Showed)
+                    if (WaitingForm2 != null)
                     {
-                        WaitingForm2Showed = false;
-                        WaitingForm2.Invoke((MethodInvoker)delegate () { WaitingForm2.Hide(); WaitingForm2.Refresh(); });
+                        if (WaitingForm2Showed)
+                        {
+                            WaitingForm2Showed = false;
+                            WaitingForm2.Invoke((MethodInvoker)delegate () { WaitingForm2.Hide(); WaitingForm2.Refresh(); });
+                        }
                     }
                 }
                 catch
                 {
 
                 }
-            }).ConfigureAwait(false);
+            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
         }
 
 
@@ -268,31 +292,34 @@ namespace Xiropht_Wallet.FormPhase
             {
                 try
                 {
-                    if (!WaitingCreateWalletFormShowed)
+                    if (WaitingCreateWalletForm != null)
                     {
-                        WaitingCreateWalletFormShowed = true;
-#if WINDOWS
-                        ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                        if (!WaitingCreateWalletFormShowed)
                         {
-                            WaitingCreateWalletForm.StartPosition = FormStartPosition.CenterParent;
-                            WaitingCreateWalletForm.TopMost = false;
-                            WaitingCreateWalletForm.ShowDialog(ClassFormPhase.WalletXiropht);
-                        });
+                            WaitingCreateWalletFormShowed = true;
+#if WINDOWS
+                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            {
+                                WaitingCreateWalletForm.StartPosition = FormStartPosition.CenterParent;
+                                WaitingCreateWalletForm.TopMost = false;
+                                WaitingCreateWalletForm.ShowDialog(ClassFormPhase.WalletXiropht);
+                            });
 #else
-                    ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
-                   {
-                       WaitingCreateWalletForm.StartPosition = FormStartPosition.CenterParent;
-                       WaitingCreateWalletForm.TopMost = true;
-                       WaitingCreateWalletForm.Show(ClassFormPhase.WalletXiropht);
-                   });
+                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                           {
+                               WaitingCreateWalletForm.StartPosition = FormStartPosition.CenterParent;
+                               WaitingCreateWalletForm.TopMost = true;
+                               WaitingCreateWalletForm.Show(ClassFormPhase.WalletXiropht);
+                           });
 #endif
+                        }
                     }
                 }
                 catch
                 {
 
                 }
-            }).ConfigureAwait(false);
+            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -304,18 +331,21 @@ namespace Xiropht_Wallet.FormPhase
             {
                 try
                 {
-                    if (WaitingCreateWalletFormShowed)
+                    if (WaitingCreateWalletForm != null)
                     {
-                        WaitingCreateWalletFormShowed = false;
+                        if (WaitingCreateWalletFormShowed)
+                        {
+                            WaitingCreateWalletFormShowed = false;
 
-                        WaitingCreateWalletForm.Invoke((MethodInvoker)delegate { WaitingCreateWalletForm.Hide(); });
+                            WaitingCreateWalletForm.Invoke((MethodInvoker)delegate { WaitingCreateWalletForm.Hide(); });
+                        }
                     }
                 }
                 catch
                 {
 
                 }
-            }).ConfigureAwait(false);
+            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
         }
     }
 }

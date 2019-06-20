@@ -2216,7 +2216,7 @@ namespace Xiropht_Wallet
                                                                         else
                                                                         {
                                                                             #region show normal transaction sent
-                                                                            if (transactionObject.Value.TransactionType == "SEND")
+                                                                            if (transactionObject.Value.TransactionType == "SEND" && transactionObject.Value.TransactionWalletAddress != "ANONYMOUS")
                                                                             {
                                                                                 int minShow = (CurrentTransactionHistoryPageNormalSend - 1) * MaxTransactionPerPage;
                                                                                 int maxShow = CurrentTransactionHistoryPageNormalSend * MaxTransactionPerPage;
@@ -2327,7 +2327,7 @@ namespace Xiropht_Wallet
                                                                             }
                                                                             #endregion
                                                                             #region Show normal transaction received.
-                                                                            else if (transactionObject.Value.TransactionType == "RECV")
+                                                                            else if (transactionObject.Value.TransactionType == "RECV" && transactionObject.Value.TransactionWalletAddress != "ANONYMOUS")
                                                                             {
                                                                                 int minShow = (CurrentTransactionHistoryPageNormalReceive - 1) * MaxTransactionPerPage;
                                                                                 int maxShow = CurrentTransactionHistoryPageNormalReceive * MaxTransactionPerPage;
