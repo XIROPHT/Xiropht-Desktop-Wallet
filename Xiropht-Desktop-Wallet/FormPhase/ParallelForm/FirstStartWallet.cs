@@ -35,7 +35,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             ClassTranslation.ChangeCurrentLanguage(comboBoxLanguage.Items[comboBoxLanguage.SelectedIndex].ToString());
             languageSelected = true;
             UpdateLangueForm();
-            ClassFormPhase.WalletXiropht.UpdateGraphicLanguageText();
+            Program.WalletXiropht.UpdateGraphicLanguageText();
         }
 
         private void buttonEndSetting_Click(object sender, EventArgs e)

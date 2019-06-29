@@ -18,19 +18,19 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private void buttonAddContact_Click(object sender, EventArgs e)
         {
             var addContactForm = new AddContactWallet();
-            addContactForm.ShowDialog(ClassFormPhase.WalletXiropht);
+            addContactForm.ShowDialog(Program.WalletXiropht);
             addContactForm.Dispose();
         }
 
         public void GetListControl()
         {
-            if (ClassFormPhase.WalletXiropht.ListControlSizeContactWallet.Count == 0)
+            if (Program.WalletXiropht.ListControlSizeContactWallet.Count == 0)
             {
                 for (int i = 0; i < Controls.Count; i++)
                 {
                     if (i < Controls.Count)
                     {
-                        ClassFormPhase.WalletXiropht.ListControlSizeContactWallet.Add(
+                        Program.WalletXiropht.ListControlSizeContactWallet.Add(
                             new Tuple<Size, Point>(Controls[i].Size, Controls[i].Location));
                     }
                 }
@@ -40,7 +40,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private void ContactWallet_Load(object sender, EventArgs e)
         {
             UpdateStyles();
-            ClassFormPhase.WalletXiropht.ResizeWalletInterface();
+            Program.WalletXiropht.ResizeWalletInterface();
             if (!contactLoaded) // Load contact database file.
             {
                 contactLoaded = true;
@@ -83,7 +83,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 #else
                         new Thread(delegate ()
                         {
-                            MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("CONTACT_LIST_COPY_ACTION_CONTENT_TEXT"));
+                            MethodInvoker invoker = () => MessageBox.Show(Program.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("CONTACT_LIST_COPY_ACTION_CONTENT_TEXT"));
                             BeginInvoke(invoker);
                         }).Start();
 #endif

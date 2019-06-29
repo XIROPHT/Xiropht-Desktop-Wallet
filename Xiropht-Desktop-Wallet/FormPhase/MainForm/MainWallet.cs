@@ -35,13 +35,13 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public void GetListControl()
         {
-            if (ClassFormPhase.WalletXiropht.ListControlSizeMain.Count == 0)
+            if (Program.WalletXiropht.ListControlSizeMain.Count == 0)
             {
                 for (int i = 0; i < Controls.Count; i++)
                 {
                     if (i < Controls.Count)
                     {
-                        ClassFormPhase.WalletXiropht.ListControlSizeMain.Add(
+                        Program.WalletXiropht.ListControlSizeMain.Add(
                             new Tuple<Size, Point>(Controls[i].Size, Controls[i].Location));
                     }
                 }
@@ -51,7 +51,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private void Main_Load(object sender, EventArgs e)
         {
             UpdateStyles();
-            ClassFormPhase.WalletXiropht.ResizeWalletInterface();
+            Program.WalletXiropht.ResizeWalletInterface();
         }
 
 

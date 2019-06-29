@@ -25,18 +25,18 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             {
                 new Thread(async delegate ()
                 {
-                    if (!await ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect
+                    if (!await Program.WalletXiropht.ClassWalletObject.WalletConnect
                         .SendPacketWallet(
                             ClassWalletCommand.ClassWalletSendEnumeration.PinPhase + "|" + textBoxPinCode.Text,
-                            ClassFormPhase.WalletXiropht.ClassWalletObject.Certificate, true))
+                            Program.WalletXiropht.ClassWalletObject.Certificate, true))
                     {
-                        ClassFormPhase.WalletXiropht.ClassWalletObject.FullDisconnection(true);
+                        Program.WalletXiropht.ClassWalletObject.FullDisconnection(true);
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS
                     ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                        MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        MessageBox.Show(Program.WalletXiropht,
                             ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));
 #endif
                     }
@@ -52,7 +52,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
 #if WINDOWS
                 ClassFormPhase.MessageBoxInterface( ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_WARNING_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                MessageBox.Show(ClassFormPhase.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_WARNING_TEXT"));
+                MessageBox.Show(Program.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_WARNING_TEXT"));
 #endif
             }
         }
@@ -154,18 +154,18 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             {
                 new Thread(async delegate()
                 {
-                    if (!await ClassFormPhase.WalletXiropht.ClassWalletObject.WalletConnect
+                    if (!await Program.WalletXiropht.ClassWalletObject.WalletConnect
                         .SendPacketWallet(
                             ClassWalletCommand.ClassWalletSendEnumeration.PinPhase + "|" + textBoxPinCode.Text,
-                            ClassFormPhase.WalletXiropht.ClassWalletObject.Certificate, true))
+                            Program.WalletXiropht.ClassWalletObject.Certificate, true))
                     {
-                        ClassFormPhase.WalletXiropht.ClassWalletObject.FullDisconnection(true);
+                        Program.WalletXiropht.ClassWalletObject.FullDisconnection(true);
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS
                     ClassFormPhase.MessageBoxInterface(
                         ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                        MessageBox.Show(ClassFormPhase.WalletXiropht,
+                        MessageBox.Show(Program.WalletXiropht,
                             ClassTranslation.GetLanguageTextFromOrder("PIN_CODE_SUBMIT_MENU_NETWORK_ERROR_TEXT"));
 #endif
                     }

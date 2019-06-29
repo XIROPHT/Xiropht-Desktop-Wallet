@@ -47,7 +47,7 @@ namespace Xiropht_Wallet
 #if WINDOWS
                     ClassFormPhase.MessageBoxInterface( "No language files found, please reinstall your gui wallet.", "No language files found.", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                    MessageBox.Show(ClassFormPhase.WalletXiropht, "No language files found, please reinstall your gui wallet.", "No language files found.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Program.WalletXiropht, "No language files found, please reinstall your gui wallet.", "No language files found.", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #endif
                     Process.GetCurrentProcess().Kill();
                 }
@@ -131,7 +131,7 @@ namespace Xiropht_Wallet
 #if WINDOWS
                 ClassFormPhase.MessageBoxInterface( "No language folder found, please reinstall your gui wallet.", "No folder language found.", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                MessageBox.Show(ClassFormPhase.WalletXiropht, "No language folder found, please reinstall your gui wallet.", "No folder language found.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Program.WalletXiropht, "No language folder found, please reinstall your gui wallet.", "No folder language found.", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #endif
                 Process.GetCurrentProcess().Kill();
             }

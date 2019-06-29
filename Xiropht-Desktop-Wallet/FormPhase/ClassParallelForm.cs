@@ -36,18 +36,18 @@ namespace Xiropht_Wallet.FormPhase
                         {
                             PinFormShowed = true;
 #if WINDOWS
-                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
                             {
                                 PinForm.StartPosition = FormStartPosition.CenterParent;
                                 PinForm.TopMost = false;
-                                PinForm.ShowDialog(ClassFormPhase.WalletXiropht);
+                                PinForm.ShowDialog(Program.WalletXiropht);
                             });
 #else
-                            ClassFormPhase.WalletXiropht.BeginInvoke((MethodInvoker)delegate ()
+                            Program.WalletXiropht.BeginInvoke((MethodInvoker)delegate ()
                            {
                                PinForm.StartPosition = FormStartPosition.CenterParent;
                                PinForm.TopMost = true;
-                               PinForm.Show(ClassFormPhase.WalletXiropht);
+                               PinForm.Show(Program.WalletXiropht);
                            });
 #endif
                         }
@@ -70,7 +70,7 @@ namespace Xiropht_Wallet.FormPhase
                      {
                          if (PinFormShowed)
                          {
-                             ClassFormPhase.WalletXiropht.BeginInvoke((MethodInvoker)delegate { PinForm.Hide(); });
+                             Program.WalletXiropht.BeginInvoke((MethodInvoker)delegate { PinForm.Hide(); });
                              PinFormShowed = false;
                          }
                      }
@@ -100,11 +100,11 @@ namespace Xiropht_Wallet.FormPhase
                             {
                                 HideWaitingFormAsync();
                             }
-                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
                             {
                                 WaitingForm.StartPosition = FormStartPosition.CenterParent;
                                 WaitingForm.TopMost = false;
-                                WaitingForm.ShowDialog(ClassFormPhase.WalletXiropht);
+                                WaitingForm.ShowDialog(Program.WalletXiropht);
                             });
                         }
                         catch
@@ -116,9 +116,9 @@ namespace Xiropht_Wallet.FormPhase
                         {
                             WaitingForm.StartPosition = FormStartPosition.CenterParent;
                             WaitingForm.TopMost = true;
-                            WaitingForm.Show(ClassFormPhase.WalletXiropht);
+                            WaitingForm.Show(Program.WalletXiropht);
                         };
-                        ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                        Program.WalletXiropht.BeginInvoke(invoke);
 #endif
                     }
                 }
@@ -141,7 +141,7 @@ namespace Xiropht_Wallet.FormPhase
                         {
 
                             MethodInvoker invoke = () => WaitingForm.Hide();
-                            ClassFormPhase.WalletXiropht.BeginInvoke(invoke);
+                            Program.WalletXiropht.BeginInvoke(invoke);
                         }
                         catch
                         {
@@ -168,18 +168,18 @@ namespace Xiropht_Wallet.FormPhase
                         try
                         {
 #if WINDOWS
-                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
                             {
                                 WaitingFormReconnect.StartPosition = FormStartPosition.CenterParent;
                                 WaitingFormReconnect.TopMost = false;
-                                WaitingFormReconnect.ShowDialog(ClassFormPhase.WalletXiropht);
+                                WaitingFormReconnect.ShowDialog(Program.WalletXiropht);
                             });
 #else
-                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
                             {
                                 WaitingFormReconnect.StartPosition = FormStartPosition.CenterParent;
                                 WaitingFormReconnect.TopMost = true;
-                                WaitingFormReconnect.Show(ClassFormPhase.WalletXiropht);
+                                WaitingFormReconnect.Show(Program.WalletXiropht);
                             });
 #endif
                         }
@@ -233,18 +233,18 @@ namespace Xiropht_Wallet.FormPhase
                         {
                             WaitingForm2Showed = true;
 #if WINDOWS
-                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
                             {
                                 WaitingForm2.StartPosition = FormStartPosition.CenterParent;
                                 WaitingForm2.TopMost = false;
-                                WaitingForm2.ShowDialog(ClassFormPhase.WalletXiropht);
+                                WaitingForm2.ShowDialog(Program.WalletXiropht);
                             });
 #else
-                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
                            {
                                WaitingForm2.StartPosition = FormStartPosition.CenterParent;
                                WaitingForm2.TopMost = true;
-                               WaitingForm2.Show(ClassFormPhase.WalletXiropht);
+                               WaitingForm2.Show(Program.WalletXiropht);
                            });
 #endif
                         }
@@ -298,18 +298,18 @@ namespace Xiropht_Wallet.FormPhase
                         {
                             WaitingCreateWalletFormShowed = true;
 #if WINDOWS
-                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
                             {
                                 WaitingCreateWalletForm.StartPosition = FormStartPosition.CenterParent;
                                 WaitingCreateWalletForm.TopMost = false;
-                                WaitingCreateWalletForm.ShowDialog(ClassFormPhase.WalletXiropht);
+                                WaitingCreateWalletForm.ShowDialog(Program.WalletXiropht);
                             });
 #else
-                            ClassFormPhase.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
                            {
                                WaitingCreateWalletForm.StartPosition = FormStartPosition.CenterParent;
                                WaitingCreateWalletForm.TopMost = true;
-                               WaitingCreateWalletForm.Show(ClassFormPhase.WalletXiropht);
+                               WaitingCreateWalletForm.Show(Program.WalletXiropht);
                            });
 #endif
                         }

@@ -17,7 +17,7 @@ namespace Xiropht_Wallet
             }
             catch
             {
-                MessageBox.Show(ClassFormPhase.WalletXiropht, "Please be sure to have install xclip, example: sudo apt-get install xclip");
+                MessageBox.Show(Program.WalletXiropht, "Please be sure to have install xclip, example: sudo apt-get install xclip");
             }
         }
 

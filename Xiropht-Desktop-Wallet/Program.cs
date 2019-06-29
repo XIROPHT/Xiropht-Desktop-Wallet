@@ -9,6 +9,7 @@ namespace Xiropht_Wallet
     static class Program
     {
         public static CultureInfo GlobalCultureInfo = new CultureInfo("fr-FR"); // Set the global culture info, I don't suggest to change this, this one is used by the blockchain and by the whole network.
+        public static WalletXiropht WalletXiropht;
 
         /// <summary>
         /// Point d'entrée principal de l'application.
@@ -53,7 +54,8 @@ namespace Xiropht_Wallet
             Application.EnableVisualStyles();
 #endif
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new WalletXiropht()); // Start the main interface.
+            WalletXiropht = new WalletXiropht();
+            Application.Run(WalletXiropht); // Start the main interface.
 
 
         }

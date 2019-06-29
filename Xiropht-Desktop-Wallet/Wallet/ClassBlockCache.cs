@@ -85,12 +85,12 @@ namespace Xiropht_Wallet.Wallet
                     Directory.CreateDirectory(ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory + WalletBlockCacheDirectory));
                 }
                     OnLoad = false;
-                    ClassFormPhase.WalletXiropht.ClassWalletObject.TotalBlockInSync = ListBlock.Count;
-                }, ClassFormPhase.WalletXiropht.ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                    Program.WalletXiropht.ClassWalletObject.TotalBlockInSync = ListBlock.Count;
+                }, Program.WalletXiropht.ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
             }
             catch
             {
-                ClassFormPhase.WalletXiropht.ClassWalletObject.TotalBlockInSync = 0;
+                Program.WalletXiropht.ClassWalletObject.TotalBlockInSync = 0;
                 ListBlock.Clear();
                 OnLoad = false;
             }
@@ -162,8 +162,14 @@ namespace Xiropht_Wallet.Wallet
             {
                 //
             }
+            try
+            {
+                ListBlock.Clear();
+            }
+            catch
+            {
 
-            ListBlock.Clear();
+            }
             return true;
         }
     }

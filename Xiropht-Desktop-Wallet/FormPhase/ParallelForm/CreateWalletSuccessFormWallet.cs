@@ -24,7 +24,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                     ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_CONTENT_TEXT"),
                     ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
 #else
-            if (MessageBox.Show(ClassFormPhase.WalletXiropht,
+            if (MessageBox.Show(Program.WalletXiropht,
                     ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_CONTENT_TEXT"),
                     ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
 #endif
@@ -43,7 +43,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                 ClassFormPhase.MessageBoxInterface(
                     ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_SAFE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                MessageBox.Show(ClassFormPhase.WalletXiropht,
+                MessageBox.Show(Program.WalletXiropht,
                     ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_SAFE_CONTENT_TEXT"));
 #endif
             }
@@ -67,7 +67,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                              labelYourPinCode.Text);
 
 
-            MessageBox.Show(ClassFormPhase.WalletXiropht,
+            MessageBox.Show(Program.WalletXiropht,
                 ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_COPY_WALLET_INFORMATION_CONTENT_TEXT"),
                 ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_COPY_WALLET_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question);
 #endif

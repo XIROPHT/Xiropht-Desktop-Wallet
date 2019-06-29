@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Xiropht_Wallet.FormCustom;
 using Xiropht_Wallet.Wallet;
 
 namespace Xiropht_Wallet.FormPhase.MainForm
@@ -10,6 +10,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
     public sealed partial class BlockExplorerWallet : Form
     {
         public bool IsShowed;
+        private ClassPanel _panelWaitingSync;
+        public Label _labelWaitingText = new Label();
+        public bool IsShowedWaitingBlock;
 
         public BlockExplorerWallet()
         {
@@ -45,13 +48,13 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public void GetListControl()
         {
-            if (ClassFormPhase.WalletXiropht.ListControlSizeBlock.Count == 0)
+            if (Program.WalletXiropht.ListControlSizeBlock.Count == 0)
             {
                 for (int i = 0; i < Controls.Count; i++)
                 {
                     if (i < Controls.Count)
                     {
-                        ClassFormPhase.WalletXiropht.ListControlSizeBlock.Add(
+                        Program.WalletXiropht.ListControlSizeBlock.Add(
                             new Tuple<Size, Point>(Controls[i].Size, Controls[i].Location));
                     }
                 }
@@ -63,10 +66,30 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         /// </summary>
         public void ResyncBlock()
         {
+
             if (ClassBlockCache.RemoveWalletBlockCache())
             {
-                ClassFormPhase.WalletXiropht.ListBlockHashShowed.Clear();
-                ClassFormPhase.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
+                MethodInvoker invoke = () =>
+                {
+                    try
+                    {
+                        listViewBlockExplorer.Items.Clear();
+                    }
+                    catch
+                    {
+                    }
+                };
+                Program.WalletXiropht.BeginInvoke(invoke);
+                try
+                {
+                    Program.WalletXiropht.ListBlockHashShowed.Clear();
+                }
+                catch
+                {
+
+                }
+                Program.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
+                Program.WalletXiropht.StopUpdateBlockHistory(true, false);
             }
         }
 
@@ -76,12 +99,106 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             UpdateStyles();
             listViewBlockExplorer.ListViewItemSorter = new ListViewComparer(0, SortOrder.Descending);
 
-            ClassFormPhase.WalletXiropht.ResizeWalletInterface();
+
+            _panelWaitingSync = new ClassPanel
+            {
+                Width = (int)(Width / 1.5f),
+                Height = (int)(Height / 5.5f),
+                BackColor = Color.LightBlue
+            };
+            _panelWaitingSync.Location = new Point()
+            {
+                X = Program.WalletXiropht.BlockWalletForm.Width / 2 - _panelWaitingSync.Width / 2,
+                Y = Program.WalletXiropht.BlockWalletForm.Height / 2 - _panelWaitingSync.Height / 2
+            };
+
+            _labelWaitingText.AutoSize = true;
+            _labelWaitingText.Font = new Font(_labelWaitingText.Font.FontFamily, 9f, FontStyle.Bold);
+            _labelWaitingText.Text = ClassTranslation.GetLanguageTextFromOrder("WAITING_MENU_LABEL_TEXT");
+            _panelWaitingSync.Controls.Add(_labelWaitingText);
+            _labelWaitingText.Location = new Point()
+            {
+                X = _panelWaitingSync.Width / 2 - _labelWaitingText.Width / 2,
+                Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
+            };
+            _labelWaitingText.Show();
+            Controls.Add(_panelWaitingSync);
+            _panelWaitingSync.Show();
+            IsShowed = true;
+            Program.WalletXiropht.ResizeWalletInterface();
         }
 
         private void Block_Resize(object sender, EventArgs e)
         {
             UpdateStyles();
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            if (_panelWaitingSync != null)
+            {
+                _panelWaitingSync.Width = (int)(Width / 1.5f);
+                _panelWaitingSync.Height = (int)(Height / 5.5f);
+                _panelWaitingSync.Location = new Point()
+                {
+                    X = Program.WalletXiropht.BlockWalletForm.Width / 2 -
+                        _panelWaitingSync.Width / 2,
+                    Y = Program.WalletXiropht.BlockWalletForm.Height / 2 -
+                        _panelWaitingSync.Height / 2
+                };
+                _labelWaitingText.Location = new Point()
+                {
+                    X = _panelWaitingSync.Width / 2 - _labelWaitingText.Width / 2,
+                    Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
+                };
+                Refresh();
+            }
+
+            base.OnResize(e);
+        }
+
+        public void ShowWaitingSyncBlockPanel()
+        {
+            if (!IsShowedWaitingBlock)
+            {
+                Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                {
+                    _panelWaitingSync.Visible = true;
+                    _panelWaitingSync.Show();
+                    _panelWaitingSync.BringToFront();
+                    _panelWaitingSync.Width = (int)(Width / 1.5f);
+                    _panelWaitingSync.Height = (int)(Height / 5.5f);
+                    _panelWaitingSync.Location = new Point()
+                    {
+                        X = Program.WalletXiropht.BlockWalletForm.Width / 2 -
+                            _panelWaitingSync.Width / 2,
+                        Y = Program.WalletXiropht.BlockWalletForm.Height / 2 -
+                            _panelWaitingSync.Height / 2
+                    };
+                    _labelWaitingText.Location = new Point()
+                    {
+                        X = _panelWaitingSync.Width / 2 - _labelWaitingText.Width / 2,
+                        Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
+                    };
+                    IsShowedWaitingBlock = true;
+                    Refresh();
+
+                });
+            }
+        }
+
+        public void HideWaitingSyncBlockPanel()
+        {
+            if (IsShowedWaitingBlock)
+            {
+                Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                {
+                    _panelWaitingSync.Visible = false;
+                    _panelWaitingSync.Hide();
+                    IsShowedWaitingBlock = false;
+                    Refresh();
+                });
+            }
         }
 
 
@@ -107,7 +224,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             LinuxClipboard.SetText(item.SubItems[ix].Text);
                             Task.Factory.StartNew(() =>
                             {
-                                MethodInvoker invoker = () => MessageBox.Show(ClassFormPhase.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                MethodInvoker invoker = () => MessageBox.Show(Program.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
                                 BeginInvoke(invoker);
                             }).ConfigureAwait(false);
 #endif
@@ -128,8 +245,6 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         /// </summary>
         public void SortingBlockExplorer()
         {
-
-
             MethodInvoker invoke = () => listViewBlockExplorer.Sort();
             listViewBlockExplorer.BeginInvoke(invoke);
         }

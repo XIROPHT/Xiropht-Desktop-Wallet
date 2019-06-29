@@ -120,7 +120,7 @@ namespace Xiropht_Wallet
         public WalletXiropht()
         {
 
-            ClassFormPhase.WalletXiropht = this;
+            Program.WalletXiropht = this;
             MainWalletForm = new MainWallet();
             OpenWalletForm = new OpenWallet();
             OverviewWalletForm = new OverviewWallet();
@@ -140,7 +140,7 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject != null)
             {
-                ClassFormPhase.WalletXiropht.ClassWalletObject.FullDisconnection(true, true);
+                Program.WalletXiropht.ClassWalletObject.FullDisconnection(true, true);
                 ClassWalletObject.Dispose();
                 ClassWalletObject = null;
             }
@@ -575,6 +575,10 @@ namespace Xiropht_Wallet
             BlockWalletForm.listViewBlockExplorer.Columns[4].Text = ClassTranslation.GetLanguageTextFromOrder("GRID_BLOCK_EXPLORER_COLUMN_DATE_CREATE_TEXT");
             BlockWalletForm.listViewBlockExplorer.Columns[5].Text = ClassTranslation.GetLanguageTextFromOrder("GRID_BLOCK_EXPLORER_COLUMN_DATE_FOUND_TEXT");
             BlockWalletForm.listViewBlockExplorer.Columns[6].Text = ClassTranslation.GetLanguageTextFromOrder("GRID_BLOCK_EXPLORER_COLUMN_TRANSACTION_HASH_TEXT");
+            if (BlockWalletForm._labelWaitingText != null)
+            {
+                BlockWalletForm._labelWaitingText.Text = ClassTranslation.GetLanguageTextFromOrder("WAITING_MENU_LABEL_TEXT");
+            }
 #if WINDOWS
             BlockWalletForm.Refresh();
 #endif
@@ -706,6 +710,10 @@ namespace Xiropht_Wallet
             TransactionHistoryWalletForm.tabPageNormalTransactionReceived.Text = ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_TAB_NORMAL_RECEIVED_TRANSACTION_LIST_TEXT");
             TransactionHistoryWalletForm.tabPageAnonymityTransactionReceived.Text = ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_TAB_ANONYMOUS_RECEIVE_TRANSACTION_LIST_TEXT");
             TransactionHistoryWalletForm.tabPageBlockRewardTransaction.Text = ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_TAB_BLOCK_REWARD_RECEIVED_LIST_TEXT");
+            if (TransactionHistoryWalletForm._labelWaitingText != null)
+            {
+                TransactionHistoryWalletForm._labelWaitingText.Text = ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_WAITING_MESSAGE_SYNC_TEXT");
+            }
 #if WINDOWS
             TransactionHistoryWalletForm.Refresh();
 #endif
@@ -929,7 +937,7 @@ namespace Xiropht_Wallet
             {
                 Height += 10;
             }
-            if (ClassFormPhase.WalletXiropht != null) // Get list of all controls of each menu.
+            if (Program.WalletXiropht != null) // Get list of all controls of each menu.
             {
                 MainWalletForm.GetListControl();
                 OverviewWalletForm.GetListControl();
@@ -3175,149 +3183,181 @@ namespace Xiropht_Wallet
         {
             if (ClassWalletObject.SeedNodeConnectorWallet == null)
                 return;
-            if (!EnableUpdateBlockWallet)
+
+            try
             {
-                EnableUpdateBlockWallet = true;
-
-
-                Task.Factory.StartNew(async () =>
+                if (!EnableUpdateBlockWallet)
                 {
-                    while (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                    EnableUpdateBlockWallet = true;
+
+
+                    Task.Factory.StartNew(async () =>
                     {
-                        if (!ClassBlockCache.OnLoad)
+                        while (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
                         {
-                            try
+                            if (!ClassBlockCache.OnLoad)
                             {
-                                if (!ClassWalletObject.InSyncBlock)
+                                try
                                 {
-                                    int minShow = ((CurrentBlockExplorerPage - 1) * MaxBlockPerPage);
-                                    int maxShow = (CurrentBlockExplorerPage * MaxBlockPerPage);
-
-                                    for (int i = minShow; i < maxShow; i++)
+                                    if (!ClassWalletObject.InSyncBlock)
                                     {
-
-                                        if (i < ClassBlockCache.ListBlock.Count)
+                                        if (BlockWalletForm.IsShowed)
                                         {
-                                            int blockTarget = (ClassBlockCache.ListBlock.Count - 1) - i;
-                                            var blockObject = ClassBlockCache.ListBlock.ElementAt(blockTarget).Value;
-                                            int blockId = int.Parse(blockObject.BlockHeight);
-                                            if (!ListBlockHashShowed.ContainsKey(blockId))
+                                            BlockWalletForm.HideWaitingSyncBlockPanel();
+                                        }
+                                        int minShow = ((CurrentBlockExplorerPage - 1) * MaxBlockPerPage);
+                                        int maxShow = (CurrentBlockExplorerPage * MaxBlockPerPage);
+
+                                        for (int i = minShow; i < maxShow; i++)
+                                        {
+
+                                            if (i < ClassBlockCache.ListBlock.Count)
                                             {
-                                                ListBlockHashShowed.Add(blockId, blockObject.BlockHash);
-
-                                                DateTime dateTimeCreate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                dateTimeCreate = dateTimeCreate.AddSeconds(int.Parse(blockObject.BlockTimestampCreate));
-                                                dateTimeCreate = dateTimeCreate.ToLocalTime();
-                                                DateTime dateTimeFound = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                dateTimeFound = dateTimeFound.AddSeconds(int.Parse(blockObject.BlockTimestampFound));
-                                                dateTimeFound = dateTimeFound.ToLocalTime();
-
-                                                string[] row =
+                                                int blockTarget = (ClassBlockCache.ListBlock.Count - 1) - i;
+                                                var blockObject = ClassBlockCache.ListBlock.ElementAt(blockTarget).Value;
+                                                int blockId = int.Parse(blockObject.BlockHeight);
+                                                if (!ListBlockHashShowed.ContainsKey(blockId))
                                                 {
+                                                    ListBlockHashShowed.Add(blockId, blockObject.BlockHash);
+
+                                                    DateTime dateTimeCreate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                    dateTimeCreate = dateTimeCreate.AddSeconds(int.Parse(blockObject.BlockTimestampCreate));
+                                                    dateTimeCreate = dateTimeCreate.ToLocalTime();
+                                                    DateTime dateTimeFound = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                    dateTimeFound = dateTimeFound.AddSeconds(int.Parse(blockObject.BlockTimestampFound));
+                                                    dateTimeFound = dateTimeFound.ToLocalTime();
+
+                                                    string[] row =
+                                                    {
                                                                 blockObject.BlockHeight, blockObject.BlockHash,
                                                                 blockObject.BlockReward, blockObject.BlockDifficulty, dateTimeCreate.ToString(CultureInfo.InvariantCulture),
                                                                 dateTimeFound.ToString(CultureInfo.InvariantCulture), blockObject.BlockTransactionHash
-                                            };
-                                                var listViewItem = new ListViewItem(row);
+                                                    };
+                                                    var listViewItem = new ListViewItem(row);
 
 
-                                                if (TotalBlockRead < maxShow)
+                                                    if (TotalBlockRead < maxShow)
+                                                    {
+                                                        void Invoker() => BlockWalletForm.listViewBlockExplorer.Items.Add(listViewItem);
+
+                                                        BeginInvoke((MethodInvoker)Invoker);
+                                                        TotalBlockRead++;
+
+                                                    }
+                                                    else
+                                                    {
+
+                                                        void Invoker() => BlockWalletForm.listViewBlockExplorer.Items.Insert(0, listViewItem);
+
+                                                        BeginInvoke((MethodInvoker)Invoker);
+                                                        TotalBlockRead++;
+                                                    }
+
+                                                }
+                                            }
+
+                                            if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.BlockExplorer)
+                                            {
+                                                if (ClassWalletObject.InSyncBlock)
                                                 {
-                                                    void Invoker() => BlockWalletForm.listViewBlockExplorer.Items.Add(listViewItem);
-
-                                                    BeginInvoke((MethodInvoker)Invoker);
-
+                                                    UpdateLabelSyncInformation(
+                                                        "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count + "/" +
+                                                        ClassWalletObject.TotalBlockInSync + ".");
                                                 }
                                                 else
                                                 {
-                                                    void Invoker() => BlockWalletForm.listViewBlockExplorer.Items.Insert(0, listViewItem);
-
-                                                    BeginInvoke((MethodInvoker)Invoker);
-
+                                                    UpdateLabelSyncInformation(
+                                                        "Total blocks loaded: " + ClassBlockCache.ListBlock.Count + "/" +
+                                                        ClassWalletObject.TotalBlockInSync + ".");
                                                 }
-                                                TotalBlockRead++;
 
                                             }
                                         }
 
-                                        if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.BlockExplorer)
+                                        if (BlockWalletForm.IsShowed)
                                         {
-                                            if (ClassWalletObject.InSyncBlock)
+                                            if (BlockWalletForm.listViewBlockExplorer.Items.Count > 0)
+                                            {
+                                                BlockWalletForm.SortingBlockExplorer();
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (BlockWalletForm.IsShowed)
+                                        {
+                                            BlockWalletForm.ShowWaitingSyncBlockPanel();
+                                        }
+                                    }
+                                }
+                                catch (Exception error)
+                                {
+#if DEBUG
+                                        Log.WriteLine("Error loading blocks: " + error.Message);
+#endif
+                                    await Task.Factory.StartNew(() => StopUpdateBlockHistory(true, false), ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                                    break;
+                                }
+                            }
+
+                            try
+                            {
+                                if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.BlockExplorer)
+                                {
+                                    if (ClassWalletObject.InSyncBlock)
+                                    {
+                                        UpdateLabelSyncInformation(
+                                            "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count + "/" +
+                                            ClassWalletObject.TotalBlockInSync + ".");
+                                    }
+                                    else
+                                    {
+                                        UpdateLabelSyncInformation(
+                                            "Total blocks loaded: " + ClassBlockCache.ListBlock.Count + "/" +
+                                            ClassWalletObject.TotalBlockInSync + ".");
+                                    }
+                                }
+                                if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.Overview)
+                                {
+                                    if (ClassWalletObject.InSyncBlock && !ClassWalletObject.InSyncTransactionAnonymity && !ClassWalletObject.InSyncTransaction)
+                                    {
+                                        try
+                                        {
+
+                                            if (ClassConnectorSetting.SeedNodeIp.ContainsKey(ClassWalletObject.ListWalletConnectToRemoteNode[9].RemoteNodeHost))
                                             {
                                                 UpdateLabelSyncInformation(
                                                     "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count + "/" +
-                                                    ClassWalletObject.TotalBlockInSync + ".");
+                                                    ClassWalletObject.TotalBlockInSync + " from Seed Node : " + ClassWalletObject.ListWalletConnectToRemoteNode[9].RemoteNodeHost + " | "+ClassConnectorSetting.SeedNodeIp[ClassWalletObject.ListWalletConnectToRemoteNode[9].RemoteNodeHost].Item1+".");
                                             }
                                             else
                                             {
                                                 UpdateLabelSyncInformation(
-                                                    "Total blocks loaded: " + ClassBlockCache.ListBlock.Count + "/" +
-                                                    ClassWalletObject.TotalBlockInSync + ".");
+                                                    "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count + "/" +
+                                                    ClassWalletObject.TotalBlockInSync + " from node: " + ClassWalletObject.ListWalletConnectToRemoteNode[9].RemoteNodeHost + ".");
                                             }
 
                                         }
-                                    }
-
-                                    if (BlockWalletForm.IsShowed)
-                                    {
-                                        if (BlockWalletForm.listViewBlockExplorer.Items.Count > 0)
+                                        catch
                                         {
-                                            BlockWalletForm.SortingBlockExplorer();
+
                                         }
                                     }
                                 }
                             }
-                            catch (Exception error)
+                            catch
                             {
-#if DEBUG
-                                        Log.WriteLine("Error loading blocks: " + error.Message);
-#endif
-                                await Task.Factory.StartNew(() => StopUpdateBlockHistory(false, false), CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current);
+
                             }
+
+                            await Task.Delay(ThreadUpdateTransactionWalletInterval);
                         }
-
-                        if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.BlockExplorer)
-                        {
-                            if (ClassWalletObject.InSyncBlock)
-                            {
-                                UpdateLabelSyncInformation(
-                                    "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count + "/" +
-                                    ClassWalletObject.TotalBlockInSync + ".");
-                            }
-                            else
-                            {
-                                UpdateLabelSyncInformation(
-                                    "Total blocks loaded: " + ClassBlockCache.ListBlock.Count + "/" +
-                                    ClassWalletObject.TotalBlockInSync + ".");
-                            }
-                        }
-                        if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.Overview)
-                        {
-                            if (ClassWalletObject.InSyncBlock && !ClassWalletObject.InSyncTransactionAnonymity && !ClassWalletObject.InSyncTransaction)
-                            {
-                                try
-                                {
-                                    try
-                                    {
-                                        UpdateLabelSyncInformation(
-                                            "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count + "/" +
-                                            ClassWalletObject.TotalBlockInSync + " from node: " + ClassWalletObject.ListWalletConnectToRemoteNode[9].RemoteNodeHost + ".");
-                                    }
-                                    catch
-                                    {
-
-                                    }
-                                }
-                                catch
-                                {
-
-                                }
-                            }
-                        }
-
-                        await Task.Delay(ThreadUpdateTransactionWalletInterval);
-                    }
-                }, ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(false);
+                    }, ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(false);
+                }
+            }
+            catch
+            {
+                EnableUpdateBlockWallet = false;
             }
         }
 
@@ -3410,25 +3450,34 @@ namespace Xiropht_Wallet
         /// <summary>
         /// Disable update block history.
         /// </summary>
-        public void StopUpdateBlockHistory(bool fullStop, bool switchPage)
+        public void StopUpdateBlockHistory(bool restart, bool switchPage)
         {
-            if (!switchPage)
+            try
             {
-                CurrentBlockExplorerPage = 1;
-                TotalBlockRead = 0;
-                ListBlockHashShowed.Clear();
-                EnableUpdateBlockWallet = false;
-                void MethodInvoker() => BlockWalletForm.listViewBlockExplorer.Items.Clear();
-                BeginInvoke((MethodInvoker)MethodInvoker);
+                if (!switchPage)
+                {
+                    CurrentBlockExplorerPage = 1;
+                    TotalBlockRead = 0;
+                    ListBlockHashShowed.Clear();
+                    EnableUpdateBlockWallet = false;
+                    void MethodInvoker() => BlockWalletForm.listViewBlockExplorer.Items.Clear();
+                    BeginInvoke((MethodInvoker)MethodInvoker);
+                }
+                else
+                {
+                    TotalBlockRead = 0;
+                    ListBlockHashShowed.Clear();
+                    void MethodInvoker() => BlockWalletForm.listViewBlockExplorer.Items.Clear();
+                    BeginInvoke((MethodInvoker)MethodInvoker);
+                }
+                if (restart)
+                {
+                    EnableUpdateBlockWallet = false;
+                    StartUpdateBlockSync();
+                }
             }
-            else
-            {
-                TotalBlockRead = 0;
-                ListBlockHashShowed.Clear();
-                void MethodInvoker() => BlockWalletForm.listViewBlockExplorer.Items.Clear();
-                BeginInvoke((MethodInvoker)MethodInvoker);
-            }
-
+            catch { 
+}
         }
 
         #endregion
@@ -3446,7 +3495,7 @@ namespace Xiropht_Wallet
                 {
                     if (Height > BaseInterfaceHeight || Width > BaseInterfaceWidth)
                     {
-                        if (ClassFormPhase.WalletXiropht != null)
+                        if (Program.WalletXiropht != null)
                         {
                             if ((CurrentInterfaceWidth != Width && Width >= BaseInterfaceWidth) ||
                                 (CurrentInterfaceHeight != Height && Height >= BaseInterfaceHeight))
@@ -3904,7 +3953,9 @@ namespace Xiropht_Wallet
                                                 bool ignore =
                                                     BlockWalletForm.Controls[i1] is DataGridView ||
                                                     BlockWalletForm.Controls[i1] is ListView ||
-                                                    BlockWalletForm.Controls[i1] is TabPage;
+                                                    BlockWalletForm.Controls[i1] is TabPage ||
+                                                    BlockWalletForm.Controls[i1] is Panel;
+
                                                 if (!ignore)
                                                 {
                                                     var currentWidth = BaseInterfaceWidth;
@@ -4162,7 +4213,8 @@ namespace Xiropht_Wallet
                                             bool ignore =
                                                 BlockWalletForm.Controls[i1] is DataGridView ||
                                                 BlockWalletForm.Controls[i1] is ListView ||
-                                                BlockWalletForm.Controls[i1] is TabPage;
+                                                BlockWalletForm.Controls[i1] is TabPage ||
+                                                BlockWalletForm.Controls[i1] is Panel;
 
                                             if (!ignore)
                                             {
@@ -4211,7 +4263,7 @@ namespace Xiropht_Wallet
                     }
                     else // Restore interface size.
                     {
-                        if (ClassFormPhase.WalletXiropht != null)
+                        if (Program.WalletXiropht != null)
                         {
                             if (ListControlSizeBase.Count > 0)
                             {
@@ -4702,7 +4754,7 @@ namespace Xiropht_Wallet
             {
                 int elementIdFound = 0;
                 bool elementFound = false;
-                foreach (var blockObject in ClassBlockCache.ListBlock)
+                foreach (var blockObject in ClassBlockCache.ListBlock.ToArray())
                 {
                     if (!elementFound)
                     {
@@ -4831,7 +4883,7 @@ namespace Xiropht_Wallet
                         decimal transactionRecvAnonymousCounter = 0;
 
 
-                        foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction)
+                        foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction.ToArray())
                         {
                             if (!elementFound)
                             {
@@ -4960,7 +5012,7 @@ namespace Xiropht_Wallet
                         else
                         {
                             elementIdFound = 0;
-                            foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction)
+                            foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction.ToArray())
                             {
                                 if (!elementFound)
                                 {
@@ -5032,7 +5084,7 @@ namespace Xiropht_Wallet
                             StartPosition = FormStartPosition.CenterParent
                         };
 
-                        foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction)
+                        foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction.ToArray())
                         {
                             switch (transactionObject.Value.TransactionType)
                             {
@@ -5135,7 +5187,7 @@ namespace Xiropht_Wallet
                             }
                         }
 
-                        foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction)
+                        foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction.ToArray())
                         {
                             TotalTransactionAnonymousSend++;
 
@@ -5199,7 +5251,7 @@ namespace Xiropht_Wallet
                         };
 
 
-                        foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction)
+                        foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction.ToArray())
                         {
                             switch (transactionObject.Value.TransactionType)
                             {
@@ -5302,7 +5354,7 @@ namespace Xiropht_Wallet
                             }
                         }
 
-                        foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction)
+                        foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction.ToArray())
                         {
                             TotalTransactionAnonymousSend++;
                             if (transactionObject.Value.TransactionWalletAddress == walletAddressFromContactName)
@@ -5373,7 +5425,7 @@ namespace Xiropht_Wallet
             {
                 int elementIdFound = 0;
                 bool elementFound = false;
-                foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction)
+                foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction.ToArray())
                 {
                     if (!elementFound)
                     {
@@ -5395,7 +5447,7 @@ namespace Xiropht_Wallet
                 else
                 {
                     elementIdFound = 0;
-                    foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction)
+                    foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction.ToArray())
                     {
                         if (!elementFound)
                         {
@@ -5497,7 +5549,7 @@ namespace Xiropht_Wallet
 
                                                     if (ClassWalletTransactionCache.ListTransaction.Count > 0)
                                                     {
-                                                        foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction)
+                                                        foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction.ToArray())
                                                         {
                                                             DateTime dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
                                                             dateTimeSend = dateTimeSend.AddSeconds(transactionObject.Value.TransactionTimestampSend);
@@ -5523,7 +5575,7 @@ namespace Xiropht_Wallet
 
                                                     if (ClassWalletTransactionAnonymityCache.ListTransaction.Count > 0)
                                                     {
-                                                        foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction)
+                                                        foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction.ToArray())
                                                         {
                                                             DateTime dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
                                                             dateTimeSend = dateTimeSend.AddSeconds(transactionObject.Value.TransactionTimestampSend);

@@ -41,6 +41,7 @@
             this.labelLoadingNetwork.Size = new System.Drawing.Size(228, 20);
             this.labelLoadingNetwork.TabIndex = 0;
             this.labelLoadingNetwork.Text = "Please wait a little moment.";
+            this.labelLoadingNetwork.Click += new System.EventHandler(this.labelLoadingNetwork_Click);
             // 
             // buttonClose
             // 

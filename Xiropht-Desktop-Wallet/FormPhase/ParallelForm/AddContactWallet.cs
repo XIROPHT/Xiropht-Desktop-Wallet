@@ -32,7 +32,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
 #endif
                     string[] objectContact = { textBoxContactName.Text, textBoxContactWalletAddress.Text, "X" };
                     ListViewItem itemContact = new ListViewItem(objectContact);
-                    ClassFormPhase.WalletXiropht.ContactWalletForm.listViewExContact.Items.Add(itemContact);
+                    Program.WalletXiropht.ContactWalletForm.listViewExContact.Items.Add(itemContact);
                     Close();
                 }
             }

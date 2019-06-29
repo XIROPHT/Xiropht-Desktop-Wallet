@@ -17,7 +17,7 @@ namespace Xiropht_Wallet
             string syncModeSetting = "SYNC-MODE-SETTING=";
             string syncModeManualHostSetting = "SYNC-MODE-MANUAL-HOST-SETTING=";
 
-            switch (ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncMode)
+            switch (Program.WalletXiropht.ClassWalletObject.WalletSyncMode)
             {
                 case 0:
                     syncModeSetting += "0";
@@ -29,7 +29,7 @@ namespace Xiropht_Wallet
                     break;
                 case 2:
                     syncModeSetting += "2";
-                    syncModeManualHostSetting += ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncHostname;
+                    syncModeManualHostSetting += Program.WalletXiropht.ClassWalletObject.WalletSyncHostname;
                     break;
                 default:
                     syncModeSetting += "0";
@@ -72,20 +72,20 @@ namespace Xiropht_Wallet
                         {
                             if (line.Replace("SYNC-MODE-SETTING=", "") == "0")
                             {
-                                ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_DEFAULT;
+                                Program.WalletXiropht.ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_DEFAULT;
                             }
                             else if (line.Replace("SYNC-MODE-SETTING=", "") == "1")
                             {
-                                ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE;
+                                Program.WalletXiropht.ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE;
                             }
                             else if (line.Replace("SYNC-MODE-SETTING=", "") == "2")
                             {
-                                ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE;
+                                Program.WalletXiropht.ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE;
                             }
                         }
                         else if (line.Contains("SYNC-MODE-MANUAL-HOST-SETTING="))
                         {
-                            ClassFormPhase.WalletXiropht.ClassWalletObject.WalletSyncHostname = line.Replace("SYNC-MODE-MANUAL-HOST-SETTING=", "");
+                            Program.WalletXiropht.ClassWalletObject.WalletSyncHostname = line.Replace("SYNC-MODE-MANUAL-HOST-SETTING=", "");
                         }
                         else if (line.Contains("CURRENT-WALLET-LANGUAGE="))
                         {

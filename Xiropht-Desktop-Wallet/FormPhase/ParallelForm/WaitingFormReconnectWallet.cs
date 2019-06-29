@@ -18,7 +18,7 @@ namespace Xiropht_Wallet.FormPhase
 
         private void ButtonClose_Click(object sender, EventArgs e)
         {
-            ClassFormPhase.WalletXiropht.ClassWalletObject.FullDisconnection(true);
+            Program.WalletXiropht.ClassWalletObject.FullDisconnection(true);
             Hide();
         }
     }
