@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MetroFramework;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -569,7 +570,7 @@ namespace Xiropht_Wallet.Wallet
 #if WINDOWS
                                  await Task.Factory.StartNew(() =>
                                  {
-                                     ClassFormPhase.MessageBoxInterface(
+                                     MetroMessageBox.Show(Program.WalletXiropht,
                                          ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SUCCESS_CONNECT_WALLET_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SUCCESS_CONNECT_WALLET_TITLE_TEXT"), MessageBoxButtons.OK,
                                          MessageBoxIcon.Information);
                                  }).ConfigureAwait(false);
@@ -746,7 +747,7 @@ namespace Xiropht_Wallet.Wallet
                                                     await HandleWalletPacketAsync(packetEach.Replace("*", ""));
 
 #if DEBUG
-                                            Log.WriteLine("Packet wallet received: " + packetEach.Replace("*", ""));
+                                                   Log.WriteLine("Packet wallet received: " + packetEach.Replace("*", ""));
 #endif
                                                 }
                                             }

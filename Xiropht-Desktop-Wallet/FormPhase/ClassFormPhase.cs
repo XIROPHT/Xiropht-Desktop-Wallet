@@ -32,7 +32,6 @@ namespace Xiropht_Wallet.FormPhase
         public static void InitializeMainInterface(WalletXiropht wallet)
         {
             Program.WalletXiropht.SwitchForm(ClassFormPhaseEnumeration.Main);
-
         }
 
         /// <summary>
