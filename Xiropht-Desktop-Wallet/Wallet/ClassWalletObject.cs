@@ -1459,7 +1459,6 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                         Log.WriteLine("The wallet address is not valid, please check it.");
 #endif
-                        await Task.Factory.StartNew(delegate { FullDisconnection(true); }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(false);
 
                         break;
                     case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletBanPhase:

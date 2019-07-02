@@ -485,7 +485,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // timerRefresh
             // 
             this.timerRefresh.Enabled = true;
-            this.timerRefresh.Interval = 2000;
+            this.timerRefresh.Interval = 100;
             this.timerRefresh.Tick += new System.EventHandler(this.timerRefresh_Tick);
             // 
             // TransactionHistoryWallet
