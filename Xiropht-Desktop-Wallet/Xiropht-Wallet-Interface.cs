@@ -3201,7 +3201,7 @@ namespace Xiropht_Wallet
                             {
                                 try
                                 {
-                                    if (!ClassWalletObject.InSyncBlock)
+                                    if (!ClassWalletObject.InSyncBlock || ClassBlockCache.ListBlock.Count >= ClassWalletObject.TotalBlockInSync)
                                     {
                                         if (BlockWalletForm.IsShowed)
                                         {
