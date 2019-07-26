@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Xiropht_Connector_All.Setting;
 using Xiropht_Connector_All.Wallet;
 using Xiropht_Wallet.Wallet;
 
@@ -87,9 +88,13 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                  Program.WalletXiropht.ClassWalletObject.WalletNewPassword = walletPassword;
                                  Program.WalletXiropht.ClassWalletObject.WalletPrivateKeyEncryptedQRCode = walletKey;
 
-                                 await Task.Delay(100);
+
+                                 ClassParallelForm.ShowWaitingFormAsync();
+
+                                 await Task.Delay(ClassConnectorSetting.MaxTimeoutSendPacket);
                                  if (!await Program.WalletXiropht.ClassWalletObject.SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassWalletCommand.ClassWalletSendEnumeration.AskPhase + "|" + requestRestoreQrCodeEncrypted, Program.WalletXiropht.ClassWalletObject.Certificate, false, true))
                                  {
+                                     ClassParallelForm.HideWaitingFormAsync();
 #if WINDOWS
                                     ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
@@ -113,7 +118,6 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                      }
                      else
                      {
-                         ClassParallelForm.ShowWaitingFormAsync();
 #if WINDOWS
                          ClassFormPhase.MessageBoxInterface(
                              ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -1,9 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Text;
 using Xiropht_Connector_All.Utils;
 using Xiropht_Connector_All.Wallet;
 using ZXing;

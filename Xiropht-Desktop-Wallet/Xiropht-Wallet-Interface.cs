@@ -3298,8 +3298,7 @@ namespace Xiropht_Wallet
 #if DEBUG
                                         Log.WriteLine("Error loading blocks: " + error.Message);
 #endif
-                                    await Task.Factory.StartNew(() => StopUpdateBlockHistory(true, false), ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
-                                    break;
+                                    Console.WriteLine("Error loading blocks: " + error.Message);
                                 }
                             }
 
