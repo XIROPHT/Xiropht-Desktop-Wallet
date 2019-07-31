@@ -43,6 +43,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.checkBoxHideWalletAddress = new System.Windows.Forms.CheckBox();
             this.buttonFeeInformation = new System.Windows.Forms.Button();
             this.buttonEstimatedTimeInformation = new System.Windows.Forms.Button();
+            this.textBoxTotalSpend = new System.Windows.Forms.TextBox();
+            this.labelLabelTotalSpend = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelWalletDestination
@@ -101,6 +103,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.textBoxAmount.Size = new System.Drawing.Size(264, 20);
             this.textBoxAmount.TabIndex = 11;
             this.textBoxAmount.Text = "0.00000000";
+            this.textBoxAmount.TextChanged += new System.EventHandler(this.textBoxAmount_TextChanged);
             // 
             // buttonSendTransaction
             // 
@@ -118,6 +121,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.textBoxFee.Size = new System.Drawing.Size(264, 20);
             this.textBoxFee.TabIndex = 9;
             this.textBoxFee.Text = "0.00001000";
+            this.textBoxFee.TextChanged += new System.EventHandler(this.textBoxFee_TextChanged);
             // 
             // textBoxTransactionTime
             // 
@@ -144,12 +148,13 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.checkBoxHideWalletAddress.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
             this.checkBoxHideWalletAddress.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBoxHideWalletAddress.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.checkBoxHideWalletAddress.Location = new System.Drawing.Point(250, 334);
+            this.checkBoxHideWalletAddress.Location = new System.Drawing.Point(253, 371);
             this.checkBoxHideWalletAddress.Name = "checkBoxHideWalletAddress";
             this.checkBoxHideWalletAddress.Size = new System.Drawing.Size(302, 19);
             this.checkBoxHideWalletAddress.TabIndex = 20;
             this.checkBoxHideWalletAddress.Text = "Option - Hide Your Wallet Address on receiver side.";
             this.checkBoxHideWalletAddress.UseVisualStyleBackColor = true;
+            this.checkBoxHideWalletAddress.CheckedChanged += new System.EventHandler(this.checkBoxHideWalletAddress_CheckedChanged);
             this.checkBoxHideWalletAddress.Click += new System.EventHandler(this.CheckBoxHideWalletAddress_Click);
             // 
             // buttonFeeInformation
@@ -178,6 +183,25 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.buttonEstimatedTimeInformation.Click += new System.EventHandler(this.buttonEstimatedTimeInformation_Click);
             this.buttonEstimatedTimeInformation.MouseHover += new System.EventHandler(this.buttonEstimatedTimeInformation_MouseHover);
             // 
+            // textBoxTotalSpend
+            // 
+            this.textBoxTotalSpend.Location = new System.Drawing.Point(309, 325);
+            this.textBoxTotalSpend.Name = "textBoxTotalSpend";
+            this.textBoxTotalSpend.Size = new System.Drawing.Size(264, 20);
+            this.textBoxTotalSpend.TabIndex = 26;
+            this.textBoxTotalSpend.Text = "N/A";
+            this.textBoxTotalSpend.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxTotalSpend_KeyPress);
+            // 
+            // labelLabelTotalSpend
+            // 
+            this.labelLabelTotalSpend.AutoSize = true;
+            this.labelLabelTotalSpend.BackColor = System.Drawing.Color.Transparent;
+            this.labelLabelTotalSpend.Location = new System.Drawing.Point(105, 332);
+            this.labelLabelTotalSpend.Name = "labelLabelTotalSpend";
+            this.labelLabelTotalSpend.Size = new System.Drawing.Size(34, 13);
+            this.labelLabelTotalSpend.TabIndex = 27;
+            this.labelLabelTotalSpend.Text = "Total:";
+            // 
             // SendTransactionWallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -185,6 +209,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(784, 496);
             this.ControlBox = false;
+            this.Controls.Add(this.labelLabelTotalSpend);
+            this.Controls.Add(this.textBoxTotalSpend);
             this.Controls.Add(this.buttonEstimatedTimeInformation);
             this.Controls.Add(this.buttonFeeInformation);
             this.Controls.Add(this.checkBoxHideWalletAddress);
@@ -227,5 +253,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         public Button buttonSendTransaction;
         public Label metroLabelEstimatedTimeReceived;
         public CheckBox checkBoxHideWalletAddress;
+        private TextBox textBoxTotalSpend;
+        public Label labelLabelTotalSpend;
     }
 }

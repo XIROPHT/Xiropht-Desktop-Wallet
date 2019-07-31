@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Xiropht_Connector_All.Setting;
 
 namespace Xiropht_Wallet
 {
@@ -19,6 +20,11 @@ namespace Xiropht_Wallet
             return path;
         }
 
+        /// <summary>
+        /// Remove special characters.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static string RemoveSpecialCharacters(string str)
         {
             StringBuilder sb = new StringBuilder();
@@ -32,6 +38,33 @@ namespace Xiropht_Wallet
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Format amount with the max decimal place.
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        public static string FormatAmount(string amount)
+        {
+            string newAmount = string.Empty;
+            var splitAmount = amount.Split(new[] { "." }, StringSplitOptions.None);
+            var newPointNumber = ClassConnectorSetting.MaxDecimalPlace - splitAmount[1].Length;
+            if (newPointNumber > 0)
+            {
+                newAmount = splitAmount[0] + "." + splitAmount[1];
+                for (int i = 0; i < newPointNumber; i++)
+                {
+                    newAmount += "0";
+                }
+                amount = newAmount;
+            }
+            else if (newPointNumber < 0)
+            {
+                newAmount = splitAmount[0] + "." + splitAmount[1].Substring(0, splitAmount[1].Length + newPointNumber);
+                amount = newAmount;
+            }
+
+            return amount;
+        }
 
     }
 }

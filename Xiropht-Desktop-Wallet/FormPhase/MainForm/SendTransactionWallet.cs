@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Xiropht_Connector_All.Setting;
+using Xiropht_Connector_All.Utils;
 using Xiropht_Connector_All.Wallet;
 using Xiropht_Wallet.Threading;
 using Xiropht_Wallet.Wallet;
@@ -147,21 +149,20 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         /// Check amount before send.
         /// </summary>
         /// <param name="amount"></param>
-        private Tuple<bool, Decimal> CheckAmount(string amount)
+        private Tuple<bool, decimal> CheckAmount(string amount)
         {
             try
             {
-                Decimal amountParse =
-                    Decimal.Parse(amount, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat);
-                return new Tuple<bool, Decimal>(true, amountParse);
+                decimal amountParse =
+                    decimal.Parse(amount, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat);
+                return new Tuple<bool, decimal>(true, amountParse);
             }
             catch
             {
                 // ignored
             }
 
-
-            return new Tuple<bool, Decimal>(false, 0);
+            return new Tuple<bool, decimal>(false, 0);
         }
 
         /// <summary>
@@ -169,13 +170,12 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         /// </summary>
         /// <param name="totalAmount"></param>
         /// <returns></returns>
-        private bool CheckAmountNetwork(Decimal totalAmount)
+        private bool CheckAmountNetwork(decimal totalAmount)
         {
             try
             {
                 string newTotalAmount = Program.WalletXiropht.ClassWalletObject.WalletConnect.WalletAmount;
-                Decimal amount = Decimal.Parse(newTotalAmount, NumberStyles.Any,
-                    Program.GlobalCultureInfo);
+                decimal amount = decimal.Parse(newTotalAmount, NumberStyles.Any, Program.GlobalCultureInfo);
                 if (amount >= totalAmount)
                 {
                     return true;
@@ -369,6 +369,86 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private void textBoxWalletDestination_TextChanged(object sender, EventArgs e)
         {
             textBoxWalletDestination.Text = ClassUtility.RemoveSpecialCharacters(textBoxWalletDestination.Text);
+        }
+
+        private void textBoxFee_TextChanged(object sender, EventArgs e)
+        {
+            CalculateTotalToSpend();
+        }
+
+        private void CalculateTotalToSpend()
+        {
+            try
+            {
+                string amountstring = textBoxAmount.Text.Replace(",", ".");
+                string feestring = textBoxFee.Text.Replace(",", ".");
+
+                var checkAmount = CheckAmount(amountstring);
+                var checkFee = CheckAmount(feestring);
+                if (checkAmount.Item1)
+                {
+                    var amountSend = checkAmount.Item2;
+                    if (checkFee.Item1)
+                    {
+                        var feeSend = checkFee.Item2;
+                        if (checkBoxHideWalletAddress.Checked)
+                        {
+                            if (CheckAmountNetwork(amountSend + feeSend + ClassConnectorSetting.MinimumWalletTransactionAnonymousFee))
+                            {
+                                textBoxTotalSpend.ForeColor = Color.Green;
+                            }
+                            else
+                            {
+                                textBoxTotalSpend.ForeColor = Color.Red;
+                            }
+                            
+                            textBoxTotalSpend.Text = ClassUtility.FormatAmount((amountSend + feeSend + ClassConnectorSetting.MinimumWalletTransactionAnonymousFee).ToString().Replace(",", "."));
+                        }
+                        else
+                        {
+                            if (CheckAmountNetwork(amountSend + feeSend))
+                            {
+                                textBoxTotalSpend.ForeColor = Color.Green;
+                            }
+                            else
+                            {
+                                textBoxTotalSpend.ForeColor = Color.Red;
+                            }
+                            textBoxTotalSpend.Text = ClassUtility.FormatAmount((amountSend + feeSend).ToString().Replace(",", "."));
+                        }
+                    }
+                    else
+                    {
+                        textBoxTotalSpend.Text = "N/A";
+                        textBoxTotalSpend.ForeColor = Color.Black;
+                    }
+                }
+                else
+                {
+                    textBoxTotalSpend.Text = "N/A";
+                    textBoxTotalSpend.ForeColor = Color.Black;
+                }
+            }
+            catch
+            {
+                textBoxTotalSpend.Text = "N/A";
+                textBoxTotalSpend.ForeColor = Color.Black;
+            }
+        }
+
+        private void textBoxAmount_TextChanged(object sender, EventArgs e)
+        {
+            CalculateTotalToSpend();
+        }
+
+        private void checkBoxHideWalletAddress_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculateTotalToSpend();
+        }
+
+        private void textBoxTotalSpend_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }
