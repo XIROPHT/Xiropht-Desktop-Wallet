@@ -53,6 +53,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private async void buttonRestoreYourWallet_ClickAsync(object sender, EventArgs e)
         {
+            ClassParallelForm.ShowWaitingFormAsync();
+
             string walletPath = textBoxPathWallet.Text;
             string walletPassword = textBoxPassword.Text;
             string walletKey = textBoxPrivateKey.Text;
@@ -61,74 +63,92 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             textBoxPathWallet.Text = string.Empty;
             textBoxPrivateKey.Text = string.Empty;
 
-            if (Program.WalletXiropht.ClassWalletObject != null)
-            {
-                Program.WalletXiropht.InitializationWalletObject();
-            }
-            if (await Program.WalletXiropht.ClassWalletObject.InitializationWalletConnection(string.Empty, walletPassword, string.Empty, ClassWalletPhase.Restore))
+
+
+            await Task.Factory.StartNew(async () =>
             {
 
-                Program.WalletXiropht.ClassWalletObject.ListenSeedNodeNetworkForWallet();
+                ClassWalletRestoreFunctions walletRestoreFunctions = new ClassWalletRestoreFunctions();
 
-                Program.WalletXiropht.ClassWalletObject.WalletDataCreationPath = walletPath;
+                string requestRestoreQrCodeEncrypted = walletRestoreFunctions.GenerateQRCodeKeyEncryptedRepresentation(walletKey, walletPassword);
 
-                await Task.Factory.StartNew(async () =>
-                 {
+                if (Program.WalletXiropht.ClassWalletObject != null)
+                {
+                    Program.WalletXiropht.InitializationWalletObject();
+                }
 
-                     if (await Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(Program.WalletXiropht.ClassWalletObject.Certificate, string.Empty, false))
-                     {
+                if (await Program.WalletXiropht.ClassWalletObject.InitializationWalletConnection(string.Empty, walletPassword, string.Empty, ClassWalletPhase.Restore))
+                {
 
-                         string requestRestoreQrCodeEncrypted = null;
+                    Program.WalletXiropht.ClassWalletObject.ListenSeedNodeNetworkForWallet();
 
-                         using (ClassWalletRestoreFunctions walletRestoreFunctions = new ClassWalletRestoreFunctions())
-                         {
-                             requestRestoreQrCodeEncrypted = walletRestoreFunctions.GenerateQRCodeKeyEncryptedRepresentation(walletKey, walletPassword);
-                             if (requestRestoreQrCodeEncrypted != null)
-                             {
-                                 Program.WalletXiropht.ClassWalletObject.WalletNewPassword = walletPassword;
-                                 Program.WalletXiropht.ClassWalletObject.WalletPrivateKeyEncryptedQRCode = walletKey;
+                    Program.WalletXiropht.ClassWalletObject.WalletDataCreationPath = walletPath;
+                    if (await Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(Program.WalletXiropht.ClassWalletObject.Certificate, string.Empty, false))
+                    {
+                         if (requestRestoreQrCodeEncrypted != null)
+                        {
+                            Program.WalletXiropht.ClassWalletObject.WalletNewPassword = walletPassword;
+                            Program.WalletXiropht.ClassWalletObject.WalletPrivateKeyEncryptedQRCode = walletKey;
 
+                            await Task.Delay(1000);
 
-                                 ClassParallelForm.ShowWaitingFormAsync();
-
-                                 await Task.Delay(ClassConnectorSetting.MaxTimeoutSendPacket);
-                                 if (!await Program.WalletXiropht.ClassWalletObject.SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassWalletCommand.ClassWalletSendEnumeration.AskPhase + "|" + requestRestoreQrCodeEncrypted, Program.WalletXiropht.ClassWalletObject.Certificate, false, true))
-                                 {
-                                     ClassParallelForm.HideWaitingFormAsync();
+                            if (!await Program.WalletXiropht.ClassWalletObject.SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(ClassWalletCommand.ClassWalletSendEnumeration.AskPhase + "|" + requestRestoreQrCodeEncrypted, Program.WalletXiropht.ClassWalletObject.Certificate, false, true))
+                            {
+                                ClassParallelForm.HideWaitingFormAsync();
 #if WINDOWS
-                                    ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
                                   ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"));
                             Program.WalletXiropht.BeginInvoke(invoke);
 #endif
-                                }
-                             }
-                             else
-                             {
+                            }
+                        }
+                        else
+                        {
+                            ClassParallelForm.HideWaitingFormAsync();
+
 #if WINDOWS
-                                ClassFormPhase.MessageBoxInterface("Invalid private key inserted.", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            ClassFormPhase.MessageBoxInterface("Invalid private key inserted.", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,"Invalid private key inserted.");
                             Program.WalletXiropht.BeginInvoke(invoke);
 #endif
 
-                             }
-                         }
-                     }
-                     else
-                     {
+                        }
+
+                    }
+                    else
+                    {
+                        ClassParallelForm.HideWaitingFormAsync();
+
 #if WINDOWS
-                         ClassFormPhase.MessageBoxInterface(
-                             ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ClassFormPhase.MessageBoxInterface(
+                                 ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                         MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
                             ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"));
                         Program.WalletXiropht.BeginInvoke(invoke);
 #endif
                     }
-                 }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current);
-            }
+                }
+                else
+                {
+                    ClassParallelForm.HideWaitingFormAsync();
+
+#if WINDOWS
+                    ClassFormPhase.MessageBoxInterface(
+                        ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else
+                        MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
+                            ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"));
+                        Program.WalletXiropht.BeginInvoke(invoke);
+#endif
+                }
+                walletRestoreFunctions.Dispose();
+
+            }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+
         }
 
         private void textBoxPassword_Resize(object sender, EventArgs e)
