@@ -927,18 +927,22 @@ namespace Xiropht_Wallet.Wallet
 #if WINDOWS
                         ClassFormPhase.MessageBoxInterface("Invalid private key.", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                        MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,"Invalid private key inserted.");
+                        await Task.Factory.StartNew(() =>
+                        {
+                            MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,"Invalid private key inserted.");
+                        }).ConfigureAwait(false);
+
 #endif
                         break;
                     case ClassWalletCommand.ClassWalletReceiveEnumeration.WalletInvalidPacket:
-                        if (WalletConnect.WalletPhase == ClassWalletPhase.Pin)
-                        {
-                            WalletConnect.SelectWalletPhase(ClassWalletPhase.Pin);
+                        if(WalletConnect.WalletPhase == ClassWalletPhase.Pin)
+                        { 
+                        WalletConnect.SelectWalletPhase(ClassWalletPhase.Pin);
 
 #if WINDOWS
-                            ClassFormPhase.MessageBoxInterface(
-                                ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_CONTENT_TEXT"),
-                                ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        ClassFormPhase.MessageBoxInterface(
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_CONTENT_TEXT"),
+                            ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_PIN_CODE_REFUSED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #else
                         await Task.Factory.StartNew(() =>
                         {
@@ -949,8 +953,8 @@ namespace Xiropht_Wallet.Wallet
                         }).ConfigureAwait(false);
 
 #endif
-                            ClassParallelForm.ShowPinFormAsync();
-                        }
+                        ClassParallelForm.ShowPinFormAsync();
+                            }
                         break;
                     case ClassWalletCommand.ClassWalletReceiveEnumeration.CreatePhase:
 
