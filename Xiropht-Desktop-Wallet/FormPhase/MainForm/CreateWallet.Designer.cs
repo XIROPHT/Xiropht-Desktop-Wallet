@@ -33,19 +33,18 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 #if WINDOWS
             this.textBoxPathWallet = new MetroFramework.Controls.MetroTextBox();
             this.textBoxSelectWalletPassword = new MetroFramework.Controls.MetroTextBox();
-            this.buttonSearchNewWalletFile = new MetroFramework.Controls.MetroButton();
-            this.buttonCreateYourWallet = new MetroFramework.Controls.MetroButton();
 #else
             this.textBoxPathWallet = new System.Windows.Forms.TextBox();
             this.textBoxSelectWalletPassword = new System.Windows.Forms.TextBox();
-            this.buttonSearchNewWalletFile = new System.Windows.Forms.Button();
-            this.buttonCreateYourWallet = new System.Windows.Forms.Button();
 #endif
+            this.buttonSearchNewWalletFile = new MetroFramework.Controls.MetroButton();
+            this.buttonCreateYourWallet = new MetroFramework.Controls.MetroButton();
             this.labelCreateSelectSavingPathWallet = new System.Windows.Forms.Label();
-
             this.labelCreateSelectWalletPassword = new System.Windows.Forms.Label();
             this.labelCreateYourWallet = new System.Windows.Forms.Label();
             this.labelCreateNoticePasswordRequirement = new System.Windows.Forms.Label();
+            this.pictureBoxPasswordStatus = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPasswordStatus)).BeginInit();
             this.SuspendLayout();
             // 
             // textBoxPathWallet
@@ -83,48 +82,6 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.textBoxPathWallet.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
 #endif
             // 
-            // labelCreateSelectSavingPathWallet
-            // 
-            this.labelCreateSelectSavingPathWallet.AutoSize = true;
-            this.labelCreateSelectSavingPathWallet.Location = new System.Drawing.Point(261, 237);
-            this.labelCreateSelectSavingPathWallet.Name = "labelCreateSelectSavingPathWallet";
-            this.labelCreateSelectSavingPathWallet.Size = new System.Drawing.Size(216, 13);
-            this.labelCreateSelectSavingPathWallet.TabIndex = 21;
-            this.labelCreateSelectSavingPathWallet.Text = "Select the path directory for your new wallet:";
-            // 
-            // buttonSearchNewWalletFile
-            // 
-            this.buttonSearchNewWalletFile.Location = new System.Drawing.Point(510, 253);
-            this.buttonSearchNewWalletFile.Name = "buttonSearchNewWalletFile";
-            this.buttonSearchNewWalletFile.Size = new System.Drawing.Size(27, 22);
-            this.buttonSearchNewWalletFile.TabIndex = 20;
-            this.buttonSearchNewWalletFile.Text = "...";
-#if WINDOWS
-            this.buttonSearchNewWalletFile.UseSelectable = true;
-#endif
-            this.buttonSearchNewWalletFile.Click += new System.EventHandler(this.ButtonSearchNewWalletFile_Click);
-            // 
-            // buttonCreateYourWallet
-            // 
-            this.buttonCreateYourWallet.Location = new System.Drawing.Point(313, 358);
-            this.buttonCreateYourWallet.Name = "buttonCreateYourWallet";
-            this.buttonCreateYourWallet.Size = new System.Drawing.Size(133, 49);
-            this.buttonCreateYourWallet.TabIndex = 18;
-            this.buttonCreateYourWallet.Text = "Create my Wallet";
-#if WINDOWS
-            this.buttonCreateYourWallet.UseSelectable = true;
-#endif
-            this.buttonCreateYourWallet.Click += new System.EventHandler(this.ButtonCreateYourWallet_Click);
-            // 
-            // labelCreateSelectWalletPassword
-            // 
-            this.labelCreateSelectWalletPassword.AutoSize = true;
-            this.labelCreateSelectWalletPassword.Location = new System.Drawing.Point(261, 300);
-            this.labelCreateSelectWalletPassword.Name = "labelCreateSelectWalletPassword";
-            this.labelCreateSelectWalletPassword.Size = new System.Drawing.Size(136, 13);
-            this.labelCreateSelectWalletPassword.TabIndex = 17;
-            this.labelCreateSelectWalletPassword.Text = "Write your wallet password:";
-            // 
             // textBoxSelectWalletPassword
             // 
             // 
@@ -159,6 +116,49 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.textBoxSelectWalletPassword.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
 #endif
             this.textBoxSelectWalletPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxSelectWalletPassword_KeyDownAsync);
+            this.textBoxSelectWalletPassword.TextChanged += new System.EventHandler(this.textBoxSelectWalletPassword_TextChanged);
+            // 
+            // buttonSearchNewWalletFile
+            // 
+            this.buttonSearchNewWalletFile.Location = new System.Drawing.Point(510, 253);
+            this.buttonSearchNewWalletFile.Name = "buttonSearchNewWalletFile";
+            this.buttonSearchNewWalletFile.Size = new System.Drawing.Size(27, 22);
+            this.buttonSearchNewWalletFile.TabIndex = 20;
+            this.buttonSearchNewWalletFile.Text = "...";
+#if WINDOWS
+            this.buttonSearchNewWalletFile.UseSelectable = true;
+#endif
+            this.buttonSearchNewWalletFile.Click += new System.EventHandler(this.ButtonSearchNewWalletFile_Click);
+            // 
+            // buttonCreateYourWallet
+            // 
+            this.buttonCreateYourWallet.Location = new System.Drawing.Point(313, 358);
+            this.buttonCreateYourWallet.Name = "buttonCreateYourWallet";
+            this.buttonCreateYourWallet.Size = new System.Drawing.Size(133, 49);
+            this.buttonCreateYourWallet.TabIndex = 18;
+            this.buttonCreateYourWallet.Text = "Create my Wallet";
+#if WINDOWS
+            this.buttonCreateYourWallet.UseSelectable = true;
+#endif
+            this.buttonCreateYourWallet.Click += new System.EventHandler(this.ButtonCreateYourWallet_Click);
+            // 
+            // labelCreateSelectSavingPathWallet
+            // 
+            this.labelCreateSelectSavingPathWallet.AutoSize = true;
+            this.labelCreateSelectSavingPathWallet.Location = new System.Drawing.Point(261, 237);
+            this.labelCreateSelectSavingPathWallet.Name = "labelCreateSelectSavingPathWallet";
+            this.labelCreateSelectSavingPathWallet.Size = new System.Drawing.Size(216, 13);
+            this.labelCreateSelectSavingPathWallet.TabIndex = 21;
+            this.labelCreateSelectSavingPathWallet.Text = "Select the path directory for your new wallet:";
+            // 
+            // labelCreateSelectWalletPassword
+            // 
+            this.labelCreateSelectWalletPassword.AutoSize = true;
+            this.labelCreateSelectWalletPassword.Location = new System.Drawing.Point(261, 300);
+            this.labelCreateSelectWalletPassword.Name = "labelCreateSelectWalletPassword";
+            this.labelCreateSelectWalletPassword.Size = new System.Drawing.Size(136, 13);
+            this.labelCreateSelectWalletPassword.TabIndex = 17;
+            this.labelCreateSelectWalletPassword.Text = "Write your wallet password:";
             // 
             // labelCreateYourWallet
             // 
@@ -181,6 +181,16 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.labelCreateNoticePasswordRequirement.Text = "Password must be a least 8 characters and contain letters, numbers, and special c" +
     "haracters.";
             // 
+            // pictureBoxPasswordStatus
+            // 
+            this.pictureBoxPasswordStatus.BackgroundImage = global::Xiropht_Wallet.Properties.Resources.error;
+            this.pictureBoxPasswordStatus.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBoxPasswordStatus.Location = new System.Drawing.Point(509, 315);
+            this.pictureBoxPasswordStatus.Name = "pictureBoxPasswordStatus";
+            this.pictureBoxPasswordStatus.Size = new System.Drawing.Size(25, 25);
+            this.pictureBoxPasswordStatus.TabIndex = 24;
+            this.pictureBoxPasswordStatus.TabStop = false;
+            // 
             // CreateWallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -188,6 +198,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(784, 496);
             this.ControlBox = false;
+            this.Controls.Add(this.pictureBoxPasswordStatus);
             this.Controls.Add(this.labelCreateNoticePasswordRequirement);
             this.Controls.Add(this.textBoxPathWallet);
             this.Controls.Add(this.labelCreateSelectSavingPathWallet);
@@ -206,6 +217,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.Text = "CreateWallet";
             this.Load += new System.EventHandler(this.CreateWallet_Load);
             this.Resize += new System.EventHandler(this.CreateWallet_Resize);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPasswordStatus)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -231,5 +243,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         public Label labelCreateSelectWalletPassword;
         public Label labelCreateYourWallet;
         public Label labelCreateNoticePasswordRequirement;
+        private PictureBox pictureBoxPasswordStatus;
+
     }
 }

@@ -368,6 +368,8 @@
   <ItemGroup>
     <Content Include="logo-web-profil.ico" />
     <Compile Include="Wallet\ClassWalletTransactionObject.cs" />
+    <None Include="Resources\valid.png" />
+    <None Include="Resources\error.png" />
     <None Include="Resources\logo-web-transparent.png" />
     <None Include="Resources\logo-web-profil.png" />
   </ItemGroup>

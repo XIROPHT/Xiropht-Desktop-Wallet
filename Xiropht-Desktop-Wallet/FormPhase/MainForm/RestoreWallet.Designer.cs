@@ -30,16 +30,10 @@
         {
 #if WINDOWS
             this.textBoxPathWallet = new MetroFramework.Controls.MetroTextBox();
-#endif
-#if LINUX
+#else
             this.textBoxPathWallet = new System.Windows.Forms.TextBox();
 #endif
-#if WINDOWS
             this.buttonSearchNewWalletFile = new MetroFramework.Controls.MetroButton();
-#endif
-#if LINUX
-            this.buttonSearchNewWalletFile = new System.Windows.Forms.Button();
-#endif
             this.labelTextRestore = new System.Windows.Forms.Label();
             this.labelCreateSelectSavingPathWallet = new System.Windows.Forms.Label();
             this.textBoxPrivateKey = new System.Windows.Forms.TextBox();
@@ -47,6 +41,8 @@
             this.labelPassword = new System.Windows.Forms.Label();
             this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.buttonRestoreYourWallet = new System.Windows.Forms.Button();
+            this.pictureBoxPasswordStatus = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPasswordStatus)).BeginInit();
             this.SuspendLayout();
             // 
             // textBoxPathWallet
@@ -148,6 +144,7 @@
             this.textBoxPassword.PasswordChar = '*';
             this.textBoxPassword.Size = new System.Drawing.Size(243, 20);
             this.textBoxPassword.TabIndex = 28;
+            this.textBoxPassword.TextChanged += new System.EventHandler(this.textBoxPassword_TextChanged);
             this.textBoxPassword.Resize += new System.EventHandler(this.textBoxPassword_Resize);
             // 
             // buttonRestoreYourWallet
@@ -159,12 +156,23 @@
             this.buttonRestoreYourWallet.Text = "Restore";
             this.buttonRestoreYourWallet.Click += new System.EventHandler(this.buttonRestoreYourWallet_ClickAsync);
             // 
+            // pictureBoxPasswordStatus
+            // 
+            this.pictureBoxPasswordStatus.BackgroundImage = global::Xiropht_Wallet.Properties.Resources.error;
+            this.pictureBoxPasswordStatus.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBoxPasswordStatus.Location = new System.Drawing.Point(496, 290);
+            this.pictureBoxPasswordStatus.Name = "pictureBoxPasswordStatus";
+            this.pictureBoxPasswordStatus.Size = new System.Drawing.Size(25, 25);
+            this.pictureBoxPasswordStatus.TabIndex = 31;
+            this.pictureBoxPasswordStatus.TabStop = false;
+            // 
             // RestoreWallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(748, 447);
+            this.Controls.Add(this.pictureBoxPasswordStatus);
             this.Controls.Add(this.buttonRestoreYourWallet);
             this.Controls.Add(this.labelPassword);
             this.Controls.Add(this.textBoxPassword);
@@ -183,6 +191,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "RestoreWallet";
             this.Load += new System.EventHandler(this.RestoreWallet_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPasswordStatus)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -204,5 +213,6 @@
         private System.Windows.Forms.TextBox textBoxPassword;
         public System.Windows.Forms.Button buttonRestoreYourWallet;
         public System.Windows.Forms.Label labelTextRestore;
+        private System.Windows.Forms.PictureBox pictureBoxPasswordStatus;
     }
 }

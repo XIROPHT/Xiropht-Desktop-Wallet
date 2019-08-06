@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Xiropht_Connector_All.Setting;
 
@@ -6,6 +7,10 @@ namespace Xiropht_Wallet
 {
     public class ClassUtility
     {
+
+
+        private static List<string> ListOfSpecialCharactersIgnored = new List<string> { "|", "*" };
+
         /// <summary>
         /// Convert path from windows to linux or Mac
         /// </summary>
@@ -64,6 +69,41 @@ namespace Xiropht_Wallet
             }
 
             return amount;
+        }
+
+        /// <summary>
+        /// Check password.
+        /// </summary>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public static bool CheckPassword(string password)
+        {
+            bool containLetter = false;
+            bool containNumber = false;
+            bool containSpecialCharacter = false;
+            foreach(var character in password)
+            {
+                if (char.IsLetter(character))
+                {
+                    containLetter = true;
+                }
+                else if (char.IsDigit(character))
+                {
+                    containNumber = true;
+                }
+                else if (!ListOfSpecialCharactersIgnored.Contains(character.ToString()))
+                {
+                    if(!char.IsLetterOrDigit(character))
+                    {
+                        containSpecialCharacter = true;
+                    }
+                }
+            }
+            if (containLetter && containNumber && containSpecialCharacter)
+            {
+                return true;
+            }
+            return false;
         }
 
     }
