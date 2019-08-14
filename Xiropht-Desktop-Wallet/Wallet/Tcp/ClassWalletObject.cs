@@ -5275,7 +5275,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                             break;
                                         }
 
-                                    DisconnectRemoteNodeTokenSync();
+                                    WalletOnUseSync = false;
                                 }, WalletSyncCancellationToken.Token, TaskCreationOptions.LongRunning,
                                 TaskScheduler.Current)
                             .ConfigureAwait(false);
@@ -5386,7 +5386,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             await Task.Delay(1000);
                         }
 
-                        DisconnectRemoteNodeTokenSync();
+                        WalletOnUseSync = false;
                     }, WalletSyncCancellationToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current)
                     .ConfigureAwait(false);
             }
