@@ -17,7 +17,7 @@ namespace Xiropht_Wallet.FormCustom
         {
             get
             {
-                CreateParams cp = base.CreateParams;
+                var cp = base.CreateParams;
                 cp.ExStyle |= 0x02000000; // Turn on WS_EX_COMPOSITED
                 return cp;
             }

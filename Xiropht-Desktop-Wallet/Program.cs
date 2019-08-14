@@ -1,21 +1,29 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Xiropht_Wallet.Debug;
+using Xiropht_Wallet.Features;
+using Xiropht_Wallet.Utility;
 
 namespace Xiropht_Wallet
 {
-    static class Program
+    internal static class Program
     {
-        public static CultureInfo GlobalCultureInfo = new CultureInfo("fr-FR"); // Set the global culture info, I don't suggest to change this, this one is used by the blockchain and by the whole network.
+        public static CultureInfo
+            GlobalCultureInfo =
+                new CultureInfo(
+                    "fr-FR"); // Set the global culture info, I don't suggest to change this, this one is used by the blockchain and by the whole network.
+
         public static WalletXiropht WalletXiropht;
 
         /// <summary>
-        /// Point d'entrée principal de l'application.
+        ///     Point d'entrée principal de l'application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Thread.CurrentThread.Name = Path.GetFileName(Environment.GetCommandLineArgs()[0]);
 
@@ -25,7 +33,7 @@ namespace Xiropht_Wallet
 #endif
             AppDomain.CurrentDomain.UnhandledException += delegate(object sender, UnhandledExceptionEventArgs args)
             {
-                var filePath = ClassUtility.ConvertPath(System.AppDomain.CurrentDomain.BaseDirectory+"\\error_wallet.txt");
+                var filePath = ClassUtility.ConvertPath(AppDomain.CurrentDomain.BaseDirectory + "\\error_wallet.txt");
                 var exception = (Exception) args.ExceptionObject;
                 using (var writer = new StreamWriter(filePath, true))
                 {
@@ -40,7 +48,7 @@ namespace Xiropht_Wallet
 
                 MessageBox.Show(
                     @"An error has been detected, send the file error_wallet.txt to the Team for fix the issue.");
-                System.Diagnostics.Trace.TraceError(exception.StackTrace);
+                Trace.TraceError(exception.StackTrace);
 
                 Environment.Exit(1);
             };
@@ -50,14 +58,13 @@ namespace Xiropht_Wallet
 
             ClassTranslation.InitializationLanguage(); // Initialization of language system.
             ClassContact.InitializationContactList(); // Initialization of contact system.
+            ClassPeerList.LoadPeerList();
 #if WINDOWS
             Application.EnableVisualStyles();
 #endif
             Application.SetCompatibleTextRenderingDefault(false);
             WalletXiropht = new WalletXiropht();
             Application.Run(WalletXiropht); // Start the main interface.
-
-
         }
     }
 }

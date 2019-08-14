@@ -1,4 +1,4 @@
-﻿namespace Xiropht_Wallet.FormPhase
+﻿namespace Xiropht_Wallet.FormPhase.ParallelForm
 {
     partial class WaitingFormReconnect
     {

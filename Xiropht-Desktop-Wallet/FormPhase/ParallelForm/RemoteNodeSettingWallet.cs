@@ -1,10 +1,8 @@
-﻿#if WINDOWS
-using MetroFramework;
-#endif
-using System;
+﻿using System;
 using System.Windows.Forms;
-using Xiropht_Connector_All.Wallet;
-using Xiropht_Wallet.Wallet;
+using Xiropht_Wallet.Features;
+using Xiropht_Wallet.Wallet.Setting;
+using Xiropht_Wallet.Wallet.Tcp;
 
 namespace Xiropht_Wallet.FormPhase.ParallelForm
 {
@@ -19,16 +17,16 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         {
             if (radioButtonEnableSeedNodeSync.Checked)
             {
-                Program.WalletXiropht.ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_DEFAULT;
+                Program.WalletXiropht.WalletSyncMode = ClassWalletSyncMode.WALLET_SYNC_DEFAULT;
             }
             else if (radioButtonEnablePublicRemoteNodeSync.Checked)
             {
-                Program.WalletXiropht.ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE;
+                Program.WalletXiropht.WalletSyncMode = ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE;
             }
             else if (radioButtonEnableManualRemoteNodeSync.Checked)
             {
-                Program.WalletXiropht.ClassWalletObject.WalletSyncMode = (int)ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE;
-                Program.WalletXiropht.ClassWalletObject.WalletSyncHostname = textBoxRemoteNodeHost.Text;
+                Program.WalletXiropht.WalletSyncMode = ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE;
+                Program.WalletXiropht.WalletSyncHostname = textBoxRemoteNodeHost.Text;
             }
 
             ClassWalletSetting.SaveSetting();
@@ -36,16 +34,24 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
 
             if (Program.WalletXiropht.ClassWalletObject.WalletConnect != null)
             {
-                if (!string.IsNullOrEmpty(Program.WalletXiropht.ClassWalletObject.WalletConnect.WalletPhase))
+                if (!Program.WalletXiropht.EnableTokenNetworkMode)
+                {
+                    if (!string.IsNullOrEmpty(Program.WalletXiropht.ClassWalletObject.WalletConnect.WalletPhase))
+                        if (!Program.WalletXiropht.ClassWalletObject.WalletClosed)
+                            Program.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
+                }
+                else
                 {
                     if (!Program.WalletXiropht.ClassWalletObject.WalletClosed)
                     {
-                        Program.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
+                        Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
+                        Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
+                        Program.WalletXiropht.ClassWalletObject.EnableWalletTokenSync();
                     }
                 }
             }
-            Close();
 
+            Close();
         }
 
         private void RadioButtonEnableManualRemoteNodeSync_Click(object sender, EventArgs e)
@@ -71,32 +77,37 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
 
         private void RemoteNodeSetting_Load(object sender, EventArgs e)
         {
-            radioButtonEnableSeedNodeSync.Text = ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_USE_SEED_NODE_NETWORK_ONLY_TEXT");
-            radioButtonEnablePublicRemoteNodeSync.Text = ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_USE_REMOTE_NODE_TEXT");
-            radioButtonEnableManualRemoteNodeSync.Text = ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_USE_MANUAL_NODE_TEXT");
-            labelNoticeRemoteNodeHost.Text = ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_USE_MANUAL_NODE_HOSTNAME_TEXT");
-            labelNoticePublicNodeInformation.Text = ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_USE_REMOTE_NODE_INFORMATION_TEXT");
-            labelNoticePrivateRemoteNode.Text = ClassTranslation.GetLanguageTextFromOrder("REMOTE_NODE_SETTING_MENU_USE_MANUAL_NODE_INFORMATION_TEXT");
-            switch(Program.WalletXiropht.ClassWalletObject.WalletSyncMode)
+            radioButtonEnableSeedNodeSync.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.remotenodesettingmenuuseseednodenetworkonlytext);
+            radioButtonEnablePublicRemoteNodeSync.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.remotenodesettingmenuuseremotenodetext);
+            radioButtonEnableManualRemoteNodeSync.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.remotenodesettingmenuusemanualnodetext);
+            labelNoticeRemoteNodeHost.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.remotenodesettingmenuusemanualnodehostnametext);
+            labelNoticePublicNodeInformation.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.remotenodesettingmenuuseremotenodeinformationtext);
+            labelNoticePrivateRemoteNode.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.remotenodesettingmenuusemanualnodeinformationtext);
+            switch (Program.WalletXiropht.WalletSyncMode)
             {
-                case (int)ClassWalletSyncMode.WALLET_SYNC_DEFAULT:
+                case ClassWalletSyncMode.WALLET_SYNC_DEFAULT:
                     radioButtonEnableSeedNodeSync.Checked = true;
                     radioButtonEnablePublicRemoteNodeSync.Checked = false;
                     radioButtonEnableManualRemoteNodeSync.Checked = false;
                     break;
-                case (int)ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE:
+                case ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE:
                     radioButtonEnableSeedNodeSync.Checked = false;
                     radioButtonEnablePublicRemoteNodeSync.Checked = true;
                     radioButtonEnableManualRemoteNodeSync.Checked = false;
                     break;
-                case (int)ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE:
+                case ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE:
                     radioButtonEnableSeedNodeSync.Checked = false;
                     radioButtonEnablePublicRemoteNodeSync.Checked = false;
                     radioButtonEnableManualRemoteNodeSync.Checked = true;
-                    textBoxRemoteNodeHost.Text = Program.WalletXiropht.ClassWalletObject.WalletSyncHostname;
+                    textBoxRemoteNodeHost.Text = Program.WalletXiropht.WalletSyncHostname;
                     break;
             }
-
         }
     }
 }

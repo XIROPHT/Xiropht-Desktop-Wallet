@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using Xiropht_Wallet.Wallet;
+using Xiropht_Wallet.Features;
 
-namespace Xiropht_Wallet.FormPhase
+namespace Xiropht_Wallet.FormPhase.ParallelForm
 {
     public partial class WaitingFormReconnect : Form
     {

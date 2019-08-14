@@ -1,9 +1,7 @@
-﻿#if WINDOWS
-using MetroFramework;
-#endif
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Xiropht_Wallet.Features;
 
 namespace Xiropht_Wallet.FormPhase.MainForm
 {
@@ -20,7 +18,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             get
             {
-                CreateParams CP = base.CreateParams;
+                var CP = base.CreateParams;
                 CP.ExStyle = CP.ExStyle | 0x02000000; // WS_EX_COMPOSITED
                 return CP;
             }
@@ -29,16 +27,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         public void GetListControl()
         {
             if (Program.WalletXiropht.ListControlSizeOverview.Count == 0)
-            {
-                for (int i = 0; i < Controls.Count; i++)
-                {
+                for (var i = 0; i < Controls.Count; i++)
                     if (i < Controls.Count)
-                    {
                         Program.WalletXiropht.ListControlSizeOverview.Add(
                             new Tuple<Size, Point>(Controls[i].Size, Controls[i].Location));
-                    }
-                }
-            }
         }
 
         private void Overview_Load(object sender, EventArgs e)
@@ -56,15 +48,19 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             var toolTipFeeAccumulatedInformation = new ToolTip();
             toolTipFeeAccumulatedInformation.SetToolTip(buttonFeeInformationAccumulated,
-                ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_BUTTON_TOOLTIP_TRANSACTION_FEE_ACCUMULATED_CONTENT_TEXT"));
+                ClassTranslation.GetLanguageTextFromOrder(
+                    "OVERVIEW_WALLET_BUTTON_TOOLTIP_TRANSACTION_FEE_ACCUMULATED_CONTENT_TEXT"));
         }
 
         private void buttonFeeInformationAccumulated_Click(object sender, EventArgs e)
         {
 #if WINDOWS
             ClassFormPhase.MessageBoxInterface(
-                ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_BUTTON_MESSAGE_TRANSACTION_FEE_ACCUMULATED_CONTENT_TEXT"),
-                ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_BUTTON_MESSAGE_TRANSACTION_FEE_ACCUMULATED_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ClassTranslation.GetLanguageTextFromOrder(
+                    "OVERVIEW_WALLET_BUTTON_MESSAGE_TRANSACTION_FEE_ACCUMULATED_CONTENT_TEXT"),
+                ClassTranslation.GetLanguageTextFromOrder(
+                    "OVERVIEW_WALLET_BUTTON_MESSAGE_TRANSACTION_FEE_ACCUMULATED_TITLE_TEXT"), MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
 #else
             MessageBox.Show(Program.WalletXiropht,
                 ClassTranslation.GetLanguageTextFromOrder("OVERVIEW_WALLET_BUTTON_MESSAGE_TRANSACTION_FEE_ACCUMULATED_CONTENT_TEXT"),

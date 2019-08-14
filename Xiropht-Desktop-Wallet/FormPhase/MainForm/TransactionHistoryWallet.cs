@@ -1,18 +1,21 @@
 ﻿using System;
+using System.Collections;
 using System.Drawing;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Xiropht_Wallet.Features;
 using Xiropht_Wallet.FormCustom;
+using Xiropht_Wallet.Utility;
 using Xiropht_Wallet.Wallet;
+using Xiropht_Wallet.Wallet.Sync;
 
 namespace Xiropht_Wallet.FormPhase.MainForm
 {
     public sealed partial class TransactionHistoryWallet : Form
     {
+        public Label _labelWaitingText = new Label();
         private ClassPanel _panelWaitingSync;
         public bool IsShowed;
-        public Label _labelWaitingText = new Label();
         public bool IsShowedWaitingTransaction;
 
         public TransactionHistoryWallet()
@@ -20,7 +23,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             InitializeComponent();
             AutoScroll = true;
             IsShowed = false;
-            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(
+                ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw |
+                ControlStyles.OptimizedDoubleBuffer, true);
             DoubleBuffered = true;
         }
 
@@ -29,37 +34,44 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             Program.WalletXiropht.ClassWalletObject.BlockTransactionSync = true;
             Program.WalletXiropht.StopUpdateTransactionHistory(true, true);
-            if (ClassWalletTransactionCache.RemoveWalletCache(Program.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress))
-            {
-                if (ClassWalletTransactionAnonymityCache.RemoveWalletCache(Program.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress))
+            if (ClassWalletTransactionCache.RemoveWalletCache(Program.WalletXiropht.ClassWalletObject.WalletConnect
+                .WalletAddress))
+                if (ClassWalletTransactionAnonymityCache.RemoveWalletCache(Program.WalletXiropht.ClassWalletObject
+                    .WalletConnect.WalletAddress))
                 {
                     ClassWalletTransactionCache.ListTransaction.Clear();
                     ClassWalletTransactionAnonymityCache.ListTransaction.Clear();
                     Program.WalletXiropht.ClassWalletObject.InSyncTransaction = false;
                     Program.WalletXiropht.ClassWalletObject.InSyncTransactionAnonymity = false;
                     Program.WalletXiropht.ClassWalletObject.BlockTransactionSync = false;
-                    Program.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
+                    if (Program.WalletXiropht.EnableTokenNetworkMode)
+                    {
+                        Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
+                        Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
+                    }
+                    else
+                    {
+                        Program.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
+                    }
                 }
-            }
         }
 
         public void AutoResizeColumns(ListView lv)
         {
             lv.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            ListView.ColumnHeaderCollection cc = lv.Columns;
-            for (int i = 0; i < cc.Count; i++)
+            var cc = lv.Columns;
+            for (var i = 0; i < cc.Count; i++)
             {
-                int colWidth = TextRenderer.MeasureText(cc[i].Text, lv.Font).Width + 30;
-                if (colWidth > cc[i].Width || cc[i].Text == ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COLUMN_FEE") || cc[i].Text == ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COLUMN_AMOUNT"))
-                {
+                var colWidth = TextRenderer.MeasureText(cc[i].Text, lv.Font).Width + 30;
+                if (colWidth > cc[i].Width ||
+                    cc[i].Text == ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcolumnfee) ||
+                    cc[i].Text == ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcolumnamount))
                     cc[i].Width = colWidth + 30;
-                }
             }
         }
 
         private void Transaction_Load(object sender, EventArgs e)
         {
-
             listViewAnonymityReceivedTransactionHistory.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             listViewAnonymityReceivedTransactionHistory.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
 
@@ -85,11 +97,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
             _panelWaitingSync = new ClassPanel
             {
-                Width = (int)(Width / 1.5f),
-                Height = (int)(Height / 5.5f),
+                Width = (int) (Width / 1.5f),
+                Height = (int) (Height / 5.5f),
                 BackColor = Color.LightBlue
             };
-            _panelWaitingSync.Location = new Point()
+            _panelWaitingSync.Location = new Point
             {
                 X = Program.WalletXiropht.TransactionHistoryWalletForm.Width / 2 - _panelWaitingSync.Width / 2,
                 Y = Program.WalletXiropht.TransactionHistoryWalletForm.Height / 2 - _panelWaitingSync.Height / 2
@@ -97,9 +109,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
             _labelWaitingText.AutoSize = true;
             _labelWaitingText.Font = new Font(_labelWaitingText.Font.FontFamily, 9f, FontStyle.Bold);
-            _labelWaitingText.Text = ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_WAITING_MESSAGE_SYNC_TEXT");
+            _labelWaitingText.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletwaitingmessagesynctext);
             _panelWaitingSync.Controls.Add(_labelWaitingText);
-            _labelWaitingText.Location = new Point()
+            _labelWaitingText.Location = new Point
             {
                 X = _panelWaitingSync.Width / 2 - _labelWaitingText.Width / 2,
                 Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
@@ -120,61 +133,56 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         public void ShowWaitingSyncTransactionPanel()
         {
             if (!IsShowedWaitingTransaction)
-            {
-                Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                Program.WalletXiropht.Invoke((MethodInvoker) delegate
                 {
                     _panelWaitingSync.Visible = true;
                     _panelWaitingSync.Show();
                     _panelWaitingSync.BringToFront();
-                    _panelWaitingSync.Width = (int)(Width / 1.5f);
-                    _panelWaitingSync.Height = (int)(Height / 5.5f);
-                    _panelWaitingSync.Location = new Point()
+                    _panelWaitingSync.Width = (int) (Width / 1.5f);
+                    _panelWaitingSync.Height = (int) (Height / 5.5f);
+                    _panelWaitingSync.Location = new Point
                     {
                         X = Program.WalletXiropht.TransactionHistoryWalletForm.Width / 2 -
                             _panelWaitingSync.Width / 2,
                         Y = Program.WalletXiropht.TransactionHistoryWalletForm.Height / 2 -
                             _panelWaitingSync.Height / 2
                     };
-                    _labelWaitingText.Location = new Point()
+                    _labelWaitingText.Location = new Point
                     {
                         X = _panelWaitingSync.Width / 2 - _labelWaitingText.Width / 2,
                         Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
                     };
                     IsShowedWaitingTransaction = true;
                     Refresh();
-
                 });
-            }
         }
 
         public void HideWaitingSyncTransactionPanel()
         {
             if (IsShowedWaitingTransaction)
-            {
-                Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                Program.WalletXiropht.Invoke((MethodInvoker) delegate
                 {
                     _panelWaitingSync.Visible = false;
                     _panelWaitingSync.Hide();
                     IsShowedWaitingTransaction = false;
                     Refresh();
                 });
-            }
         }
 
         protected override void OnResize(EventArgs e)
         {
             if (_panelWaitingSync != null)
             {
-                _panelWaitingSync.Width = (int)(Width / 1.5f);
-                _panelWaitingSync.Height = (int)(Height / 5.5f);
-                _panelWaitingSync.Location = new Point()
+                _panelWaitingSync.Width = (int) (Width / 1.5f);
+                _panelWaitingSync.Height = (int) (Height / 5.5f);
+                _panelWaitingSync.Location = new Point
                 {
                     X = Program.WalletXiropht.TransactionHistoryWalletForm.Width / 2 -
                         _panelWaitingSync.Width / 2,
                     Y = Program.WalletXiropht.TransactionHistoryWalletForm.Height / 2 -
                         _panelWaitingSync.Height / 2
                 };
-                _labelWaitingText.Location = new Point()
+                _labelWaitingText.Location = new Point
                 {
                     X = _panelWaitingSync.Width / 2 - _labelWaitingText.Width / 2,
                     Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
@@ -188,29 +196,17 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         public void GetListControl()
         {
             if (Program.WalletXiropht.ListControlSizeTransaction.Count == 0)
-            {
-                for (int i = 0; i < Controls.Count; i++)
-                {
+                for (var i = 0; i < Controls.Count; i++)
                     if (i < Controls.Count)
-                    {
                         Program.WalletXiropht.ListControlSizeTransaction.Add(
                             new Tuple<Size, Point>(Controls[i].Size, Controls[i].Location));
-                    }
-                }
-            }
 
             if (Program.WalletXiropht.ListControlSizeTransactionTabPage.Count == 0)
-            {
-                for (int i = 0; i < tabPageTransactionHistory.Controls.Count; i++)
-                {
+                for (var i = 0; i < tabPageTransactionHistory.Controls.Count; i++)
                     if (i < tabPageTransactionHistory.Controls.Count)
-                    {
                         Program.WalletXiropht.ListControlSizeTransactionTabPage.Add(
                             new Tuple<Size, Point>(tabPageTransactionHistory.Controls[i].Size,
                                 tabPageTransactionHistory.Controls[i].Location));
-                    }
-                }
-            }
 
             Program.WalletXiropht.ResizeWalletInterface();
         }
@@ -218,7 +214,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public bool CheckContainKeyInvokerNormalReceive(string hash)
         {
-            bool check = false;
+            var check = false;
             MethodInvoker invoke = () => check = listViewNormalReceivedTransactionHistory.Items.ContainsKey(hash);
             BeginInvoke(invoke);
             return check;
@@ -226,7 +222,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public bool CheckContainKeyInvokerAnonymousReceive(string hash)
         {
-            bool check = false;
+            var check = false;
             MethodInvoker invoke = () => check = listViewAnonymityReceivedTransactionHistory.Items.ContainsKey(hash);
             BeginInvoke(invoke);
             return check;
@@ -235,7 +231,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public bool CheckContainKeyInvokerNormalSend(string hash)
         {
-            bool check = false;
+            var check = false;
             MethodInvoker invoke = () => check = listViewNormalSendTransactionHistory.Items.ContainsKey(hash);
             BeginInvoke(invoke);
             return check;
@@ -243,7 +239,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public bool CheckContainKeyInvokerAnonymousSend(string hash)
         {
-            bool check = false;
+            var check = false;
             MethodInvoker invoke = () => check = listViewAnonymitySendTransactionHistory.Items.ContainsKey(hash);
             BeginInvoke(invoke);
             return check;
@@ -251,7 +247,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public bool CheckContainKeyInvokerBlockReward(string hash)
         {
-            bool check = false;
+            var check = false;
             MethodInvoker invoke = () => check = listViewBlockRewardTransactionHistory.Items.ContainsKey(hash);
             BeginInvoke(invoke);
             return check;
@@ -261,13 +257,12 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             try
             {
-                ListViewItem item = listViewNormalSendTransactionHistory.GetItemAt(0, e.Y);
+                var item = listViewNormalSendTransactionHistory.GetItemAt(0, e.Y);
 
-                bool found = false;
+                var found = false;
                 if (item == null) return;
-                for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
+                for (var ix = item.SubItems.Count - 1; ix >= 0; --ix)
                     if (item.SubItems[ix].Bounds.Contains(e.Location))
-                    {
                         if (!found)
                         {
                             found = true;
@@ -275,15 +270,20 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
                             if (ClassContact.CheckContactName(item.SubItems[ix].Text))
                             {
-                                Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
+                                Clipboard.SetText(
+                                    ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS
                                 Task.Factory.StartNew(() =>
-                                        ClassFormPhase.MessageBoxInterface(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+                                    ClassFormPhase.MessageBoxInterface(
+                                        ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " +
+                                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext), string.Empty, MessageBoxButtons.OK,
+                                        MessageBoxIcon.Information)).ConfigureAwait(false);
 #else
                                 LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
                                 Task.Factory.StartNew(() =>
                                 {
-                                    MethodInvoker invoker = () => MessageBox.Show(Program.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                    MethodInvoker invoker =
+ () => MessageBox.Show(Program.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext));
                                     BeginInvoke(invoker);
                                 }).ConfigureAwait(false);
 #endif
@@ -293,12 +293,16 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
                                 Task.Factory.StartNew(() =>
-                                        ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+                                    ClassFormPhase.MessageBoxInterface(
+                                        item.SubItems[ix].Text + " " +
+                                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext), string.Empty, MessageBoxButtons.OK,
+                                        MessageBoxIcon.Information)).ConfigureAwait(false);
 #else
                                 LinuxClipboard.SetText(item.SubItems[ix].Text);
                                 Task.Factory.StartNew(() =>
                                 {
-                                    MethodInvoker invoker = () => MessageBox.Show(Program.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                    MethodInvoker invoker =
+ () => MessageBox.Show(Program.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext));
                                     BeginInvoke(invoker);
                                 }).ConfigureAwait(false);
 #endif
@@ -307,11 +311,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
                             return;
                         }
-                    }
             }
             catch
             {
-
             }
         }
 
@@ -319,9 +321,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             try
             {
-                ListViewItem item = listViewNormalReceivedTransactionHistory.GetItemAt(5, e.Y);
+                var item = listViewNormalReceivedTransactionHistory.GetItemAt(5, e.Y);
                 if (item == null) return;
-                for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
+                for (var ix = item.SubItems.Count - 1; ix >= 0; --ix)
                     if (item.SubItems[ix].Bounds.Contains(e.Location))
                     {
                         if (ClassContact.CheckContactName(item.SubItems[ix].Text))
@@ -329,12 +331,18 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS
                             Task.Factory.StartNew(() =>
-                                    ClassFormPhase.MessageBoxInterface(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+                                    ClassFormPhase.MessageBoxInterface(
+                                        ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " +
+                                        ClassTranslation.GetLanguageTextFromOrder(
+                                            ClassTranslationEnumeration.transactionhistorywalletcopytext),
+                                        string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
+                                .ConfigureAwait(false);
 #else
                                 LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
                                 Task.Factory.StartNew(() =>
                                 {
-                                    MethodInvoker invoker = () => MessageBox.Show(Program.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                    MethodInvoker invoker =
+ () => MessageBox.Show(Program.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext));
                                     BeginInvoke(invoker);
                                 }).ConfigureAwait(false);
 #endif
@@ -344,22 +352,28 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
                             Task.Factory.StartNew(() =>
-                                    ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+                                    ClassFormPhase.MessageBoxInterface(
+                                        item.SubItems[ix].Text + " " +
+                                        ClassTranslation.GetLanguageTextFromOrder(
+                                            ClassTranslationEnumeration.transactionhistorywalletcopytext),
+                                        string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
+                                .ConfigureAwait(false);
 #else
                                 LinuxClipboard.SetText(item.SubItems[ix].Text);
                                 Task.Factory.StartNew(() =>
                                 {
-                                    MethodInvoker invoker = () => MessageBox.Show(Program.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                    MethodInvoker invoker =
+ () => MessageBox.Show(Program.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext));
                                     BeginInvoke(invoker);
                                 }).ConfigureAwait(false);
 #endif
                         }
+
                         return;
                     }
             }
             catch
             {
-
             }
         }
 
@@ -367,9 +381,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             try
             {
-                ListViewItem item = listViewAnonymitySendTransactionHistory.GetItemAt(5, e.Y);
+                var item = listViewAnonymitySendTransactionHistory.GetItemAt(5, e.Y);
                 if (item == null) return;
-                for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
+                for (var ix = item.SubItems.Count - 1; ix >= 0; --ix)
                     if (item.SubItems[ix].Bounds.Contains(e.Location))
                     {
                         if (ClassContact.CheckContactName(item.SubItems[ix].Text))
@@ -377,12 +391,18 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS
                             Task.Factory.StartNew(() =>
-                                    ClassFormPhase.MessageBoxInterface(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+                                    ClassFormPhase.MessageBoxInterface(
+                                        ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " +
+                                        ClassTranslation.GetLanguageTextFromOrder(
+                                            ClassTranslationEnumeration.transactionhistorywalletcopytext),
+                                        string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
+                                .ConfigureAwait(false);
 #else
                                 LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
                                 Task.Factory.StartNew(() =>
                                 {
-                                    MethodInvoker invoker = () => MessageBox.Show(Program.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                    MethodInvoker invoker =
+ () => MessageBox.Show(Program.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext));
                                     BeginInvoke(invoker);
                                 }).ConfigureAwait(false);
 #endif
@@ -392,22 +412,28 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
                             Task.Factory.StartNew(() =>
-                                    ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+                                    ClassFormPhase.MessageBoxInterface(
+                                        item.SubItems[ix].Text + " " +
+                                        ClassTranslation.GetLanguageTextFromOrder(
+                                            ClassTranslationEnumeration.transactionhistorywalletcopytext),
+                                        string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
+                                .ConfigureAwait(false);
 #else
                                 LinuxClipboard.SetText(item.SubItems[ix].Text);
                                 Task.Factory.StartNew(() =>
                                 {
-                                    MethodInvoker invoker = () => MessageBox.Show(Program.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                    MethodInvoker invoker =
+ () => MessageBox.Show(Program.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext));
                                     BeginInvoke(invoker);
                                 }).ConfigureAwait(false);
 #endif
                         }
+
                         return;
                     }
             }
             catch
             {
-
             }
         }
 
@@ -415,9 +441,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             try
             {
-                ListViewItem item = listViewAnonymityReceivedTransactionHistory.GetItemAt(5, e.Y);
+                var item = listViewAnonymityReceivedTransactionHistory.GetItemAt(5, e.Y);
                 if (item == null) return;
-                for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
+                for (var ix = item.SubItems.Count - 1; ix >= 0; --ix)
                     if (item.SubItems[ix].Bounds.Contains(e.Location))
                     {
                         if (ClassContact.CheckContactName(item.SubItems[ix].Text))
@@ -425,12 +451,18 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS
                             Task.Factory.StartNew(() =>
-                                    ClassFormPhase.MessageBoxInterface(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+                                    ClassFormPhase.MessageBoxInterface(
+                                        ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " +
+                                        ClassTranslation.GetLanguageTextFromOrder(
+                                            ClassTranslationEnumeration.transactionhistorywalletcopytext),
+                                        string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
+                                .ConfigureAwait(false);
 #else
                             LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
                             Task.Factory.StartNew(() =>
                             {
-                                MethodInvoker invoker = () => MessageBox.Show(Program.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                MethodInvoker invoker =
+ () => MessageBox.Show(Program.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext));
                                 BeginInvoke(invoker);
                             }).ConfigureAwait(false);
 #endif
@@ -440,22 +472,28 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
                             Task.Factory.StartNew(() =>
-                                    ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+                                    ClassFormPhase.MessageBoxInterface(
+                                        item.SubItems[ix].Text + " " +
+                                        ClassTranslation.GetLanguageTextFromOrder(
+                                            ClassTranslationEnumeration.transactionhistorywalletcopytext),
+                                        string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
+                                .ConfigureAwait(false);
 #else
                                 LinuxClipboard.SetText(item.SubItems[ix].Text);
                                 Task.Factory.StartNew(() =>
                                 {
-                                    MethodInvoker invoker = () => MessageBox.Show(Program.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                    MethodInvoker invoker =
+ () => MessageBox.Show(Program.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext));
                                     BeginInvoke(invoker);
                                 }).ConfigureAwait(false);
 #endif
                         }
+
                         return;
                     }
             }
             catch
             {
-
             }
         }
 
@@ -463,9 +501,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             try
             {
-                ListViewItem item = listViewBlockRewardTransactionHistory.GetItemAt(5, e.Y);
+                var item = listViewBlockRewardTransactionHistory.GetItemAt(5, e.Y);
                 if (item == null) return;
-                for (int ix = item.SubItems.Count - 1; ix >= 0; --ix)
+                for (var ix = item.SubItems.Count - 1; ix >= 0; --ix)
                     if (item.SubItems[ix].Bounds.Contains(e.Location))
                     {
                         if (ClassContact.CheckContactName(item.SubItems[ix].Text))
@@ -473,12 +511,18 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             Clipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS
                             Task.Factory.StartNew(() =>
-                                    ClassFormPhase.MessageBoxInterface(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+                                    ClassFormPhase.MessageBoxInterface(
+                                        ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " +
+                                        ClassTranslation.GetLanguageTextFromOrder(
+                                            ClassTranslationEnumeration.transactionhistorywalletcopytext),
+                                        string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
+                                .ConfigureAwait(false);
 #else
                                 LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
                                 Task.Factory.StartNew(() =>
                                 {
-                                    MethodInvoker invoker = () => MessageBox.Show(Program.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                    MethodInvoker invoker =
+ () => MessageBox.Show(Program.WalletXiropht, ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " + ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext));
                                     BeginInvoke(invoker);
                                 }).ConfigureAwait(false);
 #endif
@@ -488,233 +532,30 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
                             Task.Factory.StartNew(() =>
-                                    ClassFormPhase.MessageBoxInterface(item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information)).ConfigureAwait(false);
+                                    ClassFormPhase.MessageBoxInterface(
+                                        item.SubItems[ix].Text + " " +
+                                        ClassTranslation.GetLanguageTextFromOrder(
+                                            ClassTranslationEnumeration.transactionhistorywalletcopytext),
+                                        string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information))
+                                .ConfigureAwait(false);
 #else
                                 LinuxClipboard.SetText(item.SubItems[ix].Text);
                                 Task.Factory.StartNew(() =>
                                 {
-                                    MethodInvoker invoker = () => MessageBox.Show(Program.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder("TRANSACTION_HISTORY_WALLET_COPY_TEXT"));
+                                    MethodInvoker invoker =
+ () => MessageBox.Show(Program.WalletXiropht, item.SubItems[ix].Text + " " + ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext));
                                     BeginInvoke(invoker);
                                 }).ConfigureAwait(false);
 #endif
                         }
+
                         return;
                     }
             }
             catch
             {
-
             }
         }
-
-        #region Ordering events.
-
-        private ColumnHeader SortingColumn = null;
-
-        private void listViewNormalSendTransactionHistory_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            ColumnHeader new_sorting_column = listViewNormalSendTransactionHistory.Columns[e.Column];
-
-            SortOrder sort_order;
-            if (SortingColumn == null)
-            {
-                sort_order = SortOrder.Ascending;
-            }
-            else
-            {
-                if (new_sorting_column == SortingColumn)
-                {
-                    sort_order = SortingColumn.Text.StartsWith("> ") ? SortOrder.Descending : SortOrder.Ascending;
-                }
-                else
-                {
-                    sort_order = SortOrder.Ascending;
-                }
-
-                SortingColumn.Text = SortingColumn.Text.Substring(2);
-            }
-
-            SortingColumn = new_sorting_column;
-            if (sort_order == SortOrder.Ascending)
-            {
-                SortingColumn.Text = "> " + SortingColumn.Text;
-            }
-            else
-            {
-                SortingColumn.Text = "< " + SortingColumn.Text;
-            }
-
-            listViewNormalSendTransactionHistory.ListViewItemSorter =
-                new ListViewComparer(e.Column, sort_order);
-
-            listViewNormalSendTransactionHistory.Sort();
-        }
-
-        private ColumnHeader SortingColumn2 = null;
-
-        private void listViewNormalReceivedTransactionHistory_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            ColumnHeader new_sorting_column = listViewNormalReceivedTransactionHistory.Columns[e.Column];
-
-            SortOrder sort_order;
-            if (SortingColumn2 == null)
-            {
-                sort_order = SortOrder.Ascending;
-            }
-            else
-            {
-                if (new_sorting_column == SortingColumn2)
-                {
-                    sort_order = SortingColumn2.Text.StartsWith("> ") ? SortOrder.Descending : SortOrder.Ascending;
-                }
-                else
-                {
-                    sort_order = SortOrder.Ascending;
-                }
-
-                SortingColumn2.Text = SortingColumn2.Text.Substring(2);
-            }
-
-            SortingColumn2 = new_sorting_column;
-            if (sort_order == SortOrder.Ascending)
-            {
-                SortingColumn2.Text = "> " + SortingColumn2.Text;
-            }
-            else
-            {
-                SortingColumn2.Text = "< " + SortingColumn2.Text;
-            }
-
-            listViewNormalReceivedTransactionHistory.ListViewItemSorter =
-                new ListViewComparer(e.Column, sort_order);
-
-            listViewNormalReceivedTransactionHistory.Sort();
-        }
-
-        private ColumnHeader SortingColumn3 = null;
-
-        private void listViewAnonymitySendTransactionHistory_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            ColumnHeader new_sorting_column = listViewAnonymitySendTransactionHistory.Columns[e.Column];
-
-            SortOrder sort_order;
-            if (SortingColumn3 == null)
-            {
-                sort_order = SortOrder.Ascending;
-            }
-            else
-            {
-                if (new_sorting_column == SortingColumn3)
-                {
-                    sort_order = SortingColumn3.Text.StartsWith("> ") ? SortOrder.Descending : SortOrder.Ascending;
-                }
-                else
-                {
-                    sort_order = SortOrder.Ascending;
-                }
-
-                SortingColumn3.Text = SortingColumn3.Text.Substring(2);
-            }
-
-            SortingColumn3 = new_sorting_column;
-            if (sort_order == SortOrder.Ascending)
-            {
-                SortingColumn3.Text = "> " + SortingColumn3.Text;
-            }
-            else
-            {
-                SortingColumn3.Text = "< " + SortingColumn3.Text;
-            }
-
-            listViewAnonymitySendTransactionHistory.ListViewItemSorter =
-                new ListViewComparer(e.Column, sort_order);
-
-            listViewAnonymitySendTransactionHistory.Sort();
-        }
-
-        private ColumnHeader SortingColumn4 = null;
-
-        private void listViewAnonymityReceivedTransactionHistory_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            ColumnHeader new_sorting_column = listViewAnonymityReceivedTransactionHistory.Columns[e.Column];
-
-            SortOrder sort_order;
-            if (SortingColumn4 == null)
-            {
-                sort_order = SortOrder.Ascending;
-            }
-            else
-            {
-                if (new_sorting_column == SortingColumn4)
-                {
-                    sort_order = SortingColumn4.Text.StartsWith("> ") ? SortOrder.Descending : SortOrder.Ascending;
-                }
-                else
-                {
-                    sort_order = SortOrder.Ascending;
-                }
-
-                SortingColumn4.Text = SortingColumn4.Text.Substring(2);
-            }
-
-            SortingColumn4 = new_sorting_column;
-            if (sort_order == SortOrder.Ascending)
-            {
-                SortingColumn4.Text = "> " + SortingColumn4.Text;
-            }
-            else
-            {
-                SortingColumn4.Text = "< " + SortingColumn4.Text;
-            }
-
-            listViewAnonymityReceivedTransactionHistory.ListViewItemSorter =
-                new ListViewComparer(e.Column, sort_order);
-
-            listViewAnonymityReceivedTransactionHistory.Sort();
-        }
-
-        private ColumnHeader SortingColumn5 = null;
-
-        private void listViewBlockRewardTransactionHistory_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            ColumnHeader new_sorting_column = listViewBlockRewardTransactionHistory.Columns[e.Column];
-
-            SortOrder sort_order;
-            if (SortingColumn5 == null)
-            {
-                sort_order = SortOrder.Ascending;
-            }
-            else
-            {
-                if (new_sorting_column == SortingColumn5)
-                {
-                    sort_order = SortingColumn5.Text.StartsWith("> ") ? SortOrder.Descending : SortOrder.Ascending;
-                }
-                else
-                {
-                    sort_order = SortOrder.Ascending;
-                }
-
-                SortingColumn5.Text = SortingColumn5.Text.Substring(2);
-            }
-
-            SortingColumn5 = new_sorting_column;
-            if (sort_order == SortOrder.Ascending)
-            {
-                SortingColumn5.Text = "> " + SortingColumn5.Text;
-            }
-            else
-            {
-                SortingColumn5.Text = "< " + SortingColumn5.Text;
-            }
-
-            listViewBlockRewardTransactionHistory.ListViewItemSorter =
-                new ListViewComparer(e.Column, sort_order);
-
-            listViewBlockRewardTransactionHistory.Sort();
-        }
-
-        #endregion
 
         private void Transaction_Resize(object sender, EventArgs e)
         {
@@ -733,6 +574,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 listViewAnonymitySendTransactionHistory.Hide();
                 listViewNormalReceivedTransactionHistory.Hide();
             }
+
             if (tabPageNormalTransactionReceived.Visible) // Normal transaction received list
             {
                 listViewNormalSendTransactionHistory.Hide();
@@ -741,6 +583,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 listViewAnonymitySendTransactionHistory.Hide();
                 listViewNormalReceivedTransactionHistory.Show();
             }
+
             if (tabPageAnonymityTransactionSend.Visible) // Anonymous transaction send list 
             {
                 listViewNormalSendTransactionHistory.Hide();
@@ -749,6 +592,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 listViewAnonymitySendTransactionHistory.Show();
                 listViewNormalReceivedTransactionHistory.Hide();
             }
+
             if (tabPageAnonymityTransactionReceived.Visible) // Anonymous transaction received list 
             {
                 listViewNormalSendTransactionHistory.Hide();
@@ -757,6 +601,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 listViewAnonymitySendTransactionHistory.Hide();
                 listViewNormalReceivedTransactionHistory.Hide();
             }
+
             if (tabPageBlockRewardTransaction.Visible) // block reward transaction list 
             {
                 listViewNormalSendTransactionHistory.Hide();
@@ -778,6 +623,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 listViewAnonymitySendTransactionHistory.Hide();
                 listViewNormalReceivedTransactionHistory.Hide();
             }
+
             if (tabPageNormalTransactionReceived.Visible) // Normal transaction received list
             {
                 listViewNormalSendTransactionHistory.Hide();
@@ -786,6 +632,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 listViewAnonymitySendTransactionHistory.Hide();
                 listViewNormalReceivedTransactionHistory.Show();
             }
+
             if (tabPageAnonymityTransactionSend.Visible) // Anonymous transaction send list 
             {
                 listViewNormalSendTransactionHistory.Hide();
@@ -794,6 +641,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 listViewAnonymitySendTransactionHistory.Show();
                 listViewNormalReceivedTransactionHistory.Hide();
             }
+
             if (tabPageAnonymityTransactionReceived.Visible) // Anonymous transaction received list 
             {
                 listViewNormalSendTransactionHistory.Hide();
@@ -802,6 +650,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 listViewAnonymitySendTransactionHistory.Hide();
                 listViewNormalReceivedTransactionHistory.Hide();
             }
+
             if (tabPageBlockRewardTransaction.Visible) // block reward transaction list 
             {
                 listViewNormalSendTransactionHistory.Hide();
@@ -815,18 +664,184 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private void timerRefresh_Tick(object sender, EventArgs e)
         {
 #if WINDOWS
-            foreach (Control control in Controls)
-            {
-                control.Refresh();
-            }
+            foreach (Control control in Controls) control.Refresh();
 #endif
         }
+
+        #region Ordering events.
+
+        private ColumnHeader SortingColumn;
+
+        private void listViewNormalSendTransactionHistory_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            var new_sorting_column = listViewNormalSendTransactionHistory.Columns[e.Column];
+
+            SortOrder sort_order;
+            if (SortingColumn == null)
+            {
+                sort_order = SortOrder.Ascending;
+            }
+            else
+            {
+                if (new_sorting_column == SortingColumn)
+                    sort_order = SortingColumn.Text.StartsWith("> ") ? SortOrder.Descending : SortOrder.Ascending;
+                else
+                    sort_order = SortOrder.Ascending;
+
+                SortingColumn.Text = SortingColumn.Text.Substring(2);
+            }
+
+            SortingColumn = new_sorting_column;
+            if (sort_order == SortOrder.Ascending)
+                SortingColumn.Text = "> " + SortingColumn.Text;
+            else
+                SortingColumn.Text = "< " + SortingColumn.Text;
+
+            listViewNormalSendTransactionHistory.ListViewItemSorter =
+                new ListViewComparer(e.Column, sort_order);
+
+            listViewNormalSendTransactionHistory.Sort();
+        }
+
+        private ColumnHeader SortingColumn2;
+
+        private void listViewNormalReceivedTransactionHistory_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            var new_sorting_column = listViewNormalReceivedTransactionHistory.Columns[e.Column];
+
+            SortOrder sort_order;
+            if (SortingColumn2 == null)
+            {
+                sort_order = SortOrder.Ascending;
+            }
+            else
+            {
+                if (new_sorting_column == SortingColumn2)
+                    sort_order = SortingColumn2.Text.StartsWith("> ") ? SortOrder.Descending : SortOrder.Ascending;
+                else
+                    sort_order = SortOrder.Ascending;
+
+                SortingColumn2.Text = SortingColumn2.Text.Substring(2);
+            }
+
+            SortingColumn2 = new_sorting_column;
+            if (sort_order == SortOrder.Ascending)
+                SortingColumn2.Text = "> " + SortingColumn2.Text;
+            else
+                SortingColumn2.Text = "< " + SortingColumn2.Text;
+
+            listViewNormalReceivedTransactionHistory.ListViewItemSorter =
+                new ListViewComparer(e.Column, sort_order);
+
+            listViewNormalReceivedTransactionHistory.Sort();
+        }
+
+        private ColumnHeader SortingColumn3;
+
+        private void listViewAnonymitySendTransactionHistory_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            var new_sorting_column = listViewAnonymitySendTransactionHistory.Columns[e.Column];
+
+            SortOrder sort_order;
+            if (SortingColumn3 == null)
+            {
+                sort_order = SortOrder.Ascending;
+            }
+            else
+            {
+                if (new_sorting_column == SortingColumn3)
+                    sort_order = SortingColumn3.Text.StartsWith("> ") ? SortOrder.Descending : SortOrder.Ascending;
+                else
+                    sort_order = SortOrder.Ascending;
+
+                SortingColumn3.Text = SortingColumn3.Text.Substring(2);
+            }
+
+            SortingColumn3 = new_sorting_column;
+            if (sort_order == SortOrder.Ascending)
+                SortingColumn3.Text = "> " + SortingColumn3.Text;
+            else
+                SortingColumn3.Text = "< " + SortingColumn3.Text;
+
+            listViewAnonymitySendTransactionHistory.ListViewItemSorter =
+                new ListViewComparer(e.Column, sort_order);
+
+            listViewAnonymitySendTransactionHistory.Sort();
+        }
+
+        private ColumnHeader SortingColumn4;
+
+        private void listViewAnonymityReceivedTransactionHistory_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            var new_sorting_column = listViewAnonymityReceivedTransactionHistory.Columns[e.Column];
+
+            SortOrder sort_order;
+            if (SortingColumn4 == null)
+            {
+                sort_order = SortOrder.Ascending;
+            }
+            else
+            {
+                if (new_sorting_column == SortingColumn4)
+                    sort_order = SortingColumn4.Text.StartsWith("> ") ? SortOrder.Descending : SortOrder.Ascending;
+                else
+                    sort_order = SortOrder.Ascending;
+
+                SortingColumn4.Text = SortingColumn4.Text.Substring(2);
+            }
+
+            SortingColumn4 = new_sorting_column;
+            if (sort_order == SortOrder.Ascending)
+                SortingColumn4.Text = "> " + SortingColumn4.Text;
+            else
+                SortingColumn4.Text = "< " + SortingColumn4.Text;
+
+            listViewAnonymityReceivedTransactionHistory.ListViewItemSorter =
+                new ListViewComparer(e.Column, sort_order);
+
+            listViewAnonymityReceivedTransactionHistory.Sort();
+        }
+
+        private ColumnHeader SortingColumn5;
+
+        private void listViewBlockRewardTransactionHistory_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            var new_sorting_column = listViewBlockRewardTransactionHistory.Columns[e.Column];
+
+            SortOrder sort_order;
+            if (SortingColumn5 == null)
+            {
+                sort_order = SortOrder.Ascending;
+            }
+            else
+            {
+                if (new_sorting_column == SortingColumn5)
+                    sort_order = SortingColumn5.Text.StartsWith("> ") ? SortOrder.Descending : SortOrder.Ascending;
+                else
+                    sort_order = SortOrder.Ascending;
+
+                SortingColumn5.Text = SortingColumn5.Text.Substring(2);
+            }
+
+            SortingColumn5 = new_sorting_column;
+            if (sort_order == SortOrder.Ascending)
+                SortingColumn5.Text = "> " + SortingColumn5.Text;
+            else
+                SortingColumn5.Text = "< " + SortingColumn5.Text;
+
+            listViewBlockRewardTransactionHistory.ListViewItemSorter =
+                new ListViewComparer(e.Column, sort_order);
+
+            listViewBlockRewardTransactionHistory.Sort();
+        }
+
+        #endregion
     }
 
-    public class ListViewComparer : System.Collections.IComparer
+    public class ListViewComparer : IComparer
     {
-        private int _columnNumber;
-        private SortOrder _sortOrder;
+        private readonly int _columnNumber;
+        private readonly SortOrder _sortOrder;
 
         public ListViewComparer(int columnNumber,
             SortOrder sortOrder)
@@ -837,8 +852,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public int Compare(object objectX, object objectY)
         {
-            ListViewItem itemX = objectX as ListViewItem;
-            ListViewItem itemY = objectY as ListViewItem;
+            var itemX = objectX as ListViewItem;
+            var itemY = objectY as ListViewItem;
 
             string stringX = null;
             if (itemX != null && itemX.SubItems.Count <= _columnNumber)
@@ -860,7 +875,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 if (itemY != null) stringY = itemY.SubItems[_columnNumber].Text;
             }
 
-            int result = 0;
+            var result = 0;
             if (double.TryParse(stringX, out var double_x) &&
                 double.TryParse(stringY, out var double_y))
             {
@@ -880,13 +895,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             }
 
             if (_sortOrder == SortOrder.Ascending)
-            {
                 return result;
-            }
-            else
-            {
-                return -result;
-            }
+            return -result;
         }
     }
 
@@ -894,10 +904,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
     {
         private const int WM_LBUTTONDOWN = 0x0201;
 
-        public ListViewEx() : base()
+        public ListViewEx()
         {
-
-            this.SetStyle(
+            SetStyle(
                 ControlStyles.OptimizedDoubleBuffer, true);
         }
 
@@ -905,12 +914,12 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             if (m.Msg == WM_LBUTTONDOWN)
             {
-                short x = (short)m.LParam;
+                var x = (short) m.LParam;
 
-                short y = (short)((int)m.LParam >> 16);
+                var y = (short) ((int) m.LParam >> 16);
 
 
-                MouseEventArgs e = new MouseEventArgs(MouseButtons.Left, 2, x, y, 0);
+                var e = new MouseEventArgs(MouseButtons.Left, 2, x, y, 0);
 #if WINDOWS
                 UpdateStyles();
 #endif

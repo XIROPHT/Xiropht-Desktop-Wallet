@@ -1,6 +1,6 @@
 ﻿namespace Xiropht_Wallet.FormPhase.ParallelForm
 {
-    partial class RemoteNodeSettingWallet
+    partial class RemoteNodeSettingWallet : System.Windows.Forms.Form
     {
         /// <summary>
         /// Required designer variable.

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Xiropht_Wallet.Features;
 
 namespace Xiropht_Wallet.FormPhase.ParallelForm
 {
@@ -15,10 +16,13 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         {
             if (CheckContactInformations())
             {
-                if(!ClassContact.InsertContact(textBoxContactName.Text, textBoxContactWalletAddress.Text))
+                if (!ClassContact.InsertContact(textBoxContactName.Text, textBoxContactWalletAddress.Text))
                 {
 #if WINDOWS
-                    ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_INSERT_CONTACT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_INSERT_CONTACT_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ClassFormPhase.MessageBoxInterface(
+                        ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_INSERT_CONTACT_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_INSERT_CONTACT_TITLE_TEXT"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
 #else
                     MessageBox.Show(ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_INSERT_CONTACT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_INSERT_CONTACT_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 #endif
@@ -26,12 +30,16 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                 else
                 {
 #if WINDOWS
-                    ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_SUCCESS_INSERT_CONTACT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_SUCCESS_INSERT_CONTACT_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ClassFormPhase.MessageBoxInterface(
+                        ClassTranslation.GetLanguageTextFromOrder(
+                            "CONTACT_SUBMENU_SUCCESS_INSERT_CONTACT_CONTENT_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_SUCCESS_INSERT_CONTACT_TITLE_TEXT"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
 #else
                     MessageBox.Show(ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_SUCCESS_INSERT_CONTACT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_SUCCESS_INSERT_CONTACT_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 #endif
-                    string[] objectContact = { textBoxContactName.Text, textBoxContactWalletAddress.Text, "X" };
-                    ListViewItem itemContact = new ListViewItem(objectContact);
+                    string[] objectContact = {textBoxContactName.Text, textBoxContactWalletAddress.Text, "X"};
+                    var itemContact = new ListViewItem(objectContact);
                     Program.WalletXiropht.ContactWalletForm.listViewExContact.Items.Add(itemContact);
                     Close();
                 }
@@ -39,7 +47,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         }
 
         /// <summary>
-        /// Check contact informations to insert.
+        ///     Check contact informations to insert.
         /// </summary>
         /// <returns></returns>
         private bool CheckContactInformations()
@@ -47,16 +55,24 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             if (string.IsNullOrEmpty(textBoxContactName.Text))
             {
 #if WINDOWS
-                ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_EMPTY_CONTACT_NAME_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_EMPTY_CONTACT_NAME_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ClassFormPhase.MessageBoxInterface(
+                    ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_EMPTY_CONTACT_NAME_CONTENT_TEXT"),
+                    ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_EMPTY_CONTACT_NAME_TITLE_TEXT"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                 MessageBox.Show(ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_EMPTY_CONTACT_NAME_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_EMPTY_CONTACT_NAME_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #endif
                 return false;
             }
+
             if (textBoxContactName.Text.Contains("|")) // Don't allow to insert character separator inside.
             {
 #if WINDOWS
-                ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_INVALID_CONTACT_NAME_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_INVALID_CONTACT_NAME_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ClassFormPhase.MessageBoxInterface(
+                    ClassTranslation.GetLanguageTextFromOrder(
+                        "CONTACT_SUBMENU_ERROR_INVALID_CONTACT_NAME_CONTENT_TEXT"),
+                    ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_INVALID_CONTACT_NAME_TITLE_TEXT"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                 MessageBox.Show(ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_INVALID_CONTACT_NAME_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_INVALID_CONTACT_NAME_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #endif
@@ -66,7 +82,12 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             if (string.IsNullOrEmpty(textBoxContactWalletAddress.Text))
             {
 #if WINDOWS
-                ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_EMPTY_CONTACT_WALLET_ADDRESS_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_EMPTY_CONTACT_WALLET_ADDRESS_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ClassFormPhase.MessageBoxInterface(
+                    ClassTranslation.GetLanguageTextFromOrder(
+                        "CONTACT_SUBMENU_ERROR_EMPTY_CONTACT_WALLET_ADDRESS_CONTENT_TEXT"),
+                    ClassTranslation.GetLanguageTextFromOrder(
+                        "CONTACT_SUBMENU_ERROR_EMPTY_CONTACT_WALLET_ADDRESS_TITLE_TEXT"), MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
 #else
                 MessageBox.Show(ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_EMPTY_CONTACT_WALLET_ADDRESS_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_EMPTY_CONTACT_WALLET_ADDRESS_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #endif
@@ -76,7 +97,12 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             if (CheckSpecialCharacters(textBoxContactWalletAddress.Text))
             {
 #if WINDOWS
-                ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_EMPTY_CONTACT_WALLET_ADDRESS_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_INVALID_CONTACT_WALLET_ADDRESS_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ClassFormPhase.MessageBoxInterface(
+                    ClassTranslation.GetLanguageTextFromOrder(
+                        "CONTACT_SUBMENU_ERROR_EMPTY_CONTACT_WALLET_ADDRESS_CONTENT_TEXT"),
+                    ClassTranslation.GetLanguageTextFromOrder(
+                        "CONTACT_SUBMENU_ERROR_INVALID_CONTACT_WALLET_ADDRESS_TITLE_TEXT"), MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
 #else
                 MessageBox.Show(ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_INVALID_CONTACT_WALLET_ADDRESS_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_ERROR_INVALID_CONTACT_WALLET_ADDRESS_CONTENT_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 #endif
@@ -87,7 +113,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         }
 
         /// <summary>
-        /// Check special characters.
+        ///     Check special characters.
         /// </summary>
         /// <param name="word"></param>
         /// <returns></returns>
@@ -98,14 +124,16 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         }
 
         /// <summary>
-        /// Translate on loading.
+        ///     Translate on loading.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void AddContactWallet_Load(object sender, EventArgs e)
         {
-            labelTextContactName.Text = ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_LABEL_CONTACT_NAME_TEXT");
-            labelTextContactWalletAddress.Text = ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_LABEL_CONTACT_WALLET_ADDRESS_TEXT");
+            labelTextContactName.Text =
+                ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_LABEL_CONTACT_NAME_TEXT");
+            labelTextContactWalletAddress.Text =
+                ClassTranslation.GetLanguageTextFromOrder("CONTACT_SUBMENU_LABEL_CONTACT_WALLET_ADDRESS_TEXT");
         }
     }
 }

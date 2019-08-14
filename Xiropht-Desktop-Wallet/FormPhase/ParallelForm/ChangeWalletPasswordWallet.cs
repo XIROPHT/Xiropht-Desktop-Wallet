@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Xiropht_Connector_All.Wallet;
-using Xiropht_Wallet.Wallet;
+using Xiropht_Wallet.Features;
 
 namespace Xiropht_Wallet.FormPhase.ParallelForm
 {
@@ -17,7 +17,8 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             Program.WalletXiropht.ClassWalletObject.WalletNewPassword = textBoxWalletNewPassword.Text;
             Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
                 ClassWalletCommand.ClassWalletSendEnumeration.ChangePassword + "|" + textBoxWalletOldPassword.Text +
-                "|" + textBoxPinCode.Text + "|" + textBoxWalletNewPassword.Text + "", Program.WalletXiropht.ClassWalletObject.Certificate,
+                "|" + textBoxPinCode.Text + "|" + textBoxWalletNewPassword.Text + "",
+                Program.WalletXiropht.ClassWalletObject.Certificate,
                 true);
             textBoxPinCode.Text = "";
             textBoxWalletNewPassword.Text = "";
@@ -27,9 +28,12 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
 
         private void ChangeWalletPassword_Load(object sender, EventArgs e)
         {
-            labelChangePasswordWallet.Text = ClassTranslation.GetLanguageTextFromOrder("CHANGE_PASSWORD_WALLET_LABEL_OLD_PASSWORD_TEXT");
-            labelChangePasswordNewPassword.Text = ClassTranslation.GetLanguageTextFromOrder("CHANGE_PASSWORD_WALLET_LABEL_NEW_PASSWORD_TEXT");
-            labelChangePasswordPinCode.Text = ClassTranslation.GetLanguageTextFromOrder("CHANGE_PASSWORD_WALLET_LABEL_PIN_CODE_TEXT");
+            labelChangePasswordWallet.Text =
+                ClassTranslation.GetLanguageTextFromOrder("CHANGE_PASSWORD_WALLET_LABEL_OLD_PASSWORD_TEXT");
+            labelChangePasswordNewPassword.Text =
+                ClassTranslation.GetLanguageTextFromOrder("CHANGE_PASSWORD_WALLET_LABEL_NEW_PASSWORD_TEXT");
+            labelChangePasswordPinCode.Text =
+                ClassTranslation.GetLanguageTextFromOrder("CHANGE_PASSWORD_WALLET_LABEL_PIN_CODE_TEXT");
         }
     }
 }

@@ -1,10 +1,11 @@
 ﻿#if WINDOWS
+using System.Windows.Forms;
 using MetroFramework;
 using System;
 #endif
 using System.Windows.Forms;
 using Xiropht_Connector_All.Setting;
-using Xiropht_Wallet.Wallet;
+using Xiropht_Wallet.Features;
 
 namespace Xiropht_Wallet.FormPhase
 {
@@ -26,7 +27,7 @@ namespace Xiropht_Wallet.FormPhase
         public static string FormPhase;
 
         /// <summary>
-        /// Initialize the public static object of the interface for share the object with every class.
+        ///     Initialize the public static object of the interface for share the object with every class.
         /// </summary>
         /// <param name="wallet"></param>
         public static void InitializeMainInterface(WalletXiropht wallet)
@@ -35,7 +36,7 @@ namespace Xiropht_Wallet.FormPhase
         }
 
         /// <summary>
-        /// Change form phase.
+        ///     Change form phase.
         /// </summary>
         /// <param name="phase"></param>
         public static void SwitchFormPhase(string phase)
@@ -44,60 +45,67 @@ namespace Xiropht_Wallet.FormPhase
         }
 
         /// <summary>
-        /// Show wallet menu.
+        ///     Show wallet menu.
         /// </summary>
         public static void ShowWalletMenu()
         {
-            Program.WalletXiropht.BeginInvoke((MethodInvoker)delegate { Program.WalletXiropht.panelControlWallet.Visible = true; });
+            Program.WalletXiropht.BeginInvoke((MethodInvoker) delegate
+            {
+                Program.WalletXiropht.panelControlWallet.Visible = true;
+            });
         }
 
         /// <summary>
-        /// Show amount and wallet address.
+        ///     Show amount and wallet address.
         /// </summary>
         /// <param name="walletAddress"></param>
         /// <param name="walletAmount"></param>
         public static void ShowWalletInformationInMenu(string walletAddress, string walletAmount)
         {
+            Program.WalletXiropht.BeginInvoke((MethodInvoker) delegate
+            {
+                Program.WalletXiropht.labelNoticeWalletAddress.Text =
+                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.panelwalletaddresstext) + " " + walletAddress;
+            });
 
-            Program.WalletXiropht.BeginInvoke((MethodInvoker)delegate { Program.WalletXiropht.labelNoticeWalletAddress.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_ADDRESS_TEXT") + " " + walletAddress; });
 
-
-            bool showPendingAmount = false;
+            var showPendingAmount = false;
             if (Program.WalletXiropht.ClassWalletObject.WalletAmountInPending != null)
-            {
                 if (!string.IsNullOrEmpty(Program.WalletXiropht.ClassWalletObject.WalletAmountInPending))
-                {
                     showPendingAmount = true;
-                }
-            }
             if (!showPendingAmount)
-            {
-                Program.WalletXiropht.BeginInvoke((MethodInvoker)delegate
+                Program.WalletXiropht.BeginInvoke((MethodInvoker) delegate
                 {
-                    Program.WalletXiropht.labelNoticeWalletBalance.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT") + " " + walletAmount + " " + ClassConnectorSetting.CoinNameMin;
-
+                    Program.WalletXiropht.labelNoticeWalletBalance.Text =
+                        ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT") + " " +
+                        walletAmount + " " + ClassConnectorSetting.CoinNameMin;
                 });
-            }
             else
-            {
-                Program.WalletXiropht.BeginInvoke((MethodInvoker)delegate
+                Program.WalletXiropht.BeginInvoke((MethodInvoker) delegate
                 {
-                    Program.WalletXiropht.labelNoticeWalletBalance.Text = ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT") + " " + Program.WalletXiropht.ClassWalletObject.WalletConnect.WalletAmount + " " + ClassConnectorSetting.CoinNameMin + " | " + ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_PENDING_BALANCE_TEXT") + " " + Program.WalletXiropht.ClassWalletObject.WalletAmountInPending + " " + ClassConnectorSetting.CoinNameMin;
-
+                    Program.WalletXiropht.labelNoticeWalletBalance.Text =
+                        ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_BALANCE_TEXT") + " " +
+                        Program.WalletXiropht.ClassWalletObject.WalletConnect.WalletAmount + " " +
+                        ClassConnectorSetting.CoinNameMin + " | " +
+                        ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_PENDING_BALANCE_TEXT") + " " +
+                        Program.WalletXiropht.ClassWalletObject.WalletAmountInPending + " " +
+                        ClassConnectorSetting.CoinNameMin;
                 });
-            }
-
         }
 
         /// <summary>
-        /// Hide wallet menu.
+        ///     Hide wallet menu.
         /// </summary>
         public static void HideWalletMenu()
         {
             try
             {
-                void Invoke() => Program.WalletXiropht.panelControlWallet.Visible = false;
-                Program.WalletXiropht.BeginInvoke((MethodInvoker)Invoke);
+                void Invoke()
+                {
+                    Program.WalletXiropht.panelControlWallet.Visible = false;
+                }
+
+                Program.WalletXiropht.BeginInvoke((MethodInvoker) Invoke);
                 SwitchFormPhase(ClassFormPhaseEnumeration.Main);
                 ClassParallelForm.HidePinFormAsync();
                 ClassParallelForm.HideWaitingFormAsync();
@@ -105,24 +113,24 @@ namespace Xiropht_Wallet.FormPhase
             }
             catch
             {
-
             }
         }
 
 #if WINDOWS
 
         /// <summary>
-        /// Show a message in front of the main interface.
+        ///     Show a message in front of the main interface.
         /// </summary>
         /// <param name="text"></param>
         /// <param name="title"></param>
         /// <param name="button"></param>
         /// <param name="icon"></param>
-        public static DialogResult MessageBoxInterface(string text, string title, MessageBoxButtons button, MessageBoxIcon icon)
+        public static DialogResult MessageBoxInterface(string text, string title, MessageBoxButtons button,
+            MessageBoxIcon icon)
         {
-            return (DialogResult)Program.WalletXiropht.Invoke((Func<DialogResult>)delegate
+            return (DialogResult) Program.WalletXiropht.Invoke((Func<DialogResult>) delegate
             {
-                 return MetroMessageBox.Show(Program.WalletXiropht, text, title, button, icon);
+                return MetroMessageBox.Show(Program.WalletXiropht, text, title, button, icon);
             });
         }
 

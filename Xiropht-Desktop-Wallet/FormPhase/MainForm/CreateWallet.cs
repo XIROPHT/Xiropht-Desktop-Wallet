@@ -1,16 +1,13 @@
-﻿#if WINDOWS
-using MetroFramework;
-#endif
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Drawing;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Xiropht_Connector_All.Setting;
 using Xiropht_Connector_All.Wallet;
-using Xiropht_Wallet.Wallet;
+using Xiropht_Wallet.Features;
+using Xiropht_Wallet.Properties;
+using Xiropht_Wallet.Utility;
 
 namespace Xiropht_Wallet.FormPhase.MainForm
 {
@@ -28,7 +25,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             get
             {
-                CreateParams CP = base.CreateParams;
+                var CP = base.CreateParams;
                 CP.ExStyle = CP.ExStyle | 0x02000000; // WS_EX_COMPOSITED
                 return CP;
             }
@@ -37,34 +34,24 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         public void GetListControl()
         {
             if (Program.WalletXiropht.ListControlSizeCreateWallet.Count == 0)
-            {
-                for (int i = 0; i < Controls.Count; i++)
-                {
+                for (var i = 0; i < Controls.Count; i++)
                     if (i < Controls.Count)
-                    {
                         Program.WalletXiropht.ListControlSizeCreateWallet.Add(
                             new Tuple<Size, Point>(Controls[i].Size, Controls[i].Location));
-                    }
-                }
-            }
         }
 
         private void SaveWalletFilePath()
         {
             var saveFileDialogWallet = new SaveFileDialog
             {
-                InitialDirectory = System.AppDomain.CurrentDomain.BaseDirectory,
+                InitialDirectory = AppDomain.CurrentDomain.BaseDirectory,
                 Filter = @"Wallet File (*.xir) | *.xir",
                 FilterIndex = 2,
                 RestoreDirectory = true
             };
             if (saveFileDialogWallet.ShowDialog() == DialogResult.OK)
-            {
                 if (saveFileDialogWallet.FileName != "")
-                {
                     textBoxPathWallet.Text = saveFileDialogWallet.FileName;
-                }
-            }
         }
 
         private void ButtonCreateYourWallet_Click(object sender, EventArgs e)
@@ -99,25 +86,25 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             if (CheckPasswordValidity())
             {
                 if (textBoxPathWallet.Text != "")
-                {
                     if (textBoxSelectWalletPassword.Text != "")
                     {
                         if (Program.WalletXiropht.ClassWalletObject != null)
-                        {
                             Program.WalletXiropht.InitializationWalletObject();
-                        }
-                        if (await Program.WalletXiropht.ClassWalletObject.InitializationWalletConnection("", textBoxSelectWalletPassword.Text, "",
-                                ClassWalletPhase.Create))
+                        if (await Program.WalletXiropht.ClassWalletObject.InitializationWalletConnection("",
+                            textBoxSelectWalletPassword.Text, "",
+                            ClassWalletPhase.Create))
                         {
-                            Program.WalletXiropht.ClassWalletObject.WalletNewPassword = textBoxSelectWalletPassword.Text;
+                            Program.WalletXiropht.ClassWalletObject.WalletNewPassword =
+                                textBoxSelectWalletPassword.Text;
                             Program.WalletXiropht.ClassWalletObject.ListenSeedNodeNetworkForWallet();
 
                             InCreation = true;
                             Program.WalletXiropht.ClassWalletObject.WalletDataCreationPath = textBoxPathWallet.Text;
 
-                            await Task.Factory.StartNew(async delegate ()
+                            await Task.Factory.StartNew(async delegate
                             {
-                                if (await Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(Program.WalletXiropht.ClassWalletObject.Certificate, string.Empty, false))
+                                if (await Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
+                                    Program.WalletXiropht.ClassWalletObject.Certificate, string.Empty, false))
                                 {
                                     await Task.Delay(100);
                                     if (!await Program.WalletXiropht.ClassWalletObject
@@ -126,48 +113,56 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                             textBoxSelectWalletPassword.Text))
                                     {
 #if WINDOWS
-                                    ClassFormPhase.MessageBoxInterface(
-                                            ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        ClassFormPhase.MessageBoxInterface(
+                                            ClassTranslation.GetLanguageTextFromOrder(
+                                                ClassTranslationEnumeration.createwalleterrorcantconnectmessagecontenttext), string.Empty,
+                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                                    MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                        ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"));
+                                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalleterrorcantconnectmessagecontenttext));
                                     Program.WalletXiropht.BeginInvoke(invoke);
 #endif
-                                }
+                                    }
 
-                                    void MethodInvoker() => textBoxSelectWalletPassword.Text = "";
-                                    BeginInvoke((MethodInvoker)MethodInvoker);
+                                    void MethodInvoker()
+                                    {
+                                        textBoxSelectWalletPassword.Text = "";
+                                    }
+
+                                    BeginInvoke((MethodInvoker) MethodInvoker);
                                     CheckPasswordValidity();
-
                                 }
                                 else
                                 {
 #if WINDOWS
-                                ClassFormPhase.MessageBoxInterface(
-                                       ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    ClassFormPhase.MessageBoxInterface(
+                                        ClassTranslation.GetLanguageTextFromOrder(
+                                            ClassTranslationEnumeration.createwalleterrorcantconnectmessagecontenttext), string.Empty,
+                                        MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                                 MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                    ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_ERROR_CANT_CONNECT_MESSAGE_CONTENT_TEXT"));
+                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalleterrorcantconnectmessagecontenttext));
                                 Program.WalletXiropht.BeginInvoke(invoke);
 #endif
-                            }
+                                }
                             }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current);
                         }
                     }
-                }
             }
             else
             {
 #if WINDOWS
                 ClassFormPhase.MessageBoxInterface(
-                    ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_LABEL_PASSWORD_REQUIREMENT_TEXT"),
-                    ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR2_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletlabelpasswordrequirementtext),
+                    ClassTranslation.GetLanguageTextFromOrder(
+                        ClassTranslationEnumeration.walletnetworkobjectcreatewalletpassworderror2titletext), MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
 #else
                         await Task.Factory.StartNew(() =>
                         {
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_LABEL_PASSWORD_REQUIREMENT_TEXT"),
-                                ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_CREATE_WALLET_PASSWORD_ERROR2_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletlabelpasswordrequirementtext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectcreatewalletpassworderror2titletext), MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
 
@@ -177,14 +172,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void textBoxSelectWalletPassword_KeyDownAsync(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                CreateWalletAsync();
-            }
+            if (e.KeyCode == Keys.Enter) CreateWalletAsync();
         }
 
         /// <summary>
-        /// Check password validity
+        ///     Check password validity
         /// </summary>
         private bool CheckPasswordValidity()
         {
@@ -192,22 +184,22 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             {
                 if (ClassUtility.CheckPassword(textBoxSelectWalletPassword.Text))
                 {
-                    MethodInvoker invoke = () => pictureBoxPasswordStatus.BackgroundImage = Properties.Resources.valid;
+                    MethodInvoker invoke = () => pictureBoxPasswordStatus.BackgroundImage = Resources.valid;
                     BeginInvoke(invoke);
                     return true;
                 }
                 else
                 {
-                    MethodInvoker invoke = () => pictureBoxPasswordStatus.BackgroundImage = Properties.Resources.error;
+                    MethodInvoker invoke = () => pictureBoxPasswordStatus.BackgroundImage = Resources.error;
                     BeginInvoke(invoke);
                 }
             }
             else
             {
-                MethodInvoker invoke = () => pictureBoxPasswordStatus.BackgroundImage = Properties.Resources.error;
+                MethodInvoker invoke = () => pictureBoxPasswordStatus.BackgroundImage = Resources.error;
                 BeginInvoke(invoke);
-
             }
+
             return false;
         }
 
@@ -215,6 +207,5 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             CheckPasswordValidity();
         }
-
     }
 }

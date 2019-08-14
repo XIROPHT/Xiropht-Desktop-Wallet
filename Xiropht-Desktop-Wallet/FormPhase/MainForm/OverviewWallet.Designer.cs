@@ -2,7 +2,7 @@
 
 namespace Xiropht_Wallet.FormPhase.MainForm
 {
-    sealed partial class OverviewWallet
+    sealed partial class OverviewWallet : Form
     {
         /// <summary>
         /// Required designer variable.

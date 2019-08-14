@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Windows.Forms;
+using Xiropht_Wallet.Utility;
 
 namespace Xiropht_Wallet.FormPhase.ParallelForm
 {
     public partial class SearchWalletExplorer : Form
     {
-
         public SearchWalletExplorer()
         {
             InitializeComponent();
@@ -24,29 +23,29 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         }
 
         /// <summary>
-        /// Add a context menu into richtextbox control.
+        ///     Add a context menu into richtextbox control.
         /// </summary>
         /// <param name="rtb"></param>
         public void AddContextMenu(RichTextBox rtb)
         {
             if (rtb.ContextMenuStrip == null)
             {
-                ContextMenuStrip cms = new ContextMenuStrip()
+                var cms = new ContextMenuStrip
                 {
                     ShowImageMargin = false
                 };
 
-                ToolStripMenuItem tsmiUndo = new ToolStripMenuItem("Undo");
+                var tsmiUndo = new ToolStripMenuItem("Undo");
                 tsmiUndo.Click += (sender, e) => rtb.Undo();
                 cms.Items.Add(tsmiUndo);
 
-                ToolStripMenuItem tsmiRedo = new ToolStripMenuItem("Redo");
+                var tsmiRedo = new ToolStripMenuItem("Redo");
                 tsmiRedo.Click += (sender, e) => rtb.Redo();
                 cms.Items.Add(tsmiRedo);
 
                 cms.Items.Add(new ToolStripSeparator());
 
-                ToolStripMenuItem tsmiCut = new ToolStripMenuItem("Cut");
+                var tsmiCut = new ToolStripMenuItem("Cut");
                 tsmiCut.Click += (sender, e) =>
                 {
 #if WINDOWS
@@ -59,7 +58,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                 };
                 cms.Items.Add(tsmiCut);
 
-                ToolStripMenuItem tsmiCopy = new ToolStripMenuItem("Copy");
+                var tsmiCopy = new ToolStripMenuItem("Copy");
                 tsmiCopy.Click += (sender, e) =>
                 {
 #if WINDOWS
@@ -71,13 +70,13 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                 };
                 cms.Items.Add(tsmiCopy);
 
-                ToolStripMenuItem tsmiDelete = new ToolStripMenuItem("Delete");
+                var tsmiDelete = new ToolStripMenuItem("Delete");
                 tsmiDelete.Click += (sender, e) => rtb.SelectedText = "";
                 cms.Items.Add(tsmiDelete);
 
                 cms.Items.Add(new ToolStripSeparator());
 
-                ToolStripMenuItem tsmiSelectAll = new ToolStripMenuItem("Select All");
+                var tsmiSelectAll = new ToolStripMenuItem("Select All");
                 tsmiSelectAll.Click += (sender, e) => rtb.SelectAll();
                 cms.Items.Add(tsmiSelectAll);
 
@@ -96,7 +95,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         }
 
         /// <summary>
-        /// Append Text to the richtextbox control.
+        ///     Append Text to the richtextbox control.
         /// </summary>
         /// <param name="text"></param>
         public void AppendText(string text)
@@ -105,6 +104,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         }
 
         #region To finish 
+
         private void richTextBoxResearchResult_MouseClick(object sender, MouseEventArgs e)
         {
             /*
@@ -121,8 +121,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                 }
             }*/
         }
+
         #endregion
-
     }
-
 }

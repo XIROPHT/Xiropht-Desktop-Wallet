@@ -1,7 +1,4 @@
-﻿#if WINDOWS
-using MetroFramework;
-#endif
-using System;
+﻿using System;
 using System.Drawing;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -9,10 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Xiropht_Connector_All.Setting;
-using Xiropht_Connector_All.Utils;
 using Xiropht_Connector_All.Wallet;
-using Xiropht_Wallet.Threading;
-using Xiropht_Wallet.Wallet;
+using Xiropht_Wallet.Features;
+using Xiropht_Wallet.Utility;
 
 namespace Xiropht_Wallet.FormPhase.MainForm
 {
@@ -31,7 +27,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             get
             {
-                CreateParams CP = base.CreateParams;
+                var CP = base.CreateParams;
                 CP.ExStyle = CP.ExStyle | 0x02000000; // WS_EX_COMPOSITED
                 return CP;
             }
@@ -39,11 +35,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private async void ButtonSendTransaction_ClickAsync(object sender, EventArgs e)
         {
-
             try
             {
-                string amountstring = textBoxAmount.Text.Replace(",", ".");
-                string feestring = textBoxFee.Text.Replace(",", ".");
+                var amountstring = textBoxAmount.Text.Replace(",", ".");
+                var feestring = textBoxFee.Text.Replace(",", ".");
 
                 var checkAmount = CheckAmount(amountstring);
                 var checkFee = CheckAmount(feestring);
@@ -55,15 +50,22 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         var feeSend = checkFee.Item2;
                         if (CheckAmountNetwork(amountSend + feeSend))
                         {
-                            string destination = ClassUtility.RemoveSpecialCharacters(textBoxWalletDestination.Text);
-                            if ((destination.Length >= 48 &&
-                                 destination.Length <= 128) && Regex.IsMatch(
+                            var destination = ClassUtility.RemoveSpecialCharacters(textBoxWalletDestination.Text);
+                            if (destination.Length >= 48 &&
+                                destination.Length <= 128 && Regex.IsMatch(
                                     destination,
                                     "[a-z0-9]+", RegexOptions.IgnoreCase))
                             {
 #if WINDOWS
-                                if (ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_SUBMIT_CONTENT_TEXT").Replace(ClassTranslation.AmountSendOrder, "" + amountSend).Replace(ClassTranslation.TargetAddressOrder, destination),
-                                        ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_SUBMIT_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) ==
+                                if (ClassFormPhase.MessageBoxInterface(
+                                        ClassTranslation
+                                            .GetLanguageTextFromOrder(
+                                                "SEND_TRANSACTION_WALLET_MESSAGE_SUBMIT_CONTENT_TEXT")
+                                            .Replace(ClassTranslation.AmountSendOrder, "" + amountSend)
+                                            .Replace(ClassTranslation.TargetAddressOrder, destination),
+                                        ClassTranslation.GetLanguageTextFromOrder(
+                                            "SEND_TRANSACTION_WALLET_MESSAGE_SUBMIT_TITLE_TEXT"),
+                                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) ==
                                     DialogResult.Yes)
 #else
                                 if (MessageBox.Show(Program.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_SUBMIT_CONTENT_TEXT").Replace(ClassTranslation.AmountSendOrder, "" + amountSend).Replace(ClassTranslation.TargetAddressOrder, destination),
@@ -71,22 +73,33 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                     DialogResult.Yes)
 #endif
                                 {
-
                                     ClassParallelForm.ShowWaitingFormAsync();
 
                                     if (checkBoxHideWalletAddress.Checked)
                                     {
-                                        await Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
-                                                    ClassWalletCommand.ClassWalletSendEnumeration.SendTransaction + "|" +
-                                                    destination + "|" + amountSend + "|" + feeSend + "|1", Program.WalletXiropht.ClassWalletObject.Certificate, true);
-
-
+                                        if (!Program.WalletXiropht.EnableTokenNetworkMode)
+                                            await Program.WalletXiropht.ClassWalletObject.WalletConnect
+                                                .SendPacketWallet(
+                                                    ClassWalletCommand.ClassWalletSendEnumeration.SendTransaction +
+                                                    "|" +
+                                                    destination + "|" + amountSend + "|" + feeSend + "|1",
+                                                    Program.WalletXiropht.ClassWalletObject.Certificate, true);
+                                        else
+                                            await Program.WalletXiropht.ClassWalletObject.SendWalletTokenTransaction(
+                                                destination, amountSend, feeSend, "1");
                                     }
                                     else
                                     {
-                                        await Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
-                                            ClassWalletCommand.ClassWalletSendEnumeration.SendTransaction + "|" +
-                                            destination + "|" + amountSend + "|" + feeSend + "|0", Program.WalletXiropht.ClassWalletObject.Certificate, true);
+                                        if (!Program.WalletXiropht.EnableTokenNetworkMode)
+                                            await Program.WalletXiropht.ClassWalletObject.WalletConnect
+                                                .SendPacketWallet(
+                                                    ClassWalletCommand.ClassWalletSendEnumeration.SendTransaction +
+                                                    "|" +
+                                                    destination + "|" + amountSend + "|" + feeSend + "|0",
+                                                    Program.WalletXiropht.ClassWalletObject.Certificate, true);
+                                        else
+                                            await Program.WalletXiropht.ClassWalletObject.SendWalletTokenTransaction(
+                                                destination, amountSend, feeSend, "0");
                                     }
 
                                     MethodInvoker invoke = () =>
@@ -97,13 +110,15 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                         textBoxWalletDestination.Text = string.Empty;
                                     };
                                     BeginInvoke(invoke);
-
                                 }
                             }
                             else
                             {
 #if WINDOWS
-                                ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_TARGET_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                ClassFormPhase.MessageBoxInterface(
+                                    ClassTranslation.GetLanguageTextFromOrder(
+                                        "SEND_TRANSACTION_WALLET_MESSAGE_ERROR_TARGET_CONTENT_TEXT"), string.Empty,
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                                 MessageBox.Show(Program.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_TARGET_CONTENT_TEXT"));
 #endif
@@ -112,7 +127,12 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         else
                         {
 #if WINDOWS
-                            ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_TITLE_TEXT"),MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            ClassFormPhase.MessageBoxInterface(
+                                ClassTranslation.GetLanguageTextFromOrder(
+                                    "WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_CONTENT_TEXT"),
+                                ClassTranslation.GetLanguageTextFromOrder(
+                                    "WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_TITLE_TEXT"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                             MessageBox.Show(Program.WalletXiropht,
                                 ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("WALLET_NETWORK_OBJECT_SEND_TRANSACTION_NOT_ENOUGHT_AMOUNT_TITLE_TEXT"),
@@ -123,7 +143,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     else
                     {
 #if WINDOWS
-                        ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_FEE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ClassFormPhase.MessageBoxInterface(
+                            ClassTranslation.GetLanguageTextFromOrder(
+                                "SEND_TRANSACTION_WALLET_MESSAGE_ERROR_FEE_CONTENT_TEXT"), string.Empty,
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                         MessageBox.Show(Program.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_FEE_CONTENT_TEXT"));
 #endif
@@ -132,7 +155,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 else
                 {
 #if WINDOWS
-                    ClassFormPhase.MessageBoxInterface(ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_AMOUNT_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ClassFormPhase.MessageBoxInterface(
+                        ClassTranslation.GetLanguageTextFromOrder(
+                            "SEND_TRANSACTION_WALLET_MESSAGE_ERROR_AMOUNT_CONTENT_TEXT"), string.Empty,
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                     MessageBox.Show(Program.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_ERROR_AMOUNT_CONTENT_TEXT"));
 #endif
@@ -142,18 +168,19 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             {
                 Console.WriteLine("Exception error: " + error.Message);
             }
+
             Refresh();
         }
 
         /// <summary>
-        /// Check amount before send.
+        ///     Check amount before send.
         /// </summary>
         /// <param name="amount"></param>
         private Tuple<bool, decimal> CheckAmount(string amount)
         {
             try
             {
-                decimal amountParse =
+                var amountParse =
                     decimal.Parse(amount, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat);
                 return new Tuple<bool, decimal>(true, amountParse);
             }
@@ -166,7 +193,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         }
 
         /// <summary>
-        /// Check total amount with current balance.
+        ///     Check total amount with current balance.
         /// </summary>
         /// <param name="totalAmount"></param>
         /// <returns></returns>
@@ -174,12 +201,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             try
             {
-                string newTotalAmount = Program.WalletXiropht.ClassWalletObject.WalletConnect.WalletAmount;
-                decimal amount = decimal.Parse(newTotalAmount, NumberStyles.Any, Program.GlobalCultureInfo);
-                if (amount >= totalAmount)
-                {
-                    return true;
-                }
+                var newTotalAmount = Program.WalletXiropht.ClassWalletObject.WalletConnect.WalletAmount;
+                var amount = decimal.Parse(newTotalAmount.Replace(".", ","), NumberStyles.Any,
+                    Program.GlobalCultureInfo);
+                if (amount >= totalAmount) return true;
             }
             catch
             {
@@ -193,16 +218,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         public void GetListControl()
         {
             if (Program.WalletXiropht.ListControlSizeSendTransaction.Count == 0)
-            {
-                for (int i = 0; i < Controls.Count; i++)
-                {
+                for (var i = 0; i < Controls.Count; i++)
                     if (i < Controls.Count)
-                    {
                         Program.WalletXiropht.ListControlSizeSendTransaction.Add(
                             new Tuple<Size, Point>(Controls[i].Size, Controls[i].Location));
-                    }
-                }
-            }
         }
 
 
@@ -219,86 +238,101 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private async void StartAutoUpdateTimeReceived()
         {
-            await Task.Factory.StartNew(async delegate()
+            await Task.Factory.StartNew(async delegate
             {
                 while (true)
                 {
                     await Task.Delay(100);
-                    if (Program.WalletXiropht.ClassWalletObject.SeedNodeConnectorWallet != null)
+                    if (Program.WalletXiropht.EnableTokenNetworkMode)
                     {
-                        if (Program.WalletXiropht.ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
-                        {
-                            MethodInvoker invoke;
-                            if (!string.IsNullOrEmpty(textBoxFee.Text))
-                            {
-                                if (Decimal.TryParse(textBoxFee.Text.Replace(".", ","), out var feeAmount))
-                                {
-                                    Decimal timePendingFromFee = Program.WalletXiropht.ClassWalletObject.RemoteNodeTotalPendingTransactionInNetwork;
-
-
-                                    if (timePendingFromFee <= 0)
-                                    {
-                                        timePendingFromFee = 1;
-                                    }
-                                    else
-                                    {
-                                        Decimal decreaseTime = ((feeAmount * 1000) / timePendingFromFee) * 100;
-                                        if (decreaseTime > 0)
-                                        {
-                                            timePendingFromFee = timePendingFromFee - decreaseTime;
-                                            if (timePendingFromFee <= 0)
-                                            {
-                                                timePendingFromFee = 1;
-                                            }
-                                            else
-                                            {
-                                                timePendingFromFee = (timePendingFromFee * 1) / 100;
-                                            }
-                                        }
-                                    }
-                                    if (timePendingFromFee < 1)
-                                    {
-                                        timePendingFromFee = 1;
-                                    }
-
-                                    if (timePendingFromFee < 60)
-                                    {
-                                        timePendingFromFee = Math.Round(timePendingFromFee, 0);
-                                        invoke = () => textBoxTransactionTime.Text = timePendingFromFee + " " + ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_TIME_SECOND_TEXT");
-                                        BeginInvoke(invoke);
-                                    }
-                                    else if (timePendingFromFee >= 60 && timePendingFromFee < 3600)
-                                    {
-                                        timePendingFromFee = timePendingFromFee / 60;
-                                        timePendingFromFee = Math.Round(timePendingFromFee, 2);
-                                        invoke = () => textBoxTransactionTime.Text = timePendingFromFee + " " + ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_TIME_MINUTE_TEXT");
-                                        BeginInvoke(invoke);
-                                    }
-                                    else if (timePendingFromFee >= 3600 && timePendingFromFee < 84600)
-                                    {
-                                        timePendingFromFee = timePendingFromFee / 3600;
-                                        timePendingFromFee = Math.Round(timePendingFromFee, 2);
-                                        invoke = () => textBoxTransactionTime.Text = timePendingFromFee + " " + ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_TIME_HOUR_TEXT");
-                                        BeginInvoke(invoke);
-                                    }
-                                    else if (timePendingFromFee >= 84600)
-                                    {
-                                        timePendingFromFee = timePendingFromFee / 84600;
-                                        timePendingFromFee = Math.Round(timePendingFromFee, 2);
-                                        invoke = () => textBoxTransactionTime.Text = timePendingFromFee + " " + ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_TIME_DAY_TEXT");
-                                        BeginInvoke(invoke);
-                                    }
-                                }
-                                else
-                                {
-                                    invoke = () => textBoxTransactionTime.Text = "N/A";
-                                    BeginInvoke(invoke);
-                                }
-                            }
-                        }
+                        CalculateTimeToReceive();
+                    }
+                    else
+                    {
+                        if (Program.WalletXiropht.ClassWalletObject.SeedNodeConnectorWallet != null)
+                            if (Program.WalletXiropht.ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
+                                CalculateTimeToReceive();
                     }
                 }
             }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Current).ConfigureAwait(false);
+        }
+
+        private void CalculateTimeToReceive()
+        {
+            MethodInvoker invoke;
+            if (!string.IsNullOrEmpty(textBoxFee.Text))
+            {
+                if (decimal.TryParse(textBoxFee.Text.Replace(".", ","), out var feeAmount))
+                {
+                    decimal timePendingFromFee = Program.WalletXiropht.ClassWalletObject
+                        .RemoteNodeTotalPendingTransactionInNetwork;
+
+
+                    if (timePendingFromFee <= 0)
+                    {
+                        timePendingFromFee = 1;
+                    }
+                    else
+                    {
+                        var decreaseTime = feeAmount * 1000 / timePendingFromFee * 100;
+                        if (decreaseTime > 0)
+                        {
+                            timePendingFromFee = timePendingFromFee - decreaseTime;
+                            if (timePendingFromFee <= 0)
+                                timePendingFromFee = 1;
+                            else
+                                timePendingFromFee = timePendingFromFee * 1 / 100;
+                        }
+                    }
+
+                    if (timePendingFromFee < 1) timePendingFromFee = 1;
+
+                    if (timePendingFromFee < 60)
+                    {
+                        timePendingFromFee = Math.Round(timePendingFromFee, 0);
+                        invoke = () =>
+                            textBoxTransactionTime.Text =
+                                timePendingFromFee + " " +
+                                ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_TIME_SECOND_TEXT");
+                        BeginInvoke(invoke);
+                    }
+                    else if (timePendingFromFee >= 60 && timePendingFromFee < 3600)
+                    {
+                        timePendingFromFee = timePendingFromFee / 60;
+                        timePendingFromFee = Math.Round(timePendingFromFee, 2);
+                        invoke = () =>
+                            textBoxTransactionTime.Text =
+                                timePendingFromFee + " " +
+                                ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_TIME_MINUTE_TEXT");
+                        BeginInvoke(invoke);
+                    }
+                    else if (timePendingFromFee >= 3600 && timePendingFromFee < 84600)
+                    {
+                        timePendingFromFee = timePendingFromFee / 3600;
+                        timePendingFromFee = Math.Round(timePendingFromFee, 2);
+                        invoke = () =>
+                            textBoxTransactionTime.Text =
+                                timePendingFromFee + " " +
+                                ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_TIME_HOUR_TEXT");
+                        BeginInvoke(invoke);
+                    }
+                    else if (timePendingFromFee >= 84600)
+                    {
+                        timePendingFromFee = timePendingFromFee / 84600;
+                        timePendingFromFee = Math.Round(timePendingFromFee, 2);
+                        invoke = () =>
+                            textBoxTransactionTime.Text =
+                                timePendingFromFee + " " +
+                                ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_TIME_DAY_TEXT");
+                        BeginInvoke(invoke);
+                    }
+                }
+                else
+                {
+                    invoke = () => textBoxTransactionTime.Text = "N/A";
+                    BeginInvoke(invoke);
+                }
+            }
         }
 
         private void CheckBoxHideWalletAddress_Click(object sender, EventArgs e)
@@ -307,16 +341,17 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             {
 #if WINDOWS
                 if (ClassFormPhase.MessageBoxInterface(
-                        ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_OPTION_ANONYMITY_CONTENT1_TEXT"),
-                        ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_OPTION_ANONYMITY_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No)
+                        ClassTranslation.GetLanguageTextFromOrder(
+                            "SEND_TRANSACTION_WALLET_MESSAGE_OPTION_ANONYMITY_CONTENT1_TEXT"),
+                        ClassTranslation.GetLanguageTextFromOrder(
+                            "SEND_TRANSACTION_WALLET_MESSAGE_OPTION_ANONYMITY_TITLE_TEXT"), MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Error) == DialogResult.No)
 #else
                 if (MessageBox.Show(Program.WalletXiropht,
                         ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_OPTION_ANONYMITY_CONTENT1_TEXT"),
                         ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_OPTION_ANONYMITY_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No)
 #endif
-                {
                     checkBoxHideWalletAddress.Checked = false;
-                }
             }
         }
 
@@ -330,15 +365,18 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             var toolTipFeeInformation = new ToolTip();
             toolTipFeeInformation.SetToolTip(buttonFeeInformation,
-                ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_FEE_INFORMATION_CONTENT_TEXT"));
+                ClassTranslation.GetLanguageTextFromOrder(
+                    "SEND_TRANSACTION_WALLET_MESSAGE_FEE_INFORMATION_CONTENT_TEXT"));
         }
 
         private void buttonFeeInformation_Click(object sender, EventArgs e)
         {
 #if WINDOWS
             ClassFormPhase.MessageBoxInterface(
-                ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_FEE_INFORMATION_CONTENT_TEXT"),
-                ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_FEE_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ClassTranslation.GetLanguageTextFromOrder(
+                    "SEND_TRANSACTION_WALLET_MESSAGE_FEE_INFORMATION_CONTENT_TEXT"),
+                ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_FEE_INFORMATION_TITLE_TEXT"),
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
 #else
             MessageBox.Show(Program.WalletXiropht,
                 ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_FEE_INFORMATION_CONTENT_TEXT"),
@@ -350,15 +388,19 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             var toolTipFeeInformation = new ToolTip();
             toolTipFeeInformation.SetToolTip(buttonEstimatedTimeInformation,
-                ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_TIME_RECEIVE_INFORMATION_CONTENT_TEXT"));
+                ClassTranslation.GetLanguageTextFromOrder(
+                    "SEND_TRANSACTION_WALLET_MESSAGE_TIME_RECEIVE_INFORMATION_CONTENT_TEXT"));
         }
 
         private void buttonEstimatedTimeInformation_Click(object sender, EventArgs e)
         {
 #if WINDOWS
             ClassFormPhase.MessageBoxInterface(
-                ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_TIME_RECEIVE_INFORMATION_CONTENT_TEXT"),
-                ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_TIME_RECEIVE_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ClassTranslation.GetLanguageTextFromOrder(
+                    "SEND_TRANSACTION_WALLET_MESSAGE_TIME_RECEIVE_INFORMATION_CONTENT_TEXT"),
+                ClassTranslation.GetLanguageTextFromOrder(
+                    "SEND_TRANSACTION_WALLET_MESSAGE_TIME_RECEIVE_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
 #else
             MessageBox.Show(Program.WalletXiropht,
                 ClassTranslation.GetLanguageTextFromOrder("SEND_TRANSACTION_WALLET_MESSAGE_TIME_RECEIVE_INFORMATION_CONTENT_TEXT"),
@@ -380,8 +422,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             try
             {
-                string amountstring = textBoxAmount.Text.Replace(",", ".");
-                string feestring = textBoxFee.Text.Replace(",", ".");
+                var amountstring = textBoxAmount.Text.Replace(",", ".");
+                var feestring = textBoxFee.Text.Replace(",", ".");
 
                 var checkAmount = CheckAmount(amountstring);
                 var checkFee = CheckAmount(feestring);
@@ -393,28 +435,24 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         var feeSend = checkFee.Item2;
                         if (checkBoxHideWalletAddress.Checked)
                         {
-                            if (CheckAmountNetwork(amountSend + feeSend + ClassConnectorSetting.MinimumWalletTransactionAnonymousFee))
-                            {
+                            if (CheckAmountNetwork(amountSend + feeSend +
+                                                   ClassConnectorSetting.MinimumWalletTransactionAnonymousFee))
                                 textBoxTotalSpend.ForeColor = Color.Green;
-                            }
                             else
-                            {
                                 textBoxTotalSpend.ForeColor = Color.Red;
-                            }
-                            
-                            textBoxTotalSpend.Text = ClassUtility.FormatAmount((amountSend + feeSend + ClassConnectorSetting.MinimumWalletTransactionAnonymousFee).ToString().Replace(",", "."));
+
+                            textBoxTotalSpend.Text = ClassUtility.FormatAmount(
+                                (amountSend + feeSend + ClassConnectorSetting.MinimumWalletTransactionAnonymousFee)
+                                .ToString().Replace(",", "."));
                         }
                         else
                         {
                             if (CheckAmountNetwork(amountSend + feeSend))
-                            {
                                 textBoxTotalSpend.ForeColor = Color.Green;
-                            }
                             else
-                            {
                                 textBoxTotalSpend.ForeColor = Color.Red;
-                            }
-                            textBoxTotalSpend.Text = ClassUtility.FormatAmount((amountSend + feeSend).ToString().Replace(",", "."));
+                            textBoxTotalSpend.Text =
+                                ClassUtility.FormatAmount((amountSend + feeSend).ToString().Replace(",", "."));
                         }
                     }
                     else

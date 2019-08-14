@@ -2,10 +2,8 @@
 using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
-using Xiropht_Wallet.FormPhase;
 
-
-namespace Xiropht_Wallet
+namespace Xiropht_Wallet.Utility
 {
     public static class LinuxClipboard
     {
@@ -13,17 +11,17 @@ namespace Xiropht_Wallet
         {
             try
             {
-                BashRunner.Run($"echo '" + text + "' | xclip -selection c");
+                BashRunner.Run("echo \'" + text + "' | xclip -selection c");
             }
             catch
             {
-                MessageBox.Show(Program.WalletXiropht, "Please be sure to have install xclip, example: sudo apt-get install xclip");
+                MessageBox.Show(Program.WalletXiropht,
+                    "Please be sure to have install xclip, example: sudo apt-get install xclip");
             }
         }
-
     }
 
-    static class BashRunner
+    internal static class BashRunner
     {
         public static string Run(string commandLine)
         {
@@ -39,7 +37,7 @@ namespace Xiropht_Wallet
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,
-                    CreateNoWindow = false,
+                    CreateNoWindow = false
                 }
             })
             {
@@ -50,15 +48,15 @@ namespace Xiropht_Wallet
                 process.BeginErrorReadLine();
                 if (!process.WaitForExit(500))
                 {
-                    var timeoutError = $@"Process timed out. Command line: bash {arguments}. Output: {outputBuilder} Error: {errorBuilder}";
+                    var timeoutError =
+                        $@"Process timed out. Command line: bash {arguments}. Output: {outputBuilder} Error: {errorBuilder}";
                     throw new Exception(timeoutError);
                 }
-                if (process.ExitCode == 0)
-                {
-                    return outputBuilder.ToString();
-                }
 
-                var error = $@"Could not execute process. Command line: bash {arguments}.Output: {outputBuilder} Error: {errorBuilder}";
+                if (process.ExitCode == 0) return outputBuilder.ToString();
+
+                var error =
+                    $@"Could not execute process. Command line: bash {arguments}.Output: {outputBuilder} Error: {errorBuilder}";
                 throw new Exception(error);
             }
         }

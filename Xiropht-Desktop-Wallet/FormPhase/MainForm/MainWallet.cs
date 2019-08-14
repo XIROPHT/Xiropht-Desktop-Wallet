@@ -16,7 +16,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             get
             {
-                CreateParams CP = base.CreateParams;
+                var CP = base.CreateParams;
                 CP.ExStyle = CP.ExStyle | 0x02000000; // WS_EX_COMPOSITED
                 return CP;
             }
@@ -36,16 +36,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         public void GetListControl()
         {
             if (Program.WalletXiropht.ListControlSizeMain.Count == 0)
-            {
-                for (int i = 0; i < Controls.Count; i++)
-                {
+                for (var i = 0; i < Controls.Count; i++)
                     if (i < Controls.Count)
-                    {
                         Program.WalletXiropht.ListControlSizeMain.Add(
                             new Tuple<Size, Point>(Controls[i].Size, Controls[i].Location));
-                    }
-                }
-            }
         }
 
         private void Main_Load(object sender, EventArgs e)

@@ -22,26 +22,25 @@ namespace Xiropht_Wallet.FormPhase
 
 
         /// <summary>
-        /// Show pin form only if he is not showed.
+        ///     Show pin form only if he is not showed.
         /// </summary>
         public static async void ShowPinFormAsync()
         {
             await Task.Factory.StartNew(() =>
-            {
-                try
                 {
-                    if (PinForm != null)
+                    try
                     {
-                        if (!PinFormShowed)
-                        {
-                            PinFormShowed = true;
-#if WINDOWS
-                            Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                        if (PinForm != null)
+                            if (!PinFormShowed)
                             {
-                                PinForm.StartPosition = FormStartPosition.CenterParent;
-                                PinForm.TopMost = false;
-                                PinForm.ShowDialog(Program.WalletXiropht);
-                            });
+                                PinFormShowed = true;
+#if WINDOWS
+                                Program.WalletXiropht.Invoke((MethodInvoker) delegate
+                                {
+                                    PinForm.StartPosition = FormStartPosition.CenterParent;
+                                    PinForm.TopMost = false;
+                                    PinForm.ShowDialog(Program.WalletXiropht);
+                                });
 #else
                             Program.WalletXiropht.BeginInvoke((MethodInvoker)delegate ()
                            {
@@ -50,67 +49,61 @@ namespace Xiropht_Wallet.FormPhase
                                PinForm.Show(Program.WalletXiropht);
                            });
 #endif
-                        }
+                            }
                     }
-                }
-                catch
-                {
-                    PinFormShowed = false;
-                }
-            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                    catch
+                    {
+                        PinFormShowed = false;
+                    }
+                }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current)
+                .ConfigureAwait(false);
         }
 
         public static async void HidePinFormAsync()
         {
             await Task.Factory.StartNew(() =>
-             {
-                 if (PinForm != null)
-                 {
-                     try
-                     {
-                         if (PinFormShowed)
-                         {
-                             Program.WalletXiropht.BeginInvoke((MethodInvoker)delegate { PinForm.Hide(); });
-                             PinFormShowed = false;
-                         }
-                     }
-                     catch
-                     {
-                     }
-                 }
-             }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                {
+                    if (PinForm != null)
+                        try
+                        {
+                            if (PinFormShowed)
+                            {
+                                Program.WalletXiropht.BeginInvoke((MethodInvoker) delegate { PinForm.Hide(); });
+                                PinFormShowed = false;
+                            }
+                        }
+                        catch
+                        {
+                        }
+                }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Show waiting form network.
+        ///     Show waiting form network.
         /// </summary>
         public static async void ShowWaitingFormAsync()
         {
             await Task.Factory.StartNew(() =>
-            {
-                if (WaitingForm != null)
                 {
-                    if (!WaitingFormShowed)
-                    {
-                        WaitingFormShowed = true;
+                    if (WaitingForm != null)
+                        if (!WaitingFormShowed)
+                        {
+                            WaitingFormShowed = true;
 #if WINDOWS
-                        try
-                        {
-                            if (WaitingForm.Visible)
+                            try
                             {
-                                HideWaitingFormAsync();
+                                if (WaitingForm.Visible) HideWaitingFormAsync();
+                                Program.WalletXiropht.Invoke((MethodInvoker) delegate
+                                {
+                                    WaitingForm.StartPosition = FormStartPosition.CenterParent;
+                                    WaitingForm.TopMost = false;
+                                    WaitingForm.ShowDialog(Program.WalletXiropht);
+                                });
                             }
-                            Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            catch
                             {
-                                WaitingForm.StartPosition = FormStartPosition.CenterParent;
-                                WaitingForm.TopMost = false;
-                                WaitingForm.ShowDialog(Program.WalletXiropht);
-                            });
-                        }
-                        catch
-                        {
-
-                        }
+                            }
 #else
                         MethodInvoker invoke = () =>
                         {
@@ -120,60 +113,56 @@ namespace Xiropht_Wallet.FormPhase
                         };
                         Program.WalletXiropht.BeginInvoke(invoke);
 #endif
-                    }
-                }
-            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                        }
+                }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Hide waiting form.
+        ///     Hide waiting form.
         /// </summary>
         public static async void HideWaitingFormAsync()
         {
             await Task.Factory.StartNew(() =>
-            {
-                if (WaitingForm != null)
                 {
-                    if (WaitingFormShowed)
-                    {
-                        WaitingFormShowed = false;
-                        try
+                    if (WaitingForm != null)
+                        if (WaitingFormShowed)
                         {
-
-                            MethodInvoker invoke = () => WaitingForm.Hide();
-                            Program.WalletXiropht.BeginInvoke(invoke);
+                            WaitingFormShowed = false;
+                            try
+                            {
+                                MethodInvoker invoke = () => WaitingForm.Hide();
+                                Program.WalletXiropht.BeginInvoke(invoke);
+                            }
+                            catch
+                            {
+                            }
                         }
-                        catch
-                        {
-
-                        }
-                    }
-                }
-            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current)
+                .ConfigureAwait(false);
         }
 
 
         /// <summary>
-        /// Show waiting reconnect form network.
+        ///     Show waiting reconnect form network.
         /// </summary>
         public static async void ShowWaitingReconnectFormAsync()
         {
             await Task.Factory.StartNew(() =>
-            {
-                if (WaitingFormReconnect != null)
                 {
-                    if (!WaitingFormReconnectShowed)
-                    {
-                        WaitingFormReconnectShowed = true;
-                        try
+                    if (WaitingFormReconnect != null)
+                        if (!WaitingFormReconnectShowed)
                         {
-#if WINDOWS
-                            Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                            WaitingFormReconnectShowed = true;
+                            try
                             {
-                                WaitingFormReconnect.StartPosition = FormStartPosition.CenterParent;
-                                WaitingFormReconnect.TopMost = false;
-                                WaitingFormReconnect.ShowDialog(Program.WalletXiropht);
-                            });
+#if WINDOWS
+                                Program.WalletXiropht.Invoke((MethodInvoker) delegate
+                                {
+                                    WaitingFormReconnect.StartPosition = FormStartPosition.CenterParent;
+                                    WaitingFormReconnect.TopMost = false;
+                                    WaitingFormReconnect.ShowDialog(Program.WalletXiropht);
+                                });
 #else
                             Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
                             {
@@ -182,63 +171,63 @@ namespace Xiropht_Wallet.FormPhase
                                 WaitingFormReconnect.Show(Program.WalletXiropht);
                             });
 #endif
+                            }
+                            catch
+                            {
+                                WaitingFormReconnectShowed = false;
+                            }
                         }
-                        catch
-                        {
-                            WaitingFormReconnectShowed = false;
-                        }
-                    }
-                }
-            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Hide waiting reconnect form.
+        ///     Hide waiting reconnect form.
         /// </summary>
         public static async void HideWaitingReconnectFormAsync()
         {
             await Task.Factory.StartNew(() =>
-             {
-                 if (WaitingFormReconnect != null)
-                 {
-                     if (WaitingFormReconnectShowed)
-                     {
-                         WaitingFormReconnectShowed = false;
-                         try
-                         {
-                             WaitingFormReconnect.Invoke((MethodInvoker)delegate { WaitingFormReconnect.Hide(); WaitingFormReconnect.Refresh(); });
-                         }
-                         catch
-                         {
-
-                         }
-                     }
-                 }
-             }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                {
+                    if (WaitingFormReconnect != null)
+                        if (WaitingFormReconnectShowed)
+                        {
+                            WaitingFormReconnectShowed = false;
+                            try
+                            {
+                                WaitingFormReconnect.Invoke((MethodInvoker) delegate
+                                {
+                                    WaitingFormReconnect.Hide();
+                                    WaitingFormReconnect.Refresh();
+                                });
+                            }
+                            catch
+                            {
+                            }
+                        }
+                }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current)
+                .ConfigureAwait(false);
         }
 
 
         /// <summary>
-        /// Show waiting form network.
+        ///     Show waiting form network.
         /// </summary>
         public static async void ShowWaitingForm2Async()
         {
             await Task.Factory.StartNew(() =>
-            {
-                if (WaitingForm2 != null)
                 {
-                    if (!WaitingForm2Showed)
-                    {
-                        try
-                        {
-                            WaitingForm2Showed = true;
-#if WINDOWS
-                            Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                    if (WaitingForm2 != null)
+                        if (!WaitingForm2Showed)
+                            try
                             {
-                                WaitingForm2.StartPosition = FormStartPosition.CenterParent;
-                                WaitingForm2.TopMost = false;
-                                WaitingForm2.ShowDialog(Program.WalletXiropht);
-                            });
+                                WaitingForm2Showed = true;
+#if WINDOWS
+                                Program.WalletXiropht.Invoke((MethodInvoker) delegate
+                                {
+                                    WaitingForm2.StartPosition = FormStartPosition.CenterParent;
+                                    WaitingForm2.TopMost = false;
+                                    WaitingForm2.ShowDialog(Program.WalletXiropht);
+                                });
 #else
                             Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
                            {
@@ -247,63 +236,62 @@ namespace Xiropht_Wallet.FormPhase
                                WaitingForm2.Show(Program.WalletXiropht);
                            });
 #endif
-                        }
-                        catch
-                        {
-
-                        }
-                    }
-                }
-            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                            }
+                            catch
+                            {
+                            }
+                }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Hide waiting form.
+        ///     Hide waiting form.
         /// </summary>
         public static async Task HideWaitingForm2Async()
         {
             await Task.Factory.StartNew(() =>
-            {
-                try
                 {
-                    if (WaitingForm2 != null)
+                    try
                     {
-                        if (WaitingForm2Showed)
-                        {
-                            WaitingForm2Showed = false;
-                            WaitingForm2.Invoke((MethodInvoker)delegate () { WaitingForm2.Hide(); WaitingForm2.Refresh(); });
-                        }
+                        if (WaitingForm2 != null)
+                            if (WaitingForm2Showed)
+                            {
+                                WaitingForm2Showed = false;
+                                WaitingForm2.Invoke((MethodInvoker) delegate
+                                {
+                                    WaitingForm2.Hide();
+                                    WaitingForm2.Refresh();
+                                });
+                            }
                     }
-                }
-                catch
-                {
-
-                }
-            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                    catch
+                    {
+                    }
+                }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current)
+                .ConfigureAwait(false);
         }
 
 
         /// <summary>
-        /// Show waiting dialog of create wallet.
+        ///     Show waiting dialog of create wallet.
         /// </summary>
         public static async void ShowWaitingCreateWalletFormAsync()
         {
             await Task.Factory.StartNew(() =>
-            {
-                try
                 {
-                    if (WaitingCreateWalletForm != null)
+                    try
                     {
-                        if (!WaitingCreateWalletFormShowed)
-                        {
-                            WaitingCreateWalletFormShowed = true;
-#if WINDOWS
-                            Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
+                        if (WaitingCreateWalletForm != null)
+                            if (!WaitingCreateWalletFormShowed)
                             {
-                                WaitingCreateWalletForm.StartPosition = FormStartPosition.CenterParent;
-                                WaitingCreateWalletForm.TopMost = false;
-                                WaitingCreateWalletForm.ShowDialog(Program.WalletXiropht);
-                            });
+                                WaitingCreateWalletFormShowed = true;
+#if WINDOWS
+                                Program.WalletXiropht.Invoke((MethodInvoker) delegate
+                                {
+                                    WaitingCreateWalletForm.StartPosition = FormStartPosition.CenterParent;
+                                    WaitingCreateWalletForm.TopMost = false;
+                                    WaitingCreateWalletForm.ShowDialog(Program.WalletXiropht);
+                                });
 #else
                             Program.WalletXiropht.Invoke((MethodInvoker)delegate ()
                            {
@@ -312,40 +300,40 @@ namespace Xiropht_Wallet.FormPhase
                                WaitingCreateWalletForm.Show(Program.WalletXiropht);
                            });
 #endif
-                        }
+                            }
                     }
-                }
-                catch
-                {
-
-                }
-            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                    catch
+                    {
+                    }
+                }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Hide waiting dialog of create wallet.
+        ///     Hide waiting dialog of create wallet.
         /// </summary>
         public static async void HideWaitingCreateWalletFormAsync()
         {
             await Task.Factory.StartNew(() =>
-            {
-                try
                 {
-                    if (WaitingCreateWalletForm != null)
+                    try
                     {
-                        if (WaitingCreateWalletFormShowed)
-                        {
-                            WaitingCreateWalletFormShowed = false;
+                        if (WaitingCreateWalletForm != null)
+                            if (WaitingCreateWalletFormShowed)
+                            {
+                                WaitingCreateWalletFormShowed = false;
 
-                            WaitingCreateWalletForm.Invoke((MethodInvoker)delegate { WaitingCreateWalletForm.Hide(); });
-                        }
+                                WaitingCreateWalletForm.Invoke((MethodInvoker) delegate
+                                {
+                                    WaitingCreateWalletForm.Hide();
+                                });
+                            }
                     }
-                }
-                catch
-                {
-
-                }
-            }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                    catch
+                    {
+                    }
+                }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current)
+                .ConfigureAwait(false);
         }
     }
 }

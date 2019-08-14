@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading;
 
-namespace Xiropht_Wallet
+namespace Xiropht_Wallet.Debug
 {
-
     /// <summary>
-    /// This is optional.
+    ///     This is optional.
     /// </summary>
     public class ClassMemory
     {
@@ -18,8 +17,8 @@ namespace Xiropht_Wallet
         {
             while (true)
             {
-                long memory = GC.GetTotalMemory(false);
-                double megabyte = ConvertBytesToMegabytes(memory);
+                var memory = GC.GetTotalMemory(false);
+                var megabyte = ConvertBytesToMegabytes(memory);
 #if DEBUG
                 Log.WriteLine("Clean memory done. Total Memory to clean up: " + megabyte + " MB");
 #endif
@@ -35,9 +34,9 @@ namespace Xiropht_Wallet
             }
         }
 
-        static double ConvertBytesToMegabytes(long bytes)
+        private static double ConvertBytesToMegabytes(long bytes)
         {
-            return (bytes / 1024f) / 1024f;
+            return bytes / 1024f / 1024f;
         }
     }
 }

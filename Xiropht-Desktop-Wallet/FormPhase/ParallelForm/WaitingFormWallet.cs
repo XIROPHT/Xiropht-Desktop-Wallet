@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Xiropht_Wallet.Features;
 
 namespace Xiropht_Wallet.FormPhase
 {
@@ -12,7 +13,7 @@ namespace Xiropht_Wallet.FormPhase
 
         private void WaitingForm_Load(object sender, EventArgs e)
         {
-            labelLoadingNetwork.Text = ClassTranslation.GetLanguageTextFromOrder("WAITING_MENU_LABEL_TEXT");
+            labelLoadingNetwork.Text = ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.waitingmenulabeltext);
         }
 
         private void ButtonClose_Click(object sender, EventArgs e)
@@ -23,7 +24,6 @@ namespace Xiropht_Wallet.FormPhase
 
         private void labelLoadingNetwork_Click(object sender, EventArgs e)
         {
-
         }
     }
 }

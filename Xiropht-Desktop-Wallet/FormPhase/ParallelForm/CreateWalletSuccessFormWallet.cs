@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Windows.Forms;
-#if WINDOWS
-using MetroFramework;
-#endif
+using Xiropht_Wallet.Features;
+using Xiropht_Wallet.Utility;
 
 namespace Xiropht_Wallet.FormPhase.ParallelForm
 {
     public partial class CreateWalletSuccessFormWallet : Form
     {
+        public string PinCode;
         public string PrivateKey;
         public string PublicKey;
-        public string PinCode;
 
         public CreateWalletSuccessFormWallet()
         {
@@ -21,17 +20,23 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         {
 #if WINDOWS
             if (ClassFormPhase.MessageBoxInterface(
-                    ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_CONTENT_TEXT"),
-                    ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                    ClassTranslation.GetLanguageTextFromOrder(
+                        ClassTranslationEnumeration.createwalletsubmenubuttonacceptwalletinformationmessagecontenttext),
+                    ClassTranslation.GetLanguageTextFromOrder(
+                        ClassTranslationEnumeration.createwalletsubmenubuttonacceptwalletinformationmessagetitletext),
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
 #else
             if (MessageBox.Show(Program.WalletXiropht,
-                    ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_CONTENT_TEXT"),
-                    ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenubuttonacceptwalletinformationmessagecontenttext),
+                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenubuttonacceptwalletinformationmessagetitletext), MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
 #endif
             {
-                labelYourPrivateKey.Text = ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_LABEL_PRIVATE_KEY_TEXT");
-                labelYourPublicKey.Text = ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_LABEL_PUBLIC_KEY_TEXT");
-                labelYourPinCode.Text = ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_LABEL_PIN_CODE_TEXT");
+                labelYourPrivateKey.Text =
+                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenulabelprivatekeytext);
+                labelYourPublicKey.Text =
+                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenulabelpublickeytext);
+                labelYourPinCode.Text =
+                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenulabelpincodetext);
                 PrivateKey = string.Empty;
                 PublicKey = string.Empty;
                 PinCode = string.Empty;
@@ -41,10 +46,12 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             {
 #if WINDOWS
                 ClassFormPhase.MessageBoxInterface(
-                    ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_SAFE_CONTENT_TEXT"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ClassTranslation.GetLanguageTextFromOrder(
+                        ClassTranslationEnumeration.createwalletsubmenubuttonacceptwalletinformationmessagesafecontenttext),
+                    string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                 MessageBox.Show(Program.WalletXiropht,
-                    ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_MESSAGE_SAFE_CONTENT_TEXT"));
+                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenubuttonacceptwalletinformationmessagesafecontenttext));
 #endif
             }
         }
@@ -53,34 +60,44 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         {
 #if WINDOWS
             Clipboard.SetText(labelYourPublicKey.Text + " " + Environment.NewLine +
-                             labelYourPrivateKey.Text + " " + Environment.NewLine +
-                             labelYourPinCode.Text);
+                              labelYourPrivateKey.Text + " " + Environment.NewLine +
+                              labelYourPinCode.Text);
 
 
             ClassFormPhase.MessageBoxInterface(
-                ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_COPY_WALLET_INFORMATION_CONTENT_TEXT"),
-                ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_COPY_WALLET_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question);
+                ClassTranslation.GetLanguageTextFromOrder(
+                    ClassTranslationEnumeration.createwalletsubmenubuttoncopywalletinformationcontenttext),
+                ClassTranslation.GetLanguageTextFromOrder(
+                    ClassTranslationEnumeration.createwalletsubmenubuttoncopywalletinformationtitletext), MessageBoxButtons.OK,
+                MessageBoxIcon.Question);
 #else
-
             LinuxClipboard.SetText(labelYourPublicKey.Text + " " + Environment.NewLine +
                              labelYourPrivateKey.Text + " " + Environment.NewLine +
                              labelYourPinCode.Text);
 
 
             MessageBox.Show(Program.WalletXiropht,
-                ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_COPY_WALLET_INFORMATION_CONTENT_TEXT"),
-                ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_COPY_WALLET_INFORMATION_TITLE_TEXT"), MessageBoxButtons.OK, MessageBoxIcon.Question);
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenubuttoncopywalletinformationcontenttext),
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenubuttoncopywalletinformationtitletext), MessageBoxButtons.OK, MessageBoxIcon.Question);
 #endif
         }
 
         private void CreateWalletSuccessForm_Load(object sender, EventArgs e)
         {
-            labelCreateWalletInformation.Text = ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_LABEL_INFORMATION_TEXT");
-            labelYourPinCode.Text = ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_LABEL_PIN_CODE_TEXT") + " "+PinCode;
-            labelYourPrivateKey.Text = ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_LABEL_PRIVATE_KEY_TEXT") + " "+PrivateKey;
-            labelYourPublicKey.Text = ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_LABEL_PUBLIC_KEY_TEXT") + " "+PublicKey;
-            buttonAcceptAndCloseWalletInformation.Text = ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_ACCEPT_WALLET_INFORMATION_TEXT");
-            buttonCopyWalletInformation.Text = ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_SUBMENU_BUTTON_COPY_WALLET_INFORMATION_TEXT");
+            labelCreateWalletInformation.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenulabelinformationtext);
+            labelYourPinCode.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenulabelpincodetext) + " " + PinCode;
+            labelYourPrivateKey.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenulabelprivatekeytext) + " " +
+                PrivateKey;
+            labelYourPublicKey.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenulabelpublickeytext) + " " +
+                PublicKey;
+            buttonAcceptAndCloseWalletInformation.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenubuttonacceptwalletinformationtext);
+            buttonCopyWalletInformation.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenubuttoncopywalletinformationtext);
         }
     }
 }

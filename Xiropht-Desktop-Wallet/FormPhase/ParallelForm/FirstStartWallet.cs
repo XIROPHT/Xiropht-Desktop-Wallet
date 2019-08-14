@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Windows.Forms;
+using Xiropht_Wallet.Features;
+using Xiropht_Wallet.Wallet.Setting;
 
 namespace Xiropht_Wallet.FormPhase.ParallelForm
 {
     public partial class FirstStartWallet : Form
     {
-        bool languageSelected;
+        private bool languageSelected;
 
         public FirstStartWallet()
         {
@@ -15,14 +17,12 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         }
 
         /// <summary>
-        /// Initilization of the first start form.
+        ///     Initilization of the first start form.
         /// </summary>
         private void initializationFirstStartForm()
         {
-            foreach (string key in ClassTranslation.LanguageDatabases.Keys)
-            {
+            foreach (var key in ClassTranslation.LanguageDatabases.Keys)
                 comboBoxLanguage.Items.Add(ClassTranslation.UppercaseFirst(key));
-            }
         }
 
         private void UpdateLangueForm()

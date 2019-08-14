@@ -34,6 +34,7 @@
             this.textBoxPasswordWallet = new System.Windows.Forms.TextBox();
             this.labelWriteYourWalletPassword = new System.Windows.Forms.Label();
             this.labelOpenFileSelected = new System.Windows.Forms.Label();
+            this.checkBoxEnableTokenMode = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // buttonSearchWalletFile
@@ -91,12 +92,24 @@
             this.labelOpenFileSelected.TabIndex = 13;
             this.labelOpenFileSelected.Text = "File Selected:";
             // 
+            // checkBoxEnableTokenMode
+            // 
+            this.checkBoxEnableTokenMode.AutoSize = true;
+            this.checkBoxEnableTokenMode.Location = new System.Drawing.Point(152, 335);
+            this.checkBoxEnableTokenMode.Name = "checkBoxEnableTokenMode";
+            this.checkBoxEnableTokenMode.Size = new System.Drawing.Size(158, 17);
+            this.checkBoxEnableTokenMode.TabIndex = 14;
+            this.checkBoxEnableTokenMode.Text = "Use Token Network Mode. ";
+            this.checkBoxEnableTokenMode.UseVisualStyleBackColor = true;
+            this.checkBoxEnableTokenMode.CheckedChanged += new System.EventHandler(this.checkBoxEnableTokenMode_CheckedChanged);
+            // 
             // OpenWallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(784, 496);
+            this.Controls.Add(this.checkBoxEnableTokenMode);
             this.Controls.Add(this.labelOpenFileSelected);
             this.Controls.Add(this.labelWriteYourWalletPassword);
             this.Controls.Add(this.buttonSearchWalletFile);
@@ -125,5 +138,6 @@
         public System.Windows.Forms.Button buttonOpenYourWallet;
         public System.Windows.Forms.Label labelWriteYourWalletPassword;
         public System.Windows.Forms.Label labelOpenFileSelected;
+        private System.Windows.Forms.CheckBox checkBoxEnableTokenMode;
     }
 }
