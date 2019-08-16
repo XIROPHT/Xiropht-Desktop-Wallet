@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using Xiropht_Wallet.Features;
 using Xiropht_Wallet.Wallet.Setting;
@@ -77,6 +78,8 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
 
         private void RemoteNodeSetting_Load(object sender, EventArgs e)
         {
+            dataGridViewPeerList.AllowUserToAddRows = false;
+
             radioButtonEnableSeedNodeSync.Text =
                 ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.remotenodesettingmenuuseseednodenetworkonlytext);
             radioButtonEnablePublicRemoteNodeSync.Text =
@@ -107,6 +110,39 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                     radioButtonEnableManualRemoteNodeSync.Checked = true;
                     textBoxRemoteNodeHost.Text = Program.WalletXiropht.WalletSyncHostname;
                     break;
+            }
+
+            if (ClassPeerList.PeerList.Count > 0)
+            {
+                foreach (var peer in ClassPeerList.PeerList.ToArray())
+                {
+                    dataGridViewPeerList.Rows.Add(peer.Value.peer_host, peer.Value.peer_status, "Remove");
+
+                }
+            }
+        }
+
+        private void dataGridViewPeerList_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var senderGrid = (DataGridView)sender;
+
+            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
+                e.RowIndex >= 0)
+            {
+                try
+                {
+                    string peer = senderGrid.Rows[e.RowIndex].Cells[0].Value.ToString();
+                    if (ClassPeerList.PeerList.ContainsKey(peer))
+                    {
+                        ClassPeerList.PeerList.Remove(peer);
+                    }
+
+                    dataGridViewPeerList.Rows.RemoveAt(e.RowIndex);
+                }
+                catch
+                {
+
+                }
             }
         }
     }

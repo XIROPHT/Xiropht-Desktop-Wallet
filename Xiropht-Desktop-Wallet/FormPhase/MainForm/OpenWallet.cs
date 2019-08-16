@@ -250,5 +250,18 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             else
                 Program.WalletXiropht.EnableTokenNetworkMode = false;
         }
+
+        private void buttonTokenNetworkHelp_Click(object sender, EventArgs e)
+        {
+#if WINDOWS
+            ClassFormPhase.MessageBoxInterface("The token network option permit to not have to use the online mode, and then to use only once this is necessary few requests to retrieve automatically your balance and to send a transaction once you want."+Environment.NewLine+"Note: The Token Network mode not permit to change your wallet password and not permit to disable your pin code.",
+                "Token Network Option", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+#else
+            MessageBox.Show(Program.WalletXiropht,"The token network option permit to not have to use the online mode, and then to use only once this is necessary few requests to retrieve automatically your balance and to send a transaction once you want."+Environment.NewLine+"Note: The Token Network mode not permit to change your wallet password and not permit to disable your pin code.",
+                "Token Network Option", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+#endif
+        }
     }
 }

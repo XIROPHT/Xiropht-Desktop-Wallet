@@ -94,6 +94,7 @@ namespace Xiropht_Wallet.Features
         {
             if (!PeerList.ContainsKey(peerHost))
             {
+                
                 IncludeNewPeer(peerHost);
                 return true;
             }

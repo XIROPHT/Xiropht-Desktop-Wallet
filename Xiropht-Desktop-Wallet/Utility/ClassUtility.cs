@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 using Xiropht_Connector_All.Setting;
+using Xiropht_Connector_All.Utils;
 
 namespace Xiropht_Wallet.Utility
 {
@@ -80,6 +83,18 @@ namespace Xiropht_Wallet.Utility
                         containSpecialCharacter = true;
             if (containLetter && containNumber && containSpecialCharacter) return true;
             return false;
+        }
+
+        /// <summary>
+        /// Test tcp connect.
+        /// </summary>
+        /// <returns></returns>
+        public static bool TestTcpHost(string host, int port, int timeout)
+        {
+            bool status = false;
+            Task taskCheckSeedNode = Task.Run(async () => status = await CheckTcp.CheckTcpClientAsync(host, port));
+            taskCheckSeedNode.Wait(timeout);
+            return status;
         }
     }
 }

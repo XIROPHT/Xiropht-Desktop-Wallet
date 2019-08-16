@@ -35,6 +35,7 @@
             this.labelWriteYourWalletPassword = new System.Windows.Forms.Label();
             this.labelOpenFileSelected = new System.Windows.Forms.Label();
             this.checkBoxEnableTokenMode = new System.Windows.Forms.CheckBox();
+            this.buttonTokenNetworkHelp = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonSearchWalletFile
@@ -103,12 +104,23 @@
             this.checkBoxEnableTokenMode.UseVisualStyleBackColor = true;
             this.checkBoxEnableTokenMode.CheckedChanged += new System.EventHandler(this.checkBoxEnableTokenMode_CheckedChanged);
             // 
+            // buttonTokenNetworkHelp
+            // 
+            this.buttonTokenNetworkHelp.Location = new System.Drawing.Point(306, 330);
+            this.buttonTokenNetworkHelp.Name = "buttonTokenNetworkHelp";
+            this.buttonTokenNetworkHelp.Size = new System.Drawing.Size(26, 25);
+            this.buttonTokenNetworkHelp.TabIndex = 15;
+            this.buttonTokenNetworkHelp.Text = "?";
+            this.buttonTokenNetworkHelp.UseVisualStyleBackColor = true;
+            this.buttonTokenNetworkHelp.Click += new System.EventHandler(this.buttonTokenNetworkHelp_Click);
+            // 
             // OpenWallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(784, 496);
+            this.Controls.Add(this.buttonTokenNetworkHelp);
             this.Controls.Add(this.checkBoxEnableTokenMode);
             this.Controls.Add(this.labelOpenFileSelected);
             this.Controls.Add(this.labelWriteYourWalletPassword);
@@ -139,5 +151,6 @@
         public System.Windows.Forms.Label labelWriteYourWalletPassword;
         public System.Windows.Forms.Label labelOpenFileSelected;
         private System.Windows.Forms.CheckBox checkBoxEnableTokenMode;
+        private System.Windows.Forms.Button buttonTokenNetworkHelp;
     }
 }

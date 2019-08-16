@@ -36,13 +36,19 @@
             this.textBoxRemoteNodeHost = new System.Windows.Forms.TextBox();
             this.labelNoticeRemoteNodeHost = new System.Windows.Forms.Label();
             this.buttonValidSetting = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.dataGridViewPeerList = new System.Windows.Forms.DataGridView();
+            this.ColumnPeer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnPeerStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnPeerAction = new System.Windows.Forms.DataGridViewButtonColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPeerList)).BeginInit();
             this.SuspendLayout();
             // 
             // radioButtonEnableSeedNodeSync
             // 
             this.radioButtonEnableSeedNodeSync.AutoSize = true;
             this.radioButtonEnableSeedNodeSync.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButtonEnableSeedNodeSync.Location = new System.Drawing.Point(83, 47);
+            this.radioButtonEnableSeedNodeSync.Location = new System.Drawing.Point(20, 40);
             this.radioButtonEnableSeedNodeSync.Name = "radioButtonEnableSeedNodeSync";
             this.radioButtonEnableSeedNodeSync.Size = new System.Drawing.Size(391, 20);
             this.radioButtonEnableSeedNodeSync.TabIndex = 0;
@@ -55,7 +61,7 @@
             // 
             this.radioButtonEnablePublicRemoteNodeSync.AutoSize = true;
             this.radioButtonEnablePublicRemoteNodeSync.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButtonEnablePublicRemoteNodeSync.Location = new System.Drawing.Point(83, 122);
+            this.radioButtonEnablePublicRemoteNodeSync.Location = new System.Drawing.Point(20, 99);
             this.radioButtonEnablePublicRemoteNodeSync.Name = "radioButtonEnablePublicRemoteNodeSync";
             this.radioButtonEnablePublicRemoteNodeSync.Size = new System.Drawing.Size(306, 20);
             this.radioButtonEnablePublicRemoteNodeSync.TabIndex = 1;
@@ -68,7 +74,7 @@
             // 
             this.radioButtonEnableManualRemoteNodeSync.AutoSize = true;
             this.radioButtonEnableManualRemoteNodeSync.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButtonEnableManualRemoteNodeSync.Location = new System.Drawing.Point(83, 220);
+            this.radioButtonEnableManualRemoteNodeSync.Location = new System.Drawing.Point(20, 195);
             this.radioButtonEnableManualRemoteNodeSync.Name = "radioButtonEnableManualRemoteNodeSync";
             this.radioButtonEnableManualRemoteNodeSync.Size = new System.Drawing.Size(401, 20);
             this.radioButtonEnableManualRemoteNodeSync.TabIndex = 2;
@@ -81,7 +87,7 @@
             // 
             this.labelNoticePrivateRemoteNode.AutoSize = true;
             this.labelNoticePrivateRemoteNode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelNoticePrivateRemoteNode.Location = new System.Drawing.Point(80, 253);
+            this.labelNoticePrivateRemoteNode.Location = new System.Drawing.Point(17, 228);
             this.labelNoticePrivateRemoteNode.Name = "labelNoticePrivateRemoteNode";
             this.labelNoticePrivateRemoteNode.Size = new System.Drawing.Size(386, 15);
             this.labelNoticePrivateRemoteNode.TabIndex = 3;
@@ -92,7 +98,7 @@
             // 
             this.labelNoticePublicNodeInformation.AutoSize = true;
             this.labelNoticePublicNodeInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelNoticePublicNodeInformation.Location = new System.Drawing.Point(80, 157);
+            this.labelNoticePublicNodeInformation.Location = new System.Drawing.Point(17, 134);
             this.labelNoticePublicNodeInformation.Name = "labelNoticePublicNodeInformation";
             this.labelNoticePublicNodeInformation.Size = new System.Drawing.Size(482, 30);
             this.labelNoticePublicNodeInformation.TabIndex = 4;
@@ -102,7 +108,7 @@
             // 
             // textBoxRemoteNodeHost
             // 
-            this.textBoxRemoteNodeHost.Location = new System.Drawing.Point(165, 316);
+            this.textBoxRemoteNodeHost.Location = new System.Drawing.Point(20, 311);
             this.textBoxRemoteNodeHost.Name = "textBoxRemoteNodeHost";
             this.textBoxRemoteNodeHost.Size = new System.Drawing.Size(309, 20);
             this.textBoxRemoteNodeHost.TabIndex = 5;
@@ -110,7 +116,7 @@
             // labelNoticeRemoteNodeHost
             // 
             this.labelNoticeRemoteNodeHost.AutoSize = true;
-            this.labelNoticeRemoteNodeHost.Location = new System.Drawing.Point(12, 319);
+            this.labelNoticeRemoteNodeHost.Location = new System.Drawing.Point(17, 295);
             this.labelNoticeRemoteNodeHost.Name = "labelNoticeRemoteNodeHost";
             this.labelNoticeRemoteNodeHost.Size = new System.Drawing.Size(76, 13);
             this.labelNoticeRemoteNodeHost.TabIndex = 6;
@@ -119,7 +125,7 @@
             // 
             // buttonValidSetting
             // 
-            this.buttonValidSetting.Location = new System.Drawing.Point(487, 316);
+            this.buttonValidSetting.Location = new System.Drawing.Point(335, 311);
             this.buttonValidSetting.Name = "buttonValidSetting";
             this.buttonValidSetting.Size = new System.Drawing.Size(75, 20);
             this.buttonValidSetting.TabIndex = 7;
@@ -127,11 +133,56 @@
             this.buttonValidSetting.UseVisualStyleBackColor = true;
             this.buttonValidSetting.Click += new System.EventHandler(this.ButtonValidSetting_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(694, 39);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(85, 20);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Peer List:";
+            // 
+            // dataGridViewPeerList
+            // 
+            this.dataGridViewPeerList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewPeerList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ColumnPeer,
+            this.ColumnPeerStatus,
+            this.ColumnPeerAction});
+            this.dataGridViewPeerList.Location = new System.Drawing.Point(535, 62);
+            this.dataGridViewPeerList.Name = "dataGridViewPeerList";
+            this.dataGridViewPeerList.Size = new System.Drawing.Size(420, 276);
+            this.dataGridViewPeerList.TabIndex = 10;
+            this.dataGridViewPeerList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewPeerList_CellContentClick);
+            // 
+            // ColumnPeer
+            // 
+            this.ColumnPeer.HeaderText = "Peer";
+            this.ColumnPeer.Name = "ColumnPeer";
+            this.ColumnPeer.Width = 140;
+            // 
+            // ColumnPeerStatus
+            // 
+            this.ColumnPeerStatus.HeaderText = "Status";
+            this.ColumnPeerStatus.Name = "ColumnPeerStatus";
+            this.ColumnPeerStatus.Width = 120;
+            // 
+            // ColumnPeerAction
+            // 
+            this.ColumnPeerAction.HeaderText = "Action";
+            this.ColumnPeerAction.Name = "ColumnPeerAction";
+            this.ColumnPeerAction.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ColumnPeerAction.Text = "Remove";
+            this.ColumnPeerAction.Width = 115;
+            // 
             // RemoteNodeSettingWallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(591, 358);
+            this.ClientSize = new System.Drawing.Size(971, 369);
+            this.Controls.Add(this.dataGridViewPeerList);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonValidSetting);
             this.Controls.Add(this.labelNoticeRemoteNodeHost);
             this.Controls.Add(this.textBoxRemoteNodeHost);
@@ -149,6 +200,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Xiropht - Sync Setting";
             this.Load += new System.EventHandler(this.RemoteNodeSetting_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPeerList)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -164,5 +216,10 @@
         private System.Windows.Forms.TextBox textBoxRemoteNodeHost;
         private System.Windows.Forms.Label labelNoticeRemoteNodeHost;
         private System.Windows.Forms.Button buttonValidSetting;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.DataGridView dataGridViewPeerList;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPeer;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPeerStatus;
+        private System.Windows.Forms.DataGridViewButtonColumn ColumnPeerAction;
     }
 }
