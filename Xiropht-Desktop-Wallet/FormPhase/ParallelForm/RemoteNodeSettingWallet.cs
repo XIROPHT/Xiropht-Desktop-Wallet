@@ -47,7 +47,6 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                     {
                         Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
                         Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
-                        Program.WalletXiropht.ClassWalletObject.EnableWalletTokenSync();
                     }
                 }
             }
