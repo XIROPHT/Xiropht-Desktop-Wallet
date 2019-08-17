@@ -42,11 +42,12 @@
             // 
             this.labelWalletGuiVersion.AutoSize = true;
             this.labelWalletGuiVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelWalletGuiVersion.Location = new System.Drawing.Point(198, 23);
+            this.labelWalletGuiVersion.Location = new System.Drawing.Point(188, 23);
             this.labelWalletGuiVersion.Name = "labelWalletGuiVersion";
             this.labelWalletGuiVersion.Size = new System.Drawing.Size(296, 60);
             this.labelWalletGuiVersion.TabIndex = 0;
             this.labelWalletGuiVersion.Text = "Xiropht Desktop Wallet\r\n\r\nCopyright © 2019 Xiropht Developer\r\n";
+            this.labelWalletGuiVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label2
             // 
@@ -54,16 +55,15 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(12, 110);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(144, 220);
+            this.label2.Size = new System.Drawing.Size(174, 120);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Official testers: \r\n\r\n- DigitalTwister\r\n- Sniperviperman\r\n- AlpHA\r\n- Maxy86\r\n- Wo" +
-    "lfierawr\r\n- Rashed\r\n- Sabrar\r\n- Xiropht\r\n- PhelanConail";
+            this.label2.Text = "Official testers: \r\n\r\n- Sniperviperman\r\n- AlpHA\r\n- Maxy86\r\n- XirophtEnthousiast";
             // 
             // panelLanguageContributor
             // 
             this.panelLanguageContributor.AutoScroll = true;
             this.panelLanguageContributor.Controls.Add(this.labelLanguageContributors);
-            this.panelLanguageContributor.Location = new System.Drawing.Point(174, 155);
+            this.panelLanguageContributor.Location = new System.Drawing.Point(192, 155);
             this.panelLanguageContributor.Name = "panelLanguageContributor";
             this.panelLanguageContributor.Size = new System.Drawing.Size(462, 245);
             this.panelLanguageContributor.TabIndex = 2;
@@ -81,7 +81,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(285, 132);
+            this.label3.Location = new System.Drawing.Point(308, 132);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(233, 20);
             this.label3.TabIndex = 3;
@@ -91,7 +91,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(170, 415);
+            this.label1.Location = new System.Drawing.Point(253, 403);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(145, 20);
             this.label1.TabIndex = 4;
@@ -101,7 +101,7 @@
             // 
             this.linkLabelWebsite.AutoSize = true;
             this.linkLabelWebsite.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabelWebsite.Location = new System.Drawing.Point(308, 414);
+            this.linkLabelWebsite.Location = new System.Drawing.Point(392, 403);
             this.linkLabelWebsite.Name = "linkLabelWebsite";
             this.linkLabelWebsite.Size = new System.Drawing.Size(162, 20);
             this.linkLabelWebsite.TabIndex = 5;

@@ -124,6 +124,7 @@
     <Compile Include="Features\ClassPeerList.cs" />
     <Compile Include="Features\ClassTranslation.cs" />
     <Compile Include="Utility\ClassUtility.cs" />
+    <Compile Include="Wallet\Sync\ClassWalletTransactionType.cs" />
     <Compile Include="Wallet\Tcp\Option\ClassWalletRestoreFunctions.cs" />
     <Compile Include="Wallet\Setting\ClassWalletSetting.cs" />
     <Compile Include="FormCustom\ClassListView.cs">

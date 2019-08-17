@@ -30,6 +30,7 @@ using ZXing.QrCode;
 #if WINDOWS
 using MetroFramework;
 using MetroFramework.Controls;
+
 #endif
 
 namespace Xiropht_Wallet
@@ -521,8 +522,10 @@ namespace Xiropht_Wallet
         public void UpdateGraphicLanguageText()
         {
             // Main Interface.
-            fileToolStripMenuItem.Text = ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.menufiletext);
-            mainMenuToolStripMenuItem.Text = ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.menufilemainmenutext);
+            fileToolStripMenuItem.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.menufiletext);
+            mainMenuToolStripMenuItem.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.menufilemainmenutext);
             createWalletToolStripMenuItem.Text =
                 ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.menufilecreatewalletmenutext);
             openWalletToolStripMenuItem.Text =
@@ -531,9 +534,12 @@ namespace Xiropht_Wallet
                 ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.menufilerestorewalletmenutext);
             closeWalletToolStripMenuItem.Text =
                 ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.menufilefunctionclosewallettext);
-            exitToolStripMenuItem.Text = ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.menufilefunctionexittext);
-            languageToolStripMenuItem.Text = ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.menulanguagetext);
-            settingToolStripMenuItem.Text = ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.menusettingtext);
+            exitToolStripMenuItem.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.menufilefunctionexittext);
+            languageToolStripMenuItem.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.menulanguagetext);
+            settingToolStripMenuItem.Text =
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.menusettingtext);
             securityToolStripMenuItem.Text = ClassTranslation.GetLanguageTextFromOrder("MENU_SETTING_SECURITY_TEXT");
             changePasswordToolStripMenuItem.Text =
                 ClassTranslation.GetLanguageTextFromOrder("SUBMENU_SETTING_SECURITY_CONFIG_CHANGE_PASSWORD_TEXT");
@@ -556,16 +562,19 @@ namespace Xiropht_Wallet
                         showPendingAmount = true;
                 if (!showPendingAmount)
                     labelNoticeWalletBalance.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.panelwalletbalancetext) + " " +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.panelwalletbalancetext) +
+                        " " +
                         ClassWalletObject.WalletConnect.WalletAmount + " " + ClassConnectorSetting.CoinNameMin;
                 else
                     labelNoticeWalletBalance.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.panelwalletbalancetext) + " " +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.panelwalletbalancetext) +
+                        " " +
                         ClassWalletObject.WalletConnect.WalletAmount + " " + ClassConnectorSetting.CoinNameMin + " | " +
                         ClassTranslation.GetLanguageTextFromOrder("PANEL_WALLET_PENDING_BALANCE_TEXT") + " " +
                         ClassWalletObject.WalletAmountInPending + " " + ClassConnectorSetting.CoinNameMin;
-                labelNoticeWalletAddress.Text = ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.panelwalletaddresstext) +
-                                                " " + ClassWalletObject.WalletConnect.WalletAddress;
+                labelNoticeWalletAddress.Text =
+                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.panelwalletaddresstext) +
+                    " " + ClassWalletObject.WalletConnect.WalletAddress;
                 labelNoticeTotalPendingTransactionOnReceive.Text =
                     ClassTranslation.GetLanguageTextFromOrder(
                         ClassTranslationEnumeration.panelwallettotalpendingtransactiononreceivetext) + " " +
@@ -573,10 +582,13 @@ namespace Xiropht_Wallet
             }
             else
             {
-                labelNoticeWalletBalance.Text = ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.panelwalletbalancetext);
-                labelNoticeWalletAddress.Text = ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.panelwalletaddresstext);
+                labelNoticeWalletBalance.Text =
+                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.panelwalletbalancetext);
+                labelNoticeWalletAddress.Text =
+                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.panelwalletaddresstext);
                 labelNoticeTotalPendingTransactionOnReceive.Text =
-                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.panelwallettotalpendingtransactiononreceivetext);
+                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                        .panelwallettotalpendingtransactiononreceivetext);
             }
 
             buttonOverviewWallet.Text = ClassTranslation.GetLanguageTextFromOrder("BUTTON_WALLET_OVERVIEW_TEXT");
@@ -615,7 +627,8 @@ namespace Xiropht_Wallet
             CreateWalletForm.labelCreateYourWallet.Text =
                 ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_LABEL_TITLE_TEXT");
             CreateWalletForm.labelCreateNoticePasswordRequirement.Text =
-                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletlabelpasswordrequirementtext);
+                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                    .createwalletlabelpasswordrequirementtext);
             CreateWalletForm.labelCreateSelectSavingPathWallet.Text =
                 ClassTranslation.GetLanguageTextFromOrder("CREATE_WALLET_LABEL_SELECT_WALLET_FILE_TEXT");
             CreateWalletForm.labelCreateSelectWalletPassword.Text =
@@ -672,28 +685,38 @@ namespace Xiropht_Wallet
                 else
                 {
                     OverviewWalletForm.labelTextCoinMaxSupply.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelcoinmaxsupplytext);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelcoinmaxsupplytext);
                     OverviewWalletForm.labelTextCoinCirculating.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelcoincirculatingtext);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelcoincirculatingtext);
                     OverviewWalletForm.labelTextTransactionFee.Text =
                         ClassTranslation.GetLanguageTextFromOrder(
                             ClassTranslationEnumeration.overviewwalletlabeltransactionfeeaccumulatedtext);
                     OverviewWalletForm.labelTextCoinMined.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabeltotalcoinminedtext);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabeltotalcoinminedtext);
                     OverviewWalletForm.labelTextBlockchainHeight.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelblockchainheighttext);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelblockchainheighttext);
                     OverviewWalletForm.labelTextTotalBlockMined.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabeltotalblockminedtext);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabeltotalblockminedtext);
                     OverviewWalletForm.labelTextTotalBlockLeft.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabeltotalblocklefttext);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabeltotalblocklefttext);
                     OverviewWalletForm.labelTextNetworkDifficulty.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelnetworkdifficultytext);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelnetworkdifficultytext);
                     OverviewWalletForm.labelTextNetworkHashrate.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelnetworkhashratetext);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelnetworkhashratetext);
                     OverviewWalletForm.labelTextLastBlockFound.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabellastblockfoundtext);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabellastblockfoundtext);
                     OverviewWalletForm.labelTextTotalCoinInPending.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabeltotalcoinpending);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabeltotalcoinpending);
                 }
             }
             catch
@@ -1279,8 +1302,10 @@ namespace Xiropht_Wallet
                     {
 #if WINDOWS
                         if (MetroMessageBox.Show(this,
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.resyncblockexplorercontenttext),
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.resyncblockexplorertitletext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .resyncblockexplorercontenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .resyncblockexplorertitletext),
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Information) ==
                             DialogResult.Yes)
 #else
@@ -1299,8 +1324,10 @@ namespace Xiropht_Wallet
                         {
 #if WINDOWS
                             if (MetroMessageBox.Show(this,
-                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.resyncblockexplorercontenttext),
-                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.resyncblockexplorertitletext),
+                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                        .resyncblockexplorercontenttext),
+                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                        .resyncblockexplorertitletext),
                                     MessageBoxButtons.YesNo, MessageBoxIcon.Information) ==
                                 DialogResult.Yes)
 #else
@@ -1653,7 +1680,8 @@ namespace Xiropht_Wallet
                         BeginInvoke(invoke);
                         invoke = () =>
                             labelNoticeWalletAddress.Text =
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.panelwalletaddresstext) + " " +
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .panelwalletaddresstext) + " " +
                                 ClassWalletObject.WalletConnect.WalletAddress;
                         BeginInvoke(invoke);
                         _isCopyWalletAddress = false;
@@ -1752,13 +1780,15 @@ namespace Xiropht_Wallet
                 try
                 {
                     OverviewWalletForm.labelTextCoinMaxSupply.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelcoinmaxsupplytext) + " " +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelcoinmaxsupplytext) + " " +
                         info.ToString(Program.GlobalCultureInfo) + " " + ClassConnectorSetting.CoinNameMin;
                 }
                 catch
                 {
                     OverviewWalletForm.labelTextCoinMaxSupply.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelcoinmaxsupplytext);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelcoinmaxsupplytext);
                 }
             }
 
@@ -1776,12 +1806,14 @@ namespace Xiropht_Wallet
                 try
                 {
                     OverviewWalletForm.labelTextCoinCirculating.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelcoincirculatingtext) + " " +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelcoincirculatingtext) + " " +
                         info.ToString(Program.GlobalCultureInfo) + " " + ClassConnectorSetting.CoinNameMin;
                 }
                 catch
                 {
-                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelcoincirculatingtext);
+                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                        .overviewwalletlabelcoincirculatingtext);
                 }
             }
 
@@ -1814,19 +1846,24 @@ namespace Xiropht_Wallet
                 MethodInvoker invoke = () =>
                 {
                     OverviewWalletForm.labelTextCoinMined.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabeltotalcoinminedtext) + " " +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabeltotalcoinminedtext) + " " +
                         totalCoinMined.ToString(Program.GlobalCultureInfo) + " " + ClassConnectorSetting.CoinNameMin;
                     OverviewWalletForm.labelTextBlockchainHeight.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelblockchainheighttext) +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelblockchainheighttext) +
                         " " + blockchainHeight;
                     OverviewWalletForm.labelTextTotalBlockMined.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabeltotalblockminedtext) +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabeltotalblockminedtext) +
                         " " + info;
                     OverviewWalletForm.labelTextTotalBlockLeft.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabeltotalblocklefttext) + " " +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabeltotalblocklefttext) + " " +
                         totalBlockLeft;
                     OverviewWalletForm.labelTextTotalCoinInPending.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabeltotalcoinpending) + " " +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabeltotalcoinpending) + " " +
                         totalInPending.ToString(Program.GlobalCultureInfo) + " " + ClassConnectorSetting.CoinNameMin;
                 };
                 BeginInvoke(invoke);
@@ -1836,15 +1873,20 @@ namespace Xiropht_Wallet
                 MethodInvoker invoke = () =>
                 {
                     OverviewWalletForm.labelTextCoinMined.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabeltotalcoinminedtext);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabeltotalcoinminedtext);
                     OverviewWalletForm.labelTextBlockchainHeight.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelblockchainheighttext);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelblockchainheighttext);
                     OverviewWalletForm.labelTextTotalBlockMined.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabeltotalblockminedtext);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabeltotalblockminedtext);
                     OverviewWalletForm.labelTextTotalBlockLeft.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabeltotalblocklefttext);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabeltotalblocklefttext);
                     OverviewWalletForm.labelTextTotalCoinInPending.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabeltotalcoinpending);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabeltotalcoinpending);
                 };
                 BeginInvoke(invoke);
             }
@@ -1861,13 +1903,15 @@ namespace Xiropht_Wallet
                 try
                 {
                     OverviewWalletForm.labelTextNetworkDifficulty.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelnetworkdifficultytext) +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelnetworkdifficultytext) +
                         " " + info;
                 }
                 catch
                 {
                     OverviewWalletForm.labelTextNetworkDifficulty.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelnetworkdifficultytext);
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelnetworkdifficultytext);
                 }
             }
 
@@ -1889,13 +1933,15 @@ namespace Xiropht_Wallet
                     try
                     {
                         OverviewWalletForm.labelTextNetworkHashrate.Text =
-                            ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelnetworkhashratetext) +
+                            ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                .overviewwalletlabelnetworkhashratetext) +
                             " " + info;
                     }
                     catch
                     {
                         OverviewWalletForm.labelTextNetworkHashrate.Text =
-                            ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelnetworkhashratetext);
+                            ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                .overviewwalletlabelnetworkhashratetext);
                     }
                 }
 
@@ -1971,13 +2017,15 @@ namespace Xiropht_Wallet
                     try
                     {
                         OverviewWalletForm.labelTextLastBlockFound.Text =
-                            ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabellastblockfoundtext) +
+                            ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                .overviewwalletlabellastblockfoundtext) +
                             " " + info;
                     }
                     catch
                     {
                         OverviewWalletForm.labelTextLastBlockFound.Text =
-                            ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabellastblockfoundtext);
+                            ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                .overviewwalletlabellastblockfoundtext);
                     }
                 }
 
@@ -2002,34 +2050,43 @@ namespace Xiropht_Wallet
                     labelNoticeWalletBalance.Text =
                         ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.panelwalletbalancetext);
                     OverviewWalletForm.labelTextCoinMaxSupply.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelcoinmaxsupplytext) +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelcoinmaxsupplytext) +
                         " In Sync";
                     OverviewWalletForm.labelTextCoinCirculating.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelcoincirculatingtext) +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelcoincirculatingtext) +
                         " In Sync";
                     OverviewWalletForm.labelTextTransactionFee.Text =
                         ClassTranslation.GetLanguageTextFromOrder(
                             ClassTranslationEnumeration.overviewwalletlabeltransactionfeeaccumulatedtext) + " In Sync";
                     OverviewWalletForm.labelTextCoinMined.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabeltotalcoinminedtext) +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabeltotalcoinminedtext) +
                         " In Sync";
                     OverviewWalletForm.labelTextBlockchainHeight.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelblockchainheighttext) +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelblockchainheighttext) +
                         " In Sync";
                     OverviewWalletForm.labelTextTotalBlockMined.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabeltotalblockminedtext) +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabeltotalblockminedtext) +
                         " In Sync";
                     OverviewWalletForm.labelTextTotalBlockLeft.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabeltotalblocklefttext) +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabeltotalblocklefttext) +
                         " In Sync";
                     OverviewWalletForm.labelTextNetworkDifficulty.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelnetworkdifficultytext) +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelnetworkdifficultytext) +
                         " In Sync";
                     OverviewWalletForm.labelTextNetworkHashrate.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabelnetworkhashratetext) +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabelnetworkhashratetext) +
                         " In Sync";
                     OverviewWalletForm.labelTextLastBlockFound.Text =
-                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.overviewwalletlabellastblockfoundtext) +
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .overviewwalletlabellastblockfoundtext) +
                         " In Sync";
                     labelSyncInformation.Text = "Sync & Wallet disconnected.";
                     labelNoticeTotalPendingTransactionOnReceive.Text =
@@ -2246,8 +2303,8 @@ namespace Xiropht_Wallet
                                                                         i--)
                                                                     {
                                                                         var transactionObject =
-                                                                            ClassWalletTransactionCache
-                                                                                .ListTransaction.ElementAt(i);
+                                                                            ClassWalletTransactionCache.ListTransaction
+                                                                                .ElementAt(i);
 
                                                                         if (transactionObject.Value != null)
                                                                         {
@@ -2277,7 +2334,8 @@ namespace Xiropht_Wallet
 
                                                                             if (transactionObject.Value
                                                                                     .TransactionWalletAddress ==
-                                                                                "ANONYMOUS")
+                                                                                ClassWalletTransactionType
+                                                                                    .AnonymousTransaction)
                                                                             {
                                                                                 var minShow =
                                                                                     (CurrentTransactionHistoryPageAnonymousReceived -
@@ -2447,7 +2505,8 @@ namespace Xiropht_Wallet
 
                                                                             else if (transactionObject.Value
                                                                                 .TransactionWalletAddress
-                                                                                .Contains("BLOCKCHAIN["))
+                                                                                .Contains(ClassWalletTransactionType
+                                                                                    .BlockchainTransaction))
                                                                             {
                                                                                 var minShow =
                                                                                     (CurrentTransactionHistoryPageBlockReward -
@@ -2612,10 +2671,13 @@ namespace Xiropht_Wallet
                                                                                 #region show normal transaction sent
 
                                                                                 if (transactionObject.Value
-                                                                                        .TransactionType == "SEND" &&
+                                                                                        .TransactionType ==
+                                                                                    ClassWalletTransactionType
+                                                                                        .SendTransaction &&
                                                                                     transactionObject.Value
                                                                                         .TransactionWalletAddress !=
-                                                                                    "ANONYMOUS")
+                                                                                    ClassWalletTransactionType
+                                                                                        .AnonymousTransaction)
                                                                                 {
                                                                                     var minShow =
                                                                                         (CurrentTransactionHistoryPageNormalSend -
@@ -2824,10 +2886,12 @@ namespace Xiropht_Wallet
 
                                                                                 else if (transactionObject.Value
                                                                                              .TransactionType ==
-                                                                                         "RECV" &&
+                                                                                         ClassWalletTransactionType
+                                                                                             .ReceiveTransaction &&
                                                                                          transactionObject.Value
                                                                                              .TransactionWalletAddress !=
-                                                                                         "ANONYMOUS")
+                                                                                         ClassWalletTransactionType
+                                                                                             .AnonymousTransaction)
                                                                                 {
                                                                                     var minShow =
                                                                                         (CurrentTransactionHistoryPageNormalReceive -
@@ -3174,7 +3238,7 @@ namespace Xiropht_Wallet
 
                                                                                     if (ClassUtils
                                                                                             .DateUnixTimeNowSecondConvertDate(
-                                                                                                dateTimeRecv) >
+                                                                                                dateTimeRecv) >=
                                                                                         ClassUtils
                                                                                             .DateUnixTimeNowSecond())
                                                                                     {
@@ -3367,7 +3431,7 @@ namespace Xiropht_Wallet
 
                             await Task.Delay(ThreadUpdateTransactionWalletInterval);
                         }
-                    }, CancellationTokenSourceTransactionHistory.Token, TaskCreationOptions.LongRunning,
+                    }, CancellationTokenSourceTransactionHistory.Token, TaskCreationOptions.PreferFairness,
                     TaskScheduler.Current).ConfigureAwait(false);
 
                 Task.Factory.StartNew(async () =>
@@ -3427,7 +3491,8 @@ namespace Xiropht_Wallet
 
                                                                 if (TransactionHistoryWalletForm
                                                                         .listViewNormalSendTransactionHistory.Items[i1]
-                                                                        .SubItems[6].Text != "ANONYMOUS")
+                                                                        .SubItems[6].Text != ClassWalletTransactionType
+                                                                        .AnonymousTransaction)
                                                                 {
                                                                     if (ClassContact.CheckContactNameFromWalletAddress(
                                                                         TransactionHistoryWalletForm
@@ -3604,10 +3669,10 @@ namespace Xiropht_Wallet
                                                                         try
                                                                         {
                                                                             TransactionHistoryWalletForm
-                                                                                .listViewBlockRewardTransactionHistory
-                                                                                .Items[i1]
-                                                                                .BackColor =
-                                                                            Color.FromArgb(255, 153, 102);
+                                                                                    .listViewBlockRewardTransactionHistory
+                                                                                    .Items[i1]
+                                                                                    .BackColor =
+                                                                                Color.FromArgb(255, 153, 102);
                                                                         }
                                                                         catch
                                                                         {
@@ -3626,10 +3691,10 @@ namespace Xiropht_Wallet
                                                                         try
                                                                         {
                                                                             TransactionHistoryWalletForm
-                                                                                .listViewBlockRewardTransactionHistory
-                                                                                .Items[i1]
-                                                                                .BackColor =
-                                                                            Color.FromArgb(0, 255, 153);
+                                                                                    .listViewBlockRewardTransactionHistory
+                                                                                    .Items[i1]
+                                                                                    .BackColor =
+                                                                                Color.FromArgb(0, 255, 153);
                                                                         }
                                                                         catch
                                                                         {
@@ -3807,6 +3872,7 @@ namespace Xiropht_Wallet
                                                                         .Items[i1]
                                                                         .SubItems[7]
                                                                         .Text);
+
                                                                 if (ClassUtils.DateUnixTimeNowSecondConvertDate(
                                                                         transactionWalletDateRecv) >
                                                                     ClassUtils.DateUnixTimeNowSecond())
@@ -3819,17 +3885,13 @@ namespace Xiropht_Wallet
                                                                         try
                                                                         {
                                                                             TransactionHistoryWalletForm
-                                                                                .listViewAnonymitySendTransactionHistory
-                                                                                .Items[i1]
-                                                                                .BackColor =
-                                                                            Color.FromArgb(255, 153, 102);
+                                                                                    .listViewAnonymitySendTransactionHistory
+                                                                                    .Items[i1]
+                                                                                    .BackColor =
+                                                                                Color.FromArgb(255, 153, 102);
                                                                         }
                                                                         catch
                                                                         {
-                                                                            i = TransactionHistoryWalletForm
-                                                                                .listViewAnonymitySendTransactionHistory
-                                                                                .Items
-                                                                                .Count;
                                                                         }
                                                                     }
                                                                     else
@@ -3849,10 +3911,6 @@ namespace Xiropht_Wallet
                                                                             }
                                                                             catch
                                                                             {
-                                                                                i = TransactionHistoryWalletForm
-                                                                                    .listViewAnonymitySendTransactionHistory
-                                                                                    .Items
-                                                                                    .Count;
                                                                             }
                                                                     }
                                                                 }
@@ -3860,7 +3918,8 @@ namespace Xiropht_Wallet
                                                                 if (TransactionHistoryWalletForm
                                                                         .listViewAnonymitySendTransactionHistory
                                                                         .Items[i1]
-                                                                        .SubItems[6].Text != "ANONYMOUS")
+                                                                        .SubItems[6].Text != ClassWalletTransactionType
+                                                                        .AnonymousTransaction)
                                                                 {
                                                                     if (ClassContact.CheckContactNameFromWalletAddress(
                                                                         TransactionHistoryWalletForm
@@ -3914,9 +3973,9 @@ namespace Xiropht_Wallet
                                 {
                                 }
 
-                            await Task.Delay(ThreadUpdateTransactionWalletInterval * 2);
+                            await Task.Delay(ThreadUpdateTransactionWalletInterval * 1);
                         }
-                    }, CancellationTokenSourceTransactionHistory.Token, TaskCreationOptions.LongRunning,
+                    }, CancellationTokenSourceTransactionHistory.Token, TaskCreationOptions.PreferFairness,
                     TaskScheduler.Current).ConfigureAwait(false);
             }
             catch
@@ -5939,38 +5998,22 @@ namespace Xiropht_Wallet
         {
             try
             {
-                var elementIdFound = 0;
-                var elementFound = false;
-                foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction.ToArray())
-                    if (!elementFound)
+                foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction)
+                    if (transactionObject.Value.TransactionHash.Contains(elementToSearch))
                     {
-                        if (transactionObject.Value.TransactionHash.Contains(elementToSearch))
-                            elementFound = true;
-                        else
-                            elementIdFound++;
+                        return transactionObject.Value.TransactionWalletAddress;
                     }
 
-                if (elementFound)
-                    return ClassWalletTransactionCache.ListTransaction.ElementAt(elementIdFound).Value
-                        .TransactionWalletAddress;
-
-                elementIdFound = 0;
-                foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction.ToArray())
-                    if (!elementFound)
+                foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction)
+                    if (transactionObject.Value.TransactionHash.Contains(elementToSearch))
                     {
-                        if (transactionObject.Value.TransactionHash.Contains(elementToSearch))
-                            elementFound = true;
-                        else
-                            elementIdFound++;
+                        return transactionObject.Value.TransactionWalletAddress;
                     }
-
-                if (elementFound)
-                    return ClassWalletTransactionAnonymityCache.ListTransaction.ElementAt(elementIdFound).Value
-                        .TransactionWalletAddress;
             }
             catch
             {
             }
+
 
             return "NOT FOUND";
         }

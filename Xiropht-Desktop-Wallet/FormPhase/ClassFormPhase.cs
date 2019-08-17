@@ -62,6 +62,7 @@ namespace Xiropht_Wallet.FormPhase
         /// <param name="walletAmount"></param>
         public static void ShowWalletInformationInMenu(string walletAddress, string walletAmount)
         {
+
             Program.WalletXiropht.BeginInvoke((MethodInvoker) delegate
             {
                 Program.WalletXiropht.labelNoticeWalletAddress.Text =
