@@ -2765,18 +2765,24 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                     if (i < splitPacket.Length)
                                         if (splitPacket[i] != null)
                                             if (!string.IsNullOrEmpty(splitPacket[i]))
-                                                if (!await HandlePacketRemoteNodeSyncAsync(splitPacket[i],
-                                                    ListWalletConnectToRemoteNode[idNode].RemoteNodeHost))
-                                                {
-                                                    break;
-                                                }
+                                                await HandlePacketRemoteNodeSyncAsync(splitPacket[i],
+                                                    ListWalletConnectToRemoteNode[idNode].RemoteNodeHost);
+                                                
                         }
                 }
                 catch
                 {
-                    await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSyncAsync(true, false); },
-                            WalletCancellationToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current)
-                        .ConfigureAwait(false);
+                    try
+                    {
+                        await Task.Factory.StartNew(delegate { DisconnectWholeRemoteNodeSyncAsync(true, false); },
+                                WalletCancellationToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current)
+                            .ConfigureAwait(false);
+                    }
+                    catch
+                    {
+
+                    }
+
                     break;
                 }
         }
