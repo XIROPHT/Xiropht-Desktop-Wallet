@@ -286,7 +286,7 @@ namespace Xiropht_Wallet.Wallet
         ///     Add transaction to the list.
         /// </summary>
         /// <param name="transaction"></param>
-        public static async Task AddWalletTransactionAsync(string transaction)
+        public static async Task AddWalletTransactionAsync(string transaction, string node)
         {
 #if DEBUG
                 Log.WriteLine("Wallet transaction history received: " + transaction
@@ -294,6 +294,8 @@ namespace Xiropht_Wallet.Wallet
                                            ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration
                                                .WalletTransactionPerId, ""));
 #endif
+            bool errorSyncTransaction = false;
+
             if (!OnLoad)
             {
                 var splitTransaction = transaction
@@ -345,21 +347,7 @@ namespace Xiropht_Wallet.Wallet
 
                         if (finalTransactionEncrypted == ClassAlgoErrorEnumeration.AlgoError) // Ban bad remote node.
                         {
-                            if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(Program.WalletXiropht.ClassWalletObject
-                                .ListWalletConnectToRemoteNode[8].RemoteNodeHost))
-                            {
-                                if (!Program.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned.ContainsKey(Program
-                                    .WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
-                                    Program.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned.Add(
-                                        Program.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8]
-                                            .RemoteNodeHost, ClassUtils.DateUnixTimeNowSecond());
-                                else
-                                    Program.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned[
-                                        Program.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8]
-                                            .RemoteNodeHost] = ClassUtils.DateUnixTimeNowSecond();
-                            }
-
-                            Program.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
+                            errorSyncTransaction = true;
                         }
                         else
                         {
@@ -382,8 +370,7 @@ namespace Xiropht_Wallet.Wallet
                             ListTransaction.Add(hashTransaction, transactionObject);
 
 
-                            await SaveWalletCache(Program.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress,
-                                finalTransactionEncrypted);
+                            await SaveWalletCache(Program.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted);
 
 #if DEBUG
                             Log.WriteLine("Total transactions downloaded: " +
@@ -398,37 +385,7 @@ namespace Xiropht_Wallet.Wallet
                     Log.WriteLine("Can't decrypt transaction: " + transaction + " result: " +
                                   amountAndFeeDecrypted);
 #endif
-                        if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(Program.WalletXiropht.ClassWalletObject
-                            .ListWalletConnectToRemoteNode[8].RemoteNodeHost))
-                        {
-                            if (!Program.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned.ContainsKey(Program
-                                .WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
-                            {
-                                Program.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned.Add(
-                                    Program.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8]
-                                        .RemoteNodeHost, ClassUtils.DateUnixTimeNowSecond());
-                                ClassPeerList.IncrementPeerDisconnect(Program.WalletXiropht.ClassWalletObject
-                                    .ListWalletConnectToRemoteNode[8].RemoteNodeHost);
-                            }
-                            else
-                            {
-                                Program.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned[
-                                    Program.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8]
-                                        .RemoteNodeHost] = ClassUtils.DateUnixTimeNowSecond();
-                                ClassPeerList.IncrementPeerDisconnect(Program.WalletXiropht.ClassWalletObject
-                                    .ListWalletConnectToRemoteNode[8].RemoteNodeHost);
-                            }
-                        }
-
-                        if (Program.WalletXiropht.EnableTokenNetworkMode)
-                        {
-                            Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
-                            Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
-                        }
-                        else
-                        {
-                            Program.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
-                        }
+                        errorSyncTransaction = true;
                     }
                 }
                 else
@@ -436,30 +393,34 @@ namespace Xiropht_Wallet.Wallet
 #if DEBUG
                     Log.WriteLine("Wallet transaction hash: "+ hashTransaction+" already exist on database.");
 #endif
-                    if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(Program.WalletXiropht.ClassWalletObject
-                        .ListWalletConnectToRemoteNode[8].RemoteNodeHost))
+                    errorSyncTransaction = true;
+                }
+            }
+            if (errorSyncTransaction)
+            {
+                if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(node))
+                {
+                    if (!Program.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned.ContainsKey(node))
                     {
-                        if (!Program.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned.ContainsKey(Program
-                            .WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost))
-                            Program.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned.Add(
-                                Program.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8].RemoteNodeHost,
-                                ClassUtils.DateUnixTimeNowSecond());
-                        else
-                            Program.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned[
-                                    Program.WalletXiropht.ClassWalletObject.ListWalletConnectToRemoteNode[8]
-                                        .RemoteNodeHost]
-                                = ClassUtils.DateUnixTimeNowSecond();
-                    }
-
-                    if (Program.WalletXiropht.EnableTokenNetworkMode)
-                    {
-                        Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
-                        Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
+                        Program.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned.Add(node,
+                            ClassUtils.DateUnixTimeNowSecond());
+                        ClassPeerList.IncrementPeerDisconnect(node);
                     }
                     else
                     {
-                        Program.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
+                        Program.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned[node] = ClassUtils.DateUnixTimeNowSecond();
+                        ClassPeerList.IncrementPeerDisconnect(node);
                     }
+                }
+
+                if (Program.WalletXiropht.EnableTokenNetworkMode)
+                {
+                    Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
+                    Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
+                }
+                else
+                {
+                    Program.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
                 }
             }
 
