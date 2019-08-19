@@ -2165,112 +2165,68 @@ namespace Xiropht_Wallet
                                     else if (ClassFormPhase.FormPhase != ClassFormPhaseEnumeration.TransactionHistory &&
                                              ClassFormPhase.FormPhase != ClassFormPhaseEnumeration.BlockExplorer)
                                     {
-                                        var listOfNodes = string.Empty;
-                                        if (ClassWalletObject.ListWalletConnectToRemoteNode != null)
+                                        try
                                         {
-                                            var tmpListNode = new List<string>();
-                                            for (var i = 0;
-                                                i < ClassWalletObject.ListWalletConnectToRemoteNode.Count;
-                                                i++)
-                                                if (i < ClassWalletObject.ListWalletConnectToRemoteNode.Count)
-                                                    if (ClassWalletObject.ListWalletConnectToRemoteNode[i] != null)
-                                                        if (!tmpListNode.Contains(ClassWalletObject
-                                                            .ListWalletConnectToRemoteNode[i].RemoteNodeHost))
-                                                        {
-                                                            tmpListNode.Add(ClassWalletObject
-                                                                .ListWalletConnectToRemoteNode[i].RemoteNodeHost);
-                                                            listOfNodes +=
-                                                                ClassWalletObject.ListWalletConnectToRemoteNode[i]
-                                                                    .RemoteNodeHost + "|";
-                                                        }
-                                        }
-
-                                        if (!string.IsNullOrEmpty(listOfNodes))
-                                        {
-                                            listOfNodes = listOfNodes.Substring(0, listOfNodes.Length - 1);
-                                            if (ClassWalletObject.InSyncTransaction ||
-                                                ClassWalletObject.InSyncTransactionAnonymity)
+                                            bool noNode = true;
+                                            if (ClassWalletObject.ListWalletConnectToRemoteNode != null)
                                             {
-                                                try
+                                                if (ClassWalletObject.ListWalletConnectToRemoteNode.Count > 0)
                                                 {
-                                                    UpdateLabelSyncInformation(
-                                                        "Your wallet currently sync transactions with node: " +
-                                                        ClassWalletObject.ListWalletConnectToRemoteNode[8]
-                                                            .RemoteNodeHost +
-                                                        " " + (ClassWalletTransactionCache.ListTransaction.Count +
-                                                               ClassWalletTransactionAnonymityCache.ListTransaction
-                                                                   .Count) +
-                                                        "/" + (ClassWalletObject.TotalTransactionInSync +
-                                                               ClassWalletObject.TotalTransactionInSyncAnonymity) +
-                                                        ".");
-                                                }
-                                                catch (Exception error)
-                                                {
+                                                    noNode = false;
+                                                    string node = ClassWalletObject.ListWalletConnectToRemoteNode[0]
+                                                        .RemoteNodeHost;
+                                                    if (ClassWalletObject.InSyncTransaction ||
+                                                        ClassWalletObject.InSyncTransactionAnonymity)
+                                                    {
+                                                        try
+                                                        {
+                                                            UpdateLabelSyncInformation(
+                                                                "Your wallet currently sync transactions with node: " +
+                                                                ClassWalletObject.ListWalletConnectToRemoteNode[0]
+                                                                    .RemoteNodeHost +
+                                                                " " +
+                                                                (ClassWalletTransactionCache.ListTransaction.Count +
+                                                                 ClassWalletTransactionAnonymityCache.ListTransaction
+                                                                     .Count) +
+                                                                "/" + (ClassWalletObject.TotalTransactionInSync +
+                                                                       ClassWalletObject.TotalTransactionInSyncAnonymity
+                                                                ) +
+                                                                ".");
+                                                        }
+                                                        catch (Exception error)
+                                                        {
 #if DEBUG
                                                             Log.WriteLine("Error on seed node list: " + error.Message);
 #endif
-                                                }
-                                            }
-                                            else
-                                            {
-                                                if (!ClassWalletObject.InSyncBlock &&
-                                                    !ClassWalletObject.InSyncTransaction &&
-                                                    !ClassWalletObject.InSyncTransactionAnonymity)
-                                                    try
+                                                        }
+                                                    }
+                                                    else if (!ClassWalletObject.InSyncBlock)
                                                     {
-                                                        if (ClassWalletObject.ListWalletConnectToRemoteNode.Count > 0)
+                                                        if (ClassConnectorSetting.SeedNodeIp.ContainsKey(node))
                                                         {
-                                                            var totalActiveConnection = 0;
-                                                            for (var i = 0;
-                                                                i < ClassWalletObject.ListWalletConnectToRemoteNode
-                                                                    .Count;
-                                                                i++)
-                                                                if (i < ClassWalletObject.ListWalletConnectToRemoteNode
-                                                                        .Count)
-                                                                    if (ClassWalletObject
-                                                                            .ListWalletConnectToRemoteNode[i] !=
-                                                                        null)
-                                                                        if (ClassWalletObject
-                                                                            .ListWalletConnectToRemoteNode[i]
-                                                                            .RemoteNodeStatus)
-                                                                            totalActiveConnection++;
-                                                            if (ClassConnectorSetting.SeedNodeIp.ContainsKey(
-                                                                listOfNodes))
-                                                                UpdateLabelSyncInformation(
-                                                                    "Your wallet sync with Seed Node: " + listOfNodes +
-                                                                    " | " +
-                                                                    ClassConnectorSetting.SeedNodeIp[listOfNodes]
-                                                                        .Item1 +
-                                                                    " -> " + totalActiveConnection +
-                                                                    " active connection(s).");
-                                                            else
-                                                            {
-
-                                                                if (!string.IsNullOrEmpty(listOfNodes))
-                                                                {
-                                                                    UpdateLabelSyncInformation(
-                                                                        "Your wallet sync with Remote Node: " +
-                                                                        listOfNodes +
-                                                                        " -> " + totalActiveConnection +
-                                                                        " active connection(s).");
-                                                                }
-                                                                else
-                                                                {
-                                                                    UpdateLabelSyncInformation("Attempt to connect with a Remote Node for sync your wallet..");
-                                                                }
-
-                                                            }
+                                                            UpdateLabelSyncInformation(
+                                                                "Your wallet currently sync with the Seed Node IP: " +
+                                                                node +
+                                                                " Country: " +
+                                                                ClassConnectorSetting.SeedNodeIp[node].Item1);
                                                         }
                                                         else
                                                         {
                                                             UpdateLabelSyncInformation(
-                                                                "Attempt to connect with a node for sync your wallet..");
+                                                                "Your wallet currently sync with the Node IP: " + node);
                                                         }
                                                     }
-                                                    catch
-                                                    {
-                                                    }
+                                                }
                                             }
+
+                                            if (noNode)
+                                            {
+                                                UpdateLabelSyncInformation("Currently on pending to connect to a node for sync your wallet. Please wait a moment..");
+                                            }
+                                        }
+                                        catch
+                                        {
+
                                         }
                                     }
                                 }
@@ -4105,7 +4061,7 @@ namespace Xiropht_Wallet
                                                     {
                                                         if (ClassWalletObject.InSyncBlock)
                                                             UpdateLabelSyncInformation(
-                                                                "Total blocks downloaded: " +
+                                                                "Total blocks synced: " +
                                                                 ClassBlockCache.ListBlock.Count + "/" +
                                                                 ClassWalletObject.TotalBlockInSync + ".");
                                                         else
@@ -4141,7 +4097,7 @@ namespace Xiropht_Wallet
                                     {
                                         if (ClassWalletObject.InSyncBlock)
                                             UpdateLabelSyncInformation(
-                                                "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count + "/" +
+                                                "Total blocks synced: " + ClassBlockCache.ListBlock.Count + "/" +
                                                 ClassWalletObject.TotalBlockInSync + ".");
                                         else
                                             UpdateLabelSyncInformation(
@@ -4158,21 +4114,21 @@ namespace Xiropht_Wallet
                                                 if (ClassConnectorSetting.SeedNodeIp.ContainsKey(ClassWalletObject
                                                     .ListWalletConnectToRemoteNode[9].RemoteNodeHost))
                                                     UpdateLabelSyncInformation(
-                                                        "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count +
+                                                        "Total blocks synced: " + ClassBlockCache.ListBlock.Count +
                                                         "/" +
-                                                        ClassWalletObject.TotalBlockInSync + " from Seed Node : " +
+                                                        ClassWalletObject.TotalBlockInSync + " from Seed Node: " +
                                                         ClassWalletObject.ListWalletConnectToRemoteNode[9]
                                                             .RemoteNodeHost +
                                                         " | " + ClassConnectorSetting
                                                             .SeedNodeIp[
-                                                                ClassWalletObject.ListWalletConnectToRemoteNode[9]
+                                                                ClassWalletObject.ListWalletConnectToRemoteNode[0]
                                                                     .RemoteNodeHost].Item1 + ".");
                                                 else
                                                     UpdateLabelSyncInformation(
-                                                        "Total blocks downloaded: " + ClassBlockCache.ListBlock.Count +
+                                                        "Total blocks synced: " + ClassBlockCache.ListBlock.Count +
                                                         "/" +
                                                         ClassWalletObject.TotalBlockInSync + " from node: " +
-                                                        ClassWalletObject.ListWalletConnectToRemoteNode[9]
+                                                        ClassWalletObject.ListWalletConnectToRemoteNode[0]
                                                             .RemoteNodeHost +
                                                         ".");
                                             }
