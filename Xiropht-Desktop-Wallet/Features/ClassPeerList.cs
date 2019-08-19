@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using Newtonsoft.Json;
 using Xiropht_Connector_All.Setting;
 using Xiropht_Wallet.Utility;
@@ -19,8 +20,8 @@ namespace Xiropht_Wallet.Features
     public class ClassPeerList
     {
         private const string PeerFileName = "peer-list.json";
-        private const int PeerMaxBanTime = 600;
-        private const int PeerMaxDisconnect = 10;
+        public static int PeerMaxBanTime = 300;
+        public static int PeerMaxDisconnect = 50;
         public static Dictionary<string, ClassPeerObject> PeerList = new Dictionary<string, ClassPeerObject>();
 
         /// <summary>
@@ -37,8 +38,11 @@ namespace Xiropht_Wallet.Features
                         try
                         {
                             var peerObject = JsonConvert.DeserializeObject<ClassPeerObject>(line);
-                            if (!PeerList.ContainsKey(peerObject.peer_host))
-                                PeerList.Add(peerObject.peer_host, peerObject);
+                            if (IPAddress.TryParse(peerObject.peer_host, out _))
+                            {
+                                if (!PeerList.ContainsKey(peerObject.peer_host))
+                                    PeerList.Add(peerObject.peer_host, peerObject);
+                            }
                         }
                         catch
                         {

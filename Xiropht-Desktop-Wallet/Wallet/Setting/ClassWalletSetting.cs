@@ -12,6 +12,8 @@ namespace Xiropht_Wallet.Wallet.Setting
         public int wallet_sync_mode = 0;
         public string wallet_sync_manual_host = string.Empty;
         public string wallet_current_language = string.Empty;
+        public int peer_max_ban_time = 300;
+        public int peer_max_disconnect = 50;
     }
 
     public class ClassWalletSetting
@@ -77,6 +79,8 @@ namespace Xiropht_Wallet.Wallet.Setting
                 ClassTranslation.CurrentLanguage = walletSettingJsonObject.wallet_current_language;
                 Program.WalletXiropht.WalletSyncHostname = walletSettingJsonObject.wallet_sync_manual_host;
                 Program.WalletXiropht.WalletSyncMode = (ClassWalletSyncMode) walletSettingJsonObject.wallet_sync_mode;
+                ClassPeerList.PeerMaxBanTime = walletSettingJsonObject.peer_max_ban_time;
+                ClassPeerList.PeerMaxDisconnect = walletSettingJsonObject.peer_max_disconnect;
             }
             catch
             {

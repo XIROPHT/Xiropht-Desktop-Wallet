@@ -2218,31 +2218,54 @@ namespace Xiropht_Wallet
                                                     !ClassWalletObject.InSyncTransactionAnonymity)
                                                     try
                                                     {
-                                                        var totalActiveConnection = 0;
-                                                        for (var i = 0;
-                                                            i < ClassWalletObject.ListWalletConnectToRemoteNode.Count;
-                                                            i++)
-                                                            if (i < ClassWalletObject.ListWalletConnectToRemoteNode
-                                                                    .Count)
-                                                                if (ClassWalletObject
-                                                                        .ListWalletConnectToRemoteNode[i] !=
-                                                                    null)
+                                                        if (ClassWalletObject.ListWalletConnectToRemoteNode.Count > 0)
+                                                        {
+                                                            var totalActiveConnection = 0;
+                                                            for (var i = 0;
+                                                                i < ClassWalletObject.ListWalletConnectToRemoteNode
+                                                                    .Count;
+                                                                i++)
+                                                                if (i < ClassWalletObject.ListWalletConnectToRemoteNode
+                                                                        .Count)
                                                                     if (ClassWalletObject
-                                                                        .ListWalletConnectToRemoteNode[i]
-                                                                        .RemoteNodeStatus)
-                                                                        totalActiveConnection++;
-                                                        if (ClassConnectorSetting.SeedNodeIp.ContainsKey(listOfNodes))
-                                                            UpdateLabelSyncInformation(
-                                                                "Your wallet sync with Seed Node: " + listOfNodes +
-                                                                " | " +
-                                                                ClassConnectorSetting.SeedNodeIp[listOfNodes].Item1 +
-                                                                " -> " + totalActiveConnection +
-                                                                " active connection(s).");
+                                                                            .ListWalletConnectToRemoteNode[i] !=
+                                                                        null)
+                                                                        if (ClassWalletObject
+                                                                            .ListWalletConnectToRemoteNode[i]
+                                                                            .RemoteNodeStatus)
+                                                                            totalActiveConnection++;
+                                                            if (ClassConnectorSetting.SeedNodeIp.ContainsKey(
+                                                                listOfNodes))
+                                                                UpdateLabelSyncInformation(
+                                                                    "Your wallet sync with Seed Node: " + listOfNodes +
+                                                                    " | " +
+                                                                    ClassConnectorSetting.SeedNodeIp[listOfNodes]
+                                                                        .Item1 +
+                                                                    " -> " + totalActiveConnection +
+                                                                    " active connection(s).");
+                                                            else
+                                                            {
+
+                                                                if (!string.IsNullOrEmpty(listOfNodes))
+                                                                {
+                                                                    UpdateLabelSyncInformation(
+                                                                        "Your wallet sync with Remote Node: " +
+                                                                        listOfNodes +
+                                                                        " -> " + totalActiveConnection +
+                                                                        " active connection(s).");
+                                                                }
+                                                                else
+                                                                {
+                                                                    UpdateLabelSyncInformation("Attempt to connect with a Remote Node for sync your wallet..");
+                                                                }
+
+                                                            }
+                                                        }
                                                         else
+                                                        {
                                                             UpdateLabelSyncInformation(
-                                                                "Your wallet sync with Remote Node: " + listOfNodes +
-                                                                " -> " + totalActiveConnection +
-                                                                " active connection(s).");
+                                                                "Attempt to connect with a node for sync your wallet..");
+                                                        }
                                                     }
                                                     catch
                                                     {
