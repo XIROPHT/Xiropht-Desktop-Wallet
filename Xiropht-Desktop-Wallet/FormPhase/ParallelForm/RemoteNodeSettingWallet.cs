@@ -91,6 +91,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                 ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.remotenodesettingmenuuseremotenodeinformationtext);
             labelNoticePrivateRemoteNode.Text =
                 ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.remotenodesettingmenuusemanualnodeinformationtext);
+            textBoxRemoteNodeHost.Text = Program.WalletXiropht.WalletSyncHostname;
             switch (Program.WalletXiropht.WalletSyncMode)
             {
                 case ClassWalletSyncMode.WALLET_SYNC_DEFAULT:
