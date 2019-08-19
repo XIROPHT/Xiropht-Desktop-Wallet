@@ -100,11 +100,14 @@ namespace Xiropht_Wallet.Features
             }
 
             if (!PeerList[peerHost].peer_status)
+            {
                 if (PeerList[peerHost].peer_last_ban + PeerMaxBanTime <= DateTimeOffset.Now.ToUnixTimeSeconds())
                 {
                     PeerList[peerHost].peer_status = true;
                     PeerList[peerHost].peer_total_disconnect = 0;
                 }
+            }
+
 
             return PeerList[peerHost].peer_status;
         }
