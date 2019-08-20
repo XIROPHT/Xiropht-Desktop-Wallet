@@ -112,21 +112,6 @@ namespace Xiropht_Wallet.Wallet.Tcp
         public int TotalTransactionPendingOnReceive;
         public string WalletAmountInPending;
         public CancellationTokenSource WalletCancellationToken;
-        private int WalletCheckBlockPerId;
-
-        private int WalletCheckCoinCirculating;
-
-        /// <summary>
-        ///     Check network stats.
-        /// </summary>
-        private int WalletCheckMaxSupply;
-
-        private int WalletCheckNetworkDifficulty;
-        private int WalletCheckNetworkHashrate;
-        private int WalletCheckTotalBlockMined;
-        private int WalletCheckTotalPendingTransaction;
-        private int WalletCheckTotalTransactionFee;
-
         public bool WalletClosed;
         public ClassWalletConnect WalletConnect;
 
@@ -1687,284 +1672,6 @@ namespace Xiropht_Wallet.Wallet.Tcp
                     case ClassSeedNodeCommand.ClassReceiveSeedEnumeration.WalletSendRemoteNode:
                         await StartRemoteNodeSyncAsync(packet);
                         break;
-                    case ClassSeedNodeCommand.ClassReceiveSeedEnumeration.WalletResultMaxSupply:
-                        if (splitPacket[1] != "1")
-                        {
-                            WalletCheckMaxSupply = -1; // Bad
-                            try
-                            {
-                                ListWalletConnectToRemoteNode[1].TotalInvalidPacket++;
-#if DEBUG
-                                Log.WriteLine("Bad remote node information for coin max supply provided by remote node host: " + ListWalletConnectToRemoteNode[1].RemoteNodeHost);
-#endif
-                                if (ListWalletConnectToRemoteNode[1].TotalInvalidPacket >=
-                                    ClassConnectorSetting.MaxRemoteNodeInvalidPacket)
-                                    InsertBanRemoteNode(ListWalletConnectToRemoteNode[1].RemoteNodeHost);
-                            }
-                            catch
-                            {
-                            }
-                        }
-                        else
-                        {
-                            WalletCheckMaxSupply = 1; // Good
-                            try
-                            {
-                                ListWalletConnectToRemoteNode[1].TotalInvalidPacket = 0;
-#if DEBUG
-                                Log.WriteLine("Good remote node information for coin max supply provided by remote node host: " + ListWalletConnectToRemoteNode[1].RemoteNodeHost);
-
-#endif
-                            }
-                            catch
-                            {
-                            }
-                        }
-
-                        break;
-                    case ClassSeedNodeCommand.ClassReceiveSeedEnumeration.WalletResultCoinCirculating:
-                        if (splitPacket[1] != "1")
-                        {
-                            WalletCheckCoinCirculating = -1; // Bad
-
-                            try
-                            {
-                                ListWalletConnectToRemoteNode[2].TotalInvalidPacket++;
-#if DEBUG
-                                Log.WriteLine("Bad remote node information for coin circulating provided by remote node host: " + ListWalletConnectToRemoteNode[2].RemoteNodeHost);
-#endif
-                                if (ListWalletConnectToRemoteNode[2].TotalInvalidPacket >=
-                                    ClassConnectorSetting.MaxRemoteNodeInvalidPacket)
-                                    InsertBanRemoteNode(ListWalletConnectToRemoteNode[2].RemoteNodeHost);
-                            }
-                            catch
-                            {
-                            }
-                        }
-                        else
-                        {
-                            try
-                            {
-                                WalletCheckCoinCirculating = 1; // Good
-
-                                ListWalletConnectToRemoteNode[2].TotalInvalidPacket = 0;
-#if DEBUG
-                                Log.WriteLine("good remote node information for coin circulating provided by remote node host: " + ListWalletConnectToRemoteNode[2].RemoteNodeHost);
-#endif
-                            }
-                            catch
-                            {
-                            }
-                        }
-
-                        break;
-                    case ClassSeedNodeCommand.ClassReceiveSeedEnumeration.WalletResultNetworkDifficulty:
-                        if (splitPacket[1] != "1")
-                        {
-                            WalletCheckNetworkDifficulty = -1; // Bad
-                            try
-                            {
-                                ListWalletConnectToRemoteNode[5].TotalInvalidPacket++;
-#if DEBUG
-                                Log.WriteLine("Bad remote node information for network difficulty provided by remote node host: " + ListWalletConnectToRemoteNode[5].RemoteNodeHost);
-#endif
-                                if (ListWalletConnectToRemoteNode[5].TotalInvalidPacket >=
-                                    ClassConnectorSetting.MaxRemoteNodeInvalidPacket)
-                                    InsertBanRemoteNode(ListWalletConnectToRemoteNode[5].RemoteNodeHost);
-                            }
-                            catch
-                            {
-                            }
-                        }
-                        else
-                        {
-                            try
-                            {
-                                WalletCheckNetworkDifficulty = 1; // Good
-                                ListWalletConnectToRemoteNode[5].TotalInvalidPacket = 0;
-#if DEBUG
-                                Log.WriteLine("good remote node information for network difficulty provided by remote node host: " + ListWalletConnectToRemoteNode[5].RemoteNodeHost);
-#endif
-                            }
-                            catch
-                            {
-                            }
-                        }
-
-                        break;
-                    case ClassSeedNodeCommand.ClassReceiveSeedEnumeration.WalletResultNetworkHashrate:
-                        if (splitPacket[1] != "1")
-                        {
-                            WalletCheckNetworkHashrate = -1; // Bad
-                            try
-                            {
-                                ListWalletConnectToRemoteNode[6].TotalInvalidPacket++;
-#if DEBUG
-                                Log.WriteLine("Bad remote node information for network hashrate provided by remote node host: " + ListWalletConnectToRemoteNode[6].RemoteNodeHost);
-#endif
-                                if (ListWalletConnectToRemoteNode[6].TotalInvalidPacket >=
-                                    ClassConnectorSetting.MaxRemoteNodeInvalidPacket)
-                                    InsertBanRemoteNode(ListWalletConnectToRemoteNode[6].RemoteNodeHost);
-                            }
-                            catch
-                            {
-                            }
-                        }
-                        else
-                        {
-                            try
-                            {
-                                WalletCheckNetworkHashrate = 1; // Good
-                                ListWalletConnectToRemoteNode[6].TotalInvalidPacket = 0;
-#if DEBUG
-                                Log.WriteLine("good remote node information for network hashrate provided by remote node host: " + ListWalletConnectToRemoteNode[6].RemoteNodeHost);
-#endif
-                            }
-                            catch
-                            {
-                            }
-                        }
-
-                        break;
-                    case ClassSeedNodeCommand.ClassReceiveSeedEnumeration.WalletResultTotalBlockMined:
-                        if (splitPacket[1] != "1")
-                        {
-                            WalletCheckTotalBlockMined = -1; // Bad
-                            try
-                            {
-                                ListWalletConnectToRemoteNode[4].TotalInvalidPacket++;
-#if DEBUG
-                                Log.WriteLine("Bad remote node information for total block mined provided by remote node host: " + ListWalletConnectToRemoteNode[4].RemoteNodeHost);
-#endif
-                                if (ListWalletConnectToRemoteNode[4].TotalInvalidPacket >=
-                                    ClassConnectorSetting.MaxRemoteNodeInvalidPacket)
-                                    InsertBanRemoteNode(ListWalletConnectToRemoteNode[4].RemoteNodeHost);
-                            }
-                            catch
-                            {
-                            }
-                        }
-                        else
-                        {
-                            try
-                            {
-                                WalletCheckTotalBlockMined = 1; // Good
-                                ListWalletConnectToRemoteNode[4].TotalInvalidPacket = 0;
-#if DEBUG
-                                Log.WriteLine("good remote node information for total block mined provided by remote node host: " + ListWalletConnectToRemoteNode[4].RemoteNodeHost);
-#endif
-                            }
-                            catch
-                            {
-                            }
-                        }
-
-                        break;
-                    case ClassSeedNodeCommand.ClassReceiveSeedEnumeration.WalletResultTotalTransactionFee:
-                        if (splitPacket[1] != "1")
-                        {
-                            WalletCheckTotalTransactionFee = -1; // Bad
-                            try
-                            {
-                                ListWalletConnectToRemoteNode[3].TotalInvalidPacket++;
-#if DEBUG
-                                Log.WriteLine("Bad remote node information for total transaction fee provided by remote node host: " + ListWalletConnectToRemoteNode[3].RemoteNodeHost);
-#endif
-
-                                if (ListWalletConnectToRemoteNode[3].TotalInvalidPacket >=
-                                    ClassConnectorSetting.MaxRemoteNodeInvalidPacket)
-                                    InsertBanRemoteNode(ListWalletConnectToRemoteNode[3].RemoteNodeHost);
-                            }
-                            catch
-                            {
-                            }
-                        }
-                        else
-                        {
-                            try
-                            {
-                                WalletCheckTotalTransactionFee = 1; // Good
-                                ListWalletConnectToRemoteNode[3].TotalInvalidPacket = 0;
-#if DEBUG
-                                Log.WriteLine("good remote node information for total transaction fee provided by remote node host: " + ListWalletConnectToRemoteNode[3].RemoteNodeHost);
-#endif
-                            }
-                            catch
-                            {
-                            }
-                        }
-
-                        break;
-                    case ClassSeedNodeCommand.ClassReceiveSeedEnumeration.WalletResultTotalPendingTransaction:
-                        if (splitPacket[1] != "1")
-                        {
-                            WalletCheckTotalPendingTransaction = -1; // Bad
-                            try
-                            {
-                                ListWalletConnectToRemoteNode[7].TotalInvalidPacket++;
-#if DEBUG
-                                Log.WriteLine("Bad remote node information for total pending transaction provided by remote node host: " + ListWalletConnectToRemoteNode[7].RemoteNodeHost);
-#endif
-
-                                if (ListWalletConnectToRemoteNode[7].TotalInvalidPacket >=
-                                    ClassConnectorSetting.MaxRemoteNodeInvalidPacket)
-                                    InsertBanRemoteNode(ListWalletConnectToRemoteNode[7].RemoteNodeHost);
-                            }
-                            catch
-                            {
-                            }
-                        }
-                        else
-                        {
-                            try
-                            {
-                                WalletCheckTotalPendingTransaction = 1; // Good
-                                ListWalletConnectToRemoteNode[7].TotalInvalidPacket = 0;
-#if DEBUG
-                                Log.WriteLine("good remote node information for total pending transaction provided by remote node host: " + ListWalletConnectToRemoteNode[7].RemoteNodeHost);
-#endif
-                            }
-                            catch
-                            {
-                            }
-                        }
-
-                        break;
-                    case ClassSeedNodeCommand.ClassReceiveSeedEnumeration.WalletResultBlockPerId:
-                        if (splitPacket[1] != "1")
-                        {
-                            WalletCheckBlockPerId = -1; // Bad
-                            try
-                            {
-                                ListWalletConnectToRemoteNode[9].TotalInvalidPacket++;
-#if DEBUG
-                                Log.WriteLine("Bad remote node information for block per id asked provided by remote node host: " + ListWalletConnectToRemoteNode[9].RemoteNodeHost);
-#endif
-
-                                if (ListWalletConnectToRemoteNode[9].TotalInvalidPacket >=
-                                    ClassConnectorSetting.MaxRemoteNodeInvalidPacket)
-                                    InsertBanRemoteNode(ListWalletConnectToRemoteNode[9].RemoteNodeHost);
-                            }
-                            catch
-                            {
-                            }
-                        }
-                        else
-                        {
-                            try
-                            {
-                                WalletCheckBlockPerId = 1; // Good
-                                ListWalletConnectToRemoteNode[9].TotalInvalidPacket = 0;
-#if DEBUG
-                                Log.WriteLine("good remote node information for block per id asked by remote node host: " + ListWalletConnectToRemoteNode[9].RemoteNodeHost);
-#endif
-                            }
-                            catch
-                            {
-                            }
-                        }
-
-                        break;
                 }
             }
             catch
@@ -2453,15 +2160,6 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                     }
                                 }
                     }
-
-                    WalletCheckMaxSupply = 1;
-                    WalletCheckCoinCirculating = 1;
-                    WalletCheckTotalTransactionFee = 1;
-                    WalletCheckTotalBlockMined = 1;
-                    WalletCheckNetworkHashrate = 1;
-                    WalletCheckNetworkDifficulty = 1;
-                    WalletCheckTotalPendingTransaction = 1;
-                    WalletCheckBlockPerId = 1;
                     EnableReceivePacketRemoteNode = true;
                     WalletOnUseSync = true;
 #if DEBUG
@@ -2612,73 +2310,11 @@ namespace Xiropht_Wallet.Wallet.Tcp
 
                 try
                 {
-                    if (idNode != 11)
+                    if (idNode != ListWalletConnectToRemoteNode.Count -1)
                     {
-                        switch (idNode)
-                        {
-                            case 1: // max supply
-                                if (WalletCheckMaxSupply != 0)
-                                    if (!await ListWalletConnectToRemoteNode[idNode]
-                                        .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                        break;
-
-                                break;
-                            case 2: // coin circulating
-                                if (WalletCheckCoinCirculating != 0)
-                                    if (!await ListWalletConnectToRemoteNode[idNode]
-                                        .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                        break;
-
-                                break;
-                            case 3: // total fee
-                                if (WalletCheckTotalTransactionFee != 0)
-                                    if (!await ListWalletConnectToRemoteNode[idNode]
-                                        .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                        break;
-
-                                break;
-                            case 4: // block mined
-                                if (WalletCheckTotalBlockMined != 0)
-                                    if (!await ListWalletConnectToRemoteNode[idNode]
-                                        .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                        break;
-
-                                break;
-                            case 5: // difficulty
-                                if (WalletCheckNetworkDifficulty != 0)
-                                    if (!await ListWalletConnectToRemoteNode[idNode]
-                                        .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                        break;
-
-                                break;
-                            case 6: // hashrate
-                                if (WalletCheckNetworkHashrate != 0)
-                                    if (!await ListWalletConnectToRemoteNode[idNode]
-                                        .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                        break;
-
-                                break;
-                            case 7: // total pending transaction
-                                if (WalletCheckTotalPendingTransaction != 0)
-                                    if (!await ListWalletConnectToRemoteNode[idNode]
-                                        .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                        break;
-
-                                break;
-                            case 9: // block per id
-                                if (WalletCheckBlockPerId != 0)
-                                    if (!await ListWalletConnectToRemoteNode[idNode]
-                                        .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                        break;
-
-                                break;
-                            default:
-                                if (!await ListWalletConnectToRemoteNode[idNode]
-                                    .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                    break;
-
-                                break;
-                        }
+                        if (!await ListWalletConnectToRemoteNode[idNode]
+                            .SendPacketTypeRemoteNode(WalletConnect.WalletId))
+                            break;
                     }
                     else
                     {
@@ -2767,7 +2403,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                             if (!string.IsNullOrEmpty(splitPacket[i]))
                                                 await HandlePacketRemoteNodeSyncAsync(splitPacket[i],
                                                     ListWalletConnectToRemoteNode[idNode].RemoteNodeHost);
-                                                
+
                         }
                 }
                 catch
@@ -2856,14 +2492,6 @@ namespace Xiropht_Wallet.Wallet.Tcp
             }
 
             ClassRemoteNodeChecker.ListRemoteNodeChecked = null;
-            WalletCheckMaxSupply = 1;
-            WalletCheckCoinCirculating = 1;
-            WalletCheckTotalTransactionFee = 1;
-            WalletCheckTotalBlockMined = 1;
-            WalletCheckNetworkHashrate = 1;
-            WalletCheckNetworkDifficulty = 1;
-            WalletCheckTotalPendingTransaction = 1;
-            WalletCheckBlockPerId = 1;
             EnableReceivePacketRemoteNode = false;
             WalletOnUseSync = false;
             WalletOnSendingPacketRemoteNode = false;
@@ -4258,6 +3886,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                 ClassPeerList.IncrementPeerDisconnect(node);
                                                 return false;
                                             }
+
                                             ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
@@ -4283,6 +3912,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                 ClassPeerList.IncrementPeerDisconnect(node);
                                                 return false;
                                             }
+
                                             ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
@@ -4308,6 +3938,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                 ClassPeerList.IncrementPeerDisconnect(node);
                                                 return false;
                                             }
+
                                             ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
@@ -4333,6 +3964,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                 ClassPeerList.IncrementPeerDisconnect(node);
                                                 return false;
                                             }
+
                                             ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
@@ -4358,6 +3990,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                 ClassPeerList.IncrementPeerDisconnect(node);
                                                 return false;
                                             }
+
                                             ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
@@ -4471,6 +4104,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                 ClassPeerList.IncrementPeerDisconnect(node);
                                                 return false;
                                             }
+
                                             ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
@@ -4524,6 +4158,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                 ClassPeerList.IncrementPeerDisconnect(node);
                                                 return false;
                                             }
+
                                             ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
@@ -4703,6 +4338,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                 ClassPeerList.IncrementPeerDisconnect(node);
                                                 return false;
                                             }
+
                                             ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
@@ -4810,7 +4446,8 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                             {
                                                                 if (!WalletClosed)
                                                                 {
-                                                                    if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(node))
+                                                                    if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(
+                                                                        node))
                                                                     {
                                                                         InsertBanRemoteNode(node);
                                                                         ClassPeerList.IncrementPeerDisconnect(node);
@@ -4870,6 +4507,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                 ClassPeerList.IncrementPeerDisconnect(node);
                                                 return false;
                                             }
+
                                             ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
                                     }
@@ -4918,6 +4556,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                 ClassPeerList.IncrementPeerDisconnect(node);
                                                 return false;
                                             }
+
                                             ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
@@ -4970,31 +4609,30 @@ namespace Xiropht_Wallet.Wallet.Tcp
 
                                     LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
 
-                                    await Task.Factory.StartNew(async () =>
-                                        {
-                                            if (Program.WalletXiropht.WalletSyncMode ==
-                                                ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
-                                            {
-                                                if (!ClassPeerList.GetPeerTrustStatus(node))
-                                                {
-                                                    if (await CheckRemoteNodeInformationByCompareAsync(
-                                                            ClassRpcWalletCommand.TokenCheckTransaction,
-                                                            WalletConnect.WalletId + "|" +
-                                                            ClassWalletTransactionCache.ListTransaction.Count) !=
-                                                        ClassUtils.ConvertStringtoSHA512(splitPacket[1]))
-                                                    {
-                                                        InsertBanRemoteNode(node);
-                                                        ClassPeerList.IncrementPeerDisconnect(node);
-                                                    }
 
-                                                    ClassPeerList.IncrementPeerTrustPoint(node);
-                                                }
+                                    if (Program.WalletXiropht.WalletSyncMode ==
+                                        ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
+                                    {
+                                        if (!ClassPeerList.GetPeerTrustStatus(node))
+                                        {
+                                            if (await CheckRemoteNodeInformationByCompareAsync(
+                                                    ClassRpcWalletCommand.TokenCheckTransaction,
+                                                    WalletConnect.WalletId + "|" +
+                                                    ClassWalletTransactionCache.ListTransaction.Count) !=
+                                                ClassUtils.ConvertStringtoSHA512(splitPacket[1]))
+                                            {
+                                                InsertBanRemoteNode(node);
+                                                ClassPeerList.IncrementPeerDisconnect(node);
+                                                return false;
                                             }
 
-                                            await ClassWalletTransactionCache.AddWalletTransactionAsync(splitPacket[1],
-                                                node);
-                                        }, WalletSyncCancellationToken.Token, TaskCreationOptions.RunContinuationsAsynchronously,
-                                        TaskScheduler.Current).ConfigureAwait(false);
+                                            ClassPeerList.IncrementPeerTrustPoint(node);
+                                        }
+                                    }
+
+                                    await ClassWalletTransactionCache.AddWalletTransactionAsync(splitPacket[1],
+                                        node);
+
                                     #endregion
 
                                     break;
@@ -5005,32 +4643,30 @@ namespace Xiropht_Wallet.Wallet.Tcp
 
                                     LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
 
-                                    await Task.Factory.StartNew(async () =>
-                                        {
-                                            if (Program.WalletXiropht.WalletSyncMode ==
-                                                ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
-                                            {
-                                                if (!ClassPeerList.GetPeerTrustStatus(node))
-                                                {
-                                                    if (await CheckRemoteNodeInformationByCompareAsync(
-                                                            ClassRpcWalletCommand.TokenCheckTransaction,
-                                                            WalletConnect.WalletIdAnonymity + "|" +
-                                                            ClassWalletTransactionAnonymityCache.ListTransaction
-                                                                .Count) !=
-                                                        ClassUtils.ConvertStringtoSHA512(splitPacket[1]))
-                                                    {
-                                                        InsertBanRemoteNode(node);
-                                                        ClassPeerList.IncrementPeerDisconnect(node);
-                                                    }
 
-                                                    ClassPeerList.IncrementPeerTrustPoint(node);
-                                                }
+                                    if (Program.WalletXiropht.WalletSyncMode ==
+                                        ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
+                                    {
+                                        if (!ClassPeerList.GetPeerTrustStatus(node))
+                                        {
+                                            if (await CheckRemoteNodeInformationByCompareAsync(
+                                                    ClassRpcWalletCommand.TokenCheckTransaction,
+                                                    WalletConnect.WalletIdAnonymity + "|" +
+                                                    ClassWalletTransactionAnonymityCache.ListTransaction
+                                                        .Count) !=
+                                                ClassUtils.ConvertStringtoSHA512(splitPacket[1]))
+                                            {
+                                                InsertBanRemoteNode(node);
+                                                ClassPeerList.IncrementPeerDisconnect(node);
+                                                return false;
                                             }
 
-                                            await ClassWalletTransactionAnonymityCache.AddWalletTransactionAsync(
-                                                splitPacket[1], node);
-                                        }, WalletSyncCancellationToken.Token, TaskCreationOptions.RunContinuationsAsynchronously,
-                                        TaskScheduler.Current).ConfigureAwait(false);
+                                            ClassPeerList.IncrementPeerTrustPoint(node);
+                                        }
+                                    }
+
+                                    await ClassWalletTransactionAnonymityCache.AddWalletTransactionAsync(
+                                        splitPacket[1], node);
 
                                     #endregion
 
