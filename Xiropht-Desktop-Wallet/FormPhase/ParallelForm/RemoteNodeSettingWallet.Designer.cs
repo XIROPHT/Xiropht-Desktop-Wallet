@@ -41,6 +41,7 @@
             this.ColumnPeer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnPeerStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnPeerAction = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.checkBoxEnablePeerTrustSystem = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPeerList)).BeginInit();
             this.SuspendLayout();
             // 
@@ -176,11 +177,23 @@
             this.ColumnPeerAction.Text = "Remove";
             this.ColumnPeerAction.Width = 115;
             // 
+            // checkBoxEnablePeerTrustSystem
+            // 
+            this.checkBoxEnablePeerTrustSystem.AutoSize = true;
+            this.checkBoxEnablePeerTrustSystem.Location = new System.Drawing.Point(535, 344);
+            this.checkBoxEnablePeerTrustSystem.Name = "checkBoxEnablePeerTrustSystem";
+            this.checkBoxEnablePeerTrustSystem.Size = new System.Drawing.Size(148, 17);
+            this.checkBoxEnablePeerTrustSystem.TabIndex = 11;
+            this.checkBoxEnablePeerTrustSystem.Text = "Enable Peer Trust System";
+            this.checkBoxEnablePeerTrustSystem.UseVisualStyleBackColor = true;
+            this.checkBoxEnablePeerTrustSystem.CheckedChanged += new System.EventHandler(this.checkBoxEnablePeerTrustSystem_CheckedChanged);
+            // 
             // RemoteNodeSettingWallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(971, 369);
+            this.Controls.Add(this.checkBoxEnablePeerTrustSystem);
             this.Controls.Add(this.dataGridViewPeerList);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonValidSetting);
@@ -221,5 +234,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPeer;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPeerStatus;
         private System.Windows.Forms.DataGridViewButtonColumn ColumnPeerAction;
+        private System.Windows.Forms.CheckBox checkBoxEnablePeerTrustSystem;
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
 using Xiropht_Connector_All.Setting;
+using Xiropht_Connector_All.Utils;
 using Xiropht_Wallet.Utility;
 
 namespace Xiropht_Wallet.Features
@@ -15,6 +16,8 @@ namespace Xiropht_Wallet.Features
         public long peer_last_ban;
         public bool peer_status;
         public int peer_total_disconnect;
+        public int peer_trust_value;
+        public long peer_last_trust;
     }
 
     public class ClassPeerList
@@ -22,6 +25,10 @@ namespace Xiropht_Wallet.Features
         private const string PeerFileName = "peer-list.json";
         public static int PeerMaxBanTime = 300;
         public static int PeerMaxDisconnect = 50;
+        public static int PeerTrustPoint = 1;
+        public static int PeerMaxTimeTrust = 30;
+        public static int PeerTrustMinimumValue = 50;
+        public static bool PeerEnableTrustSystem = false;
         public static Dictionary<string, ClassPeerObject> PeerList = new Dictionary<string, ClassPeerObject>();
 
         /// <summary>
@@ -59,6 +66,7 @@ namespace Xiropht_Wallet.Features
         public static void IncludeNewPeer(string peerHost)
         {
             if (!PeerList.ContainsKey(peerHost))
+                if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(peerHost))
                 PeerList.Add(peerHost, new ClassPeerObject {peer_host = peerHost, peer_status = true});
         }
 
@@ -77,7 +85,9 @@ namespace Xiropht_Wallet.Features
                         {
                             peer_host = peerHost, peer_status = false,
                             peer_last_ban = DateTimeOffset.Now.ToUnixTimeSeconds(),
-                            peer_total_disconnect = PeerMaxDisconnect
+                            peer_total_disconnect = PeerMaxDisconnect,
+                            peer_trust_value = 0,
+                            peer_last_trust = 0
                         });
                 }
                 else
@@ -85,6 +95,8 @@ namespace Xiropht_Wallet.Features
                     PeerList[peerHost].peer_status = false;
                     PeerList[peerHost].peer_last_ban = DateTimeOffset.Now.ToUnixTimeSeconds();
                     PeerList[peerHost].peer_total_disconnect = PeerMaxDisconnect;
+                    PeerList[peerHost].peer_trust_value = 0;
+                    PeerList[peerHost].peer_last_trust = 0;
                 }
             }
         }
@@ -109,6 +121,8 @@ namespace Xiropht_Wallet.Features
                 {
                     PeerList[peerHost].peer_status = true;
                     PeerList[peerHost].peer_total_disconnect = 0;
+                    PeerList[peerHost].peer_trust_value = 0;
+                    PeerList[peerHost].peer_last_trust = 0;
                 }
             }
 
@@ -124,7 +138,69 @@ namespace Xiropht_Wallet.Features
         {
             if (!PeerList.ContainsKey(peerHost)) IncludeNewPeer(peerHost);
             PeerList[peerHost].peer_total_disconnect++;
+            if (PeerList[peerHost].peer_trust_value > 0)
+            {
+                PeerList[peerHost].peer_trust_value--;
+            }
+            else
+            {
+                PeerList[peerHost].peer_trust_value = 0;
+            }
             if (PeerList[peerHost].peer_total_disconnect >= PeerMaxDisconnect) BanPeer(peerHost);
+        }
+
+        /// <summary>
+        /// Increment trust value of the peer.
+        /// </summary>
+        /// <param name="peerHost"></param>
+        public static void IncrementPeerTrustPoint(string peerHost)
+        {
+            if (!PeerList.ContainsKey(peerHost)) IncludeNewPeer(peerHost);
+            if (PeerList[peerHost].peer_trust_value < PeerMaxTimeTrust)
+            {
+                PeerList[peerHost].peer_trust_value += PeerTrustPoint;
+            }
+            if (PeerList[peerHost].peer_trust_value >= PeerMaxTimeTrust)
+            {
+                if (PeerList[peerHost].peer_last_trust < DateTimeOffset.Now.ToUnixTimeSeconds())
+                {
+                    PeerList[peerHost].peer_last_trust = DateTimeOffset.Now.ToUnixTimeSeconds() + PeerMaxTimeTrust;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check if the peer is trusted.
+        /// </summary>
+        /// <param name="peerHost"></param>
+        /// <returns></returns>
+        public static bool GetPeerTrustStatus(string peerHost)
+        {
+            if (!PeerList.ContainsKey(peerHost)) IncludeNewPeer(peerHost);
+
+            if (PeerEnableTrustSystem)
+            {
+                if (PeerList[peerHost].peer_trust_value >= PeerMaxTimeTrust)
+                {
+                    if (PeerList[peerHost].peer_last_trust >= DateTimeOffset.Now.ToUnixTimeSeconds())
+                    {
+                        if (PeerList[peerHost].peer_last_trust - DateTimeOffset.Now.ToUnixTimeSeconds() <=
+                            PeerMaxTimeTrust)
+                        {
+                            if (PeerList[peerHost].peer_trust_value - PeerList[peerHost].peer_total_disconnect >=
+                                ((PeerTrustMinimumValue * 50) / 100))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+
+                    PeerList[peerHost].peer_trust_value = 0;
+                    PeerList[peerHost].peer_last_trust = 0;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

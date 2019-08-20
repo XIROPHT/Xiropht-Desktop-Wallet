@@ -120,6 +120,8 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
 
                 }
             }
+
+            checkBoxEnablePeerTrustSystem.Checked = ClassPeerList.PeerEnableTrustSystem;
         }
 
         private void dataGridViewPeerList_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -143,6 +145,18 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                 {
 
                 }
+            }
+        }
+
+        private void checkBoxEnablePeerTrustSystem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxEnablePeerTrustSystem.Checked)
+            {
+                ClassPeerList.PeerEnableTrustSystem = true;
+            }
+            else
+            {
+                ClassPeerList.PeerEnableTrustSystem = false;
             }
         }
     }

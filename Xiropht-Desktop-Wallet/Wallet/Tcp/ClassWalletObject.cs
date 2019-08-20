@@ -4249,11 +4249,16 @@ namespace Xiropht_Wallet.Wallet.Tcp
 
                                     if (Program.WalletXiropht.WalletSyncMode ==
                                         ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
-                                        if (!await CheckRemoteNodeInformationAsync(
-                                            ClassRpcWalletCommand.TokenCheckMaxSupply, splitPacket[1]))
+                                        if (!ClassPeerList.GetPeerTrustStatus(node))
                                         {
-                                            ClassPeerList.IncrementPeerDisconnect(node);
-                                            return false;
+                                            if (!await CheckRemoteNodeInformationAsync(
+                                                ClassRpcWalletCommand.TokenCheckMaxSupply, splitPacket[1]))
+                                            {
+                                                InsertBanRemoteNode(node);
+                                                ClassPeerList.IncrementPeerDisconnect(node);
+                                                return false;
+                                            }
+                                            ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
                                     LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
@@ -4269,11 +4274,16 @@ namespace Xiropht_Wallet.Wallet.Tcp
 
                                     if (Program.WalletXiropht.WalletSyncMode ==
                                         ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
-                                        if (!await CheckRemoteNodeInformationAsync(
-                                            ClassRpcWalletCommand.TokenCheckCurrentCirculating, splitPacket[1]))
+                                        if (!ClassPeerList.GetPeerTrustStatus(node))
                                         {
-                                            ClassPeerList.IncrementPeerDisconnect(node);
-                                            return false;
+                                            if (!await CheckRemoteNodeInformationAsync(
+                                                ClassRpcWalletCommand.TokenCheckCurrentCirculating, splitPacket[1]))
+                                            {
+                                                InsertBanRemoteNode(node);
+                                                ClassPeerList.IncrementPeerDisconnect(node);
+                                                return false;
+                                            }
+                                            ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
                                     LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
@@ -4289,11 +4299,16 @@ namespace Xiropht_Wallet.Wallet.Tcp
 
                                     if (Program.WalletXiropht.WalletSyncMode ==
                                         ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
-                                        if (!await CheckRemoteNodeInformationAsync(
-                                            ClassRpcWalletCommand.TokenCheckNetworkDifficulty, splitPacket[1]))
+                                        if (!ClassPeerList.GetPeerTrustStatus(node))
                                         {
-                                            ClassPeerList.IncrementPeerDisconnect(node);
-                                            return false;
+                                            if (!await CheckRemoteNodeInformationAsync(
+                                                ClassRpcWalletCommand.TokenCheckNetworkDifficulty, splitPacket[1]))
+                                            {
+                                                InsertBanRemoteNode(node);
+                                                ClassPeerList.IncrementPeerDisconnect(node);
+                                                return false;
+                                            }
+                                            ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
                                     LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
@@ -4309,11 +4324,16 @@ namespace Xiropht_Wallet.Wallet.Tcp
 
                                     if (Program.WalletXiropht.WalletSyncMode ==
                                         ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
-                                        if (!await CheckRemoteNodeInformationAsync(
-                                            ClassRpcWalletCommand.TokenCheckNetworkHashrate, splitPacket[1]))
+                                        if (!ClassPeerList.GetPeerTrustStatus(node))
                                         {
-                                            ClassPeerList.IncrementPeerDisconnect(node);
-                                            return false;
+                                            if (!await CheckRemoteNodeInformationAsync(
+                                                ClassRpcWalletCommand.TokenCheckNetworkHashrate, splitPacket[1]))
+                                            {
+                                                InsertBanRemoteNode(node);
+                                                ClassPeerList.IncrementPeerDisconnect(node);
+                                                return false;
+                                            }
+                                            ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
                                     LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
@@ -4329,11 +4349,16 @@ namespace Xiropht_Wallet.Wallet.Tcp
 
                                     if (Program.WalletXiropht.WalletSyncMode ==
                                         ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
-                                        if (!await CheckRemoteNodeInformationAsync(
-                                            ClassRpcWalletCommand.TokenCheckTotalBlockMined, splitPacket[1]))
+                                        if (!ClassPeerList.GetPeerTrustStatus(node))
                                         {
-                                            ClassPeerList.IncrementPeerDisconnect(node);
-                                            return false;
+                                            if (!await CheckRemoteNodeInformationAsync(
+                                                ClassRpcWalletCommand.TokenCheckTotalBlockMined, splitPacket[1]))
+                                            {
+                                                InsertBanRemoteNode(node);
+                                                ClassPeerList.IncrementPeerDisconnect(node);
+                                                return false;
+                                            }
+                                            ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
                                     LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
@@ -4437,11 +4462,16 @@ namespace Xiropht_Wallet.Wallet.Tcp
 
                                     if (Program.WalletXiropht.WalletSyncMode ==
                                         ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
-                                        if (!await CheckRemoteNodeInformationAsync(
-                                            ClassRpcWalletCommand.TokenCheckTotalTransactionFee, splitPacket[1]))
+                                        if (!ClassPeerList.GetPeerTrustStatus(node))
                                         {
-                                            ClassPeerList.IncrementPeerDisconnect(node);
-                                            return false;
+                                            if (!await CheckRemoteNodeInformationAsync(
+                                                ClassRpcWalletCommand.TokenCheckTotalTransactionFee, splitPacket[1]))
+                                            {
+                                                InsertBanRemoteNode(node);
+                                                ClassPeerList.IncrementPeerDisconnect(node);
+                                                return false;
+                                            }
+                                            ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
                                     LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
@@ -4457,11 +4487,17 @@ namespace Xiropht_Wallet.Wallet.Tcp
 
                                     if (Program.WalletXiropht.WalletSyncMode ==
                                         ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
-                                        if (!await CheckRemoteNodeInformationAsync(
-                                            ClassRpcWalletCommand.TokenCheckTotalPendingTransaction, splitPacket[1]))
+                                        if (!ClassPeerList.GetPeerTrustStatus(node))
                                         {
-                                            ClassPeerList.IncrementPeerDisconnect(node);
-                                            return false;
+                                            ClassPeerList.IncrementPeerTrustPoint(node);
+                                            if (!await CheckRemoteNodeInformationAsync(
+                                                ClassRpcWalletCommand.TokenCheckTotalPendingTransaction,
+                                                splitPacket[1]))
+                                            {
+                                                InsertBanRemoteNode(node);
+                                                ClassPeerList.IncrementPeerDisconnect(node);
+                                                return false;
+                                            }
                                         }
 
                                     LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
@@ -4478,12 +4514,17 @@ namespace Xiropht_Wallet.Wallet.Tcp
 
                                     if (Program.WalletXiropht.WalletSyncMode ==
                                         ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
-                                        if (!await CheckRemoteNodeInformationAsync(
-                                            ClassRpcWalletCommand.TokenCheckWalletTotalTransaction,
-                                            splitPacket[1] + "|" + WalletConnect.WalletId))
+                                        if (!ClassPeerList.GetPeerTrustStatus(node))
                                         {
-                                            ClassPeerList.IncrementPeerDisconnect(node);
-                                            return false;
+                                            if (!await CheckRemoteNodeInformationAsync(
+                                                ClassRpcWalletCommand.TokenCheckWalletTotalTransaction,
+                                                splitPacket[1] + "|" + WalletConnect.WalletId))
+                                            {
+                                                InsertBanRemoteNode(node);
+                                                ClassPeerList.IncrementPeerDisconnect(node);
+                                                return false;
+                                            }
+                                            ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
                                     LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
@@ -4529,8 +4570,8 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                     }
                                                     else
                                                     {
-                                                        InsertBanRemoteNode(ListWalletConnectToRemoteNode[0]
-                                                            .RemoteNodeHost);
+                                                        InsertBanRemoteNode(node);
+                                                        ClassPeerList.IncrementPeerDisconnect(node);
                                                         return false;
                                                     }
                                                 }
@@ -4601,9 +4642,10 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                                             .ContainsKey(
                                                                                 ListWalletConnectToRemoteNode[8]
                                                                                     .RemoteNodeHost))
-                                                                            InsertBanRemoteNode(
-                                                                                ListWalletConnectToRemoteNode[8]
-                                                                                    .RemoteNodeHost);
+                                                                        {
+                                                                            InsertBanRemoteNode(node);
+                                                                            ClassPeerList.IncrementPeerDisconnect(node);
+                                                                        }
 
                                                                     return false;
                                                                 }
@@ -4651,12 +4693,17 @@ namespace Xiropht_Wallet.Wallet.Tcp
 
                                     if (Program.WalletXiropht.WalletSyncMode ==
                                         ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
-                                        if (!await CheckRemoteNodeInformationAsync(
-                                            ClassRpcWalletCommand.TokenCheckWalletTotalTransaction,
-                                            splitPacket[1] + "|" + WalletConnect.WalletIdAnonymity))
+                                        if (!ClassPeerList.GetPeerTrustStatus(node))
                                         {
-                                            ClassPeerList.IncrementPeerDisconnect(node);
-                                            return false;
+                                            if (!await CheckRemoteNodeInformationAsync(
+                                                ClassRpcWalletCommand.TokenCheckWalletTotalTransaction,
+                                                splitPacket[1] + "|" + WalletConnect.WalletIdAnonymity))
+                                            {
+                                                InsertBanRemoteNode(node);
+                                                ClassPeerList.IncrementPeerDisconnect(node);
+                                                return false;
+                                            }
+                                            ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
                                     LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
@@ -4691,8 +4738,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
 
                                                 if (totalTransactionInWallet > TotalTransactionInSyncAnonymity)
                                                 {
-                                                    if (ClassConnectorSetting.SeedNodeIp.ContainsKey(
-                                                        ListWalletConnectToRemoteNode[11].RemoteNodeHost))
+                                                    if (ClassConnectorSetting.SeedNodeIp.ContainsKey(node))
                                                     {
                                                         ClassWalletTransactionAnonymityCache.RemoveWalletCache(
                                                             WalletConnect
@@ -4703,8 +4749,8 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                     }
                                                     else
                                                     {
-                                                        InsertBanRemoteNode(ListWalletConnectToRemoteNode[11]
-                                                            .RemoteNodeHost);
+                                                        InsertBanRemoteNode(node);
+                                                        ClassPeerList.IncrementPeerDisconnect(node);
                                                         return false;
                                                     }
                                                 }
@@ -4763,12 +4809,13 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                                 ClassUtils.DateUnixTimeNowSecond())
                                                             {
                                                                 if (!WalletClosed)
-                                                                    if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(
-                                                                        ListWalletConnectToRemoteNode[8]
-                                                                            .RemoteNodeHost))
-                                                                        InsertBanRemoteNode(
-                                                                            ListWalletConnectToRemoteNode[8]
-                                                                                .RemoteNodeHost);
+                                                                {
+                                                                    if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(node))
+                                                                    {
+                                                                        InsertBanRemoteNode(node);
+                                                                        ClassPeerList.IncrementPeerDisconnect(node);
+                                                                    }
+                                                                }
 
                                                                 return false;
                                                             }
@@ -4813,12 +4860,19 @@ namespace Xiropht_Wallet.Wallet.Tcp
 #endif
                                     if (Program.WalletXiropht.WalletSyncMode ==
                                         ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
-                                        if (!await CheckRemoteNodeInformationAsync(
-                                            ClassRpcWalletCommand.TokenCheckLastBlockFoundDate, splitPacket[1]))
+                                    {
+                                        if (!ClassPeerList.GetPeerTrustStatus(node))
                                         {
-                                            ClassPeerList.IncrementPeerDisconnect(node);
-                                            return false;
+                                            if (!await CheckRemoteNodeInformationAsync(
+                                                ClassRpcWalletCommand.TokenCheckLastBlockFoundDate, splitPacket[1]))
+                                            {
+                                                InsertBanRemoteNode(node);
+                                                ClassPeerList.IncrementPeerDisconnect(node);
+                                                return false;
+                                            }
+                                            ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
+                                    }
 
                                     LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
                                     if (int.TryParse(
@@ -4844,21 +4898,27 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                     if (Program.WalletXiropht.WalletSyncMode ==
                                         ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
                                     {
-                                        var splitBlock = splitPacket[1].Split(new[] {"#"}, StringSplitOptions.None);
-                                        if (long.TryParse(splitBlock[0], out var blockId))
+                                        if (!ClassPeerList.GetPeerTrustStatus(node))
                                         {
-                                            if (await CheckRemoteNodeInformationByCompareAsync(
-                                                    ClassRpcWalletCommand.TokenCheckBlock, splitBlock[0]) !=
-                                                splitPacket[1])
+                                            var splitBlock = splitPacket[1].Split(new[] {"#"}, StringSplitOptions.None);
+                                            if (long.TryParse(splitBlock[0], out _))
                                             {
+                                                if (await CheckRemoteNodeInformationByCompareAsync(
+                                                        ClassRpcWalletCommand.TokenCheckBlock, splitBlock[0]) !=
+                                                    splitPacket[1])
+                                                {
+                                                    InsertBanRemoteNode(node);
+                                                    ClassPeerList.IncrementPeerDisconnect(node);
+                                                    return false;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                InsertBanRemoteNode(node);
                                                 ClassPeerList.IncrementPeerDisconnect(node);
                                                 return false;
                                             }
-                                        }
-                                        else
-                                        {
-                                            ClassPeerList.IncrementPeerDisconnect(node);
-                                            return false;
+                                            ClassPeerList.IncrementPeerTrustPoint(node);
                                         }
 
                                     }
@@ -4909,8 +4969,32 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                     #region Receive transaction by ID.
 
                                     LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
-                                    await ClassWalletTransactionCache.AddWalletTransactionAsync(splitPacket[1], node);
 
+                                    await Task.Factory.StartNew(async () =>
+                                        {
+                                            if (Program.WalletXiropht.WalletSyncMode ==
+                                                ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
+                                            {
+                                                if (!ClassPeerList.GetPeerTrustStatus(node))
+                                                {
+                                                    if (await CheckRemoteNodeInformationByCompareAsync(
+                                                            ClassRpcWalletCommand.TokenCheckTransaction,
+                                                            WalletConnect.WalletId + "|" +
+                                                            ClassWalletTransactionCache.ListTransaction.Count) !=
+                                                        ClassUtils.ConvertStringtoSHA512(splitPacket[1]))
+                                                    {
+                                                        InsertBanRemoteNode(node);
+                                                        ClassPeerList.IncrementPeerDisconnect(node);
+                                                    }
+
+                                                    ClassPeerList.IncrementPeerTrustPoint(node);
+                                                }
+                                            }
+
+                                            await ClassWalletTransactionCache.AddWalletTransactionAsync(splitPacket[1],
+                                                node);
+                                        }, WalletSyncCancellationToken.Token, TaskCreationOptions.RunContinuationsAsynchronously,
+                                        TaskScheduler.Current).ConfigureAwait(false);
                                     #endregion
 
                                     break;
@@ -4920,7 +5004,33 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                     #region Receive anonymous transaction sync by ID.
 
                                     LastRemoteNodePacketReceived = ClassUtils.DateUnixTimeNowSecond();
-                                    await ClassWalletTransactionAnonymityCache.AddWalletTransactionAsync(splitPacket[1], node);
+
+                                    await Task.Factory.StartNew(async () =>
+                                        {
+                                            if (Program.WalletXiropht.WalletSyncMode ==
+                                                ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
+                                            {
+                                                if (!ClassPeerList.GetPeerTrustStatus(node))
+                                                {
+                                                    if (await CheckRemoteNodeInformationByCompareAsync(
+                                                            ClassRpcWalletCommand.TokenCheckTransaction,
+                                                            WalletConnect.WalletIdAnonymity + "|" +
+                                                            ClassWalletTransactionAnonymityCache.ListTransaction
+                                                                .Count) !=
+                                                        ClassUtils.ConvertStringtoSHA512(splitPacket[1]))
+                                                    {
+                                                        InsertBanRemoteNode(node);
+                                                        ClassPeerList.IncrementPeerDisconnect(node);
+                                                    }
+
+                                                    ClassPeerList.IncrementPeerTrustPoint(node);
+                                                }
+                                            }
+
+                                            await ClassWalletTransactionAnonymityCache.AddWalletTransactionAsync(
+                                                splitPacket[1], node);
+                                        }, WalletSyncCancellationToken.Token, TaskCreationOptions.RunContinuationsAsynchronously,
+                                        TaskScheduler.Current).ConfigureAwait(false);
 
                                     #endregion
 
@@ -4992,8 +5102,9 @@ namespace Xiropht_Wallet.Wallet.Tcp
             if (seedNodeSelected.Item1)
                 try
                 {
-                    string result =  await ProceedTokenRequestHttpAsync(
-                        "http://"+seedNodeSelected.Item2+":" + ClassConnectorSetting.SeedNodeTokenPort + "/" + type + "|" +
+                    string result = await ProceedTokenRequestHttpAsync(
+                        "http://" + seedNodeSelected.Item2 + ":" + ClassConnectorSetting.SeedNodeTokenPort + "/" +
+                        type + "|" +
                         information, timeout);
                     var resultJsonObject = JObject.Parse(result);
 
