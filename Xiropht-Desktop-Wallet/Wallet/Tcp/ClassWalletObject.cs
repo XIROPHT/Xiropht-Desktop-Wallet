@@ -2483,6 +2483,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
         ///     Proceed token request throught http protocol.
         /// </summary>
         /// <param name="url"></param>
+        /// <param name="maxTimeoutSecond"></param>
         /// <returns></returns>
         private async Task<string> ProceedTokenRequestHttpAsync(string url, int maxTimeoutSecond = 30)
         {
@@ -2558,23 +2559,19 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                         }
                                         else
                                         {
-                                            ListenRemoteNodeSyncPacket();
+                                            await ListenRemoteNodeSyncPacketAsync();
                                             SendRemoteNodeSyncPacket();
                                         }
-                                    }
-                                    else
-                                    {
-                                        WalletOnUseSync = false;
                                     }
                                 }
                             }
 
                             if (!remoteNodeSelected)
                             {
+                                var peerNodeSelected = false;
                                 if (ClassPeerList.PeerList.Count > 0)
                                 {
                                     var peerNodeAlive = string.Empty;
-                                    var peerNodeSelected = false;
                                     foreach (var peerNode in ClassPeerList.PeerList.ToArray())
                                     {
                                         if (!peerNodeSelected)
@@ -2599,39 +2596,35 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                         {
                                             ClassPeerList.IncrementPeerDisconnect(peerNodeAlive);
                                             DisconnectRemoteNodeTokenSync();
+                                            peerNodeSelected = false;
+                                        }
+                                        else
+                                        {
+                                            await ListenRemoteNodeSyncPacketAsync();
+                                            SendRemoteNodeSyncPacket();
+                                        }
+                                    }
+                                }
+                                if (!peerNodeSelected) // Use seed nodes if public nodes listed or peer list not work.
+                                {
+                                    var seedNodeAlive = GetSeedNodeAlive();
+                                    if (seedNodeAlive.Item1)
+                                    {
+                                        if (!await ConnectToRemoteNodeSyncAsync(seedNodeAlive.Item2))
+                                        {
+                                            DisconnectRemoteNodeTokenSync();
                                             WalletOnUseSync = false;
                                         }
                                         else
                                         {
-                                            ListenRemoteNodeSyncPacket();
+                                            await ListenRemoteNodeSyncPacketAsync();
                                             SendRemoteNodeSyncPacket();
                                         }
                                     }
                                     else
                                     {
-                                        var seedNodeAlive = GetSeedNodeAlive();
-                                        if (seedNodeAlive.Item1)
-                                        {
-                                            if (!await ConnectToRemoteNodeSyncAsync(seedNodeAlive.Item2))
-                                            {
-                                                DisconnectRemoteNodeTokenSync();
-                                                WalletOnUseSync = false;
-                                            }
-                                            else
-                                            {
-                                                ListenRemoteNodeSyncPacket();
-                                                SendRemoteNodeSyncPacket();
-                                            }
-                                        }
-                                        else
-                                        {
-                                            WalletOnUseSync = false;
-                                        }
+                                        WalletOnUseSync = false;
                                     }
-                                }
-                                else
-                                {
-                                    WalletOnUseSync = false;
                                 }
                             }
                         }
@@ -2648,7 +2641,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                 }
                                 else
                                 {
-                                    ListenRemoteNodeSyncPacket();
+                                    await ListenRemoteNodeSyncPacketAsync();
                                     SendRemoteNodeSyncPacket();
                                 }
                             }
@@ -2668,7 +2661,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             }
                             else
                             {
-                                ListenRemoteNodeSyncPacket();
+                                await ListenRemoteNodeSyncPacketAsync();
                                 SendRemoteNodeSyncPacket();
                             }
                         }
@@ -2738,7 +2731,6 @@ namespace Xiropht_Wallet.Wallet.Tcp
         /// <summary>
         ///     Initialize remote node sync objects.
         /// </summary>
-        /// <param name="nodeTarget"></param>
         private void InitialisationRemoteNodeTokenSync()
         {
             DisconnectRemoteNodeTokenSync();
@@ -2811,7 +2803,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
         /// <summary>
         ///     Listen packets received from a remote node object sync target.
         /// </summary>
-        private void ListenRemoteNodeSyncPacket()
+        private async Task ListenRemoteNodeSyncPacketAsync()
         {
             try
             {
@@ -2819,7 +2811,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                     if (i < ListWalletConnectToRemoteNode.Count)
                     {
                         var i1 = i;
-                        Task.Factory.StartNew(async () =>
+                       await Task.Factory.StartNew(async () =>
                             {
                                 while (!WalletClosed && WalletOnUseSync)
                                 {
@@ -2837,17 +2829,20 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                     var splitPacketReceived =
                                                         packetReceived.Split(new[] {"*"}, StringSplitOptions.None);
                                                     foreach (var packet in splitPacketReceived)
-                                                        if (packet != null)
-                                                            if (!string.IsNullOrEmpty(packet))
-                                                                if (!await HandlePacketRemoteNodeSyncAsync(packet,
-                                                                    ListWalletConnectToRemoteNode[i1].RemoteNodeHost))
-                                                                    break;
+                                                        if (!string.IsNullOrEmpty(packet))
+                                                            if (!await HandlePacketRemoteNodeSyncAsync(packet,
+                                                                ListWalletConnectToRemoteNode[i1].RemoteNodeHost))
+                                                            {
+                                                                break;
+                                                            }
                                                 }
                                                 else
                                                 {
                                                     if (!await HandlePacketRemoteNodeSyncAsync(packetReceived,
                                                         ListWalletConnectToRemoteNode[i1].RemoteNodeHost))
+                                                    {
                                                         break;
+                                                    }
                                                 }
                                             }
                                             else

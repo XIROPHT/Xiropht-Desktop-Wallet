@@ -3778,7 +3778,7 @@ namespace Xiropht_Wallet
                                                                 if (TransactionHistoryWalletForm
                                                                         .listViewNormalReceivedTransactionHistory
                                                                         .Items[i1]
-                                                                        .SubItems[6].Text != "ANONYMOUS")
+                                                                        .SubItems[6].Text != ClassWalletTransactionType.AnonymousTransaction)
                                                                 {
                                                                     if (ClassContact.CheckContactNameFromWalletAddress(
                                                                         TransactionHistoryWalletForm
@@ -5342,7 +5342,6 @@ namespace Xiropht_Wallet
                     };
                     walletResearchElementForm.AppendText(ClassBlockCache.ListBlock.ElementAt(elementIdFound).Value
                         .ConcatBlockElement());
-                    Refresh();
                     walletResearchElementForm.ShowDialog(this);
 #if DEBUG
                 Log.WriteLine("Element found: " + ClassBlockCache.ListBlock.ElementAt(elementIdFound).Value.ConcatBlockElement());
@@ -5443,13 +5442,13 @@ namespace Xiropht_Wallet
                             {
                                 switch (transactionObject.Value.TransactionType)
                                 {
-                                    case "SEND":
+                                    case ClassWalletTransactionType.SendTransaction:
                                         transactionSendNormalCounter++;
                                         break;
-                                    case "RECV":
-                                        if (transactionObject.Value.TransactionWalletAddress.Contains("BLOCKCHAIN["))
+                                    case ClassWalletTransactionType.ReceiveTransaction:
+                                        if (transactionObject.Value.TransactionWalletAddress.Contains(ClassWalletTransactionType.BlockchainTransaction))
                                             transactionBlockRewardCounter++;
-                                        else if (transactionObject.Value.TransactionWalletAddress == "ANONYMOUS")
+                                        else if (transactionObject.Value.TransactionWalletAddress == ClassWalletTransactionType.AnonymousTransaction)
                                             transactionRecvAnonymousCounter++;
                                         else
                                             transactionRecvNormalCounter++;
@@ -5473,9 +5472,10 @@ namespace Xiropht_Wallet
                                 ClassWalletTransactionCache.ListTransaction.ElementAt(elementIdFound);
                             decimal pageNumber = 1;
 
+
                             switch (transactionObject.Value.TransactionType)
                             {
-                                case "SEND":
+                                case ClassWalletTransactionType.SendTransaction:
                                     var totalPage =
                                         Math.Ceiling((decimal) (TotalTransactionNormalSend / MaxTransactionPerPage)) +
                                         1;
@@ -5492,8 +5492,8 @@ namespace Xiropht_Wallet
                                         }
 
                                     break;
-                                case "RECV":
-                                    if (transactionObject.Value.TransactionWalletAddress.Contains("BLOCKCHAIN["))
+                                case ClassWalletTransactionType.ReceiveTransaction:
+                                    if (transactionObject.Value.TransactionWalletAddress.Contains(ClassWalletTransactionType.BlockchainTransaction))
                                     {
                                         totalPage = Math.Ceiling(
                                                         (decimal) (TotalTransactionBlockReward /
@@ -5510,7 +5510,7 @@ namespace Xiropht_Wallet
                                                 pageNumber = i + 1;
                                             }
                                     }
-                                    else if (transactionObject.Value.TransactionWalletAddress == "ANONYMOUS")
+                                    else if (transactionObject.Value.TransactionWalletAddress == ClassWalletTransactionType.AnonymousTransaction)
                                     {
                                         totalPage = Math.Ceiling(
                                                         (decimal) (TotalTransactionAnonymousReceived /
@@ -5554,12 +5554,14 @@ namespace Xiropht_Wallet
                             walletResearchElementForm.AppendText(
                                 transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
                             walletResearchElementForm.ShowDialog(this);
+
 #if DEBUG
                             Log.WriteLine("Element found: " + ClassBlockCache.ListBlock.ElementAt(elementIdFound).Value.ConcatBlockElement());
 #endif
                         }
                         else
                         {
+
                             elementIdFound = 0;
                             foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction
                                 .ToArray())
@@ -5571,6 +5573,7 @@ namespace Xiropht_Wallet
                                     else
                                         elementIdFound++;
                                 }
+
 
                             if (elementFound)
                             {
@@ -5597,10 +5600,9 @@ namespace Xiropht_Wallet
                                 {
                                     StartPosition = FormStartPosition.CenterParent
                                 };
-                                Refresh();
-                                walletResearchElementForm.AppendText(
-                                    transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
+                                walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
                                 walletResearchElementForm.ShowDialog(this);
+
 #if DEBUG
                             Log.WriteLine("Element found: " + ClassBlockCache.ListBlock.ElementAt(elementIdFound).Value.ConcatBlockElement());
 #endif
@@ -5631,17 +5633,18 @@ namespace Xiropht_Wallet
                             StartPosition = FormStartPosition.CenterParent
                         };
 
+
                         foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction.ToArray())
                         {
                             switch (transactionObject.Value.TransactionType)
                             {
-                                case "SEND":
+                                case ClassWalletTransactionType.SendTransaction:
                                     transactionSendNormalCounter++;
                                     break;
-                                case "RECV":
-                                    if (transactionObject.Value.TransactionWalletAddress.Contains("BLOCKCHAIN["))
+                                case ClassWalletTransactionType.ReceiveTransaction:
+                                    if (transactionObject.Value.TransactionWalletAddress.Contains(ClassWalletTransactionType.BlockchainTransaction))
                                         transactionBlockRewardCounter++;
-                                    else if (transactionObject.Value.TransactionWalletAddress == "ANONYMOUS")
+                                    else if (transactionObject.Value.TransactionWalletAddress == ClassWalletTransactionType.AnonymousTransaction)
                                         transactionRecvAnonymousCounter++;
                                     else
                                         transactionRecvNormalCounter++;
@@ -5655,7 +5658,7 @@ namespace Xiropht_Wallet
 
                                 switch (transactionObject.Value.TransactionType)
                                 {
-                                    case "SEND":
+                                    case ClassWalletTransactionType.SendTransaction:
                                         var totalPage =
                                             Math.Ceiling(
                                                 (decimal) (TotalTransactionNormalSend / MaxTransactionPerPage)) + 1;
@@ -5672,8 +5675,8 @@ namespace Xiropht_Wallet
                                             }
 
                                         break;
-                                    case "RECV":
-                                        if (transactionObject.Value.TransactionWalletAddress.Contains("BLOCKCHAIN["))
+                                    case ClassWalletTransactionType.ReceiveTransaction:
+                                        if (transactionObject.Value.TransactionWalletAddress.Contains(ClassWalletTransactionType.BlockchainTransaction))
                                         {
                                             totalPage = Math.Ceiling(
                                                             (decimal) (TotalTransactionBlockReward /
@@ -5690,7 +5693,7 @@ namespace Xiropht_Wallet
                                                     pageNumber = i + 1;
                                                 }
                                         }
-                                        else if (transactionObject.Value.TransactionWalletAddress == "ANONYMOUS")
+                                        else if (transactionObject.Value.TransactionWalletAddress == ClassWalletTransactionType.AnonymousTransaction)
                                         {
                                             totalPage = Math.Ceiling(
                                                             (decimal) (TotalTransactionAnonymousReceived /
@@ -5735,6 +5738,7 @@ namespace Xiropht_Wallet
                             }
                         }
 
+
                         foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction.ToArray()
                         )
                         {
@@ -5765,12 +5769,9 @@ namespace Xiropht_Wallet
                             }
                         }
 
-                        if (walletAddressTransactionFound)
-                        {
-                            Refresh();
-                            walletResearchElementForm.ShowDialog(this);
-                        }
-                        else
+
+
+                        if (!walletAddressTransactionFound)
                         {
 #if WINDOWS
                             ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found",
@@ -5780,6 +5781,10 @@ namespace Xiropht_Wallet
                             MessageBox.Show(this, elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #endif
                             walletResearchElementForm.Dispose();
+                        }
+                        else
+                        {
+                            walletResearchElementForm.ShowDialog(this);
                         }
                     }
                 }
@@ -5806,13 +5811,15 @@ namespace Xiropht_Wallet
                         {
                             switch (transactionObject.Value.TransactionType)
                             {
-                                case "SEND":
+                                case ClassWalletTransactionType.SendTransaction:
                                     transactionSendNormalCounter++;
                                     break;
-                                case "RECV":
-                                    if (transactionObject.Value.TransactionWalletAddress.Contains("BLOCKCHAIN["))
+                                case ClassWalletTransactionType.ReceiveTransaction:
+                                    if (transactionObject.Value.TransactionWalletAddress.Contains(
+                                        ClassWalletTransactionType.BlockchainTransaction))
                                         transactionBlockRewardCounter++;
-                                    else if (transactionObject.Value.TransactionWalletAddress == "ANONYMOUS")
+                                    else if (transactionObject.Value.TransactionWalletAddress ==
+                                             ClassWalletTransactionType.AnonymousTransaction)
                                         transactionRecvAnonymousCounter++;
                                     else
                                         transactionRecvNormalCounter++;
@@ -5826,7 +5833,7 @@ namespace Xiropht_Wallet
 
                                 switch (transactionObject.Value.TransactionType)
                                 {
-                                    case "SEND":
+                                    case ClassWalletTransactionType.SendTransaction:
                                         var totalPage =
                                             Math.Ceiling(
                                                 (decimal) (TotalTransactionNormalSend / MaxTransactionPerPage)) + 1;
@@ -5843,8 +5850,9 @@ namespace Xiropht_Wallet
                                             }
 
                                         break;
-                                    case "RECV":
-                                        if (transactionObject.Value.TransactionWalletAddress.Contains("BLOCKCHAIN["))
+                                    case ClassWalletTransactionType.ReceiveTransaction:
+                                        if (transactionObject.Value.TransactionWalletAddress.Contains(
+                                            ClassWalletTransactionType.BlockchainTransaction))
                                         {
                                             totalPage = Math.Ceiling(
                                                             (decimal) (TotalTransactionBlockReward /
@@ -5861,7 +5869,8 @@ namespace Xiropht_Wallet
                                                     pageNumber = i + 1;
                                                 }
                                         }
-                                        else if (transactionObject.Value.TransactionWalletAddress == "ANONYMOUS")
+                                        else if (transactionObject.Value.TransactionWalletAddress ==
+                                                 ClassWalletTransactionType.AnonymousTransaction)
                                         {
                                             totalPage = Math.Ceiling(
                                                             (decimal) (TotalTransactionAnonymousReceived /
@@ -5934,13 +5943,7 @@ namespace Xiropht_Wallet
                                     transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
                             }
                         }
-
-                        if (contactTransactionFound)
-                        {
-                            Refresh();
-                            walletResearchElementForm.ShowDialog(this);
-                        }
-                        else
+                        if (!contactTransactionFound)
                         {
 #if WINDOWS
                             ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found",
@@ -5951,9 +5954,14 @@ namespace Xiropht_Wallet
 #endif
                             walletResearchElementForm.Dispose();
                         }
+                        else
+                        {
+                            walletResearchElementForm.ShowDialog(this);
+                        }
                     }
                     else
                     {
+
 #if WINDOWS
                         ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found",
                             MessageBoxButtons.OK, MessageBoxIcon.Warning);
