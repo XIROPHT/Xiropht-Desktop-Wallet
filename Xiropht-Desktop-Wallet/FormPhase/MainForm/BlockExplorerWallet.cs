@@ -82,15 +82,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 {
                 }
 
-                if (Program.WalletXiropht.EnableTokenNetworkMode)
-                {
-                    Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
-                    Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
-                }
-                else
-                {
-                    Program.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
-                }
+
+                Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
+                Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
+
 
                 Program.WalletXiropht.StopUpdateBlockHistory(true, false);
             }

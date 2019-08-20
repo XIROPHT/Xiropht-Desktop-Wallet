@@ -44,15 +44,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     Program.WalletXiropht.ClassWalletObject.InSyncTransaction = false;
                     Program.WalletXiropht.ClassWalletObject.InSyncTransactionAnonymity = false;
                     Program.WalletXiropht.ClassWalletObject.BlockTransactionSync = false;
-                    if (Program.WalletXiropht.EnableTokenNetworkMode)
-                    {
-                        Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
-                        Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
-                    }
-                    else
-                    {
-                        Program.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
-                    }
+                    Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
+                    Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
                 }
         }
 

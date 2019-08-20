@@ -396,6 +396,7 @@ namespace Xiropht_Wallet.Wallet
                     errorSyncTransaction = true;
                 }
             }
+
             if (errorSyncTransaction)
             {
                 if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(node))
@@ -408,20 +409,16 @@ namespace Xiropht_Wallet.Wallet
                     }
                     else
                     {
-                        Program.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned[node] = ClassUtils.DateUnixTimeNowSecond();
+                        Program.WalletXiropht.ClassWalletObject.ListRemoteNodeBanned[node] =
+                            ClassUtils.DateUnixTimeNowSecond();
                         ClassPeerList.IncrementPeerDisconnect(node);
                     }
                 }
 
-                if (Program.WalletXiropht.EnableTokenNetworkMode)
-                {
-                    Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
-                    Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
-                }
-                else
-                {
-                    Program.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
-                }
+
+                Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
+                Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
+
             }
 
             Program.WalletXiropht.ClassWalletObject.InReceiveTransaction = false;

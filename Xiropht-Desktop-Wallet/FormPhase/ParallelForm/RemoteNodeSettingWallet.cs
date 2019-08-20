@@ -35,20 +35,12 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
 
             if (Program.WalletXiropht.ClassWalletObject.WalletConnect != null)
             {
-                if (!Program.WalletXiropht.EnableTokenNetworkMode)
+                if (!Program.WalletXiropht.ClassWalletObject.WalletClosed)
                 {
-                    if (!string.IsNullOrEmpty(Program.WalletXiropht.ClassWalletObject.WalletConnect.WalletPhase))
-                        if (!Program.WalletXiropht.ClassWalletObject.WalletClosed)
-                            Program.WalletXiropht.ClassWalletObject.DisconnectWholeRemoteNodeSyncAsync(true, true);
+                    Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
+                    Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
                 }
-                else
-                {
-                    if (!Program.WalletXiropht.ClassWalletObject.WalletClosed)
-                    {
-                        Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
-                        Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
-                    }
-                }
+
             }
 
             Close();
