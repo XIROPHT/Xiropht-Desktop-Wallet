@@ -2034,7 +2034,6 @@ namespace Xiropht_Wallet.Wallet.Tcp
         ///     Get wallet token from token system.
         /// </summary>
         /// <param name="getSeedNodeRandom"></param>
-        /// <param name="walletAddress"></param>
         /// <returns></returns>
         private async Task<string> GetWalletTokenAsync(string getSeedNodeRandom)
         {
@@ -2610,7 +2609,24 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                     }
                                     else
                                     {
-                                        WalletOnUseSync = false;
+                                        var seedNodeAlive = GetSeedNodeAlive();
+                                        if (seedNodeAlive.Item1)
+                                        {
+                                            if (!await ConnectToRemoteNodeSyncAsync(seedNodeAlive.Item2))
+                                            {
+                                                DisconnectRemoteNodeTokenSync();
+                                                WalletOnUseSync = false;
+                                            }
+                                            else
+                                            {
+                                                ListenRemoteNodeSyncPacket();
+                                                SendRemoteNodeSyncPacket();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            WalletOnUseSync = false;
+                                        }
                                     }
                                 }
                                 else
@@ -2988,7 +3004,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                 break;
                             }
 
-                            await Task.Delay(1000);
+                            await Task.Delay(100);
                         }
 
                         WalletOnUseSync = false;
