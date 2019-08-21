@@ -75,6 +75,8 @@ For more informations about how work the network connection of wallet, please ch
 
 - Polish: XirophtEnthusiast
 
+- Chinese: bobolam1971
+
 **Official testers:**
 
 - DigitalTwister
