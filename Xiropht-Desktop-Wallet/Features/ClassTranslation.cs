@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using Xiropht_Connector_All.Setting;
 using Xiropht_Wallet.FormPhase;
@@ -509,6 +511,23 @@ namespace Xiropht_Wallet.Features
         public static Dictionary<string, Dictionary<string, string>> LanguageDatabases =
             new Dictionary<string, Dictionary<string, string>>(); // Dictionnary content format -> {string:Language Name|Dictionnary:{string:text name|string:text content}}
 
+
+        /// <summary>
+        /// Return the default encoding or a special one depending the language filename.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        private static Encoding GetEncoding(string fileName)
+        {
+            Encoding encodingFile = Encoding.UTF8;
+            if (fileName.ToLower() == "es.xirlang")
+            {
+                encodingFile = Encoding.GetEncoding("ISO-8859-1");
+            }
+
+            return encodingFile;
+        }
+
         /// <summary>
         ///     Read every language files, insert them to language database.
         /// </summary>
@@ -543,6 +562,8 @@ namespace Xiropht_Wallet.Features
                                     Log.WriteLine("Read language file: "+languageFilesList[i]);
 #endif
 
+                                    Encoding encodingFile = GetEncoding(languageFilesList[i]);
+
                                     using (var fs =
                                         File.Open(
                                             ClassUtility.ConvertPath(
@@ -550,7 +571,7 @@ namespace Xiropht_Wallet.Features
                                                 languageFilesList[i]), FileMode.Open, FileAccess.Read,
                                             FileShare.ReadWrite))
                                     using (var bs = new BufferedStream(fs))
-                                    using (var sr = new StreamReader(bs))
+                                    using (var sr = new StreamReader(bs, encodingFile))
                                     {
                                         string line;
                                         while ((line = sr.ReadLine()) != null)

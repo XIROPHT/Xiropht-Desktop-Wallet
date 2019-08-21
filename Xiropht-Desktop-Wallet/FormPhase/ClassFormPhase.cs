@@ -62,7 +62,6 @@ namespace Xiropht_Wallet.FormPhase
         /// <param name="walletAmount"></param>
         public static void ShowWalletInformationInMenu(string walletAddress, string walletAmount)
         {
-
             Program.WalletXiropht.BeginInvoke((MethodInvoker) delegate
             {
                 Program.WalletXiropht.labelNoticeWalletAddress.Text =
@@ -129,10 +128,8 @@ namespace Xiropht_Wallet.FormPhase
         public static DialogResult MessageBoxInterface(string text, string title, MessageBoxButtons button,
             MessageBoxIcon icon)
         {
-            return (DialogResult) Program.WalletXiropht.Invoke((Func<DialogResult>) delegate
-            {
-                return MetroMessageBox.Show(Program.WalletXiropht, text, title, button, icon);
-            });
+            return (DialogResult) Program.WalletXiropht.Invoke((Func<DialogResult>) (() =>
+                MetroMessageBox.Show(Program.WalletXiropht, text, title, button, icon)));
         }
 
 #endif

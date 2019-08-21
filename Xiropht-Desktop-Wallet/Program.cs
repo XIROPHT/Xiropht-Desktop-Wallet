@@ -25,6 +25,7 @@ namespace Xiropht_Wallet
         [STAThread]
         private static void Main()
         {
+            Thread.CurrentThread.CurrentUICulture = GlobalCultureInfo;
             Thread.CurrentThread.Name = Path.GetFileName(Environment.GetCommandLineArgs()[0]);
 
 #if DEBUG

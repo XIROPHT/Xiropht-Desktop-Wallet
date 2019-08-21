@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MetroFramework;
 using Xiropht_Wallet.FormPhase.ParallelForm;
 
 namespace Xiropht_Wallet.FormPhase
@@ -38,8 +39,10 @@ namespace Xiropht_Wallet.FormPhase
                                 Program.WalletXiropht.Invoke((MethodInvoker) delegate
                                 {
                                     PinForm.StartPosition = FormStartPosition.CenterParent;
-                                    PinForm.TopMost = false;
+                                    PinForm.TopMost = true;
+                                    PinForm.BringToFront();
                                     PinForm.ShowDialog(Program.WalletXiropht);
+
                                 });
 #else
                             Program.WalletXiropht.BeginInvoke((MethodInvoker)delegate ()
@@ -335,5 +338,6 @@ namespace Xiropht_Wallet.FormPhase
                 }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current)
                 .ConfigureAwait(false);
         }
+
     }
 }
