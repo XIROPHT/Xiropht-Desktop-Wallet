@@ -2476,22 +2476,28 @@ namespace Xiropht_Wallet.Wallet.Tcp
 #if DEBUG
                         Log.WriteLine(seedNode.Key + " response time: " + seedNodeResponseTime + " ms.");
 #endif
-                        ListOfSeedNodesSpeed.Add(seedNode.Key,
-                            new ClassWalletSeedNodeStats()
-                                {LastBanError = 0, PingTime = seedNodeResponseTime, TotalError = 0});
+                        if (!ListOfSeedNodesSpeed.ContainsKey(seedNode.Key))
+                        {
+                            ListOfSeedNodesSpeed.Add(seedNode.Key,
+                                new ClassWalletSeedNodeStats()
+                                    {LastBanError = 0, PingTime = seedNodeResponseTime, TotalError = 0});
+                        }
                     }
                     catch (Exception error)
                     {
 #if DEBUG
                         Log.WriteLine("GetSeedNodeSpeedList exception: " + error.Message);
 #endif
-                        ListOfSeedNodesSpeed.Add(seedNode.Key, new ClassWalletSeedNodeStats()
-                            {
-                                LastBanError = 0,
-                                PingTime = ClassConnectorSetting.MaxSeedNodeTimeoutConnect,
-                                TotalError = 0
-                            }
-                        ); // Max delay.
+                        if (!ListOfSeedNodesSpeed.ContainsKey(seedNode.Key))
+                        {
+                            ListOfSeedNodesSpeed.Add(seedNode.Key, new ClassWalletSeedNodeStats()
+                                {
+                                    LastBanError = 0,
+                                    PingTime = ClassConnectorSetting.MaxSeedNodeTimeoutConnect,
+                                    TotalError = 0
+                                }
+                            ); // Max delay.
+                        }
                     }
             }
             else if (ListOfSeedNodesSpeed.Count != ClassConnectorSetting.SeedNodeIp.Count)
@@ -4109,6 +4115,10 @@ namespace Xiropht_Wallet.Wallet.Tcp
         /// <returns></returns>
         private async Task<bool> CheckRemoteNodeInformationAsync(string type, string information, int timeout = 30)
         {
+            if (ListOfSeedNodesSpeed == null)
+            {
+                ListOfSeedNodesSpeed = GetSeedNodeSpeedList();
+            }
             foreach (var seedNode in ListOfSeedNodesSpeed.ToArray())
             {
                 if (seedNode.Value.TotalError < WalletMaxSeedNodeError &&
