@@ -2581,48 +2581,61 @@ namespace Xiropht_Wallet.Wallet.Tcp
         /// </summary>
         private async Task GetRemoteNodeListAsync()
         {
-            foreach (var seedNode in ClassConnectorSetting.SeedNodeIp.ToArray())
+            if (ListOfSeedNodesSpeed == null)
+            {
+                ListOfSeedNodesSpeed = GetSeedNodeSpeedList();
+            }
+            foreach (var seedNode in ListOfSeedNodesSpeed.ToArray())
             {
                 try
                 {
-                    var responseWallet = await ProceedTokenRequestHttpAsync(
-                        "http://" + seedNode.Key + ":" + ClassConnectorSetting.SeedNodeTokenPort + "/" +
-                        ClassRpcWalletCommand.TokenAskRemoteNode);
-                    if (responseWallet != HttpPacketError)
+                    if (seedNode.Value.TotalError < WalletMaxSeedNodeError &&
+                        seedNode.Value.LastBanError <= DateTimeOffset.Now.ToUnixTimeSeconds())
                     {
-                        var nodeListJsonObject =
-                            JsonConvert.DeserializeObject<ClassTokenRemoteNode>(responseWallet);
-                        if (classTokenRemoteNode == null)
+                        var responseWallet = await ProceedTokenRequestHttpAsync(
+                            "http://" + seedNode.Key + ":" + ClassConnectorSetting.SeedNodeTokenPort + "/" +
+                            ClassRpcWalletCommand.TokenAskRemoteNode);
+                        if (responseWallet != HttpPacketError)
                         {
-                            classTokenRemoteNode = new ClassTokenRemoteNode()
+                            var nodeListJsonObject =
+                                JsonConvert.DeserializeObject<ClassTokenRemoteNode>(responseWallet);
+                            if (classTokenRemoteNode == null)
                             {
-                                remote_node_list = nodeListJsonObject.remote_node_list,
-                                seed_node_version = nodeListJsonObject.seed_node_version
-                            };
-                            foreach (var remoteNode in classTokenRemoteNode.remote_node_list)
+                                classTokenRemoteNode = new ClassTokenRemoteNode()
+                                {
+                                    remote_node_list = nodeListJsonObject.remote_node_list,
+                                    seed_node_version = nodeListJsonObject.seed_node_version
+                                };
+                                foreach (var remoteNode in classTokenRemoteNode.remote_node_list)
+                                {
+                                    ClassPeerList.IncludeNewPeer(remoteNode);
+                                }
+                            }
+                            else
                             {
-                                ClassPeerList.IncludeNewPeer(remoteNode);
+                                foreach (var node in nodeListJsonObject.remote_node_list)
+                                {
+                                    if (!classTokenRemoteNode.remote_node_list.Contains(node))
+                                    {
+                                        ClassPeerList.IncludeNewPeer(node);
+                                        classTokenRemoteNode.remote_node_list.Add(node);
+                                    }
+                                }
                             }
                         }
                         else
                         {
-                            foreach (var node in nodeListJsonObject.remote_node_list)
+                            if (ListOfSeedNodesSpeed == null)
                             {
-                                if (!classTokenRemoteNode.remote_node_list.Contains(node))
-                                {
-                                    ClassPeerList.IncludeNewPeer(node);
-                                    classTokenRemoteNode.remote_node_list.Add(node);
-                                }
+                                ListOfSeedNodesSpeed = GetSeedNodeSpeedList();
                             }
-                        }
-                    }
-                    else
-                    {
-                        ListOfSeedNodesSpeed[seedNode.Key].TotalError++;
-                        if (ListOfSeedNodesSpeed[seedNode.Key].TotalError >= WalletMaxSeedNodeError)
-                        {
-                            ListOfSeedNodesSpeed[seedNode.Key].LastBanError =
-                                DateTimeOffset.Now.ToUnixTimeSeconds() + WalletCleanSeedNodeError;
+
+                            ListOfSeedNodesSpeed[seedNode.Key].TotalError++;
+                            if (ListOfSeedNodesSpeed[seedNode.Key].TotalError >= WalletMaxSeedNodeError)
+                            {
+                                ListOfSeedNodesSpeed[seedNode.Key].LastBanError =
+                                    DateTimeOffset.Now.ToUnixTimeSeconds() + WalletCleanSeedNodeError;
+                            }
                         }
                     }
                 }
@@ -2903,8 +2916,10 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             {
                                 if (ListWalletConnectToRemoteNode[i] != null)
                                 {
-
-                                    ListWalletConnectToRemoteNode[i].DisconnectRemoteNodeClient();
+                                    if (!ListWalletConnectToRemoteNode[i].Disposed)
+                                    {
+                                        ListWalletConnectToRemoteNode[i].DisconnectRemoteNodeClient();
+                                    }
 
                                 }
                             }
@@ -3025,36 +3040,44 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         var i1 = i;
                         await Task.Factory.StartNew(async () =>
                             {
+                                string node = ListWalletConnectToRemoteNode[i1].RemoteNodeHost;
                                 while (!WalletClosed && WalletOnUseSync)
                                 {
                                     try
                                     {
-                                        if (ClassPeerList.GetPeerStatus(
-                                            ListWalletConnectToRemoteNode[i1].RemoteNodeHost))
+
+                                        if (ListWalletConnectToRemoteNode[i1] != null)
                                         {
-                                            if (ListWalletConnectToRemoteNode[i1].RemoteNodeStatus)
+                                            if (ClassPeerList.GetPeerStatus(node))
                                             {
-                                                var packetReceived = await ListWalletConnectToRemoteNode[i1]
-                                                    .ListenRemoteNodeNetworkAsync();
-                                                if (packetReceived.Contains("*"))
+                                                if (ListWalletConnectToRemoteNode[i1].RemoteNodeStatus && !ListWalletConnectToRemoteNode[i1].Disposed)
                                                 {
-                                                    var splitPacketReceived =
-                                                        packetReceived.Split(new[] {"*"}, StringSplitOptions.None);
-                                                    foreach (var packet in splitPacketReceived)
-                                                        if (!string.IsNullOrEmpty(packet))
-                                                            if (!await HandlePacketRemoteNodeSyncAsync(packet,
-                                                                ListWalletConnectToRemoteNode[i1].RemoteNodeHost))
-                                                            {
-                                                                break;
-                                                            }
+                                                    var packetReceived = await ListWalletConnectToRemoteNode[i1].ListenRemoteNodeNetworkAsync();
+                                                    if (packetReceived.Contains("*"))
+                                                    {
+                                                        var splitPacketReceived =
+                                                            packetReceived.Split(new[] {"*"}, StringSplitOptions.None);
+                                                        foreach (var packet in splitPacketReceived)
+                                                            if (!string.IsNullOrEmpty(packet))
+                                                                if (!await HandlePacketRemoteNodeSyncAsync(packet, node))
+                                                                {
+                                                                    break;
+                                                                }
+                                                    }
+                                                    else
+                                                    {
+
+                                                        if (!await HandlePacketRemoteNodeSyncAsync(
+                                                            packetReceived, node))
+                                                        {
+                                                            break;
+                                                        }
+
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                    if (!await HandlePacketRemoteNodeSyncAsync(packetReceived,
-                                                        ListWalletConnectToRemoteNode[i1].RemoteNodeHost))
-                                                    {
-                                                        break;
-                                                    }
+                                                    break;
                                                 }
                                             }
                                             else
@@ -3066,6 +3089,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                         {
                                             break;
                                         }
+
                                     }
                                     catch (Exception error)
                                     {
@@ -3098,107 +3122,117 @@ namespace Xiropht_Wallet.Wallet.Tcp
             {
                 Task.Factory.StartNew(async () =>
                     {
-                        while (!WalletClosed && WalletOnUseSync)
+                        bool statusNode = true;
+                        while (!WalletClosed && WalletOnUseSync && statusNode)
                         {
                             try
                             {
                                 for (var i = 0; i < ListWalletConnectToRemoteNode.Count; i++)
                                     if (i < ListWalletConnectToRemoteNode.Count)
                                     {
-                                        if (ClassPeerList.GetPeerStatus(
-                                            ListWalletConnectToRemoteNode[i].RemoteNodeHost))
+                                        if (statusNode)
                                         {
-                                            if (ListWalletConnectToRemoteNode[i].RemoteNodeStatus)
+                                            if (ClassPeerList.GetPeerStatus(
+                                                ListWalletConnectToRemoteNode[i].RemoteNodeHost))
                                             {
-                                                if (i != ListWalletConnectToRemoteNode.Count - 1)
+                                                if (ListWalletConnectToRemoteNode[i].RemoteNodeStatus &&
+                                                    !ListWalletConnectToRemoteNode[i].Disposed)
                                                 {
-                                                    if (ListWalletConnectToRemoteNode[i].RemoteNodeStatus)
+                                                    if (i != ListWalletConnectToRemoteNode.Count - 1)
                                                     {
+
                                                         switch (i)
                                                         {
                                                             case 1: // max supply
 
                                                                 if (!await ListWalletConnectToRemoteNode[i]
                                                                     .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                                                    break;
+                                                                    statusNode = false;
 
                                                                 break;
                                                             case 2: // coin circulating
 
                                                                 if (!await ListWalletConnectToRemoteNode[i]
                                                                     .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                                                    break;
+                                                                    statusNode = false;
 
                                                                 break;
                                                             case 3: // total fee
 
                                                                 if (!await ListWalletConnectToRemoteNode[i]
                                                                     .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                                                    break;
+                                                                    statusNode = false;
 
                                                                 break;
                                                             case 4: // block mined
 
                                                                 if (!await ListWalletConnectToRemoteNode[i]
                                                                     .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                                                    break;
+                                                                    statusNode = false;
 
                                                                 break;
                                                             case 5: // difficulty
 
                                                                 if (!await ListWalletConnectToRemoteNode[i]
                                                                     .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                                                    break;
+                                                                    statusNode = false;
 
                                                                 break;
                                                             case 6: // hashrate
 
                                                                 if (!await ListWalletConnectToRemoteNode[i]
                                                                     .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                                                    break;
+                                                                    statusNode = false;
 
                                                                 break;
                                                             case 7: // total pending transaction
 
                                                                 if (!await ListWalletConnectToRemoteNode[i]
                                                                     .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                                                    break;
+                                                                    statusNode = false;
 
                                                                 break;
                                                             case 9: // block per id
 
                                                                 if (!await ListWalletConnectToRemoteNode[i]
                                                                     .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                                                    break;
+                                                                    statusNode = false;
 
                                                                 break;
                                                             default:
                                                                 if (!await ListWalletConnectToRemoteNode[i]
                                                                     .SendPacketTypeRemoteNode(WalletConnect.WalletId))
-                                                                    break;
+                                                                    statusNode = false;
 
                                                                 break;
                                                         }
+
                                                     }
                                                     else
                                                     {
-                                                        break;
+                                                        if (!await ListWalletConnectToRemoteNode[i]
+                                                            .SendPacketTypeRemoteNode(WalletConnect.WalletIdAnonymity))
+                                                        {
+                                                            statusNode = false;
+                                                            break;
+                                                        }
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    if (!await ListWalletConnectToRemoteNode[i]
-                                                        .SendPacketTypeRemoteNode(WalletConnect.WalletIdAnonymity))
-                                                        break;
+                                                    statusNode = false;
+                                                    break;
                                                 }
                                             }
                                             else
                                             {
+                                                statusNode = false;
                                                 break;
                                             }
                                         }
                                         else
                                         {
+                                            statusNode = false;
                                             break;
                                         }
                                     }
