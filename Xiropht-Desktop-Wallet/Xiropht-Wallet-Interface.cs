@@ -2225,7 +2225,7 @@ namespace Xiropht_Wallet
                                                 }
                                             }
 
-                                            if (noNode)
+                                            if (noNode && !ClassWalletObject.WalletOnUseSync)
                                             {
                                                 UpdateLabelSyncInformation("Currently on pending to connect to a node for sync your wallet. Please wait a moment..");
                                             }

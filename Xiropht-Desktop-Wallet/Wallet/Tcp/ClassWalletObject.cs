@@ -1878,43 +1878,52 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                             ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
                                         {
                                             await GetRemoteNodeListAsync();
-                                            await EnableWalletTokenSync();
                                         }
-                                        else
-                                        {
-                                            await EnableWalletTokenSync();
-                                        }
+
+                                        await EnableWalletTokenSync();
+
                                     }
                                     else
                                     {
                                         try
                                         {
                                             bool endCheck = false;
-                                            for (int i = 0; i < ListWalletConnectToRemoteNode.Count; i++)
+                                            if (ListWalletConnectToRemoteNode.Count > 0)
                                             {
-                                                if (!endCheck)
+                                                for (int i = 0; i < ListWalletConnectToRemoteNode.Count; i++)
                                                 {
-                                                    if (ListWalletConnectToRemoteNode[i] != null)
+                                                    if (!endCheck)
                                                     {
-                                                        if (!ListWalletConnectToRemoteNode[i].RemoteNodeStatus)
+                                                        if (ListWalletConnectToRemoteNode[i] != null)
+                                                        {
+                                                            if (!ListWalletConnectToRemoteNode[i].RemoteNodeStatus ||
+                                                                ListWalletConnectToRemoteNode[i].Disposed)
+                                                            {
+                                                                endCheck = true;
+                                                                DisconnectRemoteNodeTokenSync();
+                                                                WalletOnUseSync = false;
+                                                            }
+                                                        }
+                                                        else
                                                         {
                                                             endCheck = true;
                                                             DisconnectRemoteNodeTokenSync();
                                                             WalletOnUseSync = false;
                                                         }
                                                     }
-                                                    else
-                                                    {
-                                                        endCheck = true;
-                                                        DisconnectRemoteNodeTokenSync();
-                                                        WalletOnUseSync = false;
-                                                    }
                                                 }
+                                            }
+                                            else
+                                            {
+                                                endCheck = true;
+                                                DisconnectRemoteNodeTokenSync();
+                                                WalletOnUseSync = false;
                                             }
                                         }
                                         catch
                                         {
-
+                                            DisconnectRemoteNodeTokenSync();
+                                            WalletOnUseSync = false;
                                         }
 
                                         if (!WalletOnUseSync)
@@ -1923,12 +1932,10 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                 ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
                                             {
                                                 await GetRemoteNodeListAsync();
-                                                await EnableWalletTokenSync();
                                             }
-                                            else
-                                            {
-                                                await EnableWalletTokenSync();
-                                            }
+
+                                            await EnableWalletTokenSync();
+
                                         }
                                     }
                             }
@@ -2714,6 +2721,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                             {
                                                 try
                                                 {
+                                                    Program.WalletXiropht.UpdateLabelSyncInformation("Currently on testing connectivity of Public Remote Node host: "+remoteNode);
 
                                                     using (var tcpClient = new TcpClient())
                                                     {
@@ -2780,6 +2788,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                             {
                                                 try
                                                 {
+                                                    Program.WalletXiropht.UpdateLabelSyncInformation("Currently on testing connectivity of Peer host: " + peerNode.Key);
 
                                                     using (var tcpClient = new TcpClient())
                                                     {
@@ -2833,6 +2842,8 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                     var seedNodeAlive = GetSeedNodeAlive();
                                     if (seedNodeAlive.Item1)
                                     {
+                                        Program.WalletXiropht.UpdateLabelSyncInformation("Currently on testing connectivity of Seed Node host: " + seedNodeAlive.Item2);
+
                                         if (!await ConnectToRemoteNodeSyncAsync(seedNodeAlive.Item2))
                                         {
                                             DisconnectRemoteNodeTokenSync();
@@ -2857,6 +2868,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             var seedNodeAlive = GetSeedNodeAlive();
                             if (seedNodeAlive.Item1)
                             {
+                                Program.WalletXiropht.UpdateLabelSyncInformation("Currently on testing connectivity of Seed Node host: " + seedNodeAlive.Item2);
                                 if (!await ConnectToRemoteNodeSyncAsync(seedNodeAlive.Item2))
                                 {
                                     DisconnectRemoteNodeTokenSync();
@@ -2876,6 +2888,8 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         else if (Program.WalletXiropht.WalletSyncMode ==
                                  ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE)
                         {
+                            Program.WalletXiropht.UpdateLabelSyncInformation("Currently on testing connectivity of Manual Node host: " + Program.WalletXiropht.WalletSyncHostname);
+
                             if (!await ConnectToRemoteNodeSyncAsync(
                                 Program.WalletXiropht.WalletSyncHostname))
                             {
