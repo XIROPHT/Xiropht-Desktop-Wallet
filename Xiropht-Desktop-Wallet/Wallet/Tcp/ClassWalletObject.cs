@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -2692,13 +2693,36 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                             remoteNodeAlive = remoteNode;
                                             if (ClassPeerList.GetPeerStatus(remoteNodeAlive))
                                             {
-                                                remoteNodeSelected = ClassUtility.TestTcpHost(remoteNodeAlive,
-                                                    ClassConnectorSetting.RemoteNodePort,
-                                                    ClassConnectorSetting.MaxTimeoutConnect);
-                                                ClassPeerList.IncludeNewPeer(remoteNodeAlive);
-                                                if (!remoteNodeSelected)
+                                                try
                                                 {
-                                                    ClassPeerList.IncrementPeerDisconnect(remoteNodeAlive);
+
+                                                    using (var tcpClient = new TcpClient())
+                                                    {
+                                                        var connectTask = tcpClient.ConnectAsync(remoteNodeAlive, ClassConnectorSetting.RemoteNodePort);
+                                                        var connectTaskDelay = Task.Delay(ClassConnectorSetting.MaxTimeoutConnectRemoteNode);
+
+                                                        var completedConnectTask =
+                                                            await Task.WhenAny(connectTask, connectTaskDelay);
+                                                        if (completedConnectTask != connectTask)
+                                                        {
+                                                            remoteNodeSelected = false;
+                                                        }
+                                                        else
+                                                        {
+                                                            remoteNodeSelected = true;
+                                                        }
+                                                        ClassPeerList.IncludeNewPeer(remoteNodeAlive);
+                                                        if (!remoteNodeSelected)
+                                                        {
+                                                            ClassPeerList.IncrementPeerDisconnect(remoteNodeAlive);
+                                                        }
+                                                    }
+
+
+                                                }
+                                                catch
+                                                {
+
                                                 }
                                             }
                                         }
@@ -2735,12 +2759,35 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                             peerNodeAlive = peerNode.Value.peer_host;
                                             if (ClassPeerList.GetPeerStatus(peerNodeAlive))
                                             {
-                                                peerNodeSelected = ClassUtility.TestTcpHost(peerNodeAlive,
-                                                    ClassConnectorSetting.RemoteNodePort,
-                                                    ClassConnectorSetting.MaxTimeoutConnect);
-                                                if (!peerNodeSelected)
+                                                try
                                                 {
-                                                    ClassPeerList.IncrementPeerDisconnect(peerNodeAlive);
+
+                                                    using (var tcpClient = new TcpClient())
+                                                    {
+                                                        var connectTask = tcpClient.ConnectAsync(peerNodeAlive, ClassConnectorSetting.RemoteNodePort);
+                                                        var connectTaskDelay = Task.Delay(ClassConnectorSetting.MaxTimeoutConnectRemoteNode);
+
+                                                        var completedConnectTask =
+                                                            await Task.WhenAny(connectTask, connectTaskDelay);
+                                                        if (completedConnectTask != connectTask)
+                                                        {
+                                                            peerNodeSelected = false;
+                                                        }
+                                                        else
+                                                        {
+                                                            peerNodeSelected = true;
+                                                        }
+                                                        if (!peerNodeSelected)
+                                                        {
+                                                            ClassPeerList.IncrementPeerDisconnect(peerNodeAlive);
+                                                        }
+                                                    }
+
+
+                                                }
+                                                catch
+                                                {
+
                                                 }
                                             }
                                         }
@@ -4062,43 +4109,47 @@ namespace Xiropht_Wallet.Wallet.Tcp
         /// <returns></returns>
         private async Task<bool> CheckRemoteNodeInformationAsync(string type, string information, int timeout = 30)
         {
-            var seedNodeSelected = GetSeedNodeAlive();
-
-            if (seedNodeSelected.Item1)
-                try
+            foreach (var seedNode in ListOfSeedNodesSpeed.ToArray())
+            {
+                if (seedNode.Value.TotalError < WalletMaxSeedNodeError &&
+                    seedNode.Value.LastBanError <= DateTimeOffset.Now.ToUnixTimeSeconds())
                 {
-                    string responseWallet = await ProceedTokenRequestHttpAsync(
-                        "http://" + seedNodeSelected.Item2 + ":" + ClassConnectorSetting.SeedNodeTokenPort + "/" +
-                        type + "|" + information, timeout);
-
-                    if (responseWallet != HttpPacketError)
+                    try
                     {
-                        var resultJsonObject = JObject.Parse(responseWallet);
-                        switch (resultJsonObject["result"].ToString())
+                        string responseWallet = await ProceedTokenRequestHttpAsync(
+                            "http://" + seedNode.Key + ":" + ClassConnectorSetting.SeedNodeTokenPort + "/" +
+                            type + "|" + information, timeout);
+
+                        if (responseWallet != HttpPacketError)
                         {
-                            case ClassRpcWalletCommand.SendTokenValidInformation:
-                                return true;
-                            case ClassRpcWalletCommand.SendTokenInvalidInformation:
-                                return false;
+                            var resultJsonObject = JObject.Parse(responseWallet);
+                            switch (resultJsonObject["result"].ToString())
+                            {
+                                case ClassRpcWalletCommand.SendTokenValidInformation:
+                                    return true;
+                                case ClassRpcWalletCommand.SendTokenInvalidInformation:
+                                    return false;
+                            }
+                        }
+                        else
+                        {
+                            ListOfSeedNodesSpeed[seedNode.Key].TotalError++;
+                            if (ListOfSeedNodesSpeed[seedNode.Key].TotalError >= WalletMaxSeedNodeError)
+                            {
+                                ListOfSeedNodesSpeed[seedNode.Key].LastBanError =
+                                    DateTimeOffset.Now.ToUnixTimeSeconds() + WalletCleanSeedNodeError;
+                            }
+
                         }
                     }
-                    else
+                    catch (Exception error)
                     {
-                        ListOfSeedNodesSpeed[seedNodeSelected.Item2].TotalError++;
-                        if (ListOfSeedNodesSpeed[seedNodeSelected.Item2].TotalError >= WalletMaxSeedNodeError)
-                        {
-                            ListOfSeedNodesSpeed[seedNodeSelected.Item2].LastBanError =
-                                DateTimeOffset.Now.ToUnixTimeSeconds() + WalletCleanSeedNodeError;
-                        }
-
-                    }
-                }
-                catch (Exception error)
-                {
 #if DEBUG
                     Log.WriteLine("CheckRemoteNodeInformationAsync exception: " + error.Message);
 #endif
+                    }
                 }
+            }
 
             return false;
         }
@@ -4113,37 +4164,40 @@ namespace Xiropht_Wallet.Wallet.Tcp
         private async Task<string> CheckRemoteNodeInformationByCompareAsync(string type, string information,
             int timeout = 5)
         {
-            var seedNodeSelected = GetSeedNodeAlive();
-            if (seedNodeSelected.Item1)
-                try
+            foreach (var seedNode in ListOfSeedNodesSpeed.ToArray())
+            {
+                if (seedNode.Value.TotalError < WalletMaxSeedNodeError &&
+                    seedNode.Value.LastBanError <= DateTimeOffset.Now.ToUnixTimeSeconds())
                 {
-                    string result = await ProceedTokenRequestHttpAsync(
-                        "http://" + seedNodeSelected.Item2 + ":" + ClassConnectorSetting.SeedNodeTokenPort + "/" +
-                        type + "|" +
-                        information, timeout);
-
-                    if (result != HttpPacketError)
+                    try
                     {
-                        var resultJsonObject = JObject.Parse(result);
+                        string result = await ProceedTokenRequestHttpAsync(
+                            "http://" + seedNode.Key + ":" + ClassConnectorSetting.SeedNodeTokenPort + "/" +
+                            type + "|" +
+                            information, timeout);
 
-                        return resultJsonObject["result"].ToString();
+                        if (result != HttpPacketError)
+                        {
+                            var resultJsonObject = JObject.Parse(result);
+
+                            return resultJsonObject["result"].ToString();
+                        }
+
+                        ListOfSeedNodesSpeed[seedNode.Key].TotalError++;
+                        if (ListOfSeedNodesSpeed[seedNode.Key].TotalError >= WalletMaxSeedNodeError)
+                        {
+                            ListOfSeedNodesSpeed[seedNode.Key].LastBanError =
+                                DateTimeOffset.Now.ToUnixTimeSeconds() + WalletCleanSeedNodeError;
+                        }
                     }
-
-                    ListOfSeedNodesSpeed[seedNodeSelected.Item2].TotalError++;
-                    if (ListOfSeedNodesSpeed[seedNodeSelected.Item2].TotalError >= WalletMaxSeedNodeError)
+                    catch (Exception error)
                     {
-                        ListOfSeedNodesSpeed[seedNodeSelected.Item2].LastBanError =
-                            DateTimeOffset.Now.ToUnixTimeSeconds() + WalletCleanSeedNodeError;
-                    }
-
-                    return string.Empty;
-                }
-                catch (Exception error)
-                {
 #if DEBUG
                     Log.WriteLine("CheckRemoteNodeInformationAsync exception: " + error.Message);
 #endif
+                    }
                 }
+            }
 
             return string.Empty;
         }
