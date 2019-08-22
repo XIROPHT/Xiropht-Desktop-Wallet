@@ -483,8 +483,11 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                 await Task.Factory.StartNew(() =>
                                 {
                                     MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectcannotconnectwalletcontenttext), ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectcannotconnectwallettitletext), MessageBoxButtons.OK,
-                                    MessageBoxIcon.Error);
+                                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                            .walletnetworkobjectcannotconnectwalletcontenttext),
+                                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                            .walletnetworkobjectcannotconnectwallettitletext), MessageBoxButtons.OK,
+                                        MessageBoxIcon.Error);
                                     Program.WalletXiropht.BeginInvoke(invoke);
                                 }).ConfigureAwait(false);
 #endif
@@ -508,8 +511,11 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                 await Task.Factory.StartNew(() =>
                                 {
                                     MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsuccessconnectwalletcontenttext), ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsuccessconnectwallettitletext), MessageBoxButtons.OK,
-                                    MessageBoxIcon.Information);
+                                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                            .walletnetworkobjectsuccessconnectwalletcontenttext),
+                                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                            .walletnetworkobjectsuccessconnectwallettitletext), MessageBoxButtons.OK,
+                                        MessageBoxIcon.Information);
                                     Program.WalletXiropht.BeginInvoke(invoke);
                                 }).ConfigureAwait(false);
 #endif
@@ -794,8 +800,11 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         await Task.Factory.StartNew(() =>
                         {
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectcreatewalletpassworderror1contenttext),
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectcreatewalletpassworderror1titletext), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectcreatewalletpassworderror1contenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectcreatewalletpassworderror1titletext), MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
 #endif
@@ -823,8 +832,11 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         await Task.Factory.StartNew(() =>
                         {
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectcreatewalletpassworderror2contenttext),
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectcreatewalletpassworderror2titletext), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectcreatewalletpassworderror2contenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectcreatewalletpassworderror2titletext), MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
 
@@ -843,7 +855,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         await Task.Factory.StartNew(() =>
                         {
                             MethodInvoker invoke =
- () => MessageBox.Show(Program.WalletXiropht, "Invalid private key inserted.");
+                                () => MessageBox.Show(Program.WalletXiropht, "Invalid private key inserted.");
                         }).ConfigureAwait(false);
 
 #endif
@@ -865,8 +877,11 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             await Task.Factory.StartNew(() =>
                             {
                                 MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                     ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectpincoderefusedcontenttext),
-                                     ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectpincoderefusedtitletext), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                        .walletnetworkobjectpincoderefusedcontenttext),
+                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                        .walletnetworkobjectpincoderefusedtitletext), MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning);
                                 Program.WalletXiropht.BeginInvoke(invoke);
                             }).ConfigureAwait(false);
 
@@ -893,8 +908,9 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             await Task.Factory.StartNew(() =>
                             {
                                 MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                "Your wallet password need to be stronger , if he is try again later.",
-                                "Password not strong enough or network error.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    "Your wallet password need to be stronger , if he is try again later.",
+                                    "Password not strong enough or network error.", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
                                 Program.WalletXiropht.BeginInvoke(invoke);
                             }).ConfigureAwait(false);
 
@@ -977,8 +993,9 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             await Task.Factory.StartNew(() =>
                             {
                                 MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                "Your wallet password need to be stronger , if he is try again later.",
-                                "Password not strong enough or network error.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    "Your wallet password need to be stronger , if he is try again later.",
+                                    "Password not strong enough or network error.", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
                                 Program.WalletXiropht.BeginInvoke(invoke);
                             }).ConfigureAwait(false);
 
@@ -1174,8 +1191,11 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         await Task.Factory.StartNew(() =>
                         {
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectpincodeacceptedcontenttext),
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectpincodeacceptedtitletext), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectpincodeacceptedcontenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectpincodeacceptedtitletext), MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
 #endif
@@ -1201,8 +1221,11 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         await Task.Factory.StartNew(() =>
                         {
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                 ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectpincoderefusedcontenttext),
-                                 ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectpincoderefusedtitletext), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectpincoderefusedcontenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectpincoderefusedtitletext), MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
 
@@ -1219,8 +1242,8 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         await Task.Factory.StartNew(() =>
                         {
                             MethodInvoker invoke =
- () => MessageBox.Show(Program.WalletXiropht, splitPacket[1], "Information",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                () => MessageBox.Show(Program.WalletXiropht, splitPacket[1], "Information",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
 
@@ -1255,7 +1278,10 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             await Task.Delay(100);
 
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactioninvalidamountcontenttext), ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactioninvalidamounttitletext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectsendtransactioninvalidamountcontenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectsendtransactioninvalidamounttitletext),
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
@@ -1291,7 +1317,10 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             await Task.Delay(100);
 
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionnotenoughtamountcontenttext), ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionnotenoughtamounttitletext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectsendtransactionnotenoughtamountcontenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectsendtransactionnotenoughtamounttitletext),
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
@@ -1327,8 +1356,12 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             await Task.Delay(100);
 
                             MethodInvoker invoke =
- () => MessageBox.Show(Program.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionnotenoughtfeecontenttext),
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionnotenoughtfeetitletext), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                () => MessageBox.Show(Program.WalletXiropht,
+                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                        .walletnetworkobjectsendtransactionnotenoughtfeecontenttext),
+                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                        .walletnetworkobjectsendtransactionnotenoughtfeetitletext),
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
 
@@ -1361,8 +1394,11 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             await Task.Delay(100);
 
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionbusycontenttext),
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionbusytitletext), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectsendtransactionbusycontenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectsendtransactionbusytitletext), MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
 #endif
@@ -1395,8 +1431,11 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             await Task.Delay(100);
 
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionbusycontenttext),
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionbusytitletext), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectsendtransactionbusycontenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectsendtransactionbusytitletext), MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
 
@@ -1431,7 +1470,13 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             await Task.Delay(100);
 
                             MethodInvoker invoke =
- () => MessageBox.Show(Program.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionacceptedcontenttext) + Environment.NewLine + "Hash: " + splitPacket[1].ToLower(), ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionacceptedtitletext), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                () => MessageBox.Show(Program.WalletXiropht,
+                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                        .walletnetworkobjectsendtransactionacceptedcontenttext) + Environment.NewLine +
+                                    "Hash: " + splitPacket[1].ToLower(),
+                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                        .walletnetworkobjectsendtransactionacceptedtitletext), MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information);
                             Program.WalletXiropht.BeginInvoke(invoke);
 
                         }).ConfigureAwait(false);
@@ -1466,7 +1511,10 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             await Task.Delay(100);
 
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionaddressnotvalidcontenttext), ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionaddressnotvalidtitletext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectsendtransactionaddressnotvalidcontenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectsendtransactionaddressnotvalidtitletext),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
@@ -1490,7 +1538,10 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         await Task.Factory.StartNew(() =>
                         {
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectbannedcontenttext), ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectbannedtitletext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectbannedcontenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectbannedtitletext),
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
@@ -1515,7 +1566,10 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         await Task.Factory.StartNew(() =>
                         {
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectalreadyconnectedcontenttext), ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectalreadyconnectedtitletext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectalreadyconnectedcontenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectalreadyconnectedtitletext),
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
@@ -1564,7 +1618,10 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         await Task.Factory.StartNew(() =>
                         {
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectchangepasswordacceptedcontenttext), ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectchangepasswordacceptedtitletext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectchangepasswordacceptedcontenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectchangepasswordacceptedtitletext),
                                 MessageBoxButtons.OK, MessageBoxIcon.Question);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
@@ -1584,8 +1641,11 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         await Task.Factory.StartNew(() =>
                         {
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectchangepasswordrefusedcontenttext),
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectchangepasswordrefusedtitletext), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectchangepasswordrefusedcontenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectchangepasswordrefusedtitletext), MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
 
@@ -1604,8 +1664,12 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         await Task.Factory.StartNew(() =>
                         {
                             MethodInvoker invoke =
- () => MessageBox.Show(Program.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectchangepincodestatusacceptedcontenttext),
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectchangepincodestatusacceptedtitletext), MessageBoxButtons.OK, MessageBoxIcon.Question);
+                                () => MessageBox.Show(Program.WalletXiropht,
+                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                        .walletnetworkobjectchangepincodestatusacceptedcontenttext),
+                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                        .walletnetworkobjectchangepincodestatusacceptedtitletext), MessageBoxButtons.OK,
+                                    MessageBoxIcon.Question);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
 
@@ -1625,8 +1689,11 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         await Task.Factory.StartNew(() =>
                         {
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectchangepincodestatusrefusedcontenttext),
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectchangepincodestatusrefusedtitletext), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectchangepincodestatusrefusedcontenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectchangepincodestatusrefusedtitletext), MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
 #endif
@@ -1644,8 +1711,11 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         await Task.Factory.StartNew(() =>
                         {
                             MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectwarningwalletconnectioncontenttext),
-                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectwarningwalletconnectiontitletext), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectwarningwalletconnectioncontenttext),
+                                ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                    .walletnetworkobjectwarningwalletconnectiontitletext), MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
                             Program.WalletXiropht.BeginInvoke(invoke);
                         }).ConfigureAwait(false);
 
@@ -1680,7 +1750,8 @@ namespace Xiropht_Wallet.Wallet.Tcp
                 await Task.Factory.StartNew(() =>
                 {
                     MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectcannotsendpackettext));
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .walletnetworkobjectcannotsendpackettext));
                     Program.WalletXiropht.BeginInvoke(invoke);
                 }).ConfigureAwait(false);
 
@@ -1770,7 +1841,8 @@ namespace Xiropht_Wallet.Wallet.Tcp
                 Task.Factory.StartNew(() =>
                 {
                     MessageBox.Show(Program.WalletXiropht,
-                      ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjecttransactioncacheerrortext));
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .walletnetworkobjecttransactioncacheerrortext));
                     ClassWalletTransactionCache.RemoveWalletCache(WalletConnect.WalletAddress);
                 }).ConfigureAwait(false);
 #endif
@@ -1795,7 +1867,8 @@ namespace Xiropht_Wallet.Wallet.Tcp
                 Task.Factory.StartNew(() =>
                 {
                     MessageBox.Show(Program.WalletXiropht,
-                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectanonymitytransactioncacheerrortext));
+                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                            .walletnetworkobjectanonymitytransactioncacheerrortext));
                     ClassWalletTransactionAnonymityCache.RemoveWalletCache(WalletConnect.WalletAddress);
                 }).ConfigureAwait(false);
 #endif
@@ -2262,17 +2335,26 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                         }).ConfigureAwait(false);
 
 #else
-                                                    await Task.Factory.StartNew(async () =>
-                                                    {
-                                                        await Task.Delay(100);
-                                                        ClassParallelForm.HideWaitingFormAsync();
-                                                        await Task.Delay(100);
+                                                        await Task.Factory.StartNew(async () =>
+                                                        {
+                                                            await Task.Delay(100);
+                                                            ClassParallelForm.HideWaitingFormAsync();
+                                                            await Task.Delay(100);
 
-                                                        MethodInvoker invoke =
- () => MessageBox.Show(Program.WalletXiropht, ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionacceptedcontenttext) + Environment.NewLine + "Hash: " + splitWalletTransaction[1].ToLower(), ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionacceptedtitletext), MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                                        Program.WalletXiropht.BeginInvoke(invoke);
+                                                            MethodInvoker invoke =
+                                                                () => MessageBox.Show(Program.WalletXiropht,
+                                                                    ClassTranslation.GetLanguageTextFromOrder(
+                                                                        ClassTranslationEnumeration
+                                                                            .walletnetworkobjectsendtransactionacceptedcontenttext) +
+                                                                    Environment.NewLine + "Hash: " +
+                                                                    splitWalletTransaction[3].ToLower(),
+                                                                    ClassTranslation.GetLanguageTextFromOrder(
+                                                                        ClassTranslationEnumeration
+                                                                            .walletnetworkobjectsendtransactionacceptedtitletext),
+                                                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                                            Program.WalletXiropht.BeginInvoke(invoke);
 
-                                                    }).ConfigureAwait(false);
+                                                        }).ConfigureAwait(false);
 #endif
 #if DEBUG
                                                     Log.WriteLine(
@@ -2299,18 +2381,23 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                                         }).ConfigureAwait(false);
 #else
-                                                    await Task.Factory.StartNew(async () =>
-                                                    {
-                                                        await Task.Delay(100);
-                                                        ClassParallelForm.HideWaitingFormAsync();
-                                                        await Task.Delay(100);
+                                                        await Task.Factory.StartNew(async () =>
+                                                        {
+                                                            await Task.Delay(100);
+                                                            ClassParallelForm.HideWaitingFormAsync();
+                                                            await Task.Delay(100);
 
-                                                        MethodInvoker invoke =
- () => MessageBox.Show(Program.WalletXiropht,
-                                                            ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionaddressnotvalidcontenttext), ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionaddressnotvalidtitletext),
-                                                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                                        Program.WalletXiropht.BeginInvoke(invoke);
-                                                    }).ConfigureAwait(false);
+                                                            MethodInvoker invoke =
+                                                                () => MessageBox.Show(Program.WalletXiropht,
+                                                                    ClassTranslation.GetLanguageTextFromOrder(
+                                                                        ClassTranslationEnumeration
+                                                                            .walletnetworkobjectsendtransactionaddressnotvalidcontenttext),
+                                                                    ClassTranslation.GetLanguageTextFromOrder(
+                                                                        ClassTranslationEnumeration
+                                                                            .walletnetworkobjectsendtransactionaddressnotvalidtitletext),
+                                                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                                            Program.WalletXiropht.BeginInvoke(invoke);
+                                                        }).ConfigureAwait(false);
 
 #endif
 #if DEBUG
@@ -2339,18 +2426,23 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                         }).ConfigureAwait(false);
 
 #else
-                                                    await Task.Factory.StartNew(async () =>
-                                                    {
-                                                        await Task.Delay(100);
-                                                        ClassParallelForm.HideWaitingFormAsync();
-                                                        await Task.Delay(100);
+                                                        await Task.Factory.StartNew(async () =>
+                                                        {
+                                                            await Task.Delay(100);
+                                                            ClassParallelForm.HideWaitingFormAsync();
+                                                            await Task.Delay(100);
 
-                                                        MethodInvoker invoke =
- () => MessageBox.Show(Program.WalletXiropht,
-                                                            ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactioninvalidamountcontenttext), ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactioninvalidamounttitletext),
-                                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                                        Program.WalletXiropht.BeginInvoke(invoke);
-                                                    }).ConfigureAwait(false);
+                                                            MethodInvoker invoke =
+                                                                () => MessageBox.Show(Program.WalletXiropht,
+                                                                    ClassTranslation.GetLanguageTextFromOrder(
+                                                                        ClassTranslationEnumeration
+                                                                            .walletnetworkobjectsendtransactioninvalidamountcontenttext),
+                                                                    ClassTranslation.GetLanguageTextFromOrder(
+                                                                        ClassTranslationEnumeration
+                                                                            .walletnetworkobjectsendtransactioninvalidamounttitletext),
+                                                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                                            Program.WalletXiropht.BeginInvoke(invoke);
+                                                        }).ConfigureAwait(false);
 
 #endif
 #if DEBUG
@@ -2437,8 +2529,11 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         await Task.Delay(100);
 
                         MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                            ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionbusycontenttext),
-                            ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.walletnetworkobjectsendtransactionbusytitletext), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                .walletnetworkobjectsendtransactionbusycontenttext),
+                            ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                                .walletnetworkobjectsendtransactionbusytitletext), MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
                         Program.WalletXiropht.BeginInvoke(invoke);
                     }).ConfigureAwait(false);
 
@@ -2455,7 +2550,8 @@ namespace Xiropht_Wallet.Wallet.Tcp
                     string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                 MethodInvoker invoke = () => MessageBox.Show(Program.WalletXiropht,
-                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalleterrorcantconnectmessagecontenttext));
+                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
+                        .createwalleterrorcantconnectmessagecontenttext));
                 Program.WalletXiropht.BeginInvoke(invoke);
 #endif
             }
@@ -2592,6 +2688,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
             {
                 ListOfSeedNodesSpeed = GetSeedNodeSpeedList();
             }
+
             foreach (var seedNode in ListOfSeedNodesSpeed.ToArray())
             {
                 try
@@ -2681,7 +2778,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                 {
                     using (StreamReader reader = new StreamReader(buffer))
                     {
-                       return await reader.ReadToEndAsync();
+                        return await reader.ReadToEndAsync();
                     }
                 }
             }
@@ -2726,12 +2823,16 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                             {
                                                 try
                                                 {
-                                                    Program.WalletXiropht.UpdateLabelSyncInformation("Currently on testing connectivity of Public Remote Node host: "+remoteNode);
+                                                    Program.WalletXiropht.UpdateLabelSyncInformation(
+                                                        "Currently on testing connectivity of Public Remote Node host: " +
+                                                        remoteNode);
 
                                                     using (var tcpClient = new TcpClient())
                                                     {
-                                                        var connectTask = tcpClient.ConnectAsync(remoteNodeAlive, ClassConnectorSetting.RemoteNodePort);
-                                                        var connectTaskDelay = Task.Delay(ClassConnectorSetting.MaxTimeoutConnectRemoteNode);
+                                                        var connectTask = tcpClient.ConnectAsync(remoteNodeAlive,
+                                                            ClassConnectorSetting.RemoteNodePort);
+                                                        var connectTaskDelay = Task.Delay(ClassConnectorSetting
+                                                            .MaxTimeoutConnectRemoteNode);
 
                                                         var completedConnectTask =
                                                             await Task.WhenAny(connectTask, connectTaskDelay);
@@ -2743,6 +2844,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                         {
                                                             remoteNodeSelected = true;
                                                         }
+
                                                         ClassPeerList.IncludeNewPeer(remoteNodeAlive);
                                                         if (!remoteNodeSelected)
                                                         {
@@ -2793,12 +2895,16 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                             {
                                                 try
                                                 {
-                                                    Program.WalletXiropht.UpdateLabelSyncInformation("Currently on testing connectivity of Peer host: " + peerNode.Key);
+                                                    Program.WalletXiropht.UpdateLabelSyncInformation(
+                                                        "Currently on testing connectivity of Peer host: " +
+                                                        peerNode.Key);
 
                                                     using (var tcpClient = new TcpClient())
                                                     {
-                                                        var connectTask = tcpClient.ConnectAsync(peerNodeAlive, ClassConnectorSetting.RemoteNodePort);
-                                                        var connectTaskDelay = Task.Delay(ClassConnectorSetting.MaxTimeoutConnectRemoteNode);
+                                                        var connectTask = tcpClient.ConnectAsync(peerNodeAlive,
+                                                            ClassConnectorSetting.RemoteNodePort);
+                                                        var connectTaskDelay = Task.Delay(ClassConnectorSetting
+                                                            .MaxTimeoutConnectRemoteNode);
 
                                                         var completedConnectTask =
                                                             await Task.WhenAny(connectTask, connectTaskDelay);
@@ -2810,6 +2916,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                         {
                                                             peerNodeSelected = true;
                                                         }
+
                                                         if (!peerNodeSelected)
                                                         {
                                                             ClassPeerList.IncrementPeerDisconnect(peerNodeAlive);
@@ -2847,7 +2954,9 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                     var seedNodeAlive = GetSeedNodeAlive();
                                     if (seedNodeAlive.Item1)
                                     {
-                                        Program.WalletXiropht.UpdateLabelSyncInformation("Currently on testing connectivity of Seed Node host: " + seedNodeAlive.Item2);
+                                        Program.WalletXiropht.UpdateLabelSyncInformation(
+                                            "Currently on testing connectivity of Seed Node host: " +
+                                            seedNodeAlive.Item2);
 
                                         if (!await ConnectToRemoteNodeSyncAsync(seedNodeAlive.Item2))
                                         {
@@ -2873,7 +2982,8 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             var seedNodeAlive = GetSeedNodeAlive();
                             if (seedNodeAlive.Item1)
                             {
-                                Program.WalletXiropht.UpdateLabelSyncInformation("Currently on testing connectivity of Seed Node host: " + seedNodeAlive.Item2);
+                                Program.WalletXiropht.UpdateLabelSyncInformation(
+                                    "Currently on testing connectivity of Seed Node host: " + seedNodeAlive.Item2);
                                 if (!await ConnectToRemoteNodeSyncAsync(seedNodeAlive.Item2))
                                 {
                                     DisconnectRemoteNodeTokenSync();
@@ -2893,7 +3003,9 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         else if (Program.WalletXiropht.WalletSyncMode ==
                                  ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE)
                         {
-                            Program.WalletXiropht.UpdateLabelSyncInformation("Currently on testing connectivity of Manual Node host: " + Program.WalletXiropht.WalletSyncHostname);
+                            Program.WalletXiropht.UpdateLabelSyncInformation(
+                                "Currently on testing connectivity of Manual Node host: " +
+                                Program.WalletXiropht.WalletSyncHostname);
 
                             if (!await ConnectToRemoteNodeSyncAsync(
                                 Program.WalletXiropht.WalletSyncHostname))
@@ -2938,6 +3050,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                 Log.WriteLine("DisconnectRemoteNodeTokenSync exception: " + error.Message);
 #endif
             }
+
             if (ListWalletConnectToRemoteNode != null)
                 if (ListWalletConnectToRemoteNode.Count > 0)
                 {
@@ -4165,7 +4278,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
         /// <returns></returns>
         private async Task<bool> CheckRemoteNodeInformationAsync(string type, string information, int timeout = 5)
         {
-            
+
 
             foreach (var seedNode in ListOfSeedNodesSpeed.ToArray())
             {
