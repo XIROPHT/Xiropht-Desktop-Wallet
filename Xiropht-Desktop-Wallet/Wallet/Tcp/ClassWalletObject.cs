@@ -1710,8 +1710,9 @@ namespace Xiropht_Wallet.Wallet.Tcp
         private ClassTokenRemoteNode classTokenRemoteNode;
         private const int WalletUpdateBalanceInterval = 15 * 1000;
         private const int WalletCheckSyncInterval = 1 * 1000;
+        private const int WalletSendPacketToNodeInterval = 5 * 1000;
         private int WalletTokenUpdateFailed;
-        private int WalletMaxSeedNodeError = 5; // Max failure.
+        private int WalletMaxSeedNodeError = 2; // Max failure.
         private int WalletCleanSeedNodeError = 30; // Each 30 seconds
 
 
@@ -1915,7 +1916,6 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                             }
                                             else
                                             {
-                                                endCheck = true;
                                                 DisconnectRemoteNodeTokenSync();
                                                 WalletOnUseSync = false;
                                             }
@@ -2601,7 +2601,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                     {
                         var responseWallet = await ProceedTokenRequestHttpAsync(
                             "http://" + seedNode.Key + ":" + ClassConnectorSetting.SeedNodeTokenPort + "/" +
-                            ClassRpcWalletCommand.TokenAskRemoteNode);
+                            ClassRpcWalletCommand.TokenAskRemoteNode, 5);
                         if (responseWallet != HttpPacketError)
                         {
                             var nodeListJsonObject =
@@ -2661,23 +2661,28 @@ namespace Xiropht_Wallet.Wallet.Tcp
         /// <param name="url"></param>
         /// <param name="maxTimeoutSecond"></param>
         /// <returns></returns>
-        private async Task<string> ProceedTokenRequestHttpAsync(string url, int maxTimeoutSecond = 5)
+        private async Task<string> ProceedTokenRequestHttpAsync(string url, int maxTimeoutSecond = 30)
         {
             try
             {
+
                 var request = (HttpWebRequest) WebRequest.Create(url);
                 request.AutomaticDecompression = DecompressionMethods.GZip;
                 request.ServicePoint.Expect100Continue = false;
                 request.ServicePoint.ConnectionLimit = 65535;
-                request.KeepAlive = false;
+                request.KeepAlive = true;
                 request.Timeout = maxTimeoutSecond * 1000;
                 request.UserAgent = ClassConnectorSetting.CoinName + " Desktop Wallet - " +
                                     Assembly.GetExecutingAssembly().GetName().Version + "R";
+                request.Proxy = null;
                 using (var response = (HttpWebResponse) await request.GetResponseAsync())
                 using (var stream = response.GetResponseStream())
-                using (var reader = new StreamReader(stream))
+                using (BufferedStream buffer = new BufferedStream(stream))
                 {
-                    return await reader.ReadToEndAsync();
+                    using (StreamReader reader = new StreamReader(buffer))
+                    {
+                       return await reader.ReadToEndAsync();
+                    }
                 }
             }
             catch
@@ -2921,6 +2926,18 @@ namespace Xiropht_Wallet.Wallet.Tcp
         public void DisconnectRemoteNodeTokenSync()
         {
 
+            try
+            {
+                if (WalletSyncCancellationToken != null)
+                    if (!WalletSyncCancellationToken.IsCancellationRequested)
+                        WalletSyncCancellationToken.Cancel();
+            }
+            catch (Exception error)
+            {
+#if DEBUG
+                Log.WriteLine("DisconnectRemoteNodeTokenSync exception: " + error.Message);
+#endif
+            }
             if (ListWalletConnectToRemoteNode != null)
                 if (ListWalletConnectToRemoteNode.Count > 0)
                 {
@@ -2947,18 +2964,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                     ListWalletConnectToRemoteNode.Clear();
                 }
 
-            try
-            {
-                if (WalletSyncCancellationToken != null)
-                    if (!WalletSyncCancellationToken.IsCancellationRequested)
-                        WalletSyncCancellationToken.Cancel();
-            }
-            catch (Exception error)
-            {
-#if DEBUG
-                Log.WriteLine("DisconnectRemoteNodeTokenSync exception: " + error.Message);
-#endif
-            }
+
 
             InSyncBlock = false;
             InReceiveTransaction = false;
@@ -3064,28 +3070,25 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                         {
                                             if (ClassPeerList.GetPeerStatus(node))
                                             {
-                                                if (ListWalletConnectToRemoteNode[i1].RemoteNodeStatus && !ListWalletConnectToRemoteNode[i1].Disposed)
+                                                if (ListWalletConnectToRemoteNode[i1].RemoteNodeStatus &&
+                                                    !ListWalletConnectToRemoteNode[i1].Disposed)
                                                 {
-                                                    var packetReceived = await ListWalletConnectToRemoteNode[i1].ListenRemoteNodeNetworkAsync();
+                                                    var packetReceived = await ListWalletConnectToRemoteNode[i1]
+                                                        .ListenRemoteNodeNetworkAsync();
                                                     if (packetReceived.Contains("*"))
                                                     {
                                                         var splitPacketReceived =
                                                             packetReceived.Split(new[] {"*"}, StringSplitOptions.None);
                                                         foreach (var packet in splitPacketReceived)
                                                             if (!string.IsNullOrEmpty(packet))
-                                                                if (!await HandlePacketRemoteNodeSyncAsync(packet, node))
-                                                                {
-                                                                    break;
-                                                                }
+                                                                await HandlePacketRemoteNodeSyncAsync(packet, node);
                                                     }
                                                     else
                                                     {
 
-                                                        if (!await HandlePacketRemoteNodeSyncAsync(
-                                                            packetReceived, node))
-                                                        {
-                                                            break;
-                                                        }
+                                                        await HandlePacketRemoteNodeSyncAsync(
+                                                            packetReceived, node);
+
 
                                                     }
                                                 }
@@ -3246,7 +3249,6 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                         }
                                         else
                                         {
-                                            statusNode = false;
                                             break;
                                         }
                                     }
@@ -3259,7 +3261,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                 break;
                             }
 
-                            await Task.Delay(100);
+                            await Task.Delay(WalletSendPacketToNodeInterval);
                         }
 
                         WalletOnUseSync = false;
@@ -4161,12 +4163,10 @@ namespace Xiropht_Wallet.Wallet.Tcp
         /// <param name="information"></param>
         /// <param name="timeout"></param>
         /// <returns></returns>
-        private async Task<bool> CheckRemoteNodeInformationAsync(string type, string information, int timeout = 30)
+        private async Task<bool> CheckRemoteNodeInformationAsync(string type, string information, int timeout = 5)
         {
-            if (ListOfSeedNodesSpeed == null)
-            {
-                ListOfSeedNodesSpeed = GetSeedNodeSpeedList();
-            }
+            
+
             foreach (var seedNode in ListOfSeedNodesSpeed.ToArray())
             {
                 if (seedNode.Value.TotalError < WalletMaxSeedNodeError &&
@@ -4191,11 +4191,14 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         }
                         else
                         {
-                            ListOfSeedNodesSpeed[seedNode.Key].TotalError++;
-                            if (ListOfSeedNodesSpeed[seedNode.Key].TotalError >= WalletMaxSeedNodeError)
+                            if (ListOfSeedNodesSpeed.ContainsKey(seedNode.Key))
                             {
-                                ListOfSeedNodesSpeed[seedNode.Key].LastBanError =
-                                    DateTimeOffset.Now.ToUnixTimeSeconds() + WalletCleanSeedNodeError;
+                                ListOfSeedNodesSpeed[seedNode.Key].TotalError++;
+                                if (ListOfSeedNodesSpeed[seedNode.Key].TotalError >= WalletMaxSeedNodeError)
+                                {
+                                    ListOfSeedNodesSpeed[seedNode.Key].LastBanError =
+                                        DateTimeOffset.Now.ToUnixTimeSeconds() + WalletCleanSeedNodeError;
+                                }
                             }
 
                         }
@@ -4241,11 +4244,14 @@ namespace Xiropht_Wallet.Wallet.Tcp
                             return resultJsonObject["result"].ToString();
                         }
 
-                        ListOfSeedNodesSpeed[seedNode.Key].TotalError++;
-                        if (ListOfSeedNodesSpeed[seedNode.Key].TotalError >= WalletMaxSeedNodeError)
+                        if (ListOfSeedNodesSpeed.ContainsKey(seedNode.Key))
                         {
-                            ListOfSeedNodesSpeed[seedNode.Key].LastBanError =
-                                DateTimeOffset.Now.ToUnixTimeSeconds() + WalletCleanSeedNodeError;
+                            ListOfSeedNodesSpeed[seedNode.Key].TotalError++;
+                            if (ListOfSeedNodesSpeed[seedNode.Key].TotalError >= WalletMaxSeedNodeError)
+                            {
+                                ListOfSeedNodesSpeed[seedNode.Key].LastBanError =
+                                    DateTimeOffset.Now.ToUnixTimeSeconds() + WalletCleanSeedNodeError;
+                            }
                         }
                     }
                     catch (Exception error)

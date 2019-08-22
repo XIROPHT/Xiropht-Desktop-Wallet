@@ -106,9 +106,16 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
 
             if (ClassPeerList.PeerList.Count > 0)
             {
-                foreach (var peer in ClassPeerList.PeerList.ToArray())
+                try
                 {
-                    dataGridViewPeerList.Rows.Add(peer.Value.peer_host, peer.Value.peer_status, "Remove");
+                    foreach (var peer in ClassPeerList.PeerList.ToArray())
+                    {
+                        dataGridViewPeerList.Rows.Add(peer.Value.peer_host, peer.Value.peer_status, "Remove");
+
+                    }
+                }
+                catch
+                {
 
                 }
             }

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using Xiropht_Wallet.Debug;
@@ -27,7 +28,7 @@ namespace Xiropht_Wallet
         {
             Thread.CurrentThread.CurrentUICulture = GlobalCultureInfo;
             Thread.CurrentThread.Name = Path.GetFileName(Environment.GetCommandLineArgs()[0]);
-
+            ServicePointManager.DefaultConnectionLimit = 65535;
 #if DEBUG
             Log.InitializeLog(); // Initialization of log system.
             Log.AutoWriteLog(); // Start the automatic write of log lines.

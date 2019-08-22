@@ -176,27 +176,34 @@ namespace Xiropht_Wallet.Features
         /// <returns></returns>
         public static bool GetPeerTrustStatus(string peerHost)
         {
+            if (ClassConnectorSetting.SeedNodeIp.ContainsKey(peerHost))
+            {
+                return true;
+            }
             if (!PeerList.ContainsKey(peerHost)) IncludeNewPeer(peerHost);
 
             if (PeerEnableTrustSystem)
             {
-                if (PeerList[peerHost].peer_trust_value >= PeerMaxTimeTrust)
+                if (PeerList.ContainsKey(peerHost))
                 {
-                    if (PeerList[peerHost].peer_last_trust >= DateTimeOffset.Now.ToUnixTimeSeconds())
+                    if (PeerList[peerHost].peer_trust_value >= PeerMaxTimeTrust)
                     {
-                        if (PeerList[peerHost].peer_last_trust - DateTimeOffset.Now.ToUnixTimeSeconds() <=
-                            PeerMaxTimeTrust)
+                        if (PeerList[peerHost].peer_last_trust >= DateTimeOffset.Now.ToUnixTimeSeconds())
                         {
-                            if (PeerList[peerHost].peer_trust_value - PeerList[peerHost].peer_total_disconnect >=
-                                ((PeerTrustMinimumValue * 50) / 100))
+                            if (PeerList[peerHost].peer_last_trust - DateTimeOffset.Now.ToUnixTimeSeconds() <=
+                                PeerMaxTimeTrust)
                             {
-                                return true;
+                                if (PeerList[peerHost].peer_trust_value - PeerList[peerHost].peer_total_disconnect >=
+                                    ((PeerTrustMinimumValue * 50) / 100))
+                                {
+                                    return true;
+                                }
                             }
                         }
-                    }
 
-                    PeerList[peerHost].peer_trust_value = 0;
-                    PeerList[peerHost].peer_last_trust = 0;
+                        PeerList[peerHost].peer_trust_value = 0;
+                        PeerList[peerHost].peer_last_trust = 0;
+                    }
                 }
             }
 
