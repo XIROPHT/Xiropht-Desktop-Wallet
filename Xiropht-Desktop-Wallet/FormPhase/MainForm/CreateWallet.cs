@@ -79,7 +79,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             if (InCreation)
             {
-                Program.WalletXiropht.ClassWalletObject.FullDisconnection(true);
+                await Program.WalletXiropht.ClassWalletObject.FullDisconnection(true);
                 InCreation = false;
             }
 
@@ -89,10 +89,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     if (textBoxSelectWalletPassword.Text != "")
                     {
                         if (Program.WalletXiropht.ClassWalletObject != null)
-                            Program.WalletXiropht.InitializationWalletObject();
-                        if (await Program.WalletXiropht.ClassWalletObject.InitializationWalletConnection("",
-                            textBoxSelectWalletPassword.Text, "",
-                            ClassWalletPhase.Create))
+                            await Program.WalletXiropht.InitializationWalletObject();
+                        if (Program.WalletXiropht.ClassWalletObject != null && await Program.WalletXiropht.ClassWalletObject.InitializationWalletConnection("",
+                                textBoxSelectWalletPassword.Text, "",
+                                ClassWalletPhase.Create))
                         {
                             Program.WalletXiropht.ClassWalletObject.WalletNewPassword =
                                 textBoxSelectWalletPassword.Text;

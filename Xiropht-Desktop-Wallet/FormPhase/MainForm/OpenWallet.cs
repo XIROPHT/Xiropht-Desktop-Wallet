@@ -99,7 +99,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
             Task.Factory.StartNew(async delegate
             {
-                Program.WalletXiropht.InitializationWalletObject();
+                await Program.WalletXiropht.InitializationWalletObject();
                 try
                 {
                     var error = false;
@@ -147,8 +147,13 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         var walletAddress = splitWalletFileDecrypted[0];
                         var walletKey = splitWalletFileDecrypted[1];
 
+                        if (Program.WalletXiropht.ClassWalletObject == null)
+                        {
+                            await Program.WalletXiropht.InitializationWalletObject();
+                        }
                         if (!Program.WalletXiropht.EnableTokenNetworkMode)
                         {
+
                             if (!await Program.WalletXiropht.ClassWalletObject.InitializationWalletConnection(
                                 walletAddress,
                                 textBoxPasswordWallet.Text,

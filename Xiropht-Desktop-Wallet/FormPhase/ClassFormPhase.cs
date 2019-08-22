@@ -1,9 +1,8 @@
 ﻿#if WINDOWS
-using System.Windows.Forms;
 using MetroFramework;
-using System;
 #endif
 using System.Windows.Forms;
+using System;
 using Xiropht_Connector_All.Setting;
 using Xiropht_Wallet.Features;
 

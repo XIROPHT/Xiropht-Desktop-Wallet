@@ -30,7 +30,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                             ClassWalletCommand.ClassWalletSendEnumeration.PinPhase + "|" + textBoxPinCode.Text,
                             Program.WalletXiropht.ClassWalletObject.Certificate, true))
                     {
-                        Program.WalletXiropht.ClassWalletObject.FullDisconnection(true);
+                        await Program.WalletXiropht.ClassWalletObject.FullDisconnection(true);
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS
                         ClassFormPhase.MessageBoxInterface(
@@ -157,7 +157,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                             ClassWalletCommand.ClassWalletSendEnumeration.PinPhase + "|" + textBoxPinCode.Text,
                             Program.WalletXiropht.ClassWalletObject.Certificate, true))
                     {
-                        Program.WalletXiropht.ClassWalletObject.FullDisconnection(true);
+                        await Program.WalletXiropht.ClassWalletObject.FullDisconnection(true);
                         ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
 #if WINDOWS
                         ClassFormPhase.MessageBoxInterface(

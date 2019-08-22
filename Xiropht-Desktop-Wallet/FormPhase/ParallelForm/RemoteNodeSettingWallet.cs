@@ -14,7 +14,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             InitializeComponent();
         }
 
-        private void ButtonValidSetting_Click(object sender, EventArgs e)
+        private async void ButtonValidSetting_Click(object sender, EventArgs e)
         {
             if (radioButtonEnableSeedNodeSync.Checked)
             {
@@ -37,7 +37,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             {
                 if (!Program.WalletXiropht.ClassWalletObject.WalletClosed)
                 {
-                    Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
+                    await Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
                     Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
                 }
 

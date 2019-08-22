@@ -67,7 +67,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         walletRestoreFunctions.GenerateQRCodeKeyEncryptedRepresentation(walletKey, walletPassword);
 
                     if (Program.WalletXiropht.ClassWalletObject != null)
-                        Program.WalletXiropht.InitializationWalletObject();
+                        await Program.WalletXiropht.InitializationWalletObject();
 
                     if (await Program.WalletXiropht.ClassWalletObject.InitializationWalletConnection(string.Empty,
                         walletPassword, string.Empty, ClassWalletPhase.Restore))

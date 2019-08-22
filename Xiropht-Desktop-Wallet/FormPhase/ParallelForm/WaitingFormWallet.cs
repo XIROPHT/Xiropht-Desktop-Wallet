@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Xiropht_Wallet.Features;
 
-namespace Xiropht_Wallet.FormPhase
+namespace Xiropht_Wallet.FormPhase.ParallelForm
 {
     public partial class WaitingForm : Form
     {
@@ -16,9 +17,9 @@ namespace Xiropht_Wallet.FormPhase
             labelLoadingNetwork.Text = ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.waitingmenulabeltext);
         }
 
-        private void ButtonClose_Click(object sender, EventArgs e)
+        private async void ButtonClose_Click(object sender, EventArgs e)
         {
-            Program.WalletXiropht.ClassWalletObject.FullDisconnection(true);
+            await Program.WalletXiropht.ClassWalletObject.FullDisconnection(true);
             Hide();
         }
 

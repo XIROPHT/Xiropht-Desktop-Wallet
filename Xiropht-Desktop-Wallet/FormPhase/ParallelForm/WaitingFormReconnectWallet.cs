@@ -16,9 +16,9 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             labelLoadingNetwork.Text = ClassTranslation.GetLanguageTextFromOrder("NETWORK_WAITING_MENU_LABEL_TEXT");
         }
 
-        private void ButtonClose_Click(object sender, EventArgs e)
+        private async void ButtonClose_Click(object sender, EventArgs e)
         {
-            Program.WalletXiropht.ClassWalletObject.FullDisconnection(true);
+            await Program.WalletXiropht.ClassWalletObject.FullDisconnection(true);
             Hide();
         }
     }

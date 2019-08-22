@@ -145,20 +145,19 @@ namespace Xiropht_Wallet
             SetStyle(
                 ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw |
                 ControlStyles.OptimizedDoubleBuffer, true);
-            InitializationWalletObject();
+            ClassWalletObject = new ClassWalletObject();
+            _firstStart = ClassWalletSetting.LoadSetting(); // Load the setting file.
         }
 
-        public void InitializationWalletObject()
+        public async Task InitializationWalletObject()
         {
             if (ClassWalletObject != null)
             {
-                Program.WalletXiropht.ClassWalletObject.FullDisconnection(true, true);
+                await Program.WalletXiropht.ClassWalletObject.FullDisconnection(true, true);
                 ClassWalletObject.Dispose();
                 ClassWalletObject = null;
             }
-
             ClassWalletObject = new ClassWalletObject();
-            _firstStart = ClassWalletSetting.LoadSetting(); // Load the setting file.
         }
 
         /// <summary>
@@ -400,27 +399,37 @@ namespace Xiropht_Wallet
         /// </summary>
         public void UpdateNetworkStats()
         {
-            Task.Factory.StartNew(async () =>
+            try
+            {
+                if (ClassWalletObject.WalletCancellationToken != null)
                 {
-                    if (EnableTokenNetworkMode)
-                        while (!ClassWalletObject.WalletClosed)
+                    Task.Factory.StartNew(async () =>
                         {
-                            UpdateNetworkStatsLabel();
-                            await Task.Delay(ThreadUpdateNetworkStatsInterval);
-                        }
-                    else
-                        while (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() &&
-                               !ClassWalletObject.WalletClosed)
-                        {
-                            if (ClassWalletObject.SeedNodeConnectorWallet != null)
-                                if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() &&
-                                    !ClassWalletObject.WalletClosed)
+                            if (EnableTokenNetworkMode)
+                                while (!ClassWalletObject.WalletClosed)
+                                {
                                     UpdateNetworkStatsLabel();
+                                    await Task.Delay(ThreadUpdateNetworkStatsInterval);
+                                }
+                            else
+                                while (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() &&
+                                       !ClassWalletObject.WalletClosed)
+                                {
+                                    if (ClassWalletObject.SeedNodeConnectorWallet != null)
+                                        if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() &&
+                                            !ClassWalletObject.WalletClosed)
+                                            UpdateNetworkStatsLabel();
 
-                            await Task.Delay(ThreadUpdateNetworkStatsInterval);
-                        }
-                }, ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.DenyChildAttach,
-                TaskScheduler.Current).ConfigureAwait(false);
+                                    await Task.Delay(ThreadUpdateNetworkStatsInterval);
+                                }
+                        }, ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.DenyChildAttach,
+                        TaskScheduler.Current).ConfigureAwait(false);
+                }
+            }
+            catch
+            {
+
+            }
         }
 
         /// <summary>
@@ -889,20 +898,20 @@ namespace Xiropht_Wallet
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MainMenuToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void MainMenuToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (ClassWalletObject.WalletConnect != null)
             {
                 if (EnableTokenNetworkMode)
                 {
-                    if (!ClassWalletObject.WalletClosed) ClassWalletObject.FullDisconnection(true);
+                    if (!ClassWalletObject.WalletClosed) await ClassWalletObject.FullDisconnection(true);
                 }
                 else
                 {
                     if (ClassWalletObject.SeedNodeConnectorWallet != null)
                         if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() &&
                             ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
-                            ClassWalletObject.FullDisconnection(true);
+                            await ClassWalletObject.FullDisconnection(true);
                 }
             }
 
@@ -914,20 +923,20 @@ namespace Xiropht_Wallet
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void CreateWalletToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void CreateWalletToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (ClassWalletObject.WalletConnect != null)
             {
                 if (EnableTokenNetworkMode)
                 {
-                    if (!ClassWalletObject.WalletClosed) ClassWalletObject.FullDisconnection(true);
+                    if (!ClassWalletObject.WalletClosed) await ClassWalletObject.FullDisconnection(true);
                 }
                 else
                 {
                     if (ClassWalletObject.SeedNodeConnectorWallet != null)
                         if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() &&
                             ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
-                            ClassWalletObject.FullDisconnection(true);
+                            await ClassWalletObject.FullDisconnection(true);
                 }
             }
 
@@ -939,20 +948,20 @@ namespace Xiropht_Wallet
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OpenWalletToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void OpenWalletToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (ClassWalletObject.WalletConnect != null)
             {
                 if (EnableTokenNetworkMode)
                 {
-                    if (!ClassWalletObject.WalletClosed) ClassWalletObject.FullDisconnection(true);
+                    if (!ClassWalletObject.WalletClosed) await ClassWalletObject.FullDisconnection(true);
                 }
                 else
                 {
                     if (ClassWalletObject.SeedNodeConnectorWallet != null)
                         if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() &&
                             ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
-                            ClassWalletObject.FullDisconnection(true);
+                           await ClassWalletObject.FullDisconnection(true);
                 }
             }
 
@@ -1017,18 +1026,18 @@ namespace Xiropht_Wallet
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void CloseWalletToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void CloseWalletToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (EnableTokenNetworkMode)
             {
-                if (!ClassWalletObject.WalletClosed) ClassWalletObject.FullDisconnection(true);
+                if (!ClassWalletObject.WalletClosed) await ClassWalletObject.FullDisconnection(true);
             }
             else
             {
                 if (ClassWalletObject.SeedNodeConnectorWallet != null)
                     if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() &&
                         ClassWalletObject.WalletConnect.WalletPhase != ClassWalletPhase.Create)
-                        ClassWalletObject.FullDisconnection(true);
+                        await ClassWalletObject.FullDisconnection(true);
             }
 
             ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.Main);
@@ -1224,7 +1233,7 @@ namespace Xiropht_Wallet
                                 ClassTranslation.GetLanguageTextFromOrder("RESYNC_TRANSACTION_HISTORY_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Information) ==
                             DialogResult.Yes)
 #endif
-                            TransactionHistoryWalletForm.ResyncTransaction();
+                            TransactionHistoryWalletForm.ResyncTransactionAsync();
                     }
                 }
                 else
@@ -1245,7 +1254,7 @@ namespace Xiropht_Wallet
                                 ClassTranslation.GetLanguageTextFromOrder("RESYNC_TRANSACTION_HISTORY_TITLE_TEXT"), MessageBoxButtons.YesNo, MessageBoxIcon.Information) ==
                             DialogResult.Yes)
 #endif
-                                TransactionHistoryWalletForm.ResyncTransaction();
+                                TransactionHistoryWalletForm.ResyncTransactionAsync();
                         }
                 }
             }
@@ -1696,17 +1705,17 @@ namespace Xiropht_Wallet
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void restoreWalletToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void restoreWalletToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (EnableTokenNetworkMode)
             {
-                if (!ClassWalletObject.WalletClosed) ClassWalletObject.FullDisconnection(true);
+                if (!ClassWalletObject.WalletClosed) await ClassWalletObject.FullDisconnection(true);
             }
             else
             {
                 if (ClassWalletObject.SeedNodeConnectorWallet != null)
                     if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus())
-                        ClassWalletObject.FullDisconnection(true);
+                        await ClassWalletObject.FullDisconnection(true);
             }
 
             ClassFormPhase.SwitchFormPhase(ClassFormPhaseEnumeration.RestoreWallet);

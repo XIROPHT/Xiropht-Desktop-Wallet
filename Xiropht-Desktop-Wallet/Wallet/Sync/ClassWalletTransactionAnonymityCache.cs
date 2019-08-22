@@ -425,7 +425,7 @@ namespace Xiropht_Wallet.Wallet.Sync
                     }
                 }
 
-                Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
+                await Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
                 Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
             }
 

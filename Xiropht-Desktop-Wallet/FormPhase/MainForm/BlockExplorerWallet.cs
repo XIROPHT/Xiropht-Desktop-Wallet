@@ -59,7 +59,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         /// <summary>
         ///     Force to resync blocks.
         /// </summary>
-        public void ResyncBlock()
+        public async void ResyncBlock()
         {
             if (ClassBlockCache.RemoveWalletBlockCache())
             {
@@ -83,7 +83,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 }
 
 
-                Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
+                await Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
                 Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
 
 

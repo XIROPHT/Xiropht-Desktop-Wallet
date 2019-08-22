@@ -30,7 +30,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         }
 
 
-        public void ResyncTransaction()
+        public async void ResyncTransactionAsync()
         {
             Program.WalletXiropht.ClassWalletObject.BlockTransactionSync = true;
             Program.WalletXiropht.StopUpdateTransactionHistory(true, true);
@@ -44,7 +44,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     Program.WalletXiropht.ClassWalletObject.InSyncTransaction = false;
                     Program.WalletXiropht.ClassWalletObject.InSyncTransactionAnonymity = false;
                     Program.WalletXiropht.ClassWalletObject.BlockTransactionSync = false;
-                    Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
+                    await Program.WalletXiropht.ClassWalletObject.DisconnectRemoteNodeTokenSync();
                     Program.WalletXiropht.ClassWalletObject.WalletOnUseSync = false;
                 }
         }
