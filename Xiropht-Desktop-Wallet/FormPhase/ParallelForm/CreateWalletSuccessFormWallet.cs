@@ -98,6 +98,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                 ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenubuttonacceptwalletinformationtext);
             buttonCopyWalletInformation.Text =
                 ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.createwalletsubmenubuttoncopywalletinformationtext);
+            ClassParallelForm.HideWaitingCreateWalletFormAsync();
         }
     }
 }
