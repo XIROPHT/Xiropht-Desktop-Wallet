@@ -94,3 +94,5 @@ For more informations about how work the network connection of wallet, please ch
 **--> Use this one: https://github.com/XIROPHT/metroframework-modern-ui**
 
 **External library used: ZXing.Net, a QR Code generator used since version 0.4.8.7R: https://github.com/micjahn/ZXing.Net/**
+
+**Newtonsoft.Json library is used since version 0.7.0.0R for the Token Network mode system: https://github.com/JamesNK/Newtonsoft.Json**
