@@ -109,7 +109,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                     await Task.Delay(100);
                                     if (!await Program.WalletXiropht.ClassWalletObject
                                         .SendPacketWalletToSeedNodeNetwork(
-                                            ClassWalletCommand.ClassWalletSendEnumeration.CreatePhase + "|" +
+                                            ClassWalletCommand.ClassWalletSendEnumeration.CreatePhase + ClassConnectorSetting.PacketContentSeperator +
                                             textBoxSelectWalletPassword.Text))
                                     {
 #if WINDOWS

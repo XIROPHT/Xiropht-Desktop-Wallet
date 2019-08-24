@@ -41,7 +41,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void Overview_Resize(object sender, EventArgs e)
         {
-            Refresh();
+            UpdateStyles();
         }
 
         private void buttonFeeInformationAccumulated_MouseHover(object sender, EventArgs e)

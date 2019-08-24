@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Xiropht_Connector_All.Setting;
 using Xiropht_Connector_All.Wallet;
 using Xiropht_Wallet.Features;
 
@@ -45,12 +46,12 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         {
             if (Program.WalletXiropht.ClassWalletObject.WalletPinDisabled) // Pin disabled
                 Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
-                    ClassWalletCommand.ClassWalletSendEnumeration.DisablePinCode + "|" + textBoxWalletOldPassword.Text +
-                    "|" + textBoxPinCode.Text + "|1", Program.WalletXiropht.ClassWalletObject.Certificate, true);
+                    ClassWalletCommand.ClassWalletSendEnumeration.DisablePinCode + ClassConnectorSetting.PacketContentSeperator + textBoxWalletOldPassword.Text +
+                    ClassConnectorSetting.PacketContentSeperator + textBoxPinCode.Text + "|1", Program.WalletXiropht.ClassWalletObject.Certificate, true);
             else
                 Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
-                    ClassWalletCommand.ClassWalletSendEnumeration.DisablePinCode + "|" + textBoxWalletOldPassword.Text +
-                    "|" + textBoxPinCode.Text + "|0", Program.WalletXiropht.ClassWalletObject.Certificate, true);
+                    ClassWalletCommand.ClassWalletSendEnumeration.DisablePinCode + ClassConnectorSetting.PacketContentSeperator + textBoxWalletOldPassword.Text +
+                    ClassConnectorSetting.PacketContentSeperator + textBoxPinCode.Text + "|0", Program.WalletXiropht.ClassWalletObject.Certificate, true);
 
             textBoxWalletOldPassword.Text = "";
             textBoxPinCode.Text = "";

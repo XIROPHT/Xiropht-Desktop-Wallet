@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
+using Xiropht_Connector_All.Setting;
 using Xiropht_Connector_All.Utils;
 using Xiropht_Connector_All.Wallet;
 using Xiropht_Wallet.Features;
@@ -27,7 +28,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                 {
                     if (!await Program.WalletXiropht.ClassWalletObject.WalletConnect
                         .SendPacketWallet(
-                            ClassWalletCommand.ClassWalletSendEnumeration.PinPhase + "|" + textBoxPinCode.Text,
+                            ClassWalletCommand.ClassWalletSendEnumeration.PinPhase + ClassConnectorSetting.PacketContentSeperator + textBoxPinCode.Text,
                             Program.WalletXiropht.ClassWalletObject.Certificate, true))
                     {
                         await Program.WalletXiropht.ClassWalletObject.FullDisconnection(true);
@@ -154,7 +155,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
                 {
                     if (!await Program.WalletXiropht.ClassWalletObject.WalletConnect
                         .SendPacketWallet(
-                            ClassWalletCommand.ClassWalletSendEnumeration.PinPhase + "|" + textBoxPinCode.Text,
+                            ClassWalletCommand.ClassWalletSendEnumeration.PinPhase + ClassConnectorSetting.PacketContentSeperator + textBoxPinCode.Text,
                             Program.WalletXiropht.ClassWalletObject.Certificate, true))
                     {
                         await Program.WalletXiropht.ClassWalletObject.FullDisconnection(true);

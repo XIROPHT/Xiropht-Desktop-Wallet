@@ -8,8 +8,8 @@ using Xiropht_Connector_All.Setting;
 using Xiropht_Connector_All.Wallet;
 using Xiropht_Wallet.Features;
 using Xiropht_Wallet.Properties;
-using Xiropht_Wallet.Tcp.Option;
 using Xiropht_Wallet.Utility;
+using Xiropht_Wallet.Wallet.Tcp.Option;
 
 namespace Xiropht_Wallet.FormPhase.MainForm
 {
@@ -64,7 +64,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     var walletRestoreFunctions = new ClassWalletRestoreFunctions();
 
                     var requestRestoreQrCodeEncrypted =
-                        walletRestoreFunctions.GenerateQRCodeKeyEncryptedRepresentation(walletKey, walletPassword);
+                        walletRestoreFunctions.GenerateQrCodeKeyEncryptedRepresentation(walletKey, walletPassword);
 
                     if (Program.WalletXiropht.ClassWalletObject != null)
                         await Program.WalletXiropht.InitializationWalletObject();
@@ -87,7 +87,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
                                 if (!await Program.WalletXiropht.ClassWalletObject.SeedNodeConnectorWallet
                                     .SendPacketToSeedNodeAsync(
-                                        ClassWalletCommand.ClassWalletSendEnumeration.AskPhase + "|" +
+                                        ClassWalletCommand.ClassWalletSendEnumeration.AskPhase + ClassConnectorSetting.PacketContentSeperator +
                                         requestRestoreQrCodeEncrypted,
                                         Program.WalletXiropht.ClassWalletObject.Certificate, false, true))
                                 {

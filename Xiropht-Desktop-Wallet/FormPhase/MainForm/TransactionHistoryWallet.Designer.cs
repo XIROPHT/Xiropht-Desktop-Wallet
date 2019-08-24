@@ -29,9 +29,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.tabPageTransactionHistory = new System.Windows.Forms.TabControl();
-            this.tabPageNormalTransactionSend = new System.Windows.Forms.TabPage();
+            this.tabPageTransactionHistory = new Xiropht_Wallet.FormPhase.MainForm.TabControlEx();
+            this.tabPageNormalTransactionSend = new Xiropht_Wallet.FormPhase.MainForm.TabPageEx();
             this.listViewNormalSendTransactionHistory = new Xiropht_Wallet.FormPhase.MainForm.ListViewEx();
             this.columnHeaderID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -42,7 +41,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.columnHeaderAddress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderDateRecv = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderBlockHeightSrc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tabPageNormalTransactionReceived = new System.Windows.Forms.TabPage();
+            this.tabPageNormalTransactionReceived = new Xiropht_Wallet.FormPhase.MainForm.TabPageEx();
             this.listViewNormalReceivedTransactionHistory = new Xiropht_Wallet.FormPhase.MainForm.ListViewEx();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -53,7 +52,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tabPageAnonymityTransactionSend = new System.Windows.Forms.TabPage();
+            this.tabPageAnonymityTransactionSend = new Xiropht_Wallet.FormPhase.MainForm.TabPageEx();
             this.listViewAnonymitySendTransactionHistory = new Xiropht_Wallet.FormPhase.MainForm.ListViewEx();
             this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -64,7 +63,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader17 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader18 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tabPageAnonymityTransactionReceived = new System.Windows.Forms.TabPage();
+            this.tabPageAnonymityTransactionReceived = new Xiropht_Wallet.FormPhase.MainForm.TabPageEx();
             this.listViewAnonymityReceivedTransactionHistory = new Xiropht_Wallet.FormPhase.MainForm.ListViewEx();
             this.columnHeader19 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader20 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -75,7 +74,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.columnHeader25 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader26 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader27 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tabPageBlockRewardTransaction = new System.Windows.Forms.TabPage();
+            this.tabPageBlockRewardTransaction = new Xiropht_Wallet.FormPhase.MainForm.TabPageEx();
             this.listViewBlockRewardTransactionHistory = new Xiropht_Wallet.FormPhase.MainForm.ListViewEx();
             this.columnHeader28 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader29 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -86,7 +85,6 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.columnHeader34 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader35 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader36 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.timerRefresh = new System.Windows.Forms.Timer(this.components);
             this.tabPageTransactionHistory.SuspendLayout();
             this.tabPageNormalTransactionSend.SuspendLayout();
             this.tabPageNormalTransactionReceived.SuspendLayout();
@@ -482,12 +480,6 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             // 
             this.columnHeader36.Text = "Block Height Src";
             // 
-            // timerRefresh
-            // 
-            this.timerRefresh.Enabled = true;
-            this.timerRefresh.Interval = 100;
-            this.timerRefresh.Tick += new System.EventHandler(this.timerRefresh_Tick);
-            // 
             // TransactionHistoryWallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -569,12 +561,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private System.Windows.Forms.ColumnHeader columnHeader34;
         private System.Windows.Forms.ColumnHeader columnHeader35;
         private System.Windows.Forms.ColumnHeader columnHeader36;
-        public System.Windows.Forms.TabControl tabPageTransactionHistory;
-        public System.Windows.Forms.TabPage tabPageNormalTransactionSend;
-        public System.Windows.Forms.TabPage tabPageAnonymityTransactionSend;
-        public System.Windows.Forms.TabPage tabPageNormalTransactionReceived;
-        public System.Windows.Forms.TabPage tabPageAnonymityTransactionReceived;
-        public System.Windows.Forms.TabPage tabPageBlockRewardTransaction;
-        private System.Windows.Forms.Timer timerRefresh;
+        public TabControlEx tabPageTransactionHistory;
+        public TabPageEx tabPageNormalTransactionSend;
+        public TabPageEx tabPageAnonymityTransactionSend;
+        public TabPageEx tabPageNormalTransactionReceived;
+        public TabPageEx tabPageAnonymityTransactionReceived;
+        public TabPageEx tabPageBlockRewardTransaction;
     }
 }

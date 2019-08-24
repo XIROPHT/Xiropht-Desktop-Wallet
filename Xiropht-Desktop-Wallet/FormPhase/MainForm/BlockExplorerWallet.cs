@@ -149,7 +149,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     X = _panelWaitingSync.Width / 2 - _labelWaitingText.Width / 2,
                     Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
                 };
-                Refresh();
+                UpdateStyles();
             }
 
             base.OnResize(e);
@@ -178,7 +178,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
                     };
                     IsShowedWaitingBlock = true;
-                    Refresh();
+                    UpdateStyles();
                 });
         }
 
@@ -190,7 +190,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     _panelWaitingSync.Visible = false;
                     _panelWaitingSync.Hide();
                     IsShowedWaitingBlock = false;
-                    Refresh();
+                    UpdateStyles();
                 });
         }
 

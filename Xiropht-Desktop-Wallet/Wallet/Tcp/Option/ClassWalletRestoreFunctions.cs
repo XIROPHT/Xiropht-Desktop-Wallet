@@ -2,20 +2,21 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using Xiropht_Connector_All.Setting;
 using Xiropht_Connector_All.Utils;
 using Xiropht_Connector_All.Wallet;
 using ZXing;
 using ZXing.Common;
 using ZXing.QrCode;
 
-namespace Xiropht_Wallet.Tcp.Option
+namespace Xiropht_Wallet.Wallet.Tcp.Option
 {
     public class ClassWalletRestoreFunctions : IDisposable
     {
         /// <summary>
         ///     Dispose information.
         /// </summary>
-        private bool IsDisposed;
+        private bool _isDisposed;
 
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace Xiropht_Wallet.Tcp.Option
         /// <param name="privateKey"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public string GenerateQRCodeKeyEncryptedRepresentation(string privateKey, string password)
+        public string GenerateQrCodeKeyEncryptedRepresentation(string privateKey, string password)
         {
             try
             {
@@ -42,10 +43,10 @@ namespace Xiropht_Wallet.Tcp.Option
                     Options = options,
                     Format = BarcodeFormat.QR_CODE
                 };
-                var sourceKey = privateKey.Trim() + "|" + password.Trim() + "|" + ClassUtils.DateUnixTimeNowSecond();
-                using (var representationQRCode = new Bitmap(qr.Write(sourceKey)))
+                var sourceKey = privateKey.Trim() + ClassConnectorSetting.PacketContentSeperator + password.Trim() + ClassConnectorSetting.PacketContentSeperator + ClassUtils.DateUnixTimeNowSecond();
+                using (var representationQrCode = new Bitmap(qr.Write(sourceKey)))
                 {
-                    LuminanceSource source = new BitmapLuminanceSource(representationQRCode);
+                    LuminanceSource source = new BitmapLuminanceSource(representationQrCode);
 
                     var bitmap = new BinaryBitmap(new HybridBinarizer(source));
                     var result = new MultiFormatReader().decode(bitmap);
@@ -53,7 +54,7 @@ namespace Xiropht_Wallet.Tcp.Option
                     if (result != null)
                         if (result.Text == sourceKey)
                         {
-                            var qrCodeString = BitmapToBase64String(representationQRCode);
+                            var qrCodeString = BitmapToBase64String(representationQrCode);
                             var QrCodeStringEncrypted = ClassAlgo.GetEncryptedResultManual(
                                 ClassAlgoEnumeration.Rijndael, qrCodeString, privateKey,
                                 ClassWalletNetworkSetting.KeySize);
@@ -63,7 +64,7 @@ namespace Xiropht_Wallet.Tcp.Option
                             {
                                 var walletUniqueIdInstance =
                                     long.Parse(privateKey.Split(new[] {"$"}, StringSplitOptions.None)[1]);
-                                qrCodeEncryptedRequest = walletUniqueIdInstance + "|" + QrCodeStringEncrypted;
+                                qrCodeEncryptedRequest = walletUniqueIdInstance + ClassConnectorSetting.PacketContentSeperator + QrCodeStringEncrypted;
                             }
                             else
                             {
@@ -72,7 +73,7 @@ namespace Xiropht_Wallet.Tcp.Option
                                     ClassUtils.GetRandomBetween(privateKey.Length / 4,
                                         privateKey.Length /
                                         8)); // Indicate only a small part of the end of the private key (For old private key users).
-                                qrCodeEncryptedRequest = randomEndPrivateKey + "|" + QrCodeStringEncrypted;
+                                qrCodeEncryptedRequest = randomEndPrivateKey + ClassConnectorSetting.PacketContentSeperator + QrCodeStringEncrypted;
                             }
 
                             // Testing QR Code encryption.
@@ -150,10 +151,10 @@ namespace Xiropht_Wallet.Tcp.Option
 
         protected virtual void Dispose(bool disposing)
         {
-            if (IsDisposed)
+            if (_isDisposed)
                 return;
 
-            IsDisposed = true;
+            _isDisposed = true;
         }
 
         #endregion

@@ -81,8 +81,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                             await Program.WalletXiropht.ClassWalletObject.WalletConnect
                                                 .SendPacketWallet(
                                                     ClassWalletCommand.ClassWalletSendEnumeration.SendTransaction +
-                                                    "|" +
-                                                    destination + "|" + amountSend + "|" + feeSend + "|1",
+                                                    ClassConnectorSetting.PacketContentSeperator +
+                                                    destination + ClassConnectorSetting.PacketContentSeperator + amountSend + ClassConnectorSetting.PacketContentSeperator + feeSend + "|1",
                                                     Program.WalletXiropht.ClassWalletObject.Certificate, true);
                                         else
                                             await Program.WalletXiropht.ClassWalletObject.SendWalletTokenTransaction(
@@ -94,8 +94,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                             await Program.WalletXiropht.ClassWalletObject.WalletConnect
                                                 .SendPacketWallet(
                                                     ClassWalletCommand.ClassWalletSendEnumeration.SendTransaction +
-                                                    "|" +
-                                                    destination + "|" + amountSend + "|" + feeSend + "|0",
+                                                    ClassConnectorSetting.PacketContentSeperator +
+                                                    destination + ClassConnectorSetting.PacketContentSeperator + amountSend + ClassConnectorSetting.PacketContentSeperator + feeSend + "|0",
                                                     Program.WalletXiropht.ClassWalletObject.Certificate, true);
                                         else
                                             await Program.WalletXiropht.ClassWalletObject.SendWalletTokenTransaction(
@@ -169,7 +169,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 Console.WriteLine("Exception error: " + error.Message);
             }
 
-            Refresh();
+            UpdateStyles();
         }
 
         /// <summary>

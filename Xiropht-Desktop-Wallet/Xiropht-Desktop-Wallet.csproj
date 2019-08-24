@@ -127,9 +127,6 @@
     <Compile Include="Wallet\Sync\ClassWalletTransactionType.cs" />
     <Compile Include="Wallet\Tcp\Option\ClassWalletRestoreFunctions.cs" />
     <Compile Include="Wallet\Setting\ClassWalletSetting.cs" />
-    <Compile Include="FormCustom\ClassListView.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="FormCustom\ClassLabel.cs">
       <SubType>Component</SubType>
     </Compile>

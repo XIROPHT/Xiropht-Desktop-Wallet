@@ -120,7 +120,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             listViewAnonymityReceivedTransactionHistory.Hide();
             listViewAnonymitySendTransactionHistory.Hide();
             listViewNormalReceivedTransactionHistory.Hide();
-            Refresh();
+            UpdateStyles();
         }
 
         public void ShowWaitingSyncTransactionPanel()
@@ -146,7 +146,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
                     };
                     IsShowedWaitingTransaction = true;
-                    Refresh();
+                    UpdateStyles();
                 });
         }
 
@@ -158,7 +158,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     _panelWaitingSync.Visible = false;
                     _panelWaitingSync.Hide();
                     IsShowedWaitingTransaction = false;
-                    Refresh();
+                    UpdateStyles();
                 });
         }
 
@@ -180,7 +180,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     X = _panelWaitingSync.Width / 2 - _labelWaitingText.Width / 2,
                     Y = _panelWaitingSync.Height / 2 - _labelWaitingText.Height / 2
                 };
-                Refresh();
+                UpdateStyles();
             }
 
             base.OnResize(e);
@@ -207,43 +207,28 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         public bool CheckContainKeyInvokerNormalReceive(string hash)
         {
-            var check = false;
-            MethodInvoker invoke = () => check = listViewNormalReceivedTransactionHistory.Items.ContainsKey(hash);
-            BeginInvoke(invoke);
-            return check;
+            return false;
         }
 
         public bool CheckContainKeyInvokerAnonymousReceive(string hash)
         {
-            var check = false;
-            MethodInvoker invoke = () => check = listViewAnonymityReceivedTransactionHistory.Items.ContainsKey(hash);
-            BeginInvoke(invoke);
-            return check;
+            return false;
         }
 
 
         public bool CheckContainKeyInvokerNormalSend(string hash)
         {
-            var check = false;
-            MethodInvoker invoke = () => check = listViewNormalSendTransactionHistory.Items.ContainsKey(hash);
-            BeginInvoke(invoke);
-            return check;
+            return false;
         }
 
         public bool CheckContainKeyInvokerAnonymousSend(string hash)
         {
-            var check = false;
-            MethodInvoker invoke = () => check = listViewAnonymitySendTransactionHistory.Items.ContainsKey(hash);
-            BeginInvoke(invoke);
-            return check;
+            return false;
         }
 
         public bool CheckContainKeyInvokerBlockReward(string hash)
         {
-            var check = false;
-            MethodInvoker invoke = () => check = listViewBlockRewardTransactionHistory.Items.ContainsKey(hash);
-            BeginInvoke(invoke);
-            return check;
+            return false;
         }
 
         private void listViewNormalSendTransactionHistory_MouseClick(object sender, MouseEventArgs e)
@@ -252,25 +237,22 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             {
                 var item = listViewNormalSendTransactionHistory.GetItemAt(0, e.Y);
 
-                var found = false;
                 if (item == null) return;
                 for (var ix = item.SubItems.Count - 1; ix >= 0; --ix)
                     if (item.SubItems[ix].Bounds.Contains(e.Location))
-                        if (!found)
+                    {
+
+
+                        if (ClassContact.CheckContactName(item.SubItems[ix].Text))
                         {
-                            found = true;
-
-
-                            if (ClassContact.CheckContactName(item.SubItems[ix].Text))
-                            {
-                                Clipboard.SetText(
-                                    ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
+                            Clipboard.SetText(
+                                ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
 #if WINDOWS
-                                Task.Factory.StartNew(() =>
-                                    ClassFormPhase.MessageBoxInterface(
-                                        ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " +
-                                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext), string.Empty, MessageBoxButtons.OK,
-                                        MessageBoxIcon.Information)).ConfigureAwait(false);
+                            Task.Factory.StartNew(() =>
+                                ClassFormPhase.MessageBoxInterface(
+                                    ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2 + " " +
+                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext), string.Empty, MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information)).ConfigureAwait(false);
 #else
                                 LinuxClipboard.SetText(ClassContact.ListContactWallet[item.SubItems[ix].Text.ToLower()].Item2);
                                 Task.Factory.StartNew(() =>
@@ -280,16 +262,16 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                     BeginInvoke(invoker);
                                 }).ConfigureAwait(false);
 #endif
-                            }
-                            else
-                            {
-                                Clipboard.SetText(item.SubItems[ix].Text);
+                        }
+                        else
+                        {
+                            Clipboard.SetText(item.SubItems[ix].Text);
 #if WINDOWS
-                                Task.Factory.StartNew(() =>
-                                    ClassFormPhase.MessageBoxInterface(
-                                        item.SubItems[ix].Text + " " +
-                                        ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext), string.Empty, MessageBoxButtons.OK,
-                                        MessageBoxIcon.Information)).ConfigureAwait(false);
+                            Task.Factory.StartNew(() =>
+                                ClassFormPhase.MessageBoxInterface(
+                                    item.SubItems[ix].Text + " " +
+                                    ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration.transactionhistorywalletcopytext), string.Empty, MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information)).ConfigureAwait(false);
 #else
                                 LinuxClipboard.SetText(item.SubItems[ix].Text);
                                 Task.Factory.StartNew(() =>
@@ -299,11 +281,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                     BeginInvoke(invoker);
                                 }).ConfigureAwait(false);
 #endif
-                            }
-
-
-                            return;
                         }
+
+
+                        return;
+                    }
             }
             catch
             {
@@ -552,7 +534,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void Transaction_Resize(object sender, EventArgs e)
         {
-            Refresh();
+            UpdateStyles();
         }
 
 
@@ -654,12 +636,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             }
         }
 
-        private void timerRefresh_Tick(object sender, EventArgs e)
-        {
-#if WINDOWS
-            foreach (Control control in Controls) control.Refresh();
-#endif
-        }
+
 
         #region Ordering events.
 
@@ -893,14 +870,110 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         }
     }
 
-    public sealed class ListViewEx : ListView
-    {
-        private const int WM_LBUTTONDOWN = 0x0201;
 
-        public ListViewEx()
+    public sealed class TabControlEx : TabControl
+    {
+        private Timer _timeUpdateStyle;
+
+        public TabControlEx()
         {
             SetStyle(
                 ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.DoubleBuffer, true);
+            DoubleBuffered = true;
+            _timeUpdateStyle = new Timer { Interval = 100, Enabled = true };
+            _timeUpdateStyle.Tick += TimeUpdateStyleEvent;
+            _timeUpdateStyle.Start();
+        }
+
+        private void TimeUpdateStyleEvent(object sender, EventArgs e)
+        {
+            UpdateStyles();
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000; // Turn on WS_EX_COMPOSITED
+                return cp;
+            }
+        }
+
+    }
+
+
+    public sealed class TabPageEx : TabPage
+    {
+        private Timer _timeUpdateStyle;
+
+        public TabPageEx()
+        {
+            SetStyle(
+                ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.DoubleBuffer, true);
+            DoubleBuffered = true;
+            _timeUpdateStyle = new Timer { Interval = 100, Enabled = true };
+            _timeUpdateStyle.Tick += TimeUpdateStyleEvent;
+            _timeUpdateStyle.Start();
+        }
+
+        private void TimeUpdateStyleEvent(object sender, EventArgs e)
+        {
+            UpdateStyles();
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000; // Turn on WS_EX_COMPOSITED
+                return cp;
+            }
+        }
+
+    }
+
+    public sealed class ListViewEx : ListView
+    {
+        private const int WM_LBUTTONDOWN = 0x0201;
+        private Timer _timeUpdateStyle;
+
+        public ListViewEx()
+        {
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                          ControlStyles.AllPaintingInWmPaint, true);
+
+            this.SetStyle(ControlStyles.EnableNotifyMessage, true);
+            _timeUpdateStyle = new Timer {Interval = 100, Enabled = true};
+            _timeUpdateStyle.Tick += TimeUpdateStyleEvent;
+            _timeUpdateStyle.Start();
+        }
+
+        private void TimeUpdateStyleEvent(object sender, EventArgs e)
+        {
+            UpdateStyles();
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000; // Turn on WS_EX_COMPOSITED
+                return cp;
+            }
+        }
+
+        protected override void OnNotifyMessage(Message m)
+        {
+            //Filter out the WM_ERASEBKGND message
+            if (m.Msg != 0x14)
+            {
+                base.OnNotifyMessage(m);
+            }
         }
 
         protected override void WndProc(ref Message m)

@@ -8,6 +8,8 @@ using Xiropht_Connector_All.Setting;
 using Xiropht_Connector_All.Utils;
 using Xiropht_Connector_All.Wallet;
 using Xiropht_Wallet.Features;
+using Xiropht_Wallet.Wallet.Tcp;
+
 #if WINDOWS
 #endif
 
@@ -181,22 +183,60 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
                             Program.WalletXiropht.ClassWalletObject.ListenSeedNodeNetworkForWallet();
 
+                            _walletFileData = string.Empty;
+                            _fileSelectedPath = string.Empty;
+                            invoke = () =>
+                                labelOpenFileSelected.Text =
+                                    ClassTranslation.GetLanguageTextFromOrder(
+                                        "OPEN_WALLET_LABEL_FILE_SELECTED_TEXT");
+                            BeginInvoke(invoke);
 
-                            if (await Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
-                                Program.WalletXiropht.ClassWalletObject.Certificate, string.Empty, false))
+                            if (Program.WalletXiropht.WalletSyncMode == ClassWalletSyncMode.WALLET_SYNC_DEFAULT)
                             {
-                                await Task.Delay(100);
-                                await Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
-                                    ClassConnectorSettingEnumeration.WalletLoginType + "|" + Program.WalletXiropht
-                                        .ClassWalletObject.WalletConnect.WalletAddress,
-                                    Program.WalletXiropht.ClassWalletObject.Certificate, true);
-                                _walletFileData = string.Empty;
-                                _fileSelectedPath = string.Empty;
-                                invoke = () =>
-                                    labelOpenFileSelected.Text =
-                                        ClassTranslation.GetLanguageTextFromOrder(
-                                            "OPEN_WALLET_LABEL_FILE_SELECTED_TEXT");
-                                BeginInvoke(invoke);
+                                if (await Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
+                                    Program.WalletXiropht.ClassWalletObject.Certificate, string.Empty, false))
+                                {
+                                    await Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
+                                        ClassConnectorSettingEnumeration.WalletLoginType + ClassConnectorSetting.PacketContentSeperator + Program.WalletXiropht
+                                            .ClassWalletObject.WalletConnect.WalletAddress,
+                                        Program.WalletXiropht.ClassWalletObject.Certificate, true);
+                                }
+                            }
+                            else if (Program.WalletXiropht.WalletSyncMode ==
+                                     ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
+                            {
+                                if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(Program.WalletXiropht
+                                    .ClassWalletObject.SeedNodeConnectorWallet.ReturnCurrentSeedNodeHost()))
+                                {
+                                    await Program.WalletXiropht.ClassWalletObject.SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(
+                                        ClassConnectorSettingEnumeration.WalletLoginProxy +
+                                        ClassConnectorSetting.PacketContentSeperator +
+                                        Program.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress +
+                                        ClassConnectorSetting.PacketContentSeperator +
+                                        Program.WalletXiropht.ClassWalletObject.Certificate + ClassConnectorSetting.PacketSplitSeperator, string.Empty, false, false);
+                                }
+                                else
+                                {
+                                    if (await Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
+                                        Program.WalletXiropht.ClassWalletObject.Certificate, string.Empty, false))
+                                    {
+                                        await Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
+                                            ClassConnectorSettingEnumeration.WalletLoginType + ClassConnectorSetting.PacketContentSeperator + Program.WalletXiropht
+                                                .ClassWalletObject.WalletConnect.WalletAddress,
+                                            Program.WalletXiropht.ClassWalletObject.Certificate, true);
+                                    }
+                                }
+
+                            }
+                            else if (Program.WalletXiropht.WalletSyncMode ==
+                                     ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE)
+                            {
+                                await Program.WalletXiropht.ClassWalletObject.SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(
+                                    ClassConnectorSettingEnumeration.WalletLoginProxy +
+                                    ClassConnectorSetting.PacketContentSeperator +
+                                    Program.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress +
+                                    ClassConnectorSetting.PacketContentSeperator +
+                                    Program.WalletXiropht.ClassWalletObject.Certificate + ClassConnectorSetting.PacketSplitSeperator, string.Empty, false, false);
                             }
                         }
                         else

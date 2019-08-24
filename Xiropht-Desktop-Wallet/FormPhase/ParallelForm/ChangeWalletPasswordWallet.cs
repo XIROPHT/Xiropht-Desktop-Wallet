@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Xiropht_Connector_All.Setting;
 using Xiropht_Connector_All.Wallet;
 using Xiropht_Wallet.Features;
 
@@ -16,8 +17,8 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         {
             Program.WalletXiropht.ClassWalletObject.WalletNewPassword = textBoxWalletNewPassword.Text;
             Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
-                ClassWalletCommand.ClassWalletSendEnumeration.ChangePassword + "|" + textBoxWalletOldPassword.Text +
-                "|" + textBoxPinCode.Text + "|" + textBoxWalletNewPassword.Text + "",
+                ClassWalletCommand.ClassWalletSendEnumeration.ChangePassword + ClassConnectorSetting.PacketContentSeperator + textBoxWalletOldPassword.Text +
+                ClassConnectorSetting.PacketContentSeperator + textBoxPinCode.Text + ClassConnectorSetting.PacketContentSeperator + textBoxWalletNewPassword.Text + "",
                 Program.WalletXiropht.ClassWalletObject.Certificate,
                 true);
             textBoxPinCode.Text = "";

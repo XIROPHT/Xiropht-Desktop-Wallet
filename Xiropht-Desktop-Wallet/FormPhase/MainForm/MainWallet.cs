@@ -51,7 +51,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
         private void Main_Resize_1(object sender, EventArgs e)
         {
-            Refresh();
+            UpdateStyles();
         }
     }
 }

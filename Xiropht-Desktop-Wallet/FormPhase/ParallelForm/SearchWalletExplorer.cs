@@ -20,7 +20,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
         private void SearchWalletExplorer_Load(object sender, EventArgs e)
         {
             AddContextMenu(richTextBoxResearchResult);
-            Refresh();
+            UpdateStyles();
         }
 
         /// <summary>

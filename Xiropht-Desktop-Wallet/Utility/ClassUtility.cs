@@ -10,7 +10,7 @@ namespace Xiropht_Wallet.Utility
 {
     public class ClassUtility
     {
-        private static readonly List<string> ListOfSpecialCharactersIgnored = new List<string> {"|", "*"};
+        private static readonly List<string> ListOfSpecialCharactersIgnored = new List<string> {ClassConnectorSetting.PacketContentSeperator, "*"};
 
         /// <summary>
         ///     Convert path from windows to linux or Mac
