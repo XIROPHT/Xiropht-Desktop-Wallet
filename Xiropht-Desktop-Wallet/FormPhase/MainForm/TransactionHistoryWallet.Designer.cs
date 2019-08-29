@@ -29,6 +29,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.timerUpdateTxColor = new System.Windows.Forms.Timer(this.components);
+            this.timerInsertTx = new System.Windows.Forms.Timer(this.components);
             this.tabPageTransactionHistory = new Xiropht_Wallet.FormPhase.MainForm.TabControlEx();
             this.tabPageNormalTransactionSend = new Xiropht_Wallet.FormPhase.MainForm.TabPageEx();
             this.listViewNormalSendTransactionHistory = new Xiropht_Wallet.FormPhase.MainForm.ListViewEx();
@@ -92,6 +95,18 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             this.tabPageAnonymityTransactionReceived.SuspendLayout();
             this.tabPageBlockRewardTransaction.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // timerUpdateTxColor
+            // 
+            this.timerUpdateTxColor.Enabled = true;
+            this.timerUpdateTxColor.Interval = 1000;
+            this.timerUpdateTxColor.Tick += new System.EventHandler(this.timerUpdateTxColor_Tick);
+            // 
+            // timerInsertTx
+            // 
+            this.timerInsertTx.Enabled = true;
+            this.timerInsertTx.Interval = 1000;
+            this.timerInsertTx.Tick += new System.EventHandler(this.timerInsertTx_Tick);
             // 
             // tabPageTransactionHistory
             // 
@@ -567,5 +582,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         public TabPageEx tabPageNormalTransactionReceived;
         public TabPageEx tabPageAnonymityTransactionReceived;
         public TabPageEx tabPageBlockRewardTransaction;
+        private System.Windows.Forms.Timer timerUpdateTxColor;
+        private System.Windows.Forms.Timer timerInsertTx;
     }
 }

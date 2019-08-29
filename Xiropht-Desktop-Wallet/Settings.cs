@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Configuration;
 
-namespace Xiropht_Wallet.Properties
+namespace Xiropht_Wallet
 {
     // Cette classe vous permet de gérer des événements spécifiques dans la classe de paramètres :
     //  L'événement SettingChanging est déclenché avant la modification d'une valeur de paramètre.

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
 using Xiropht_Connector_All.Setting;
-using Xiropht_Connector_All.Utils;
 using Xiropht_Wallet.Utility;
 
 namespace Xiropht_Wallet.Features
@@ -18,6 +17,8 @@ namespace Xiropht_Wallet.Features
         public int peer_total_disconnect;
         public int peer_trust_value;
         public long peer_last_trust;
+        public bool peer_proxy_status;
+        public long peer_last_proxy_ban;
     }
 
     public class ClassPeerList
@@ -128,6 +129,59 @@ namespace Xiropht_Wallet.Features
 
 
             return PeerList[peerHost].peer_status;
+        }
+
+        /// <summary>
+        /// Get the peer proxy status.
+        /// </summary>
+        /// <param name="peerHost"></param>
+        /// <returns></returns>
+        public static bool GetPeerProxyStatus(string peerHost)
+        {
+            if (!PeerList.ContainsKey(peerHost))
+            {
+
+                IncludeNewPeer(peerHost);
+                return true;
+            }
+
+            if (!PeerList[peerHost].peer_proxy_status)
+            {
+                if (PeerList[peerHost].peer_last_proxy_ban + PeerMaxBanTime <= DateTimeOffset.Now.ToUnixTimeSeconds())
+                {
+                    PeerList[peerHost].peer_proxy_status = true;
+                    PeerList[peerHost].peer_last_proxy_ban = 0;
+                }
+            }
+
+
+            return PeerList[peerHost].peer_status;
+        }
+
+        /// <summary>
+        /// Ban proxy peer.
+        /// </summary>
+        /// <param name="peerHost"></param>
+        public static void BanProxyPeer(string peerHost)
+        {
+            if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(peerHost))
+            {
+                if (!PeerList.ContainsKey(peerHost))
+                {
+                    PeerList.Add(peerHost,
+                        new ClassPeerObject
+                        {
+                            peer_host = peerHost,
+                            peer_proxy_status = false,
+                            peer_last_proxy_ban = DateTimeOffset.Now.ToUnixTimeSeconds()
+                        });
+                }
+                else
+                {
+                    PeerList[peerHost].peer_proxy_status = false;
+                    PeerList[peerHost].peer_last_proxy_ban = DateTimeOffset.Now.ToUnixTimeSeconds();
+                }
+            }
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MetroFramework;
 using Xiropht_Connector_All.Setting;
 using Xiropht_Connector_All.Utils;
 using Xiropht_Connector_All.Wallet;
@@ -98,9 +99,36 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 return;
             }
 
+            if (Program.WalletXiropht.WalletEnableProxyMode)
+            {
+                if (!Program.WalletXiropht.EnableTokenNetworkMode)
+                {
+#if WINDOWS
+                    if (MetroMessageBox.Show(Program.WalletXiropht,
+                            "The proxy mode option is enabled, default mode to connect is recommended, also the proxy mode check process on initialization can take time. Do you want to continue ?",
+                            "Proxy feature", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
+                        DialogResult.No)
+                    {
+                        Program.WalletXiropht.ClassWalletObject.FullDisconnection(true, true).ConfigureAwait(false);
+                        return;
+                    }
+#else
+                    if (MessageBox.Show(Program.WalletXiropht,
+                            "The proxy mode option is enabled, default mode to connect is recommended, also the proxy mode check process on initialization can take time. Do you want to continue ?",
+                            "Proxy feature", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
+                        DialogResult.No)
+                    {
+                        Program.WalletXiropht.ClassWalletObject.FullDisconnection(true, true).ConfigureAwait(false);
+                        return;
+                    }
+#endif
+
+                }
+            }
 
             Task.Factory.StartNew(async delegate
             {
+
                 await Program.WalletXiropht.InitializationWalletObject();
                 try
                 {
@@ -175,6 +203,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                             ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_CONTENT_TEXT"), ClassTranslation.GetLanguageTextFromOrder("OPEN_WALLET_ERROR_MESSAGE_NETWORK_TITLE_TEXT"), MessageBoxButtons.OK,
                             MessageBoxIcon.Warning);
 #endif
+                                await Program.WalletXiropht.ClassWalletObject.FullDisconnection(true, true);
                                 return;
                             }
 
@@ -191,7 +220,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                         "OPEN_WALLET_LABEL_FILE_SELECTED_TEXT");
                             BeginInvoke(invoke);
 
-                            if (Program.WalletXiropht.WalletSyncMode == ClassWalletSyncMode.WALLET_SYNC_DEFAULT)
+                            if (Program.WalletXiropht.WalletSyncMode == ClassWalletSyncMode.WALLET_SYNC_DEFAULT || !Program.WalletXiropht.WalletEnableProxyMode)
                             {
                                 if (await Program.WalletXiropht.ClassWalletObject.WalletConnect.SendPacketWallet(
                                     Program.WalletXiropht.ClassWalletObject.Certificate, string.Empty, false))
@@ -203,7 +232,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                 }
                             }
                             else if (Program.WalletXiropht.WalletSyncMode ==
-                                     ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE)
+                                     ClassWalletSyncMode.WALLET_SYNC_PUBLIC_NODE && Program.WalletXiropht.WalletEnableProxyMode)
                             {
                                 if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(Program.WalletXiropht
                                     .ClassWalletObject.SeedNodeConnectorWallet.ReturnCurrentSeedNodeHost()))
@@ -229,7 +258,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
                             }
                             else if (Program.WalletXiropht.WalletSyncMode ==
-                                     ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE)
+                                     ClassWalletSyncMode.WALLET_SYNC_MANUAL_NODE && Program.WalletXiropht.WalletEnableProxyMode)
                             {
                                 await Program.WalletXiropht.ClassWalletObject.SeedNodeConnectorWallet.SendPacketToSeedNodeAsync(
                                     ClassConnectorSettingEnumeration.WalletLoginProxy +

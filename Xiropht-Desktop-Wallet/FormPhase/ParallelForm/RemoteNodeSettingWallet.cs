@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using MetroFramework;
 using Xiropht_Wallet.Features;
 using Xiropht_Wallet.Wallet.Setting;
 using Xiropht_Wallet.Wallet.Tcp;
+using Program = Xiropht_Wallet.Program;
 
 namespace Xiropht_Wallet.FormPhase.ParallelForm
 {
@@ -121,6 +123,7 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             }
 
             checkBoxEnablePeerTrustSystem.Checked = ClassPeerList.PeerEnableTrustSystem;
+            checkBoxEnableProxyMode.Checked = Program.WalletXiropht.WalletEnableProxyMode;
         }
 
         private void dataGridViewPeerList_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -156,6 +159,52 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             else
             {
                 ClassPeerList.PeerEnableTrustSystem = false;
+            }
+        }
+
+        private void checkBoxEnableProxyMode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxEnableProxyMode.Checked)
+            {
+#if WINDOWS
+                if (MetroMessageBox.Show(Program.WalletXiropht,
+                        "This option is not mandatory to connect on the network. This is suggested to use Seed Nodes when you want to connect your wallet. Are your sure to enable this feature?",
+                        "Proxy feature", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                {
+
+                    MetroMessageBox.Show(Program.WalletXiropht,
+                        "This option is take in count, reconnect your wallet for use it.",
+                        "Proxy feature", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    Program.WalletXiropht.WalletEnableProxyMode = true;
+                }
+                else
+                {
+                    checkBoxEnableProxyMode.Checked = false;
+                    Program.WalletXiropht.WalletEnableProxyMode = false;
+                }
+#else
+                if (MessageBox.Show(Program.WalletXiropht,
+                        "This option is not mandatory to connect on the network. This is suggested to use Seed Nodes when you want to connect your wallet. Are your sure to enable this feature?",
+                        "Proxy feature", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                {
+
+                    MessageBox.Show(Program.WalletXiropht,
+                        "This option is take in count, reconnect your wallet for use it.",
+                        "Proxy feature", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    Program.WalletXiropht.WalletEnableProxyMode = true;
+                }
+                else
+                {
+                    checkBoxEnableProxyMode.Checked = false;
+                    Program.WalletXiropht.WalletEnableProxyMode = false;
+                }
+
+#endif
+                Program.WalletXiropht.WalletEnableProxyMode = true;
+            }
+            else
+            {
+                Program.WalletXiropht.WalletEnableProxyMode = false;
             }
         }
     }

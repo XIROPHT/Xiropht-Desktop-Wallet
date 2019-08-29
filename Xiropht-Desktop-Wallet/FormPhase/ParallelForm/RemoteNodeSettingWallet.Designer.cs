@@ -42,6 +42,7 @@
             this.ColumnPeerStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnPeerAction = new System.Windows.Forms.DataGridViewButtonColumn();
             this.checkBoxEnablePeerTrustSystem = new System.Windows.Forms.CheckBox();
+            this.checkBoxEnableProxyMode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPeerList)).BeginInit();
             this.SuspendLayout();
             // 
@@ -126,7 +127,7 @@
             // 
             // buttonValidSetting
             // 
-            this.buttonValidSetting.Location = new System.Drawing.Point(335, 311);
+            this.buttonValidSetting.Location = new System.Drawing.Point(424, 375);
             this.buttonValidSetting.Name = "buttonValidSetting";
             this.buttonValidSetting.Size = new System.Drawing.Size(75, 20);
             this.buttonValidSetting.TabIndex = 7;
@@ -188,11 +189,23 @@
             this.checkBoxEnablePeerTrustSystem.UseVisualStyleBackColor = true;
             this.checkBoxEnablePeerTrustSystem.CheckedChanged += new System.EventHandler(this.checkBoxEnablePeerTrustSystem_CheckedChanged);
             // 
+            // checkBoxEnableProxyMode
+            // 
+            this.checkBoxEnableProxyMode.AutoSize = true;
+            this.checkBoxEnableProxyMode.Location = new System.Drawing.Point(20, 344);
+            this.checkBoxEnableProxyMode.Name = "checkBoxEnableProxyMode";
+            this.checkBoxEnableProxyMode.Size = new System.Drawing.Size(393, 17);
+            this.checkBoxEnableProxyMode.TabIndex = 12;
+            this.checkBoxEnableProxyMode.Text = "Enable Proxy Mode - Connect to the network by a node instead of seed node.";
+            this.checkBoxEnableProxyMode.UseVisualStyleBackColor = true;
+            this.checkBoxEnableProxyMode.CheckedChanged += new System.EventHandler(this.checkBoxEnableProxyMode_CheckedChanged);
+            // 
             // RemoteNodeSettingWallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(971, 369);
+            this.ClientSize = new System.Drawing.Size(971, 407);
+            this.Controls.Add(this.checkBoxEnableProxyMode);
             this.Controls.Add(this.checkBoxEnablePeerTrustSystem);
             this.Controls.Add(this.dataGridViewPeerList);
             this.Controls.Add(this.label1);
@@ -235,5 +248,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPeerStatus;
         private System.Windows.Forms.DataGridViewButtonColumn ColumnPeerAction;
         private System.Windows.Forms.CheckBox checkBoxEnablePeerTrustSystem;
+        private System.Windows.Forms.CheckBox checkBoxEnableProxyMode;
     }
 }
