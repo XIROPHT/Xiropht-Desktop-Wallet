@@ -55,6 +55,10 @@ namespace Xiropht_Wallet
         public RestoreWallet RestoreWalletForm;
         public ContactWallet ContactWalletForm;
         public ClassWalletObject ClassWalletObject;
+        public CancellationTokenSource WalletCancellationToken;
+        public CancellationTokenSource WalletSyncCancellationToken;
+
+
         public ClassWalletSyncMode WalletSyncMode;
         public string WalletSyncHostname = string.Empty;
         public bool WalletEnableProxyMode;
@@ -411,7 +415,7 @@ namespace Xiropht_Wallet
         {
             try
             {
-                if (ClassWalletObject.WalletCancellationToken != null)
+                if (WalletCancellationToken != null)
                 {
                     Task.Factory.StartNew(async () =>
                         {
@@ -432,7 +436,7 @@ namespace Xiropht_Wallet
 
                                     await Task.Delay(ThreadUpdateNetworkStatsInterval);
                                 }
-                        }, ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.DenyChildAttach,
+                        }, WalletCancellationToken.Token, TaskCreationOptions.DenyChildAttach,
                         TaskScheduler.Current).ConfigureAwait(false);
                 }
             }
@@ -1707,7 +1711,7 @@ namespace Xiropht_Wallet
                                 ClassWalletObject.WalletConnect.WalletAddress;
                         BeginInvoke(invoke);
                         _isCopyWalletAddress = false;
-                    }, ClassWalletObject.WalletCancellationToken.Token,
+                    }, WalletCancellationToken.Token,
                     TaskCreationOptions.RunContinuationsAsynchronously,
                     TaskScheduler.Current).ConfigureAwait(false);
             }
@@ -2304,7 +2308,7 @@ namespace Xiropht_Wallet
 
                                 await Task.Delay(ThreadUpdateTransactionWalletInterval);
                             }
-                        }, ClassWalletObject.WalletCancellationToken.Token, TaskCreationOptions.LongRunning,
+                        }, WalletCancellationToken.Token, TaskCreationOptions.LongRunning,
                         TaskScheduler.Current).ConfigureAwait(false);
                 }
             }

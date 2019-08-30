@@ -164,6 +164,10 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
 
         private void checkBoxEnableProxyMode_CheckedChanged(object sender, EventArgs e)
         {
+        }
+
+        private void checkBoxEnableProxyMode_Click(object sender, EventArgs e)
+        {
             if (checkBoxEnableProxyMode.Checked)
             {
 #if WINDOWS

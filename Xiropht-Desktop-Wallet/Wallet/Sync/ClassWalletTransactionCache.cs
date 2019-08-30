@@ -173,7 +173,7 @@ namespace Xiropht_Wallet.Wallet
 
                             Program.WalletXiropht.ClassWalletObject.TotalTransactionInSync = ListTransaction.Count;
                             OnLoad = false;
-                        }, Program.WalletXiropht.ClassWalletObject.WalletCancellationToken.Token,
+                        }, Program.WalletXiropht.WalletCancellationToken.Token,
                         TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
                 }
                 catch

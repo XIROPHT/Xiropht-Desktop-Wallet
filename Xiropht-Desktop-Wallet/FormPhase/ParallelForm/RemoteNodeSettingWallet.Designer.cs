@@ -199,6 +199,7 @@
             this.checkBoxEnableProxyMode.Text = "Enable Proxy Mode - Connect to the network by a node instead of seed node.";
             this.checkBoxEnableProxyMode.UseVisualStyleBackColor = true;
             this.checkBoxEnableProxyMode.CheckedChanged += new System.EventHandler(this.checkBoxEnableProxyMode_CheckedChanged);
+            this.checkBoxEnableProxyMode.Click += new System.EventHandler(this.checkBoxEnableProxyMode_Click);
             // 
             // RemoteNodeSettingWallet
             // 
