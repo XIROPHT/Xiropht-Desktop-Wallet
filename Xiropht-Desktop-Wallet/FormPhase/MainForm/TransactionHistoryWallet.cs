@@ -13,7 +13,9 @@ using Xiropht_Wallet.Utility;
 using Xiropht_Wallet.Wallet;
 using Xiropht_Wallet.Wallet.Sync;
 using Timer = System.Windows.Forms.Timer;
-
+#if DEBUG
+using Xiropht_Wallet.Debug;
+#endif
 namespace Xiropht_Wallet.FormPhase.MainForm
 {
     public sealed partial class TransactionHistoryWallet : Form

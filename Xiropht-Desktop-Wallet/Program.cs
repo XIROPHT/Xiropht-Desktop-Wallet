@@ -5,9 +5,12 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using Xiropht_Wallet.Debug;
 using Xiropht_Wallet.Features;
 using Xiropht_Wallet.Utility;
+
+#if DEBUG
+using Xiropht_Wallet.Debug;
+#endif
 
 namespace Xiropht_Wallet
 {

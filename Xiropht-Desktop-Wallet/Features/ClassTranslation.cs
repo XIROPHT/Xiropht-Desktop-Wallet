@@ -9,6 +9,9 @@ using System.Windows.Forms;
 using Xiropht_Connector_All.Setting;
 using Xiropht_Wallet.FormPhase;
 using Xiropht_Wallet.Utility;
+#if DEBUG
+using Xiropht_Wallet.Debug;
+#endif
 
 namespace Xiropht_Wallet.Features
 {

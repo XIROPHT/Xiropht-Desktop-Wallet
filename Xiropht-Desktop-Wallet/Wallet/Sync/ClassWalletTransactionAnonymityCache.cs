@@ -11,6 +11,9 @@ using Xiropht_Connector_All.Wallet;
 using Xiropht_Wallet.Features;
 using Xiropht_Wallet.Utility;
 using Xiropht_Wallet.Wallet.Sync.Object;
+#if DEBUG
+using Xiropht_Wallet.Debug;
+#endif
 
 namespace Xiropht_Wallet.Wallet.Sync
 {

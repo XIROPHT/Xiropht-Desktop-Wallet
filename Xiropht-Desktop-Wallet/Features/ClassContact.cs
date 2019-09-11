@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+#if DEBUG
+using Xiropht_Wallet.Debug;
+#endif
 using Xiropht_Wallet.Utility;
 
 namespace Xiropht_Wallet.Features

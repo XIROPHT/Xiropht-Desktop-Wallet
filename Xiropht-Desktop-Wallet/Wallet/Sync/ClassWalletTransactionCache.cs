@@ -10,10 +10,11 @@ using Xiropht_Connector_All.Utils;
 using Xiropht_Connector_All.Wallet;
 using Xiropht_Wallet.Features;
 using Xiropht_Wallet.Utility;
-using Xiropht_Wallet.Wallet.Sync;
 using Xiropht_Wallet.Wallet.Sync.Object;
-
-namespace Xiropht_Wallet.Wallet
+#if DEBUG
+using Xiropht_Wallet.Debug;
+#endif
+namespace Xiropht_Wallet.Wallet.Sync
 {
     public class ClassWalletTransactionCache
     {
@@ -189,6 +190,7 @@ namespace Xiropht_Wallet.Wallet
         ///     Save each transMethodInvoker into cache
         /// </summary>
         /// <param name="walletAddress"></param>
+        /// <param name="transaction"></param>
         public static async Task SaveWalletCache(string walletAddress, string transaction)
         {
             if (!string.IsNullOrEmpty(walletAddress))
@@ -286,6 +288,7 @@ namespace Xiropht_Wallet.Wallet
         ///     Add transaction to the list.
         /// </summary>
         /// <param name="transaction"></param>
+        /// <param name="node"></param>
         public static async Task AddWalletTransactionAsync(string transaction, string node)
         {
 #if DEBUG

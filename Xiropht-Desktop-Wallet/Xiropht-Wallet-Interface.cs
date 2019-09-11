@@ -33,6 +33,10 @@ using MetroFramework.Controls;
 
 #endif
 
+#if DEBUG
+using Xiropht_Wallet.Debug;
+#endif
+
 namespace Xiropht_Wallet
 {
 #if WINDOWS

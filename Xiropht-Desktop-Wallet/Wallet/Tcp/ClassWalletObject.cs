@@ -18,7 +18,6 @@ using Xiropht_Connector_All.Seed;
 using Xiropht_Connector_All.Setting;
 using Xiropht_Connector_All.Utils;
 using Xiropht_Connector_All.Wallet;
-using Xiropht_Wallet.Debug;
 using Xiropht_Wallet.Features;
 using Xiropht_Wallet.FormPhase;
 using Xiropht_Wallet.FormPhase.ParallelForm;
@@ -26,12 +25,11 @@ using Xiropht_Wallet.Utility;
 using Xiropht_Wallet.Wallet.Sync;
 using Xiropht_Wallet.Wallet.Sync.Object;
 
-#if WINDOWS
+#if DEBUG
+using Xiropht_Wallet.Debug;
 #endif
 
-#if DEBUG
-using Xiropht_Wallet.Threading;
-#endif
+
 namespace Xiropht_Wallet.Wallet.Tcp
 {
     public enum ClassWalletSyncMode
