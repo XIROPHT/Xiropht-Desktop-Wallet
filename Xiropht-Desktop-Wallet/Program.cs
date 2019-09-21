@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
+using Xiropht_Wallet.Debug;
 using Xiropht_Wallet.Features;
 using Xiropht_Wallet.Utility;
 
@@ -16,10 +17,7 @@ namespace Xiropht_Wallet
 {
     internal static class Program
     {
-        public static CultureInfo
-            GlobalCultureInfo =
-                new CultureInfo(
-                    "fr-FR"); // Set the global culture info, I don't suggest to change this, this one is used by the blockchain and by the whole network.
+        public static CultureInfo GlobalCultureInfo = new CultureInfo("fr-FR"); // Set the global culture info, I don't suggest to change this, this one is used by the blockchain and by the whole network.
 
         public static WalletXiropht WalletXiropht;
 
@@ -29,9 +27,16 @@ namespace Xiropht_Wallet
         [STAThread]
         private static void Main()
         {
-            Thread.CurrentThread.CurrentUICulture = GlobalCultureInfo;
+            CultureInfo.DefaultThreadCurrentCulture = GlobalCultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = GlobalCultureInfo;
             Thread.CurrentThread.Name = Path.GetFileName(Environment.GetCommandLineArgs()[0]);
             ServicePointManager.DefaultConnectionLimit = 65535;
+
+
+            ThreadPool.SetMinThreads(65535, 100);
+            ThreadPool.SetMaxThreads(65535, 100);
+
+
 #if DEBUG
             Log.InitializeLog(); // Initialization of log system.
             Log.AutoWriteLog(); // Start the automatic write of log lines.
@@ -58,7 +63,7 @@ namespace Xiropht_Wallet
         private static void Application_ThreadException(object sender, UnhandledExceptionEventArgs e)
         {
             var filePath = ClassUtility.ConvertPath(AppDomain.CurrentDomain.BaseDirectory + "\\error_wallet.txt");
-            var exception = (Exception) e.ExceptionObject;
+            var exception = (Exception)e.ExceptionObject;
             using (var writer = new StreamWriter(filePath, true))
             {
                 writer.WriteLine("Message :" + exception.Message + "<br/>" + Environment.NewLine +

@@ -312,6 +312,9 @@ namespace Xiropht_Wallet.Wallet.Sync
                     .Replace(
                         ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletAnonymityTransactionPerId,
                         string.Empty).Split(new[] {"#"}, StringSplitOptions.None);
+
+
+
                 var hashTransaction = splitTransaction[4]; // Transaction Hash.
                 if (!ListTransaction.ContainsKey(hashTransaction))
                 {
@@ -336,10 +339,13 @@ namespace Xiropht_Wallet.Wallet.Sync
 
                     if (amountAndFeeDecrypted != ClassAlgoErrorEnumeration.AlgoError)
                     {
+#if DEBUG
+                        Log.WriteLine("Wallet anonymity transaction transaction history received decrypted: " + amountAndFeeDecrypted);
+#endif
                         var splitDecryptedAmountAndFee =
                             amountAndFeeDecrypted.Split(new[] {"-"}, StringSplitOptions.None);
-                        var amountDecrypted = splitDecryptedAmountAndFee[0];
-                        var feeDecrypted = splitDecryptedAmountAndFee[1];
+                        var amountDecrypted = splitDecryptedAmountAndFee[0].Replace(".", ",");
+                        var feeDecrypted = splitDecryptedAmountAndFee[1].Replace(".", ",");
                         var walletDstOrSrc = splitDecryptedAmountAndFee[2];
 
 
@@ -410,6 +416,12 @@ namespace Xiropht_Wallet.Wallet.Sync
                     errorSyncTransaction = true;
                 }
             }
+#if DEBUG
+            else
+            {
+                Log.WriteLine("Can't save transaction, the database is currently on loading.");
+            }
+#endif
 
             if (errorSyncTransaction)
             {

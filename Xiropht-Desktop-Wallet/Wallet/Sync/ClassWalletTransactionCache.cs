@@ -303,7 +303,7 @@ namespace Xiropht_Wallet.Wallet.Sync
             {
                 var splitTransaction = transaction
                     .Replace(ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletTransactionPerId,
-                        string.Empty).Split(new[] {"#"}, StringSplitOptions.None);
+                        string.Empty).Split(new[] { "#" }, StringSplitOptions.None);
                 var hashTransaction = splitTransaction[4]; // Transaction Hash.
                 if (!ListTransaction.ContainsKey(hashTransaction))
                 {
@@ -328,10 +328,11 @@ namespace Xiropht_Wallet.Wallet.Sync
 
                     if (amountAndFeeDecrypted != ClassAlgoErrorEnumeration.AlgoError)
                     {
+
                         var splitDecryptedAmountAndFee =
-                            amountAndFeeDecrypted.Split(new[] {"-"}, StringSplitOptions.None);
-                        var amountDecrypted = splitDecryptedAmountAndFee[0];
-                        var feeDecrypted = splitDecryptedAmountAndFee[1];
+                            amountAndFeeDecrypted.Split(new[] { "-" }, StringSplitOptions.None);
+                        var amountDecrypted = splitDecryptedAmountAndFee[0].Replace(".", ",");
+                        var feeDecrypted = splitDecryptedAmountAndFee[1].Replace(".", ",");
                         var walletDstOrSrc = splitDecryptedAmountAndFee[2];
 
 
@@ -354,7 +355,7 @@ namespace Xiropht_Wallet.Wallet.Sync
                         }
                         else
                         {
-                            var splitBlockchainHeight = blockchainHeight.Split(new[] {"~"}, StringSplitOptions.None);
+                            var splitBlockchainHeight = blockchainHeight.Split(new[] { "~" }, StringSplitOptions.None);
 
                             var transactionObject = new ClassWalletTransactionObject
                             {
@@ -385,8 +386,8 @@ namespace Xiropht_Wallet.Wallet.Sync
                     else
                     {
 #if DEBUG
-                    Log.WriteLine("Can't decrypt transaction: " + transaction + " result: " +
-                                  amountAndFeeDecrypted);
+                        Log.WriteLine("Can't decrypt transaction: " + transaction + " result: " +
+                                      amountAndFeeDecrypted);
 #endif
                         errorSyncTransaction = true;
                     }
@@ -394,11 +395,17 @@ namespace Xiropht_Wallet.Wallet.Sync
                 else
                 {
 #if DEBUG
-                    Log.WriteLine("Wallet transaction hash: "+ hashTransaction+" already exist on database.");
+                    Log.WriteLine("Wallet transaction hash: " + hashTransaction + " already exist on database.");
 #endif
                     errorSyncTransaction = true;
                 }
             }
+#if DEBUG
+            else
+            {
+                Log.WriteLine("Can't save transaction, the database is currently on loading.");
+            }
+#endif
 
             if (errorSyncTransaction)
             {

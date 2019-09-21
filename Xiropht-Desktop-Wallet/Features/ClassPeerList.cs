@@ -64,11 +64,19 @@ namespace Xiropht_Wallet.Features
         ///     Include a new peer.
         /// </summary>
         /// <param name="peerHost"></param>
-        public static void IncludeNewPeer(string peerHost)
+        public static bool IncludeNewPeer(string peerHost)
         {
-            if (!PeerList.ContainsKey(peerHost))
-                if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(peerHost))
-                PeerList.Add(peerHost, new ClassPeerObject {peer_host = peerHost, peer_status = true});
+            try
+            {
+                if (!PeerList.ContainsKey(peerHost))
+                    if (!ClassConnectorSetting.SeedNodeIp.ContainsKey(peerHost))
+                        PeerList.Add(peerHost, new ClassPeerObject { peer_host = peerHost, peer_status = true });
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -111,7 +119,6 @@ namespace Xiropht_Wallet.Features
         {
             if (!PeerList.ContainsKey(peerHost))
             {
-                
                 IncludeNewPeer(peerHost);
                 return true;
             }
@@ -141,7 +148,10 @@ namespace Xiropht_Wallet.Features
             if (!PeerList.ContainsKey(peerHost))
             {
 
-                IncludeNewPeer(peerHost);
+                if(!IncludeNewPeer(peerHost))
+                {
+                    return false;
+                }
                 return true;
             }
 
