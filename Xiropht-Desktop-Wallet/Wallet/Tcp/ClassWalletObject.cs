@@ -2339,7 +2339,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                             bool endCheck = false;
                                             if (ListWalletConnectToRemoteNode.Count > 0)
                                             {
-                                                foreach (var node in ListWalletConnectToRemoteNode)
+                                                foreach (var node in ListWalletConnectToRemoteNode.ToArray())
                                                 {
                                                     if (!endCheck)
                                                     {

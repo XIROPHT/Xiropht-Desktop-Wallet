@@ -24,8 +24,7 @@ namespace Xiropht_Wallet.Wallet.Sync
         private static bool _inClearCache;
         public static bool OnLoad;
 
-        public static Dictionary<string, ClassWalletTransactionObject> ListTransaction =
-            new Dictionary<string, ClassWalletTransactionObject>(); // hash, transaction object
+        public static Dictionary<string, ClassWalletTransactionObject> ListTransaction = new Dictionary<string, ClassWalletTransactionObject>(); // hash, transaction object
 
         /// <summary>
         ///     Load transaction in cache.

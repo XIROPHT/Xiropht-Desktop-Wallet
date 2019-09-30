@@ -22,8 +22,7 @@ namespace Xiropht_Wallet.Wallet.Sync
         private const string WalletTransMethodInvokerCacheFileExtension = "transaction.xirtra";
         private static bool _inClearCache;
 
-        public static Dictionary<string, ClassWalletTransactionObject> ListTransaction =
-            new Dictionary<string, ClassWalletTransactionObject>(); // hash, transaction object
+        public static Dictionary<string, ClassWalletTransactionObject> ListTransaction = new Dictionary<string, ClassWalletTransactionObject>(); // hash, transaction object
 
         public static bool OnLoad;
 

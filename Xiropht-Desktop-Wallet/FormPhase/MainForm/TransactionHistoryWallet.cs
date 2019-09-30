@@ -631,6 +631,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             }
         }
 
+
         /// <summary>
         /// Update tx showed.
         /// </summary>
@@ -638,9 +639,10 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             if (IsShowed)
             {
+
                 #region Update transaction normal send color
 
-                if (listViewNormalSendTransactionHistory.Items.Count >0)
+                if (listViewNormalSendTransactionHistory.Items.Count > 0)
                 {
                     ListViewItem[] cloneItemsTx =
                         new ListViewItem[listViewNormalSendTransactionHistory.Items.Count];
@@ -1070,7 +1072,6 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 }
 
                 #endregion
-
             }
 
         }
