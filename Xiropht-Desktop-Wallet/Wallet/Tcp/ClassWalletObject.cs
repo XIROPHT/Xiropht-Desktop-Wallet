@@ -775,12 +775,13 @@ namespace Xiropht_Wallet.Wallet.Tcp
 #if WINDOWS
                                 await Task.Factory.StartNew(() =>
                                 {
-                                    MetroMessageBox.Show(Program.WalletXiropht,
+                                    MethodInvoker invoke = () => MetroMessageBox.Show(Program.WalletXiropht,
                                         ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
                                             .walletnetworkobjectsuccessconnectwalletcontenttext),
                                         ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
                                             .walletnetworkobjectsuccessconnectwallettitletext), MessageBoxButtons.OK,
                                         MessageBoxIcon.Information);
+                                    Program.WalletXiropht.BeginInvoke(invoke);
                                 }).ConfigureAwait(false);
 
 #else

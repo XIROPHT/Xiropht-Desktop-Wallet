@@ -36,17 +36,6 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             }
         }
 
-        public void AutoResizeColumns(ListView lv)
-        {
-            lv.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            var cc = lv.Columns;
-            for (var i = 0; i < cc.Count; i++)
-            {
-                var colWidth = TextRenderer.MeasureText(cc[i].Text, lv.Font).Width + 30;
-                if (colWidth > cc[i].Width) cc[i].Width = colWidth + 30;
-            }
-        }
-
         public void GetListControl()
         {
             if (Program.WalletXiropht.ListControlSizeBlock.Count == 0)
