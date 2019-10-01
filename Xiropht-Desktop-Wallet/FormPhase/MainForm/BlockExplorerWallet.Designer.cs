@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.columnHeaderID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -45,6 +46,7 @@
             this.columnHeaderBlockDateCreate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderBlockDateFound = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderBlockTransactionHash = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.timerShowBlockExplorer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // columnHeaderID
@@ -146,6 +148,12 @@
             this.columnHeaderBlockTransactionHash.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeaderBlockTransactionHash.Width = 134;
             // 
+            // timerShowBlockExplorer
+            // 
+            this.timerShowBlockExplorer.Enabled = true;
+            this.timerShowBlockExplorer.Interval = 1000;
+            this.timerShowBlockExplorer.Tick += new System.EventHandler(this.timerShowBlockExplorer_Tick);
+            // 
             // BlockExplorerWallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -184,5 +192,6 @@
         private System.Windows.Forms.ColumnHeader columnHeaderBlockDateCreate;
         private System.Windows.Forms.ColumnHeader columnHeaderBlockDateFound;
         private System.Windows.Forms.ColumnHeader columnHeaderBlockTransactionHash;
+        private System.Windows.Forms.Timer timerShowBlockExplorer;
     }
 }

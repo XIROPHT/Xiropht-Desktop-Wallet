@@ -2265,7 +2265,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
             Program.WalletXiropht.TransactionHistoryWalletForm.StartUpdateTransactionHistory(Program.WalletXiropht);
 
             if (!Program.WalletXiropht.EnableUpdateBlockWallet)
-                Program.WalletXiropht.StartUpdateBlockSync();
+                Program.WalletXiropht.BlockWalletForm.StartUpdateBlockSync(Program.WalletXiropht);
         }
 
         /// <summary>
@@ -3944,7 +3944,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                     TotalBlockMined = splitPacket[1];
 
                                     if (!Program.WalletXiropht.EnableUpdateBlockWallet)
-                                        Program.WalletXiropht.StartUpdateBlockSync();
+                                        Program.WalletXiropht.BlockWalletForm.StartUpdateBlockSync(Program.WalletXiropht);
 
                                     if (!InSyncBlock)
                                     {

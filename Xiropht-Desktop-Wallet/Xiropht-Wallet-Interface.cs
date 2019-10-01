@@ -91,10 +91,9 @@ namespace Xiropht_Wallet
 
 
  
-        private const int ThreadUpdateTransactionWalletInterval = 1 * 1000;
         private const int ThreadUpdateNetworkStatsInterval = 1000;
         public int MaxTransactionPerPage = 100;
-        private const int MaxBlockPerPage = 100;
+        public int MaxBlockPerPage = 100;
         private const int MinSizeTransactionHash = 100;
 
         /// <summary>
@@ -2132,197 +2131,6 @@ namespace Xiropht_Wallet
 
 
         /// <summary>
-        ///     Start update block sync.
-        /// </summary>
-        public void StartUpdateBlockSync()
-        {
-            if (!EnableTokenNetworkMode)
-                if (ClassWalletObject.SeedNodeConnectorWallet == null)
-                    return;
-            try
-            {
-                if (!EnableUpdateBlockWallet)
-                {
-                    EnableUpdateBlockWallet = true;
-
-
-                    Task.Factory.StartNew(async () =>
-                        {
-                            while (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() ||
-                                   EnableTokenNetworkMode && !ClassWalletObject.WalletClosed)
-                            {
-                                
-                                if (!ClassBlockCache.OnLoad)
-                                    try
-                                    {
-                                        if (!ClassWalletObject.InSyncBlock || ClassBlockCache.ListBlock.Count >=
-                                            ClassWalletObject.TotalBlockInSync)
-                                        {
-                                            if (BlockWalletForm.IsShowed)
-                                            {
-                                                BlockWalletForm.HideWaitingSyncBlockPanel();
-
-                                                var minShow = (CurrentBlockExplorerPage - 1) * MaxBlockPerPage;
-                                                var maxShow = CurrentBlockExplorerPage * MaxBlockPerPage;
-
-                                                for (var i = minShow; i < maxShow; i++)
-                                                {
-                                                    if (i < ClassBlockCache.ListBlock.Count)
-                                                    {
-                                                        var blockTarget = ClassBlockCache.ListBlock.Count - 1 - i;
-                                                        var blockObject = ClassBlockCache.ListBlock
-                                                            .ElementAt(blockTarget)
-                                                            .Value;
-                                                        var blockId = int.Parse(blockObject.BlockHeight);
-                                                        if (!ListBlockHashShowed.ContainsKey(blockId))
-                                                        {
-                                                            ListBlockHashShowed.Add(blockId, blockObject.BlockHash);
-
-                                                            var dateTimeCreate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                            dateTimeCreate =
-                                                                dateTimeCreate.AddSeconds(
-                                                                    int.Parse(blockObject.BlockTimestampCreate));
-                                                            dateTimeCreate = dateTimeCreate.ToLocalTime();
-                                                            var dateTimeFound = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                            dateTimeFound =
-                                                                dateTimeFound.AddSeconds(
-                                                                    int.Parse(blockObject.BlockTimestampFound));
-                                                            dateTimeFound = dateTimeFound.ToLocalTime();
-
-                                                            string[] row =
-                                                            {
-                                                                blockObject.BlockHeight, blockObject.BlockHash,
-                                                                blockObject.BlockReward, blockObject.BlockDifficulty,
-                                                                dateTimeCreate.ToString(CultureInfo.InvariantCulture),
-                                                                dateTimeFound.ToString(CultureInfo.InvariantCulture),
-                                                                blockObject.BlockTransactionHash
-                                                            };
-                                                            var listViewItem = new ListViewItem(row);
-
-
-                                                            if (TotalBlockRead < maxShow)
-                                                            {
-                                                                void Invoker()
-                                                                {
-                                                                    BlockWalletForm.listViewBlockExplorer.Items.Add(
-                                                                        listViewItem);
-                                                                }
-
-                                                                BeginInvoke((MethodInvoker) Invoker);
-                                                                TotalBlockRead++;
-                                                            }
-                                                            else
-                                                            {
-                                                                void Invoker()
-                                                                {
-                                                                    BlockWalletForm.listViewBlockExplorer.Items.Insert(
-                                                                        0,
-                                                                        listViewItem);
-                                                                }
-
-                                                                BeginInvoke((MethodInvoker) Invoker);
-                                                                TotalBlockRead++;
-                                                            }
-                                                        }
-                                                    }
-
-                                                    if (ClassFormPhase.FormPhase ==
-                                                        ClassFormPhaseEnumeration.BlockExplorer)
-                                                    {
-                                                        if (ClassWalletObject.InSyncBlock)
-                                                            UpdateLabelSyncInformation(
-                                                                "Total blocks synced: " +
-                                                                ClassBlockCache.ListBlock.Count + "/" +
-                                                                ClassWalletObject.TotalBlockInSync + ".");
-                                                        else
-                                                            UpdateLabelSyncInformation(
-                                                                "Total blocks loaded: " +
-                                                                ClassBlockCache.ListBlock.Count +
-                                                                "/" +
-                                                                ClassWalletObject.TotalBlockInSync + ".");
-                                                    }
-                                                }
-
-                                                if (BlockWalletForm.IsShowed)
-                                                    if (BlockWalletForm.listViewBlockExplorer.Items.Count > 0)
-                                                        BlockWalletForm.SortingBlockExplorer();
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (BlockWalletForm.IsShowed) BlockWalletForm.ShowWaitingSyncBlockPanel();
-                                        }
-                                    }
-                                    catch (Exception error)
-                                    {
-#if DEBUG
-                                        Log.WriteLine("Error loading blocks: " + error.Message);
-#endif
-                                        Console.WriteLine("Error loading blocks: " + error.Message);
-                                    }
-
-                                try
-                                {
-                                    if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.BlockExplorer)
-                                    {
-                                        if (ClassWalletObject.InSyncBlock)
-                                            UpdateLabelSyncInformation(
-                                                "Total blocks synced: " + ClassBlockCache.ListBlock.Count + "/" +
-                                                ClassWalletObject.TotalBlockInSync + ".");
-                                        else
-                                            UpdateLabelSyncInformation(
-                                                "Total blocks loaded: " + ClassBlockCache.ListBlock.Count + "/" +
-                                                ClassWalletObject.TotalBlockInSync + ".");
-                                    }
-
-                                    if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.Overview)
-                                        if (ClassWalletObject.InSyncBlock &&
-                                            !ClassWalletObject.InSyncTransactionAnonymity &&
-                                            !ClassWalletObject.InSyncTransaction)
-                                            try
-                                            {
-                                                if (ClassConnectorSetting.SeedNodeIp.ContainsKey(ClassWalletObject
-                                                    .ListWalletConnectToRemoteNode[9].RemoteNodeHost))
-                                                    UpdateLabelSyncInformation(
-                                                        "Total blocks synced: " + ClassBlockCache.ListBlock.Count +
-                                                        "/" +
-                                                        ClassWalletObject.TotalBlockInSync + " from Seed Node: " +
-                                                        ClassWalletObject.ListWalletConnectToRemoteNode[9]
-                                                            .RemoteNodeHost +
-                                                        " | " + ClassConnectorSetting
-                                                            .SeedNodeIp[
-                                                                ClassWalletObject.ListWalletConnectToRemoteNode[0]
-                                                                    .RemoteNodeHost].Item1 + ".");
-                                                else
-                                                    UpdateLabelSyncInformation(
-                                                        "Total blocks synced: " + ClassBlockCache.ListBlock.Count +
-                                                        "/" +
-                                                        ClassWalletObject.TotalBlockInSync + " from node: " +
-                                                        ClassWalletObject.ListWalletConnectToRemoteNode[0]
-                                                            .RemoteNodeHost +
-                                                        ".");
-                                            }
-                                            catch
-                                            {
-                                            }
-                                }
-                                catch
-                                {
-                                }
-
-                                await Task.Delay(ThreadUpdateTransactionWalletInterval);
-                            }
-                        }, WalletCancellationToken.Token, TaskCreationOptions.LongRunning,
-                        TaskScheduler.Current).ConfigureAwait(false);
-                }
-            }
-            catch
-            {
-                EnableUpdateBlockWallet = false;
-            }
-        }
-
-        /// <summary>
         ///     Disable update transaction history.
         /// </summary>
         public void StopUpdateTransactionHistory(bool fullStop, bool clean, bool switchPage = false)
@@ -2444,7 +2252,7 @@ namespace Xiropht_Wallet
                 if (restart)
                 {
                     EnableUpdateBlockWallet = false;
-                    StartUpdateBlockSync();
+                    BlockWalletForm.StartUpdateBlockSync(this);
                 }
             }
             catch
