@@ -97,8 +97,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
             _panelWaitingSync = new ClassPanel
             {
-                Width = (int) (Width / 1.5f),
-                Height = (int) (Height / 5.5f),
+                Width = (int)(Width / 1.5f),
+                Height = (int)(Height / 5.5f),
                 BackColor = Color.LightBlue
             };
             _panelWaitingSync.Location = new Point
@@ -137,8 +137,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 _panelWaitingSync.Visible = true;
                 _panelWaitingSync.Show();
                 _panelWaitingSync.BringToFront();
-                _panelWaitingSync.Width = (int) (Width / 1.5f);
-                _panelWaitingSync.Height = (int) (Height / 5.5f);
+                _panelWaitingSync.Width = (int)(Width / 1.5f);
+                _panelWaitingSync.Height = (int)(Height / 5.5f);
                 _panelWaitingSync.Location = new Point
                 {
                     X = Width / 2 -
@@ -172,8 +172,8 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             if (_panelWaitingSync != null)
             {
-                _panelWaitingSync.Width = (int) (Width / 1.5f);
-                _panelWaitingSync.Height = (int) (Height / 5.5f);
+                _panelWaitingSync.Width = (int)(Width / 1.5f);
+                _panelWaitingSync.Height = (int)(Height / 5.5f);
                 _panelWaitingSync.Location = new Point
                 {
                     X = Width / 2 -
@@ -1354,7 +1354,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                 catch (Exception error)
                                                 {
 #if DEBUG
-                                                            Log.WriteLine("Error on seed node list: " + error.Message);
+                                                    Log.WriteLine("Error on seed node list: " + error.Message);
 #endif
                                                 }
                                             }
@@ -1379,7 +1379,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                     }
                                 }
 
-                             
+
                             }
                             catch
                             {
@@ -1390,7 +1390,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                     catch (Exception error)
                     {
 #if DEBUG
-                                            Log.WriteLine("Error on listing remote node connection: " + error.Message);
+                        Log.WriteLine("Error on listing remote node connection: " + error.Message);
 #endif
                         walletXiropht.StopUpdateTransactionHistory(true, true);
                         errorSyncList = true;
@@ -1647,11 +1647,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                                         var listViewItem =
                                                                             new ListViewItem(row);
 
-                                                                       
-                                                                                listViewBlockRewardTransactionHistory
-                                                                                .Items
-                                                                                .Add(listViewItem);
-                                          
+
+                                                                        listViewBlockRewardTransactionHistory
+                                                                        .Items
+                                                                        .Add(listViewItem);
+
 
                                                                         if (ClassUtils
                                                                                 .DateUnixTimeNowSecondConvertDate(
@@ -1672,15 +1672,15 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                                         }
                                                                         else
                                                                         {
-                                                                           listViewBlockRewardTransactionHistory
-                                                                                        .Items[listViewBlockRewardTransactionHistory
-                                                                                                .Items
-                                                                                                .Count -
-                                                                                            1]
-                                                                                        .BackColor =
-                                                                                    Color.FromArgb(0,
-                                                                                        255,
-                                                                                        153);
+                                                                            listViewBlockRewardTransactionHistory
+                                                                                         .Items[listViewBlockRewardTransactionHistory
+                                                                                                 .Items
+                                                                                                 .Count -
+                                                                                             1]
+                                                                                         .BackColor =
+                                                                                     Color.FromArgb(0,
+                                                                                         255,
+                                                                                         153);
                                                                         }
 
                                                                     }
@@ -1800,9 +1800,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                                                 new ListViewItem(row);
 
 
-                                                                           listViewNormalSendTransactionHistory
-                                                                                    .Items
-                                                                                    .Add(listViewItem);
+                                                                            listViewNormalSendTransactionHistory
+                                                                                     .Items
+                                                                                     .Add(listViewItem);
 
 
                                                                             if (ClassUtils
@@ -1825,17 +1825,17 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                                             }
                                                                             else
                                                                             {
-                                                                               listViewNormalSendTransactionHistory
-                                                                                            .Items[listViewNormalSendTransactionHistory
-                                                                                                    .Items
-                                                                                                    .Count -
-                                                                                                1]
-                                                                                            .BackColor
-                                                                                        =
-                                                                                        Color.FromArgb(
-                                                                                            0,
-                                                                                            255, 153);
-       
+                                                                                listViewNormalSendTransactionHistory
+                                                                                             .Items[listViewNormalSendTransactionHistory
+                                                                                                     .Items
+                                                                                                     .Count -
+                                                                                                 1]
+                                                                                             .BackColor
+                                                                                         =
+                                                                                         Color.FromArgb(
+                                                                                             0,
+                                                                                             255, 153);
+
                                                                             }
                                                                         }
 
@@ -2288,7 +2288,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                                     listViewAnonymitySendTransactionHistory
                                                                             .Items
                                                                             .Insert(0, listViewItem);
-          
+
 
                                                                 }
 
@@ -2297,7 +2297,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                                 )
                                                                 {
                                                                     AutoResizeColumns(listViewAnonymitySendTransactionHistory);
-                                                                    
+
                                                                 }
 
                                                                 walletXiropht.TotalTransactionAnonymousSend++;
@@ -2321,7 +2321,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                         .ShowWaitingSyncTransactionPanel();
                                             }
 
-      
+
 
                                             if (this
                                                     .listViewNormalSendTransactionHistory.Items.Count +
@@ -2359,7 +2359,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         catch (Exception error)
                         {
 #if DEBUG
-                                                Log.WriteLine("Error on showing transaction history: " + error.Message);
+                            Log.WriteLine("Error on showing transaction history: " + error.Message);
 #endif
                             walletXiropht.StopUpdateTransactionHistory(true, true);
                         }
@@ -2515,7 +2515,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                           ControlStyles.AllPaintingInWmPaint, true);
 
             this.SetStyle(ControlStyles.EnableNotifyMessage, true);
-            _timeUpdateStyle = new Timer {Interval = 100, Enabled = true};
+            _timeUpdateStyle = new Timer { Interval = 100, Enabled = true };
             _timeUpdateStyle.Tick += TimeUpdateStyleEvent;
             _timeUpdateStyle.Start();
         }
@@ -2548,9 +2548,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             if (m.Msg == WM_LBUTTONDOWN)
             {
-                var x = (short) m.LParam;
+                var x = (short)m.LParam;
 
-                var y = (short) ((int) m.LParam >> 16);
+                var y = (short)((int)m.LParam >> 16);
 
 
                 var e = new MouseEventArgs(MouseButtons.Left, 2, x, y, 0);

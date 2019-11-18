@@ -490,6 +490,9 @@ namespace Xiropht_Wallet
         /// <param name="e"></param>
         private void WalletXiropht_Load(object sender, EventArgs e)
         {
+            Hide();
+            Thread.Sleep(100);
+            Show();
             Text += Assembly.GetExecutingAssembly().GetName().Version;
 
             pictureBoxLogo.BackgroundImage = Resources.logo_web_transparent;
