@@ -1,17 +1,19 @@
 # Xiropht-Wallet
 
-This is the official Xiropht Desktop Wallet, this one is compatible with Netframework 4.6.1 minimum or Mono. 
+This is the official Xiropht Desktop Wallet compatible with Netframework 4.6.1 minimum or Mono.
 
-
-**In production, we suggest to compile the wallet in Release Mode for disable log files.**
+**In production, we suggest compiling the wallet in Release Mode for disabling log files.**
 
 
 Windows:
 
-- For compile the project Visual Studio or Mono is required.
-- We suggest to use compilation flags: WINDOWS-DEBUG, WINDOWS-RELEASE (for production) or LINUX-DEBUG, LINUX-RELEASE (for production)
+- Visual Studio is required.
+- NetFramework 4.6.1 or newer (https://dotnet.microsoft.com/download/dotnet-framework/)
+- Compilation Flags: WINDOWS-DEBUG, WINDOWS-RELEASE  or LINUX-DEBUG, LINUX-RELEASE
 
 Linux:
+
+- Mono Framework (https://www.mono-project.com/)
 
 - For compile the project Mono is required, you can also compile the project with Visual Studio and make a Linux Binary, remember to use LINUX-DEBUG or LINUX-RELEASE (for production) compilation flags.
 
