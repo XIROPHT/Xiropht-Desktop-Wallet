@@ -815,92 +815,90 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                 {
                     while (true)
                     {
-                        if (!ClassWalletTransactionCache.OnLoad && !ClassWalletTransactionAnonymityCache.OnLoad)
+                        if (IsShowed)
                         {
-                            if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.TransactionHistory)
+                            MethodInvoker invoke = () =>
                             {
-                                #region Cleanup "normal" transaction received/sent showed.
-
-                                if (walletXiropht.TotalTransactionRead > ClassWalletTransactionCache.ListTransactionIndex.Count)
+                                try
                                 {
-                                    MethodInvoker invoke = () =>
+                                    if (!ClassWalletTransactionCache.OnLoad && !ClassWalletTransactionAnonymityCache.OnLoad)
                                     {
-                                        listViewNormalSendTransactionHistory.Items.Clear();
-                                        listViewAnonymityReceivedTransactionHistory.Items.Clear();
-                                        listViewBlockRewardTransactionHistory.Items.Clear();
-                                        listViewNormalReceivedTransactionHistory.Items.Clear();
-                                    };
-                                    BeginInvoke(invoke);
-                                    walletXiropht.TotalTransactionRead = 0;
-                                    walletXiropht.NormalTransactionLoaded = false;
-                                }
-
-                                #endregion
-
-                                #region Cleanup transaction anonymously sent showed.
-
-                                if (walletXiropht.TotalAnonymityTransactionRead > ClassWalletTransactionAnonymityCache.ListTransactionIndex.Count)
-                                {
-                                    MethodInvoker invoke = () =>
-                                    {
-                                        listViewAnonymitySendTransactionHistory.Items.Clear();
-                                    };
-                                    BeginInvoke(invoke);
-                                    walletXiropht.TotalAnonymityTransactionRead = 0;
-                                    walletXiropht.AnonymousTransactionLoaded = false;
-                                }
-
-                                #endregion
-
-                                if (!walletXiropht.ClassWalletObject.InSyncTransaction && !walletXiropht.ClassWalletObject.InSyncTransactionAnonymity)
-                                {
-
-                                    walletXiropht.UpdateCurrentPageNumberTransactionHistory();
-                                    if (ClassWalletTransactionCache.ListTransactionIndex.Count > 0)
-                                    {
-                                        if (walletXiropht.TotalTransactionRead != ClassWalletTransactionCache.ListTransactionIndex.Count)
+                                        if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.TransactionHistory)
                                         {
-                                            if (!IsShowedWaitingTransaction)
+                                        #region Cleanup "normal" transaction received/sent showed.
+
+                                        if (walletXiropht.TotalTransactionRead > ClassWalletTransactionCache.ListTransactionIndex.Count)
                                             {
-                                                MethodInvoker invoke = ShowWaitingSyncTransactionPanel;
-                                                BeginInvoke(invoke);
+
+                                                listViewNormalSendTransactionHistory.Items.Clear();
+                                                listViewAnonymityReceivedTransactionHistory.Items.Clear();
+                                                listViewBlockRewardTransactionHistory.Items.Clear();
+                                                listViewNormalReceivedTransactionHistory.Items.Clear();
+                                                walletXiropht.TotalTransactionRead = 0;
+                                                walletXiropht.NormalTransactionLoaded = false;
                                             }
 
+                                        #endregion
 
-                                            for (var i = ClassWalletTransactionCache.ListTransactionIndex.Count - 1; i >= walletXiropht.TotalTransactionRead; i--)
+                                        #region Cleanup transaction anonymously sent showed.
+
+                                        if (walletXiropht.TotalAnonymityTransactionRead > ClassWalletTransactionAnonymityCache.ListTransactionIndex.Count)
                                             {
-                                                if (ClassWalletTransactionCache.ListTransactionIndex.ContainsKey(i))
+                                                listViewAnonymitySendTransactionHistory.Items.Clear();
+                                                walletXiropht.TotalAnonymityTransactionRead = 0;
+                                                walletXiropht.AnonymousTransactionLoaded = false;
+                                            }
+
+                                        #endregion
+
+                                        if (!walletXiropht.ClassWalletObject.InSyncTransaction && !walletXiropht.ClassWalletObject.InSyncTransactionAnonymity)
+                                            {
+
+                                                walletXiropht.UpdateCurrentPageNumberTransactionHistory();
+                                                if (ClassWalletTransactionCache.ListTransactionIndex.Count > 0)
                                                 {
-                                                    if (ClassWalletTransactionCache.ListTransaction.ContainsKey(ClassWalletTransactionCache.ListTransactionIndex[i]))
+                                                    if (walletXiropht.TotalTransactionRead != ClassWalletTransactionCache.ListTransactionIndex.Count)
                                                     {
-                                                        var transactionObject = ClassWalletTransactionCache.ListTransaction[ClassWalletTransactionCache.ListTransactionIndex[i]];
-
-                                                        if (transactionObject != null)
+                                                        if (!IsShowedWaitingTransaction)
                                                         {
-                                                            var dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                            dateTimeSend = dateTimeSend.AddSeconds(transactionObject.TransactionTimestampSend);
-                                                            dateTimeSend = dateTimeSend.ToLocalTime();
+                                                            ShowWaitingSyncTransactionPanel();
+                                                        }
 
 
-                                                            var dateTimeRecv = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                            dateTimeRecv = dateTimeRecv.AddSeconds(transactionObject.TransactionTimestampRecv);
-                                                            dateTimeRecv = dateTimeRecv.ToLocalTime();
-
-
-                                                            #region show anonymous transaction received
-
-                                                            if (transactionObject.TransactionWalletAddress == ClassWalletTransactionType.AnonymousTransaction)
+                                                        for (var i = ClassWalletTransactionCache.ListTransactionIndex.Count - 1; i >= walletXiropht.TotalTransactionRead; i--)
+                                                        {
+                                                            if (ClassWalletTransactionCache.ListTransactionIndex.ContainsKey(i))
                                                             {
-                                                                var minShow = (walletXiropht.CurrentTransactionHistoryPageAnonymousReceived - 1) * walletXiropht.MaxTransactionPerPage;
-                                                                var maxShow = walletXiropht.CurrentTransactionHistoryPageAnonymousReceived * walletXiropht.MaxTransactionPerPage;
-
-                                                                if (!walletXiropht.NormalTransactionLoaded)
+                                                                if (ClassWalletTransactionCache.ListTransaction.ContainsKey(ClassWalletTransactionCache.ListTransactionIndex[i]))
                                                                 {
-                                                                    if (walletXiropht.TotalTransactionAnonymousReceived >= minShow && walletXiropht.TotalTransactionAnonymousReceived < maxShow && !walletXiropht.NormalTransactionLoaded)
-                                                                    {
+                                                                    var transactionObject = ClassWalletTransactionCache.ListTransaction[ClassWalletTransactionCache.ListTransactionIndex[i]];
 
-                                                                        string[] row =
+                                                                    if (transactionObject != null)
+                                                                    {
+                                                                        var dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                                        dateTimeSend = dateTimeSend.AddSeconds(transactionObject.TransactionTimestampSend);
+                                                                        dateTimeSend = dateTimeSend.ToLocalTime();
+
+
+                                                                        var dateTimeRecv = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                                        dateTimeRecv = dateTimeRecv.AddSeconds(transactionObject.TransactionTimestampRecv);
+                                                                        dateTimeRecv = dateTimeRecv.ToLocalTime();
+
+
+                                                                    #region show anonymous transaction received
+
+                                                                    if (transactionObject.TransactionWalletAddress == ClassWalletTransactionType.AnonymousTransaction)
                                                                         {
+                                                                            var minShow = (walletXiropht.CurrentTransactionHistoryPageAnonymousReceived - 1) * walletXiropht.MaxTransactionPerPage;
+                                                                            var maxShow = walletXiropht.CurrentTransactionHistoryPageAnonymousReceived * walletXiropht.MaxTransactionPerPage;
+
+                                                                            if (!walletXiropht.NormalTransactionLoaded)
+                                                                            {
+                                                                                if (walletXiropht.TotalTransactionAnonymousReceived >= minShow && walletXiropht.TotalTransactionAnonymousReceived < maxShow && !walletXiropht.NormalTransactionLoaded)
+                                                                                {
+
+                                                                                    string[] row =
+                                                                                    {
                                                                             (walletXiropht.TotalTransactionAnonymousReceived +1).ToString(),
                                                                             dateTimeSend.ToString(),
                                                                             transactionObject.TransactionType,
@@ -910,28 +908,27 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                                             transactionObject.TransactionWalletAddress,
                                                                             dateTimeRecv.ToString(),
                                                                             transactionObject.TransactionBlockchainHeight
-                                                                        };
+                                                                            };
 
-                                                                        MethodInvoker invoke = () => listViewAnonymityReceivedTransactionHistory.Items.Add(new ListViewItem(row));
-                                                                        BeginInvoke(invoke);
+                                                                                    listViewAnonymityReceivedTransactionHistory.Items.Add(new ListViewItem(row));
 
-                                                                        if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >= ClassUtils.DateUnixTimeNowSecond())
-                                                                        {
-                                                                            invoke = () => listViewAnonymityReceivedTransactionHistory.Items[listViewAnonymityReceivedTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(255, 153, 102);
-                                                                            BeginInvoke(invoke);
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            invoke = () => listViewAnonymityReceivedTransactionHistory.Items[listViewAnonymityReceivedTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(0, 255, 153);
-                                                                            BeginInvoke(invoke);
-                                                                        }
-                                                                    }
-                                                                }
-                                                                if (walletXiropht.NormalTransactionLoaded && walletXiropht.CurrentTransactionHistoryPageAnonymousReceived == 1)
-                                                                {
+                                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >= ClassUtils.DateUnixTimeNowSecond())
+                                                                                    {
+                                                                                        invoke = () => listViewAnonymityReceivedTransactionHistory.Items[listViewAnonymityReceivedTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(255, 153, 102);
+                                                                                        BeginInvoke(invoke);
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        invoke = () => listViewAnonymityReceivedTransactionHistory.Items[listViewAnonymityReceivedTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(0, 255, 153);
+                                                                                        BeginInvoke(invoke);
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                            if (walletXiropht.NormalTransactionLoaded && walletXiropht.CurrentTransactionHistoryPageAnonymousReceived == 1)
+                                                                            {
 
-                                                                    string[] row =
-                                                                    {
+                                                                                string[] row =
+                                                                                {
                                                                         (walletXiropht.TotalTransactionAnonymousReceived +1).ToString(),
                                                                         dateTimeSend.ToString(),
                                                                         transactionObject.TransactionType,
@@ -941,34 +938,32 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                                         transactionObject.TransactionWalletAddress,
                                                                         dateTimeRecv.ToString(),
                                                                         transactionObject.TransactionBlockchainHeight
-                                                                    };
-                                                                    MethodInvoker invoke = () => listViewAnonymityReceivedTransactionHistory.Items.Insert(0, new ListViewItem(row));
-                                                                    BeginInvoke(invoke);
-                                                                }
+                                                                        };
+                                                                                listViewAnonymityReceivedTransactionHistory.Items.Insert(0, new ListViewItem(row));
+                                                                            }
 
-                                                                if (walletXiropht.TotalTransactionAnonymousReceived == minShow)
-                                                                {
-                                                                    MethodInvoker invoke = () => AutoResizeColumns(listViewAnonymityReceivedTransactionHistory);
-                                                                    BeginInvoke(invoke);
-                                                                }
+                                                                            if (walletXiropht.TotalTransactionAnonymousReceived == minShow)
+                                                                            {
+                                                                                AutoResizeColumns(listViewAnonymityReceivedTransactionHistory);
+                                                                            }
 
-                                                                walletXiropht.TotalTransactionAnonymousReceived++;
-                                                            }
+                                                                            walletXiropht.TotalTransactionAnonymousReceived++;
+                                                                        }
 
-                                                            #endregion
+                                                                    #endregion
 
-                                                            #region Show block reward transaction.
+                                                                    #region Show block reward transaction.
 
-                                                            else if (transactionObject.TransactionWalletAddress.Contains(ClassWalletTransactionType.BlockchainTransaction))
-                                                            {
-                                                                var minShow = (walletXiropht.CurrentTransactionHistoryPageBlockReward - 1) * walletXiropht.MaxTransactionPerPage;
-                                                                var maxShow = walletXiropht.CurrentTransactionHistoryPageBlockReward * walletXiropht.MaxTransactionPerPage;
+                                                                    else if (transactionObject.TransactionWalletAddress.Contains(ClassWalletTransactionType.BlockchainTransaction))
+                                                                        {
+                                                                            var minShow = (walletXiropht.CurrentTransactionHistoryPageBlockReward - 1) * walletXiropht.MaxTransactionPerPage;
+                                                                            var maxShow = walletXiropht.CurrentTransactionHistoryPageBlockReward * walletXiropht.MaxTransactionPerPage;
 
-                                                                if (walletXiropht.TotalTransactionBlockReward >= minShow && walletXiropht.TotalTransactionBlockReward < maxShow && !walletXiropht.NormalTransactionLoaded)
-                                                                {
+                                                                            if (walletXiropht.TotalTransactionBlockReward >= minShow && walletXiropht.TotalTransactionBlockReward < maxShow && !walletXiropht.NormalTransactionLoaded)
+                                                                            {
 
-                                                                    string[] row =
-                                                                    {
+                                                                                string[] row =
+                                                                                {
                                                                     (walletXiropht.TotalTransactionBlockReward + 1).ToString(),
                                                                     dateTimeSend.ToString(),
                                                                     transactionObject.TransactionType,
@@ -978,73 +973,68 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                                     transactionObject.TransactionWalletAddress,
                                                                     dateTimeRecv.ToString(),
                                                                     transactionObject.TransactionBlockchainHeight
-                                                                };
+                                                                    };
 
 
-                                                                    MethodInvoker invoke = () => listViewBlockRewardTransactionHistory.Items.Add(new ListViewItem(row));
-                                                                    BeginInvoke(invoke);
+                                                                                listViewBlockRewardTransactionHistory.Items.Add(new ListViewItem(row));
 
-                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) > ClassUtils.DateUnixTimeNowSecond())
-                                                                    {
-                                                                        invoke = () => listViewBlockRewardTransactionHistory.Items[listViewBlockRewardTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(255, 153, 102);
-                                                                        BeginInvoke(invoke);
-                                                                    }
+                                                                                if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) > ClassUtils.DateUnixTimeNowSecond())
+                                                                                {
+                                                                                    listViewBlockRewardTransactionHistory.Items[listViewBlockRewardTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(255, 153, 102);
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    listViewBlockRewardTransactionHistory.Items[listViewBlockRewardTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(0, 255, 153);
+                                                                                }
+                                                                            }
+
+                                                                            if (walletXiropht.NormalTransactionLoaded && walletXiropht.CurrentTransactionHistoryPageBlockReward == 1)
+                                                                            {
+
+                                                                                string[] row =
+                                                                                {
+                                                                    (walletXiropht.TotalTransactionBlockReward + 1).ToString(),
+                                                                    dateTimeSend.ToString(),
+                                                                    transactionObject.TransactionType,
+                                                                    transactionObject.TransactionHash,
+                                                                    transactionObject.TransactionAmount.ToString(),
+                                                                    transactionObject.TransactionFee.ToString(),
+                                                                    transactionObject.TransactionWalletAddress,
+                                                                    dateTimeRecv.ToString(),
+                                                                    transactionObject.TransactionBlockchainHeight
+                                                                    };
+
+                                                                                listViewBlockRewardTransactionHistory.Items.Insert(0, new ListViewItem(row));
+                                                                            }
+
+                                                                            if (walletXiropht.TotalTransactionBlockReward == minShow)
+                                                                            {
+                                                                                AutoResizeColumns(listViewBlockRewardTransactionHistory);
+                                                                            }
+
+                                                                            walletXiropht.TotalTransactionBlockReward++;
+                                                                        }
+
+                                                                    #endregion
+
                                                                     else
-                                                                    {
-                                                                        invoke = () => listViewBlockRewardTransactionHistory.Items[listViewBlockRewardTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(0, 255, 153);
-                                                                        BeginInvoke(invoke);
-                                                                    }
-                                                                }
-
-                                                                if (walletXiropht.NormalTransactionLoaded && walletXiropht.CurrentTransactionHistoryPageBlockReward == 1)
-                                                                {
-
-                                                                    string[] row =
-                                                                    {
-                                                                    (walletXiropht.TotalTransactionBlockReward + 1).ToString(),
-                                                                    dateTimeSend.ToString(),
-                                                                    transactionObject.TransactionType,
-                                                                    transactionObject.TransactionHash,
-                                                                    transactionObject.TransactionAmount.ToString(),
-                                                                    transactionObject.TransactionFee.ToString(),
-                                                                    transactionObject.TransactionWalletAddress,
-                                                                    dateTimeRecv.ToString(),
-                                                                    transactionObject.TransactionBlockchainHeight
-                                                                };
-
-                                                                    MethodInvoker invoke = () => listViewBlockRewardTransactionHistory.Items.Insert(0, new ListViewItem(row));
-                                                                    BeginInvoke(invoke);
-                                                                }
-
-                                                                if (walletXiropht.TotalTransactionBlockReward == minShow)
-                                                                {
-                                                                    MethodInvoker invoke = () => AutoResizeColumns(listViewBlockRewardTransactionHistory);
-                                                                    BeginInvoke(invoke);
-                                                                }
-
-                                                                walletXiropht.TotalTransactionBlockReward++;
-                                                            }
-
-                                                            #endregion
-
-                                                            else
-                                                            {
-                                                                #region show normal transaction sent
-
-                                                                if (transactionObject.TransactionType == ClassWalletTransactionType.SendTransaction && transactionObject.TransactionWalletAddress != ClassWalletTransactionType.AnonymousTransaction)
-                                                                {
-                                                                    var minShow = (walletXiropht.CurrentTransactionHistoryPageNormalSend - 1) * walletXiropht.MaxTransactionPerPage;
-                                                                    var maxShow = walletXiropht.CurrentTransactionHistoryPageNormalSend * walletXiropht.MaxTransactionPerPage;
-
-                                                                    if (walletXiropht.TotalTransactionNormalSend >= minShow && walletXiropht.TotalTransactionNormalSend < maxShow && !walletXiropht.NormalTransactionLoaded)
-                                                                    {
-                                                                        var walletAddress = transactionObject.TransactionWalletAddress;
-                                                                        if (ClassContact.CheckContactNameFromWalletAddress(transactionObject.TransactionWalletAddress))
                                                                         {
-                                                                            walletAddress = ClassContact.GetContactNameFromWalletAddress(transactionObject.TransactionWalletAddress);
-                                                                        }
-                                                                        string[] row =
-                                                                        {
+                                                                        #region show normal transaction sent
+
+                                                                        if (transactionObject.TransactionType == ClassWalletTransactionType.SendTransaction && transactionObject.TransactionWalletAddress != ClassWalletTransactionType.AnonymousTransaction)
+                                                                            {
+                                                                                var minShow = (walletXiropht.CurrentTransactionHistoryPageNormalSend - 1) * walletXiropht.MaxTransactionPerPage;
+                                                                                var maxShow = walletXiropht.CurrentTransactionHistoryPageNormalSend * walletXiropht.MaxTransactionPerPage;
+
+                                                                                if (walletXiropht.TotalTransactionNormalSend >= minShow && walletXiropht.TotalTransactionNormalSend < maxShow && !walletXiropht.NormalTransactionLoaded)
+                                                                                {
+                                                                                    var walletAddress = transactionObject.TransactionWalletAddress;
+                                                                                    if (ClassContact.CheckContactNameFromWalletAddress(transactionObject.TransactionWalletAddress))
+                                                                                    {
+                                                                                        walletAddress = ClassContact.GetContactNameFromWalletAddress(transactionObject.TransactionWalletAddress);
+                                                                                    }
+                                                                                    string[] row =
+                                                                                    {
                                                                         (walletXiropht.TotalTransactionNormalSend + 1).ToString(),
                                                                         dateTimeSend.ToString(),
                                                                         transactionObject.TransactionType,
@@ -1054,34 +1044,31 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                                         walletAddress,
                                                                         dateTimeRecv.ToString(),
                                                                         transactionObject.TransactionBlockchainHeight
-                                                                    };
+                                                                        };
 
-                                                                        MethodInvoker invoke = () => listViewNormalSendTransactionHistory.Items.Add(new ListViewItem(row));
-                                                                        BeginInvoke(invoke);
+                                                                                    listViewNormalSendTransactionHistory.Items.Add(new ListViewItem(row));
 
-                                                                        if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) > ClassUtils.DateUnixTimeNowSecond())
-                                                                        {
-                                                                            invoke = () => listViewNormalSendTransactionHistory.Items[listViewNormalSendTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(255, 153, 102);
-                                                                            BeginInvoke(invoke);
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            invoke = () => listViewNormalSendTransactionHistory.Items[listViewNormalSendTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(0, 255, 153);
-                                                                            BeginInvoke(invoke);
-                                                                        }
-                                                                    }
+                                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) > ClassUtils.DateUnixTimeNowSecond())
+                                                                                    {
+                                                                                        listViewNormalSendTransactionHistory.Items[listViewNormalSendTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(255, 153, 102);
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        listViewNormalSendTransactionHistory.Items[listViewNormalSendTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(0, 255, 153);
+                                                                                    }
+                                                                                }
 
 
-                                                                    if (walletXiropht.NormalTransactionLoaded && walletXiropht.CurrentTransactionHistoryPageNormalSend == 1)
-                                                                    {
+                                                                                if (walletXiropht.NormalTransactionLoaded && walletXiropht.CurrentTransactionHistoryPageNormalSend == 1)
+                                                                                {
 
-                                                                        var walletAddress = transactionObject.TransactionWalletAddress;
-                                                                        if (ClassContact.CheckContactNameFromWalletAddress(transactionObject.TransactionWalletAddress))
-                                                                        {
-                                                                            walletAddress = ClassContact.GetContactNameFromWalletAddress(transactionObject.TransactionWalletAddress);
-                                                                        }
-                                                                        string[] row =
-                                                                        {
+                                                                                    var walletAddress = transactionObject.TransactionWalletAddress;
+                                                                                    if (ClassContact.CheckContactNameFromWalletAddress(transactionObject.TransactionWalletAddress))
+                                                                                    {
+                                                                                        walletAddress = ClassContact.GetContactNameFromWalletAddress(transactionObject.TransactionWalletAddress);
+                                                                                    }
+                                                                                    string[] row =
+                                                                                    {
                                                                         (walletXiropht.TotalTransactionNormalSend + 1).ToString(),
                                                                         dateTimeSend.ToString(),
                                                                         transactionObject.TransactionType,
@@ -1091,42 +1078,40 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                                         walletAddress,
                                                                         dateTimeRecv.ToString(),
                                                                         transactionObject.TransactionBlockchainHeight
-                                                                    };
+                                                                        };
 
-                                                                        MethodInvoker invoke = () => listViewNormalSendTransactionHistory.Items.Insert(0, new ListViewItem(row));
-                                                                        BeginInvoke(invoke);
+                                                                                    listViewNormalSendTransactionHistory.Items.Insert(0, new ListViewItem(row));
 
-                                                                    }
-
-
-                                                                    if (walletXiropht.TotalTransactionNormalSend == minShow)
-                                                                    {
-                                                                        MethodInvoker invoke = () => AutoResizeColumns(listViewNormalSendTransactionHistory);
-                                                                        BeginInvoke(invoke);
-                                                                    }
+                                                                                }
 
 
-                                                                    walletXiropht.TotalTransactionNormalSend++;
-                                                                }
+                                                                                if (walletXiropht.TotalTransactionNormalSend == minShow)
+                                                                                {
+                                                                                    AutoResizeColumns(listViewNormalSendTransactionHistory);
+                                                                                }
 
-                                                                #endregion
 
-                                                                #region Show normal transaction received.
+                                                                                walletXiropht.TotalTransactionNormalSend++;
+                                                                            }
 
-                                                                else if (transactionObject.TransactionType == ClassWalletTransactionType.ReceiveTransaction && transactionObject.TransactionWalletAddress != ClassWalletTransactionType.AnonymousTransaction)
-                                                                {
-                                                                    var minShow = (walletXiropht.CurrentTransactionHistoryPageNormalReceive - 1) * walletXiropht.MaxTransactionPerPage;
-                                                                    var maxShow = walletXiropht.CurrentTransactionHistoryPageNormalReceive * walletXiropht.MaxTransactionPerPage;
+                                                                        #endregion
 
-                                                                    if (walletXiropht.TotalTransactionNormalReceived >= minShow && walletXiropht.TotalTransactionNormalReceived < maxShow && !walletXiropht.NormalTransactionLoaded)
-                                                                    {
-                                                                        var walletAddress = transactionObject.TransactionWalletAddress;
-                                                                        if (ClassContact.CheckContactNameFromWalletAddress(transactionObject.TransactionWalletAddress))
-                                                                        {
-                                                                            walletAddress = ClassContact.GetContactNameFromWalletAddress(transactionObject.TransactionWalletAddress);
-                                                                        }
-                                                                        string[] row =
-                                                                        {
+                                                                        #region Show normal transaction received.
+
+                                                                        else if (transactionObject.TransactionType == ClassWalletTransactionType.ReceiveTransaction && transactionObject.TransactionWalletAddress != ClassWalletTransactionType.AnonymousTransaction)
+                                                                            {
+                                                                                var minShow = (walletXiropht.CurrentTransactionHistoryPageNormalReceive - 1) * walletXiropht.MaxTransactionPerPage;
+                                                                                var maxShow = walletXiropht.CurrentTransactionHistoryPageNormalReceive * walletXiropht.MaxTransactionPerPage;
+
+                                                                                if (walletXiropht.TotalTransactionNormalReceived >= minShow && walletXiropht.TotalTransactionNormalReceived < maxShow && !walletXiropht.NormalTransactionLoaded)
+                                                                                {
+                                                                                    var walletAddress = transactionObject.TransactionWalletAddress;
+                                                                                    if (ClassContact.CheckContactNameFromWalletAddress(transactionObject.TransactionWalletAddress))
+                                                                                    {
+                                                                                        walletAddress = ClassContact.GetContactNameFromWalletAddress(transactionObject.TransactionWalletAddress);
+                                                                                    }
+                                                                                    string[] row =
+                                                                                    {
                                                                         (walletXiropht.TotalTransactionNormalReceived + 1).ToString(),
                                                                         dateTimeSend.ToString(),
                                                                         transactionObject.TransactionType,
@@ -1136,32 +1121,29 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                                         walletAddress,
                                                                         dateTimeRecv.ToString(),
                                                                         transactionObject.TransactionBlockchainHeight
-                                                                    };
+                                                                        };
 
-                                                                        MethodInvoker invoke = () => listViewNormalReceivedTransactionHistory.Items.Add(new ListViewItem(row));
-                                                                        BeginInvoke(invoke);
+                                                                                    listViewNormalReceivedTransactionHistory.Items.Add(new ListViewItem(row));
 
-                                                                        if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) > ClassUtils.DateUnixTimeNowSecond())
-                                                                        {
-                                                                            invoke = () => listViewNormalReceivedTransactionHistory.Items[listViewNormalReceivedTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(255, 153, 102);
-                                                                            BeginInvoke(invoke);
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            invoke = () => listViewNormalReceivedTransactionHistory.Items[listViewNormalReceivedTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(0, 255, 153);
-                                                                            BeginInvoke(invoke);
-                                                                        }
-                                                                    }
+                                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) > ClassUtils.DateUnixTimeNowSecond())
+                                                                                    {
+                                                                                        listViewNormalReceivedTransactionHistory.Items[listViewNormalReceivedTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(255, 153, 102);
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        listViewNormalReceivedTransactionHistory.Items[listViewNormalReceivedTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(0, 255, 153);
+                                                                                    }
+                                                                                }
 
-                                                                    if (walletXiropht.NormalTransactionLoaded && walletXiropht.CurrentTransactionHistoryPageNormalReceive == 1)
-                                                                    {
-                                                                        var walletAddress = transactionObject.TransactionWalletAddress;
-                                                                        if (ClassContact.CheckContactNameFromWalletAddress(transactionObject.TransactionWalletAddress))
-                                                                        {
-                                                                            walletAddress = ClassContact.GetContactNameFromWalletAddress(transactionObject.TransactionWalletAddress);
-                                                                        }
-                                                                        string[] row =
-                                                                        {
+                                                                                if (walletXiropht.NormalTransactionLoaded && walletXiropht.CurrentTransactionHistoryPageNormalReceive == 1)
+                                                                                {
+                                                                                    var walletAddress = transactionObject.TransactionWalletAddress;
+                                                                                    if (ClassContact.CheckContactNameFromWalletAddress(transactionObject.TransactionWalletAddress))
+                                                                                    {
+                                                                                        walletAddress = ClassContact.GetContactNameFromWalletAddress(transactionObject.TransactionWalletAddress);
+                                                                                    }
+                                                                                    string[] row =
+                                                                                    {
                                                                         (walletXiropht.TotalTransactionNormalReceived +1).ToString(),
                                                                         dateTimeSend.ToString(),
                                                                         transactionObject.TransactionType,
@@ -1171,195 +1153,198 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                                                         walletAddress,
                                                                         dateTimeRecv.ToString(),
                                                                         transactionObject.TransactionBlockchainHeight
-                                                                    };
+                                                                        };
 
-                                                                        MethodInvoker invoke = () => listViewNormalReceivedTransactionHistory.Items.Insert(0, new ListViewItem(row));
-                                                                        BeginInvoke(invoke);
+                                                                                    listViewNormalReceivedTransactionHistory.Items.Insert(0, new ListViewItem(row));
+                                                                                }
+
+                                                                                if (walletXiropht.TotalTransactionNormalReceived == minShow)
+                                                                                {
+                                                                                    AutoResizeColumns(listViewNormalReceivedTransactionHistory);
+                                                                                }
+
+                                                                                walletXiropht.TotalTransactionNormalReceived++;
+                                                                            }
+
+                                                                        #endregion
                                                                     }
-
-                                                                    if (walletXiropht.TotalTransactionNormalReceived == minShow)
-                                                                    {
-                                                                        MethodInvoker invoke = () => AutoResizeColumns(listViewNormalReceivedTransactionHistory);
-                                                                        BeginInvoke(invoke);
                                                                     }
-
-                                                                    walletXiropht.TotalTransactionNormalReceived++;
                                                                 }
-
-                                                                #endregion
                                                             }
+                                                        }
+                                                        walletXiropht.TotalTransactionRead = ClassWalletTransactionCache.ListTransaction.Count;
+                                                        walletXiropht.NormalTransactionLoaded = true;
+
+                                                        if (IsShowedWaitingTransaction)
+                                                        {
+                                                            HideWaitingSyncTransactionPanel();
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (IsShowedWaitingTransaction)
+                                                        {
+                                                            HideWaitingSyncTransactionPanel();
+                                                        }
+                                                    }
+                                                }
+
+                                                if (listViewAnonymitySendTransactionHistory.Items.Count > ClassWalletTransactionAnonymityCache.ListTransaction.Count)
+                                                {
+                                                    walletXiropht.AnonymousTransactionLoaded = false;
+                                                }
+
+                                                if (ClassWalletTransactionAnonymityCache.ListTransaction.Count > 0)
+                                                {
+                                                    if (walletXiropht.TotalAnonymityTransactionRead != ClassWalletTransactionAnonymityCache.ListTransactionIndex.Count)
+                                                    {
+                                                        if (!IsShowedWaitingTransaction)
+                                                        {
+                                                            ShowWaitingSyncTransactionPanel();
+                                                        }
+
+                                                    #region Show transaction anonymity sent with the unique wallet anonymity id of the wallet
+
+                                                    if (walletXiropht.TotalAnonymityTransactionRead != ClassWalletTransactionAnonymityCache.ListTransactionIndex.Count)
+                                                        {
+                                                            for (var i = ClassWalletTransactionAnonymityCache.ListTransactionIndex.Count - 1; i >= walletXiropht.TotalAnonymityTransactionRead; i--)
+                                                            {
+                                                                if (ClassWalletTransactionAnonymityCache.ListTransactionIndex.ContainsKey(i))
+                                                                {
+                                                                    if (ClassWalletTransactionAnonymityCache.ListTransaction.ContainsKey(ClassWalletTransactionAnonymityCache.ListTransactionIndex[i]))
+                                                                    {
+                                                                        var transactionObject = ClassWalletTransactionAnonymityCache.ListTransaction[ClassWalletTransactionAnonymityCache.ListTransactionIndex[i]];
+
+                                                                        if (transactionObject != null)
+                                                                        {
+                                                                            var dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                                            dateTimeSend = dateTimeSend.AddSeconds(transactionObject.TransactionTimestampSend);
+                                                                            dateTimeSend = dateTimeSend.ToLocalTime();
+
+                                                                            DateTime dateTimeRecv = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                                            dateTimeRecv = dateTimeRecv.AddSeconds(transactionObject.TransactionTimestampRecv);
+                                                                            dateTimeRecv = dateTimeRecv.ToLocalTime();
+
+                                                                            var minShow = (walletXiropht.CurrentTransactionHistoryPageAnonymousSend - 1) * walletXiropht.MaxTransactionPerPage;
+                                                                            var maxShow = walletXiropht.CurrentTransactionHistoryPageAnonymousSend * walletXiropht.MaxTransactionPerPage;
+
+                                                                            if (walletXiropht.TotalTransactionAnonymousSend >= minShow && walletXiropht.TotalTransactionAnonymousSend < maxShow && !walletXiropht.AnonymousTransactionLoaded)
+                                                                            {
+                                                                                var walletAddress = transactionObject.TransactionWalletAddress;
+                                                                                if (ClassContact.CheckContactNameFromWalletAddress(transactionObject.TransactionWalletAddress))
+                                                                                {
+                                                                                    walletAddress = ClassContact.GetContactNameFromWalletAddress(transactionObject.TransactionWalletAddress);
+                                                                                }
+
+                                                                                string[] row =
+                                                                                {
+                                                                        (walletXiropht.TotalTransactionAnonymousSend +1).ToString(),
+                                                                        dateTimeSend.ToString(),
+                                                                        transactionObject.TransactionType,
+                                                                        transactionObject.TransactionHash,
+                                                                        transactionObject.TransactionAmount.ToString(),
+                                                                        transactionObject.TransactionFee.ToString(),
+                                                                        walletAddress,
+                                                                        dateTimeRecv.ToString(),
+                                                                        transactionObject.TransactionBlockchainHeight
+                                                                        };
+
+                                                                                listViewAnonymitySendTransactionHistory.Items.Add(new ListViewItem(row));
+
+
+                                                                                if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >= ClassUtils.DateUnixTimeNowSecond())
+                                                                                {
+                                                                                    listViewAnonymitySendTransactionHistory.Items[listViewAnonymitySendTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(255, 153, 102);
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    listViewAnonymitySendTransactionHistory.Items[listViewAnonymitySendTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(0, 255, 153);
+                                                                                }
+                                                                            }
+
+                                                                            if (walletXiropht.AnonymousTransactionLoaded && walletXiropht.CurrentTransactionHistoryPageAnonymousSend == 1)
+                                                                            {
+
+                                                                                var walletAddress = transactionObject.TransactionWalletAddress;
+                                                                                if (ClassContact.CheckContactNameFromWalletAddress(transactionObject.TransactionWalletAddress))
+                                                                                {
+                                                                                    walletAddress = ClassContact.GetContactNameFromWalletAddress(transactionObject.TransactionWalletAddress);
+                                                                                }
+                                                                                string[] row =
+                                                                                {
+                                                                        (walletXiropht.TotalTransactionAnonymousSend +1).ToString(),
+                                                                        dateTimeSend.ToString(),
+                                                                        transactionObject.TransactionType,
+                                                                        transactionObject.TransactionHash,
+                                                                        transactionObject.TransactionAmount.ToString(),
+                                                                        transactionObject.TransactionFee.ToString(),
+                                                                        walletAddress,
+                                                                        dateTimeRecv.ToString(),
+                                                                        transactionObject.TransactionBlockchainHeight
+                                                                        };
+
+                                                                                listViewAnonymitySendTransactionHistory.Items.Insert(0, new ListViewItem(row));
+                                                                            }
+
+                                                                            if (walletXiropht.TotalTransactionAnonymousSend == minShow)
+                                                                            {
+                                                                                AutoResizeColumns(listViewAnonymitySendTransactionHistory);
+                                                                            }
+
+                                                                            walletXiropht.TotalTransactionAnonymousSend++;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            walletXiropht.TotalAnonymityTransactionRead = ClassWalletTransactionAnonymityCache.ListTransaction.Count;
+                                                            walletXiropht.AnonymousTransactionLoaded = true;
+                                                        }
+
+                                                    #endregion
+
+
+                                                    if (IsShowedWaitingTransaction)
+                                                        {
+                                                            HideWaitingSyncTransactionPanel();
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (IsShowedWaitingTransaction)
+                                                        {
+                                                            HideWaitingSyncTransactionPanel();
                                                         }
                                                     }
                                                 }
                                             }
-                                            walletXiropht.TotalTransactionRead = ClassWalletTransactionCache.ListTransaction.Count;
-                                            walletXiropht.NormalTransactionLoaded = true;
-
-                                            if (IsShowedWaitingTransaction)
-                                            {
-                                                MethodInvoker invoke = HideWaitingSyncTransactionPanel;
-                                                BeginInvoke(invoke);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (IsShowedWaitingTransaction)
-                                            {
-                                                MethodInvoker invoke = HideWaitingSyncTransactionPanel;
-                                                BeginInvoke(invoke);
-                                            }
                                         }
                                     }
-
-                                    if (listViewAnonymitySendTransactionHistory.Items.Count > ClassWalletTransactionAnonymityCache.ListTransaction.Count)
+                                    else
                                     {
-                                        walletXiropht.AnonymousTransactionLoaded = false;
-                                    }
-
-                                    if (ClassWalletTransactionAnonymityCache.ListTransaction.Count > 0)
-                                    {
-                                        if (walletXiropht.TotalAnonymityTransactionRead != ClassWalletTransactionAnonymityCache.ListTransactionIndex.Count)
+                                        if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.TransactionHistory)
                                         {
                                             if (!IsShowedWaitingTransaction)
                                             {
-                                                MethodInvoker invoke = ShowWaitingSyncTransactionPanel;
-                                                BeginInvoke(invoke);
-                                            }
-
-                                            #region Show transaction anonymity sent with the unique wallet anonymity id of the wallet
-
-                                            if (walletXiropht.TotalAnonymityTransactionRead != ClassWalletTransactionAnonymityCache.ListTransactionIndex.Count)
-                                            {
-                                                for (var i = ClassWalletTransactionAnonymityCache.ListTransactionIndex.Count - 1; i >= walletXiropht.TotalAnonymityTransactionRead; i--)
-                                                {
-                                                    if (ClassWalletTransactionAnonymityCache.ListTransactionIndex.ContainsKey(i))
-                                                    {
-                                                        if (ClassWalletTransactionAnonymityCache.ListTransaction.ContainsKey(ClassWalletTransactionAnonymityCache.ListTransactionIndex[i]))
-                                                        {
-                                                            var transactionObject = ClassWalletTransactionAnonymityCache.ListTransaction[ClassWalletTransactionAnonymityCache.ListTransactionIndex[i]];
-
-                                                            if (transactionObject != null)
-                                                            {
-                                                                var dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                                dateTimeSend = dateTimeSend.AddSeconds(transactionObject.TransactionTimestampSend);
-                                                                dateTimeSend = dateTimeSend.ToLocalTime();
-
-                                                                DateTime dateTimeRecv = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                                dateTimeRecv = dateTimeRecv.AddSeconds(transactionObject.TransactionTimestampRecv);
-                                                                dateTimeRecv = dateTimeRecv.ToLocalTime();
-
-                                                                var minShow = (walletXiropht.CurrentTransactionHistoryPageAnonymousSend - 1) * walletXiropht.MaxTransactionPerPage;
-                                                                var maxShow = walletXiropht.CurrentTransactionHistoryPageAnonymousSend * walletXiropht.MaxTransactionPerPage;
-
-                                                                if (walletXiropht.TotalTransactionAnonymousSend >= minShow && walletXiropht.TotalTransactionAnonymousSend < maxShow && !walletXiropht.AnonymousTransactionLoaded)
-                                                                {
-                                                                    var walletAddress = transactionObject.TransactionWalletAddress;
-                                                                    if (ClassContact.CheckContactNameFromWalletAddress(transactionObject.TransactionWalletAddress))
-                                                                    {
-                                                                        walletAddress = ClassContact.GetContactNameFromWalletAddress(transactionObject.TransactionWalletAddress);
-                                                                    }
-
-                                                                    string[] row =
-                                                                    {
-                                                                        (walletXiropht.TotalTransactionAnonymousSend +1).ToString(),
-                                                                        dateTimeSend.ToString(),
-                                                                        transactionObject.TransactionType,
-                                                                        transactionObject.TransactionHash,
-                                                                        transactionObject.TransactionAmount.ToString(),
-                                                                        transactionObject.TransactionFee.ToString(),
-                                                                        walletAddress,
-                                                                        dateTimeRecv.ToString(),
-                                                                        transactionObject.TransactionBlockchainHeight
-                                                                    };
-
-                                                                    MethodInvoker invoke = () => listViewAnonymitySendTransactionHistory.Items.Add(new ListViewItem(row));
-
-                                                                    BeginInvoke(invoke);
-
-                                                                    if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >= ClassUtils.DateUnixTimeNowSecond())
-                                                                    {
-                                                                        invoke = () => listViewAnonymitySendTransactionHistory.Items[listViewAnonymitySendTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(255, 153, 102);
-                                                                        BeginInvoke(invoke);
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        invoke = () => listViewAnonymitySendTransactionHistory.Items[listViewAnonymitySendTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(0, 255, 153);
-                                                                        BeginInvoke(invoke);
-                                                                    }
-                                                                }
-
-                                                                if (walletXiropht.AnonymousTransactionLoaded && walletXiropht.CurrentTransactionHistoryPageAnonymousSend == 1)
-                                                                {
-
-                                                                    var walletAddress = transactionObject.TransactionWalletAddress;
-                                                                    if (ClassContact.CheckContactNameFromWalletAddress(transactionObject.TransactionWalletAddress))
-                                                                    {
-                                                                        walletAddress = ClassContact.GetContactNameFromWalletAddress(transactionObject.TransactionWalletAddress);
-                                                                    }
-                                                                    string[] row =
-                                                                    {
-                                                                        (walletXiropht.TotalTransactionAnonymousSend +1).ToString(),
-                                                                        dateTimeSend.ToString(),
-                                                                        transactionObject.TransactionType,
-                                                                        transactionObject.TransactionHash,
-                                                                        transactionObject.TransactionAmount.ToString(),
-                                                                        transactionObject.TransactionFee.ToString(),
-                                                                        walletAddress,
-                                                                        dateTimeRecv.ToString(),
-                                                                        transactionObject.TransactionBlockchainHeight
-                                                                    };
-
-                                                                    MethodInvoker invoke = () => listViewAnonymitySendTransactionHistory.Items.Insert(0, new ListViewItem(row));
-                                                                    BeginInvoke(invoke);
-                                                                }
-
-                                                                if (walletXiropht.TotalTransactionAnonymousSend == minShow)
-                                                                {
-                                                                    MethodInvoker invoke = () => AutoResizeColumns(listViewAnonymitySendTransactionHistory);
-                                                                    BeginInvoke(invoke);
-                                                                }
-
-                                                                walletXiropht.TotalTransactionAnonymousSend++;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-
-                                                walletXiropht.TotalAnonymityTransactionRead = ClassWalletTransactionAnonymityCache.ListTransaction.Count;
-                                                walletXiropht.AnonymousTransactionLoaded = true;
-                                            }
-
-                                            #endregion
-
-
-                                            if (IsShowedWaitingTransaction)
-                                            {
-                                                MethodInvoker invoke = HideWaitingSyncTransactionPanel;
-                                                BeginInvoke(invoke);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (IsShowedWaitingTransaction)
-                                            {
-                                                MethodInvoker invoke = HideWaitingSyncTransactionPanel;
-                                                BeginInvoke(invoke);
+                                                ShowWaitingSyncTransactionPanel();
                                             }
                                         }
                                     }
                                 }
-                            }
-                        }
-                        else
-                        {
-                            if (ClassFormPhase.FormPhase == ClassFormPhaseEnumeration.TransactionHistory)
-                            {
-                                if (!IsShowedWaitingTransaction)
+                                catch
                                 {
-                                    MethodInvoker invoke = () => ShowWaitingSyncTransactionPanel();
-                                    BeginInvoke(invoke);
+                                    listViewNormalSendTransactionHistory.Items.Clear();
+                                    listViewAnonymityReceivedTransactionHistory.Items.Clear();
+                                    listViewBlockRewardTransactionHistory.Items.Clear();
+                                    listViewNormalReceivedTransactionHistory.Items.Clear();
+                                    walletXiropht.TotalTransactionRead = 0;
+                                    walletXiropht.NormalTransactionLoaded = false;
+                                    listViewAnonymitySendTransactionHistory.Items.Clear();
+                                    walletXiropht.TotalAnonymityTransactionRead = 0;
+                                    walletXiropht.AnonymousTransactionLoaded = false;
                                 }
-                            }
+                            };
+                            BeginInvoke(invoke);
                         }
                         await Task.Delay(1000);
                     }
