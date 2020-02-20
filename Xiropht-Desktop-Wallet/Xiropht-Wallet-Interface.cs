@@ -1390,7 +1390,7 @@ namespace Xiropht_Wallet
                         {
                             CurrentTransactionHistoryPageNormalSend--;
                             labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalSend;
-                            StopUpdateTransactionHistory(false, false, true);
+                            CleanTransactionHistory();
                         }
 
                     if (TransactionHistoryWalletForm.tabPageNormalTransactionReceived.Visible
@@ -1399,7 +1399,7 @@ namespace Xiropht_Wallet
                         {
                             CurrentTransactionHistoryPageNormalReceive--;
                             labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
-                            StopUpdateTransactionHistory(false, false, true);
+                            CleanTransactionHistory();
                         }
 
                     if (TransactionHistoryWalletForm.tabPageAnonymityTransactionSend.Visible
@@ -1408,7 +1408,7 @@ namespace Xiropht_Wallet
                         {
                             CurrentTransactionHistoryPageAnonymousSend--;
                             labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousSend;
-                            StopUpdateTransactionHistory(false, false, true);
+                            CleanTransactionHistory();
                         }
 
                     if (TransactionHistoryWalletForm.tabPageAnonymityTransactionReceived.Visible
@@ -1417,7 +1417,7 @@ namespace Xiropht_Wallet
                         {
                             CurrentTransactionHistoryPageAnonymousReceived--;
                             labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousReceived;
-                            StopUpdateTransactionHistory(false, false, true);
+                            CleanTransactionHistory();
                         }
 
                     if (TransactionHistoryWalletForm.tabPageBlockRewardTransaction.Visible
@@ -1426,7 +1426,7 @@ namespace Xiropht_Wallet
                         {
                             CurrentTransactionHistoryPageBlockReward--;
                             labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageBlockReward;
-                            StopUpdateTransactionHistory(false, false, true);
+                            CleanTransactionHistory();
                         }
                 }
             }
@@ -1462,7 +1462,7 @@ namespace Xiropht_Wallet
                         {
                             CurrentTransactionHistoryPageNormalSend++;
                             labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalSend;
-                            StopUpdateTransactionHistory(false, false, true);
+                            CleanTransactionHistory();
                         }
                     }
 
@@ -1477,7 +1477,7 @@ namespace Xiropht_Wallet
                         {
                             CurrentTransactionHistoryPageNormalReceive++;
                             labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
-                            StopUpdateTransactionHistory(false, false, true);
+                            CleanTransactionHistory();
                         }
                     }
 
@@ -1492,7 +1492,7 @@ namespace Xiropht_Wallet
                         {
                             CurrentTransactionHistoryPageAnonymousSend++;
                             labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousSend;
-                            StopUpdateTransactionHistory(false, false, true);
+                            CleanTransactionHistory();
                         }
                     }
 
@@ -1506,7 +1506,7 @@ namespace Xiropht_Wallet
                         {
                             CurrentTransactionHistoryPageAnonymousReceived++;
                             labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousReceived;
-                            StopUpdateTransactionHistory(false, false, true);
+                            CleanTransactionHistory();
                         }
                     }
 
@@ -1521,7 +1521,7 @@ namespace Xiropht_Wallet
                         {
                             CurrentTransactionHistoryPageBlockReward++;
                             labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageBlockReward;
-                            StopUpdateTransactionHistory(false, false, true);
+                            CleanTransactionHistory();
                         }
                     }
                 }
@@ -1557,7 +1557,7 @@ namespace Xiropht_Wallet
                     {
                         CurrentTransactionHistoryPageNormalSend = 1;
                         labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalSend;
-                        StopUpdateTransactionHistory(false, false, true);
+                        CleanTransactionHistory();
                     }
 
                     if (TransactionHistoryWalletForm.tabPageNormalTransactionReceived.Visible
@@ -1565,7 +1565,7 @@ namespace Xiropht_Wallet
                     {
                         CurrentTransactionHistoryPageNormalReceive = 1;
                         labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
-                        StopUpdateTransactionHistory(false, false, true);
+                        CleanTransactionHistory();
                     }
 
                     if (TransactionHistoryWalletForm.tabPageAnonymityTransactionSend.Visible
@@ -1573,7 +1573,7 @@ namespace Xiropht_Wallet
                     {
                         CurrentTransactionHistoryPageAnonymousSend = 1;
                         labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousSend;
-                        StopUpdateTransactionHistory(false, false, true);
+                        CleanTransactionHistory();
                     }
 
                     if (TransactionHistoryWalletForm.tabPageAnonymityTransactionReceived.Visible
@@ -1581,7 +1581,7 @@ namespace Xiropht_Wallet
                     {
                         CurrentTransactionHistoryPageAnonymousReceived = 1;
                         labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
-                        StopUpdateTransactionHistory(false, false, true);
+                        CleanTransactionHistory();
                     }
 
                     if (TransactionHistoryWalletForm.tabPageBlockRewardTransaction.Visible
@@ -1589,7 +1589,7 @@ namespace Xiropht_Wallet
                     {
                         CurrentTransactionHistoryPageBlockReward = 1;
                         labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageBlockReward;
-                        StopUpdateTransactionHistory(false, false, true);
+                        CleanTransactionHistory();
                     }
                 }
             }
@@ -1621,7 +1621,7 @@ namespace Xiropht_Wallet
                         if (numberParge <= 0) numberParge = 1;
                         CurrentTransactionHistoryPageNormalSend = (int) numberParge;
                         labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalSend;
-                        StopUpdateTransactionHistory(false, false, true);
+                        CleanTransactionHistory();
                     }
 
                     if (TransactionHistoryWalletForm.tabPageNormalTransactionReceived.Visible
@@ -1633,7 +1633,7 @@ namespace Xiropht_Wallet
                         if (numberParge <= 0) numberParge = 1;
                         CurrentTransactionHistoryPageNormalReceive = (int) numberParge;
                         labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageNormalReceive;
-                        StopUpdateTransactionHistory(false, false, true);
+                        CleanTransactionHistory();
                     }
 
                     if (TransactionHistoryWalletForm.tabPageAnonymityTransactionSend.Visible
@@ -1645,7 +1645,7 @@ namespace Xiropht_Wallet
                         if (numberParge <= 0) numberParge = 1;
                         CurrentTransactionHistoryPageAnonymousSend = (int) numberParge;
                         labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousSend;
-                        StopUpdateTransactionHistory(false, false, true);
+                        CleanTransactionHistory();
                     }
 
                     if (TransactionHistoryWalletForm.tabPageAnonymityTransactionReceived.Visible
@@ -1657,7 +1657,7 @@ namespace Xiropht_Wallet
                         if (numberParge <= 0) numberParge = 1;
                         CurrentTransactionHistoryPageAnonymousReceived = (int) numberParge;
                         labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageAnonymousReceived;
-                        StopUpdateTransactionHistory(false, false, true);
+                        CleanTransactionHistory();
                     }
 
                     if (TransactionHistoryWalletForm.tabPageBlockRewardTransaction.Visible
@@ -1669,7 +1669,7 @@ namespace Xiropht_Wallet
                         if (numberParge <= 0) numberParge = 1;
                         CurrentTransactionHistoryPageBlockReward = (int) numberParge;
                         labelNoticeCurrentPage.Text = "" + CurrentTransactionHistoryPageBlockReward;
-                        StopUpdateTransactionHistory(false, false, true);
+                        CleanTransactionHistory();
                     }
                 }
             }
@@ -2137,96 +2137,26 @@ namespace Xiropht_Wallet
             }
         }
 
-
         /// <summary>
-        ///     Disable update transaction history.
+        /// Clean the transaction history.
         /// </summary>
-        public void StopUpdateTransactionHistory(bool fullStop, bool clean, bool switchPage = false)
+        public void CleanTransactionHistory()
         {
-            if (clean)
-            {
-                CurrentTransactionHistoryPageAnonymousReceived = 1;
-                CurrentTransactionHistoryPageAnonymousSend = 1;
-                CurrentTransactionHistoryPageNormalSend = 1;
-                CurrentTransactionHistoryPageNormalReceive = 1;
-                CurrentTransactionHistoryPageBlockReward = 1;
-                _normalTransactionLoaded = false;
-                _anonymousTransactionLoaded = false;
-                NormalTransactionLoaded = false;
-                AnonymousTransactionLoaded = false;
-                MethodInvoker invoke = () =>
-                {
-                    TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Clear();
-                    TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Clear();
+            TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Clear();
+            TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Clear();
+            TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
+            TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
+            TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Clear();
+            NormalTransactionLoaded = false;
+            AnonymousTransactionLoaded = false;
+            TotalTransactionAnonymousReceived = 0;
+            TotalTransactionAnonymousSend = 0;
+            TotalTransactionBlockReward = 0;
+            TotalTransactionNormalReceived = 0;
+            TotalTransactionNormalSend = 0;
+            TotalTransactionRead = 0;
+            TotalAnonymityTransactionRead = 0;
 
-                    // Transaction anonymity
-                    TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
-                    TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Clear();
-
-                    // Transaction block reward
-                    TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
-                };
-                BeginInvoke(invoke);
-                ListTransactionShowed.Clear();
-            }
-
-            if (switchPage)
-            {
-                TotalTransactionAnonymousReceived = 0;
-                TotalTransactionAnonymousSend = 0;
-                TotalTransactionNormalReceived = 0;
-                TotalTransactionNormalSend = 0;
-                TotalTransactionBlockReward = 0;
-                TotalTransactionRead = 0;
-                TotalAnonymityTransactionRead = 0;
-                _normalTransactionLoaded = false;
-                _anonymousTransactionLoaded = false;
-                NormalTransactionLoaded = false;
-                AnonymousTransactionLoaded = false;
-
-                // Transaction normal
-                MethodInvoker invoke = () =>
-                {
-                    TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Clear();
-                    TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Clear();
-
-                    // Transaction anonymity
-                    TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
-                    TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Clear();
-
-                    // Transaction block reward
-                    TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
-                };
-                BeginInvoke(invoke);
-            }
-            else
-            {
-                TotalTransactionAnonymousReceived = 0;
-                TotalTransactionAnonymousSend = 0;
-                TotalTransactionNormalReceived = 0;
-                TotalTransactionNormalSend = 0;
-                TotalTransactionBlockReward = 0;
-                TotalTransactionRead = 0;
-                TotalAnonymityTransactionRead = 0;
-                _normalTransactionLoaded = false;
-                _anonymousTransactionLoaded = false;
-                NormalTransactionLoaded = false;
-                AnonymousTransactionLoaded = false;
-
-                // Transaction normal
-                MethodInvoker invoke = () =>
-                {
-                    TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Clear();
-                    TransactionHistoryWalletForm.listViewNormalReceivedTransactionHistory.Items.Clear();
-                    // Transaction anonymity
-                    TransactionHistoryWalletForm.listViewAnonymitySendTransactionHistory.Items.Clear();
-                    TransactionHistoryWalletForm.listViewAnonymityReceivedTransactionHistory.Items.Clear();
-                    // Transaction block reward
-                    TransactionHistoryWalletForm.listViewBlockRewardTransactionHistory.Items.Clear();
-                };
-                BeginInvoke(invoke);
-                ListTransactionShowed.Clear();
-            }
         }
 
         /// <summary>

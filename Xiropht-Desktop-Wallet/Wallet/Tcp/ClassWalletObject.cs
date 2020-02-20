@@ -623,7 +623,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                         Program.WalletXiropht.UpdateLabelSyncInformation(
                             ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
                                 .walletnetworkobjectdisconnectedtext));
-                        Program.WalletXiropht.StopUpdateTransactionHistory(true, true);
+                        Program.WalletXiropht.CleanTransactionHistory();
                         Program.WalletXiropht.StopUpdateBlockHistory(false, false);
                         ClassWalletTransactionCache.ClearWalletCache();
                         ClassWalletTransactionAnonymityCache.ClearWalletCache();
@@ -739,7 +739,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                     ClassTranslation.GetLanguageTextFromOrder(ClassTranslationEnumeration
                                         .walletnetworkobjectdisconnectedtext));
 
-                                Program.WalletXiropht.StopUpdateTransactionHistory(true, true);
+                                Program.WalletXiropht.CleanTransactionHistory();
 
                                 Program.WalletXiropht.StopUpdateBlockHistory(false, false);
                                 ClassConnectorSetting.NETWORK_GENESIS_KEY =
@@ -4163,7 +4163,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                         ClassWalletTransactionCache.RemoveWalletCache(WalletConnect
                                                             .WalletAddress);
                                                         Program.WalletXiropht
-                                                            .StopUpdateTransactionHistory(false, false);
+                                                            .CleanTransactionHistory();
                                                         totalTransactionInWallet = 0;
                                                     }
                                                     else
@@ -4365,8 +4365,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                                         ClassWalletTransactionAnonymityCache.RemoveWalletCache(
                                                             WalletConnect
                                                                 .WalletAddress);
-                                                        Program.WalletXiropht
-                                                            .StopUpdateTransactionHistory(false, false);
+                                                        Program.WalletXiropht.CleanTransactionHistory();
                                                         totalTransactionInWallet = 0;
                                                     }
                                                     else

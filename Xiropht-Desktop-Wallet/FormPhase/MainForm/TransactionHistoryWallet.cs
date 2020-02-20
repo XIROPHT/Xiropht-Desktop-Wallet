@@ -40,7 +40,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         public async void ResyncTransactionAsync()
         {
             Program.WalletXiropht.ClassWalletObject.BlockTransactionSync = true;
-            Program.WalletXiropht.StopUpdateTransactionHistory(true, true);
+            Program.WalletXiropht.CleanTransactionHistory();
             if (ClassWalletTransactionCache.RemoveWalletCache(Program.WalletXiropht.ClassWalletObject.WalletConnect
                 .WalletAddress))
                 if (ClassWalletTransactionAnonymityCache.RemoveWalletCache(Program.WalletXiropht.ClassWalletObject
@@ -900,16 +900,16 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
                                                                                     string[] row =
                                                                                     {
-                                                                            (walletXiropht.TotalTransactionAnonymousReceived +1).ToString(),
-                                                                            dateTimeSend.ToString(),
-                                                                            transactionObject.TransactionType,
-                                                                            transactionObject.TransactionHash,
-                                                                            transactionObject.TransactionAmount.ToString(),
-                                                                            transactionObject.TransactionFee.ToString(),
-                                                                            transactionObject.TransactionWalletAddress,
-                                                                            dateTimeRecv.ToString(),
-                                                                            transactionObject.TransactionBlockchainHeight
-                                                                            };
+                                                                                        (walletXiropht.TotalTransactionAnonymousReceived +1).ToString(),
+                                                                                        dateTimeSend.ToString(),
+                                                                                        transactionObject.TransactionType,
+                                                                                        transactionObject.TransactionHash,
+                                                                                        transactionObject.TransactionAmount.ToString(),
+                                                                                        transactionObject.TransactionFee.ToString(),
+                                                                                        transactionObject.TransactionWalletAddress,
+                                                                                        dateTimeRecv.ToString(),
+                                                                                        transactionObject.TransactionBlockchainHeight
+                                                                                    };
 
                                                                                     listViewAnonymityReceivedTransactionHistory.Items.Add(new ListViewItem(row));
 
