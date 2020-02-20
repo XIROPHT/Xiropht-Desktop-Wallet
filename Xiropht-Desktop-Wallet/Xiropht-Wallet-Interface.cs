@@ -24,6 +24,7 @@ using Xiropht_Wallet.Utility;
 using Xiropht_Wallet.Wallet;
 using Xiropht_Wallet.Wallet.Setting;
 using Xiropht_Wallet.Wallet.Sync;
+using Xiropht_Wallet.Wallet.Sync.Object;
 using Xiropht_Wallet.Wallet.Tcp;
 using ZXing;
 using ZXing.QrCode;
@@ -421,26 +422,25 @@ namespace Xiropht_Wallet
                 if (WalletCancellationToken != null)
                 {
                     Task.Factory.StartNew(async () =>
-                        {
-                            if (EnableTokenNetworkMode)
-                                while (!ClassWalletObject.WalletClosed)
-                                {
-                                    UpdateNetworkStatsLabel();
-                                    await Task.Delay(ThreadUpdateNetworkStatsInterval);
-                                }
-                            else
-                                while (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() &&
-                                       !ClassWalletObject.WalletClosed)
-                                {
-                                    if (ClassWalletObject.SeedNodeConnectorWallet != null)
-                                        if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() &&
-                                            !ClassWalletObject.WalletClosed)
-                                            UpdateNetworkStatsLabel();
+                    {
+                        if (EnableTokenNetworkMode)
+                            while (!ClassWalletObject.WalletClosed)
+                            {
+                                UpdateNetworkStatsLabel();
+                                await Task.Delay(ThreadUpdateNetworkStatsInterval);
+                            }
+                        else
+                            while (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() &&
+                                   !ClassWalletObject.WalletClosed)
+                            {
+                                if (ClassWalletObject.SeedNodeConnectorWallet != null)
+                                    if (ClassWalletObject.SeedNodeConnectorWallet.ReturnStatus() &&
+                                        !ClassWalletObject.WalletClosed)
+                                        UpdateNetworkStatsLabel();
 
-                                    await Task.Delay(ThreadUpdateNetworkStatsInterval);
-                                }
-                        }, WalletCancellationToken.Token, TaskCreationOptions.DenyChildAttach,
-                        TaskScheduler.Current).ConfigureAwait(false);
+                                await Task.Delay(ThreadUpdateNetworkStatsInterval);
+                            }
+                    }, WalletCancellationToken.Token, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
                 }
             }
             catch
@@ -1699,7 +1699,9 @@ namespace Xiropht_Wallet
                     LinuxClipboard.SetText(ClassWalletObject.WalletConnect.WalletAddress);
                 else // Windows (normaly)
                     Clipboard.SetText(ClassWalletObject.WalletConnect.WalletAddress);
-                Task.Factory.StartNew(async () =>
+                try
+                {
+                    Task.Factory.StartNew(async () =>
                     {
                         var oldText = labelNoticeWalletAddress.Text;
                         var oldColor = labelNoticeWalletAddress.ForeColor;
@@ -1717,9 +1719,12 @@ namespace Xiropht_Wallet
                                 ClassWalletObject.WalletConnect.WalletAddress;
                         BeginInvoke(invoke);
                         _isCopyWalletAddress = false;
-                    }, WalletCancellationToken.Token,
-                    TaskCreationOptions.RunContinuationsAsynchronously,
-                    TaskScheduler.Current).ConfigureAwait(false);
+                    }, WalletCancellationToken.Token, TaskCreationOptions.RunContinuationsAsynchronously, TaskScheduler.Current).ConfigureAwait(false);
+                }
+                catch
+                {
+
+                }
             }
         }
 
@@ -3357,15 +3362,13 @@ namespace Xiropht_Wallet
             var useContactName = false;
             var useWalletAddress = false;
 
-            try
+            if (elementToSearch.Length >= ClassConnectorSetting.MinWalletAddressSize &&
+                elementToSearch.Length <= ClassConnectorSetting.MaxWalletAddressSize)
             {
-                if (elementToSearch.Length >= ClassConnectorSetting.MinWalletAddressSize &&
-                    elementToSearch.Length <= ClassConnectorSetting.MaxWalletAddressSize)
-                {
 #if WINDOWS
-                    if (ClassFormPhase.MessageBoxInterface("Do you want to research by wallet address?",
-                            "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) ==
-                        DialogResult.Yes) useWalletAddress = true;
+                if (ClassFormPhase.MessageBoxInterface("Do you want to research by wallet address?",
+                        "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) ==
+                    DialogResult.Yes) useWalletAddress = true;
 #endif
 #if LINUX
                     if (MessageBox.Show(this, "Do you want to research by wallet address?", "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
@@ -3373,24 +3376,7 @@ namespace Xiropht_Wallet
                         useWalletAddress = true;
                     }
 #endif
-                    if (!useWalletAddress)
-                        if (elementToSearch.Length < MinSizeTransactionHash)
-                        {
-#if WINDOWS
-                            if (ClassFormPhase.MessageBoxInterface("Do you want to research by contact name?",
-                                    "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) ==
-                                DialogResult.Yes) useContactName = true;
-#endif
-#if LINUX
-                            if (MessageBox.Show(this, "Do you want to research by contact name?", "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
-                            {
-                                useContactName = true;
-                            }
-#endif
-                        }
-                }
-                else
-                {
+                if (!useWalletAddress)
                     if (elementToSearch.Length < MinSizeTransactionHash)
                     {
 #if WINDOWS
@@ -3399,27 +3385,243 @@ namespace Xiropht_Wallet
                             DialogResult.Yes) useContactName = true;
 #endif
 #if LINUX
+                            if (MessageBox.Show(this, "Do you want to research by contact name?", "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                            {
+                                useContactName = true;
+                            }
+#endif
+                    }
+            }
+            else
+            {
+                if (elementToSearch.Length < MinSizeTransactionHash)
+                {
+#if WINDOWS
+                    if (ClassFormPhase.MessageBoxInterface("Do you want to research by contact name?",
+                            "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) ==
+                        DialogResult.Yes) useContactName = true;
+#endif
+#if LINUX
                         if (MessageBox.Show(this, "Do you want to research by contact name?", "Research mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                         {
                             useContactName = true;
                         }
 #endif
-                    }
                 }
+            }
 
-                if (!useContactName)
+            MethodInvoker invokeResearch = () =>
+            {
+                try
                 {
-                    if (!useWalletAddress) // Usually when the user target a transaction hash.
+                    if (!useContactName)
                     {
-                        decimal transactionSendNormalCounter = 0;
-                        decimal transactionRecvNormalCounter = 0;
-                        decimal transactionSendAnonymousCounter = 0;
-                        decimal transactionBlockRewardCounter = 0;
-                        decimal transactionRecvAnonymousCounter = 0;
+                        if (!useWalletAddress) // Usually when the user target a transaction hash.
+                            {
+                            decimal transactionSendNormalCounter = 0;
+                            decimal transactionRecvNormalCounter = 0;
+                            decimal transactionSendAnonymousCounter = 0;
+                            decimal transactionBlockRewardCounter = 0;
+                            decimal transactionRecvAnonymousCounter = 0;
 
 
-                        foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction.ToArray())
-                            if (!elementFound)
+                            foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction.ToArray())
+                                if (!elementFound)
+                                {
+                                    switch (transactionObject.Value.TransactionType)
+                                    {
+                                        case ClassWalletTransactionType.SendTransaction:
+                                            transactionSendNormalCounter++;
+                                            break;
+                                        case ClassWalletTransactionType.ReceiveTransaction:
+                                            if (transactionObject.Value.TransactionWalletAddress.Contains(ClassWalletTransactionType.BlockchainTransaction))
+                                                transactionBlockRewardCounter++;
+                                            else if (transactionObject.Value.TransactionWalletAddress == ClassWalletTransactionType.AnonymousTransaction)
+                                                transactionRecvAnonymousCounter++;
+                                            else
+                                                transactionRecvNormalCounter++;
+                                            break;
+                                    }
+
+                                    if (transactionObject.Value.TransactionHash == elementToSearch)
+                                        elementFound = true;
+                                    else
+                                        elementIdFound++;
+                                }
+
+                            if (elementFound)
+                            {
+                                var walletResearchElementForm = new SearchWalletExplorer
+                                {
+                                    StartPosition = FormStartPosition.CenterParent
+                                };
+
+                                var transactionObject =
+                                    ClassWalletTransactionCache.ListTransaction.ElementAt(elementIdFound);
+                                decimal pageNumber = 1;
+
+
+                                switch (transactionObject.Value.TransactionType)
+                                {
+                                    case ClassWalletTransactionType.SendTransaction:
+                                        var totalPage =
+                                            Math.Ceiling((decimal)(TotalTransactionNormalSend / MaxTransactionPerPage)) +
+                                            1;
+
+                                        var target = TotalTransactionNormalSend - transactionSendNormalCounter;
+                                        for (var i = 0; i < totalPage; i++)
+                                            if (target >= i * MaxTransactionPerPage &&
+                                                target <= (i + 1) * MaxTransactionPerPage)
+                                            {
+#if DEBUG
+                                            Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                    pageNumber = i + 1;
+                                            }
+
+                                        break;
+                                    case ClassWalletTransactionType.ReceiveTransaction:
+                                        if (transactionObject.Value.TransactionWalletAddress.Contains(ClassWalletTransactionType.BlockchainTransaction))
+                                        {
+                                            totalPage = Math.Ceiling(
+                                                            (decimal)(TotalTransactionBlockReward /
+                                                                       MaxTransactionPerPage)) + 1;
+
+                                            target = TotalTransactionBlockReward - transactionBlockRewardCounter;
+                                            for (var i = 0; i < totalPage; i++)
+                                                if (target >= i * MaxTransactionPerPage &&
+                                                    target <= (i + 1) * MaxTransactionPerPage)
+                                                {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                        pageNumber = i + 1;
+                                                }
+                                        }
+                                        else if (transactionObject.Value.TransactionWalletAddress == ClassWalletTransactionType.AnonymousTransaction)
+                                        {
+                                            totalPage = Math.Ceiling(
+                                                            (decimal)(TotalTransactionAnonymousReceived /
+                                                                       MaxTransactionPerPage)) + 1;
+
+                                            target = TotalTransactionAnonymousReceived - transactionRecvAnonymousCounter;
+                                            for (var i = 0; i < totalPage; i++)
+                                                if (target >= i * MaxTransactionPerPage &&
+                                                    target <= (i + 1) * MaxTransactionPerPage)
+                                                {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                        pageNumber = i + 1;
+                                                }
+                                        }
+                                        else
+                                        {
+                                            totalPage = Math.Ceiling(
+                                                            (decimal)(TotalTransactionNormalReceived /
+                                                                       MaxTransactionPerPage)) + 1;
+
+                                            target = TotalTransactionNormalReceived - transactionRecvNormalCounter;
+                                            for (var i = 0; i < totalPage; i++)
+                                                if (target >= i * MaxTransactionPerPage &&
+                                                    target <= (i + 1) * MaxTransactionPerPage)
+                                                {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                        pageNumber = i + 1;
+                                                }
+                                        }
+
+                                        break;
+                                }
+
+                                if (pageNumber < 1) pageNumber = 1;
+
+
+                                walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
+                                walletResearchElementForm.ShowDialog(this);
+
+#if DEBUG
+                            Log.WriteLine("Element found: " + ClassBlockCache.ListBlock.ElementAt(elementIdFound).Value.ConcatBlockElement());
+#endif
+                                }
+                            else
+                            {
+
+                                elementIdFound = 0;
+                                foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction
+                                    .ToArray())
+                                    if (!elementFound)
+                                    {
+                                        transactionSendAnonymousCounter++;
+                                        if (transactionObject.Value.TransactionHash.Contains(elementToSearch))
+                                            elementFound = true;
+                                        else
+                                            elementIdFound++;
+                                    }
+
+
+                                if (elementFound)
+                                {
+                                    var transactionObject =
+                                        ClassWalletTransactionAnonymityCache.ListTransaction.ElementAt(elementIdFound);
+                                    decimal pageNumber = 0;
+
+                                    var totalPage =
+                                        Math.Ceiling((decimal)(TotalTransactionAnonymousSend / MaxTransactionPerPage)) + 1;
+
+                                    var target = TotalTransactionAnonymousSend - transactionSendAnonymousCounter;
+                                    for (var i = 0; i < totalPage; i++)
+                                        if (target >= i * MaxTransactionPerPage &&
+                                            target <= (i + 1) * MaxTransactionPerPage)
+                                        {
+#if DEBUG
+                                        Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                pageNumber = i + 1;
+                                        }
+
+                                    if (pageNumber < 1) pageNumber = 1;
+                                    var walletResearchElementForm = new SearchWalletExplorer
+                                    {
+                                        StartPosition = FormStartPosition.CenterParent
+                                    };
+                                    walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
+                                    walletResearchElementForm.ShowDialog(this);
+
+#if DEBUG
+                            Log.WriteLine("Element found: " + ClassBlockCache.ListBlock.ElementAt(elementIdFound).Value.ConcatBlockElement());
+#endif
+                                    }
+                                else
+                                {
+#if WINDOWS
+                                        ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#endif
+#if LINUX
+                                MessageBox.Show(this, elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#endif
+                                    }
+                            }
+                        }
+                        else // Search by wallet address
+                            {
+                            decimal transactionSendNormalCounter = 0;
+                            decimal transactionRecvNormalCounter = 0;
+                            decimal transactionSendAnonymousCounter = 0;
+                            decimal transactionBlockRewardCounter = 0;
+                            decimal transactionRecvAnonymousCounter = 0;
+
+                            var walletAddressTransactionFound = false;
+                            var walletResearchElementForm = new SearchWalletExplorer
+                            {
+                                StartPosition = FormStartPosition.CenterParent
+                            };
+
+
+                            foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction.ToArray())
                             {
                                 switch (transactionObject.Value.TransactionType)
                                 {
@@ -3436,554 +3638,337 @@ namespace Xiropht_Wallet
                                         break;
                                 }
 
-                                if (transactionObject.Value.TransactionHash == elementToSearch)
-                                    elementFound = true;
-                                else
-                                    elementIdFound++;
+                                if (transactionObject.Value.TransactionWalletAddress == elementToSearch)
+                                {
+                                    walletAddressTransactionFound = true;
+                                    decimal pageNumber = 1;
+
+                                    switch (transactionObject.Value.TransactionType)
+                                    {
+                                        case ClassWalletTransactionType.SendTransaction:
+                                            var totalPage =
+                                                Math.Ceiling(
+                                                    (decimal)(TotalTransactionNormalSend / MaxTransactionPerPage)) + 1;
+
+                                            var target = TotalTransactionNormalSend - transactionSendNormalCounter;
+                                            for (var i = 0; i < totalPage; i++)
+                                                if (target >= i * MaxTransactionPerPage &&
+                                                    target <= (i + 1) * MaxTransactionPerPage)
+                                                {
+#if DEBUG
+                                            Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                        pageNumber = i + 1;
+                                                }
+
+                                            break;
+                                        case ClassWalletTransactionType.ReceiveTransaction:
+                                            if (transactionObject.Value.TransactionWalletAddress.Contains(ClassWalletTransactionType.BlockchainTransaction))
+                                            {
+                                                totalPage = Math.Ceiling(
+                                                                (decimal)(TotalTransactionBlockReward /
+                                                                           MaxTransactionPerPage)) + 1;
+
+                                                target = TotalTransactionBlockReward - transactionBlockRewardCounter;
+                                                for (var i = 0; i < totalPage; i++)
+                                                    if (target >= i * MaxTransactionPerPage &&
+                                                        target <= (i + 1) * MaxTransactionPerPage)
+                                                    {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                            pageNumber = i + 1;
+                                                    }
+                                            }
+                                            else if (transactionObject.Value.TransactionWalletAddress == ClassWalletTransactionType.AnonymousTransaction)
+                                            {
+                                                totalPage = Math.Ceiling(
+                                                                (decimal)(TotalTransactionAnonymousReceived /
+                                                                           MaxTransactionPerPage)) + 1;
+
+                                                target = TotalTransactionAnonymousReceived -
+                                                         transactionRecvAnonymousCounter;
+                                                for (var i = 0; i < totalPage; i++)
+                                                    if (target >= i * MaxTransactionPerPage &&
+                                                        target <= (i + 1) * MaxTransactionPerPage)
+                                                    {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                            pageNumber = i + 1;
+                                                    }
+                                            }
+                                            else
+                                            {
+                                                totalPage = Math.Ceiling(
+                                                                (decimal)(TotalTransactionNormalReceived /
+                                                                           MaxTransactionPerPage)) + 1;
+
+                                                target = TotalTransactionNormalReceived - transactionRecvNormalCounter;
+                                                for (var i = 0; i < totalPage; i++)
+                                                    if (target >= i * MaxTransactionPerPage &&
+                                                        target <= (i + 1) * MaxTransactionPerPage)
+                                                    {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                            pageNumber = i + 1;
+                                                    }
+                                            }
+
+                                            break;
+                                    }
+
+                                    if (pageNumber < 1) pageNumber = 1;
+                                    walletResearchElementForm.AppendText(
+                                        transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
+                                }
                             }
 
-                        if (elementFound)
-                        {
-                            var walletResearchElementForm = new SearchWalletExplorer
+
+                            foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction.ToArray()
+                            )
                             {
-                                StartPosition = FormStartPosition.CenterParent
-                            };
+                                TotalTransactionAnonymousSend++;
 
-                            var transactionObject =
-                                ClassWalletTransactionCache.ListTransaction.ElementAt(elementIdFound);
-                            decimal pageNumber = 1;
+                                if (transactionObject.Value.TransactionWalletAddress == elementToSearch)
+                                {
+                                    walletAddressTransactionFound = true;
+                                    decimal pageNumber = 0;
 
-
-                            switch (transactionObject.Value.TransactionType)
-                            {
-                                case ClassWalletTransactionType.SendTransaction:
                                     var totalPage =
-                                        Math.Ceiling((decimal) (TotalTransactionNormalSend / MaxTransactionPerPage)) +
-                                        1;
+                                        Math.Ceiling((decimal)(TotalTransactionAnonymousSend / MaxTransactionPerPage)) + 1;
 
-                                    var target = TotalTransactionNormalSend - transactionSendNormalCounter;
+                                    var target = TotalTransactionAnonymousSend - transactionSendAnonymousCounter;
                                     for (var i = 0; i < totalPage; i++)
                                         if (target >= i * MaxTransactionPerPage &&
                                             target <= (i + 1) * MaxTransactionPerPage)
                                         {
 #if DEBUG
-                                            Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
-#endif
-                                            pageNumber = i + 1;
-                                        }
-
-                                    break;
-                                case ClassWalletTransactionType.ReceiveTransaction:
-                                    if (transactionObject.Value.TransactionWalletAddress.Contains(ClassWalletTransactionType.BlockchainTransaction))
-                                    {
-                                        totalPage = Math.Ceiling(
-                                                        (decimal) (TotalTransactionBlockReward /
-                                                                   MaxTransactionPerPage)) + 1;
-
-                                        target = TotalTransactionBlockReward - transactionBlockRewardCounter;
-                                        for (var i = 0; i < totalPage; i++)
-                                            if (target >= i * MaxTransactionPerPage &&
-                                                target <= (i + 1) * MaxTransactionPerPage)
-                                            {
-#if DEBUG
-                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
-#endif
-                                                pageNumber = i + 1;
-                                            }
-                                    }
-                                    else if (transactionObject.Value.TransactionWalletAddress == ClassWalletTransactionType.AnonymousTransaction)
-                                    {
-                                        totalPage = Math.Ceiling(
-                                                        (decimal) (TotalTransactionAnonymousReceived /
-                                                                   MaxTransactionPerPage)) + 1;
-
-                                        target = TotalTransactionAnonymousReceived - transactionRecvAnonymousCounter;
-                                        for (var i = 0; i < totalPage; i++)
-                                            if (target >= i * MaxTransactionPerPage &&
-                                                target <= (i + 1) * MaxTransactionPerPage)
-                                            {
-#if DEBUG
-                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
-#endif
-                                                pageNumber = i + 1;
-                                            }
-                                    }
-                                    else
-                                    {
-                                        totalPage = Math.Ceiling(
-                                                        (decimal) (TotalTransactionNormalReceived /
-                                                                   MaxTransactionPerPage)) + 1;
-
-                                        target = TotalTransactionNormalReceived - transactionRecvNormalCounter;
-                                        for (var i = 0; i < totalPage; i++)
-                                            if (target >= i * MaxTransactionPerPage &&
-                                                target <= (i + 1) * MaxTransactionPerPage)
-                                            {
-#if DEBUG
-                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
-#endif
-                                                pageNumber = i + 1;
-                                            }
-                                    }
-
-                                    break;
-                            }
-
-                            if (pageNumber < 1) pageNumber = 1;
-
-
-                            walletResearchElementForm.AppendText(
-                                transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
-                            walletResearchElementForm.ShowDialog(this);
-
-#if DEBUG
-                            Log.WriteLine("Element found: " + ClassBlockCache.ListBlock.ElementAt(elementIdFound).Value.ConcatBlockElement());
-#endif
-                        }
-                        else
-                        {
-
-                            elementIdFound = 0;
-                            foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction
-                                .ToArray())
-                                if (!elementFound)
-                                {
-                                    transactionSendAnonymousCounter++;
-                                    if (transactionObject.Value.TransactionHash.Contains(elementToSearch))
-                                        elementFound = true;
-                                    else
-                                        elementIdFound++;
-                                }
-
-
-                            if (elementFound)
-                            {
-                                var transactionObject =
-                                    ClassWalletTransactionAnonymityCache.ListTransaction.ElementAt(elementIdFound);
-                                decimal pageNumber = 0;
-
-                                var totalPage =
-                                    Math.Ceiling((decimal) (TotalTransactionAnonymousSend / MaxTransactionPerPage)) + 1;
-
-                                var target = TotalTransactionAnonymousSend - transactionSendAnonymousCounter;
-                                for (var i = 0; i < totalPage; i++)
-                                    if (target >= i * MaxTransactionPerPage &&
-                                        target <= (i + 1) * MaxTransactionPerPage)
-                                    {
-#if DEBUG
                                         Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
 #endif
-                                        pageNumber = i + 1;
-                                    }
+                                                pageNumber = i + 1;
+                                        }
 
-                                if (pageNumber < 1) pageNumber = 1;
-                                var walletResearchElementForm = new SearchWalletExplorer
-                                {
-                                    StartPosition = FormStartPosition.CenterParent
-                                };
-                                walletResearchElementForm.AppendText(transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
-                                walletResearchElementForm.ShowDialog(this);
-
-#if DEBUG
-                            Log.WriteLine("Element found: " + ClassBlockCache.ListBlock.ElementAt(elementIdFound).Value.ConcatBlockElement());
-#endif
+                                    if (pageNumber < 1) pageNumber = 1;
+                                    walletResearchElementForm.AppendText(
+                                        transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
+                                }
                             }
-                            else
+
+
+
+                            if (!walletAddressTransactionFound)
                             {
 #if WINDOWS
-                                ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found",
+                                    ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found",
                                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
-#endif
-#if LINUX
-                                MessageBox.Show(this, elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-#endif
-                            }
-                        }
-                    }
-                    else // Search by wallet address
-                    {
-                        decimal transactionSendNormalCounter = 0;
-                        decimal transactionRecvNormalCounter = 0;
-                        decimal transactionSendAnonymousCounter = 0;
-                        decimal transactionBlockRewardCounter = 0;
-                        decimal transactionRecvAnonymousCounter = 0;
-
-                        var walletAddressTransactionFound = false;
-                        var walletResearchElementForm = new SearchWalletExplorer
-                        {
-                            StartPosition = FormStartPosition.CenterParent
-                        };
-
-
-                        foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction.ToArray())
-                        {
-                            switch (transactionObject.Value.TransactionType)
-                            {
-                                case ClassWalletTransactionType.SendTransaction:
-                                    transactionSendNormalCounter++;
-                                    break;
-                                case ClassWalletTransactionType.ReceiveTransaction:
-                                    if (transactionObject.Value.TransactionWalletAddress.Contains(ClassWalletTransactionType.BlockchainTransaction))
-                                        transactionBlockRewardCounter++;
-                                    else if (transactionObject.Value.TransactionWalletAddress == ClassWalletTransactionType.AnonymousTransaction)
-                                        transactionRecvAnonymousCounter++;
-                                    else
-                                        transactionRecvNormalCounter++;
-                                    break;
-                            }
-
-                            if (transactionObject.Value.TransactionWalletAddress == elementToSearch)
-                            {
-                                walletAddressTransactionFound = true;
-                                decimal pageNumber = 1;
-
-                                switch (transactionObject.Value.TransactionType)
-                                {
-                                    case ClassWalletTransactionType.SendTransaction:
-                                        var totalPage =
-                                            Math.Ceiling(
-                                                (decimal) (TotalTransactionNormalSend / MaxTransactionPerPage)) + 1;
-
-                                        var target = TotalTransactionNormalSend - transactionSendNormalCounter;
-                                        for (var i = 0; i < totalPage; i++)
-                                            if (target >= i * MaxTransactionPerPage &&
-                                                target <= (i + 1) * MaxTransactionPerPage)
-                                            {
-#if DEBUG
-                                            Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
-#endif
-                                                pageNumber = i + 1;
-                                            }
-
-                                        break;
-                                    case ClassWalletTransactionType.ReceiveTransaction:
-                                        if (transactionObject.Value.TransactionWalletAddress.Contains(ClassWalletTransactionType.BlockchainTransaction))
-                                        {
-                                            totalPage = Math.Ceiling(
-                                                            (decimal) (TotalTransactionBlockReward /
-                                                                       MaxTransactionPerPage)) + 1;
-
-                                            target = TotalTransactionBlockReward - transactionBlockRewardCounter;
-                                            for (var i = 0; i < totalPage; i++)
-                                                if (target >= i * MaxTransactionPerPage &&
-                                                    target <= (i + 1) * MaxTransactionPerPage)
-                                                {
-#if DEBUG
-                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
-#endif
-                                                    pageNumber = i + 1;
-                                                }
-                                        }
-                                        else if (transactionObject.Value.TransactionWalletAddress == ClassWalletTransactionType.AnonymousTransaction)
-                                        {
-                                            totalPage = Math.Ceiling(
-                                                            (decimal) (TotalTransactionAnonymousReceived /
-                                                                       MaxTransactionPerPage)) + 1;
-
-                                            target = TotalTransactionAnonymousReceived -
-                                                     transactionRecvAnonymousCounter;
-                                            for (var i = 0; i < totalPage; i++)
-                                                if (target >= i * MaxTransactionPerPage &&
-                                                    target <= (i + 1) * MaxTransactionPerPage)
-                                                {
-#if DEBUG
-                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
-#endif
-                                                    pageNumber = i + 1;
-                                                }
-                                        }
-                                        else
-                                        {
-                                            totalPage = Math.Ceiling(
-                                                            (decimal) (TotalTransactionNormalReceived /
-                                                                       MaxTransactionPerPage)) + 1;
-
-                                            target = TotalTransactionNormalReceived - transactionRecvNormalCounter;
-                                            for (var i = 0; i < totalPage; i++)
-                                                if (target >= i * MaxTransactionPerPage &&
-                                                    target <= (i + 1) * MaxTransactionPerPage)
-                                                {
-#if DEBUG
-                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
-#endif
-                                                    pageNumber = i + 1;
-                                                }
-                                        }
-
-                                        break;
-                                }
-
-                                if (pageNumber < 1) pageNumber = 1;
-                                walletResearchElementForm.AppendText(
-                                    transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
-                            }
-                        }
-
-
-                        foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction.ToArray()
-                        )
-                        {
-                            TotalTransactionAnonymousSend++;
-
-                            if (transactionObject.Value.TransactionWalletAddress == elementToSearch)
-                            {
-                                walletAddressTransactionFound = true;
-                                decimal pageNumber = 0;
-
-                                var totalPage =
-                                    Math.Ceiling((decimal) (TotalTransactionAnonymousSend / MaxTransactionPerPage)) + 1;
-
-                                var target = TotalTransactionAnonymousSend - transactionSendAnonymousCounter;
-                                for (var i = 0; i < totalPage; i++)
-                                    if (target >= i * MaxTransactionPerPage &&
-                                        target <= (i + 1) * MaxTransactionPerPage)
-                                    {
-#if DEBUG
-                                        Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
-#endif
-                                        pageNumber = i + 1;
-                                    }
-
-                                if (pageNumber < 1) pageNumber = 1;
-                                walletResearchElementForm.AppendText(
-                                    transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
-                            }
-                        }
-
-
-
-                        if (!walletAddressTransactionFound)
-                        {
-#if WINDOWS
-                            ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #endif
 #if LINUX
                             MessageBox.Show(this, elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #endif
-                            walletResearchElementForm.Dispose();
-                        }
-                        else
-                        {
-                            walletResearchElementForm.ShowDialog(this);
+                                    walletResearchElementForm.Dispose();
+                            }
+                            else
+                            {
+                                walletResearchElementForm.ShowDialog(this);
+                            }
                         }
                     }
-                }
-                else // Search by contact name
-                {
-                    if (ClassContact.ListContactWallet.ContainsKey(elementToSearch.ToLower()))
-                    {
-                        decimal transactionSendNormalCounter = 0;
-                        decimal transactionRecvNormalCounter = 0;
-                        decimal transactionSendAnonymousCounter = 0;
-                        decimal transactionBlockRewardCounter = 0;
-                        decimal transactionRecvAnonymousCounter = 0;
-
-                        var contactTransactionFound = false;
-                        var walletAddressFromContactName =
-                            ClassContact.GetWalletAddressFromContactName(elementToSearch);
-                        var walletResearchElementForm = new SearchWalletExplorer
+                    else // Search by contact name
                         {
-                            StartPosition = FormStartPosition.CenterParent
-                        };
-
-
-                        foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction.ToArray())
+                        if (ClassContact.ListContactWallet.ContainsKey(elementToSearch.ToLower()))
                         {
-                            switch (transactionObject.Value.TransactionType)
-                            {
-                                case ClassWalletTransactionType.SendTransaction:
-                                    transactionSendNormalCounter++;
-                                    break;
-                                case ClassWalletTransactionType.ReceiveTransaction:
-                                    if (transactionObject.Value.TransactionWalletAddress.Contains(
-                                        ClassWalletTransactionType.BlockchainTransaction))
-                                        transactionBlockRewardCounter++;
-                                    else if (transactionObject.Value.TransactionWalletAddress ==
-                                             ClassWalletTransactionType.AnonymousTransaction)
-                                        transactionRecvAnonymousCounter++;
-                                    else
-                                        transactionRecvNormalCounter++;
-                                    break;
-                            }
+                            decimal transactionSendNormalCounter = 0;
+                            decimal transactionRecvNormalCounter = 0;
+                            decimal transactionSendAnonymousCounter = 0;
+                            decimal transactionBlockRewardCounter = 0;
+                            decimal transactionRecvAnonymousCounter = 0;
 
-                            if (transactionObject.Value.TransactionWalletAddress == walletAddressFromContactName)
+                            var contactTransactionFound = false;
+                            var walletAddressFromContactName =
+                                ClassContact.GetWalletAddressFromContactName(elementToSearch);
+                            var walletResearchElementForm = new SearchWalletExplorer
                             {
-                                contactTransactionFound = true;
-                                decimal pageNumber = 1;
+                                StartPosition = FormStartPosition.CenterParent
+                            };
 
+
+                            foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction.ToArray())
+                            {
                                 switch (transactionObject.Value.TransactionType)
                                 {
                                     case ClassWalletTransactionType.SendTransaction:
-                                        var totalPage =
-                                            Math.Ceiling(
-                                                (decimal) (TotalTransactionNormalSend / MaxTransactionPerPage)) + 1;
-
-                                        var target = TotalTransactionNormalSend - transactionSendNormalCounter;
-                                        for (var i = 0; i < totalPage; i++)
-                                            if (target >= i * MaxTransactionPerPage &&
-                                                target <= (i + 1) * MaxTransactionPerPage)
-                                            {
-#if DEBUG
-                                            Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
-#endif
-                                                pageNumber = i + 1;
-                                            }
-
+                                        transactionSendNormalCounter++;
                                         break;
                                     case ClassWalletTransactionType.ReceiveTransaction:
                                         if (transactionObject.Value.TransactionWalletAddress.Contains(
                                             ClassWalletTransactionType.BlockchainTransaction))
-                                        {
-                                            totalPage = Math.Ceiling(
-                                                            (decimal) (TotalTransactionBlockReward /
-                                                                       MaxTransactionPerPage)) + 1;
-
-                                            target = TotalTransactionBlockReward - transactionBlockRewardCounter;
-                                            for (var i = 0; i < totalPage; i++)
-                                                if (target >= i * MaxTransactionPerPage &&
-                                                    target <= (i + 1) * MaxTransactionPerPage)
-                                                {
-#if DEBUG
-                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
-#endif
-                                                    pageNumber = i + 1;
-                                                }
-                                        }
+                                            transactionBlockRewardCounter++;
                                         else if (transactionObject.Value.TransactionWalletAddress ==
                                                  ClassWalletTransactionType.AnonymousTransaction)
-                                        {
-                                            totalPage = Math.Ceiling(
-                                                            (decimal) (TotalTransactionAnonymousReceived /
-                                                                       MaxTransactionPerPage)) + 1;
-
-                                            target = TotalTransactionAnonymousReceived -
-                                                     transactionRecvAnonymousCounter;
-                                            for (var i = 0; i < totalPage; i++)
-                                                if (target >= i * MaxTransactionPerPage &&
-                                                    target <= (i + 1) * MaxTransactionPerPage)
-                                                {
-#if DEBUG
-                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
-#endif
-                                                    pageNumber = i + 1;
-                                                }
-                                        }
+                                            transactionRecvAnonymousCounter++;
                                         else
-                                        {
-                                            totalPage = Math.Ceiling(
-                                                            (decimal) (TotalTransactionNormalReceived /
-                                                                       MaxTransactionPerPage)) + 1;
-
-                                            target = TotalTransactionNormalReceived - transactionRecvNormalCounter;
-                                            for (var i = 0; i < totalPage; i++)
-                                                if (target >= i * MaxTransactionPerPage &&
-                                                    target <= (i + 1) * MaxTransactionPerPage)
-                                                {
-#if DEBUG
-                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
-#endif
-                                                    pageNumber = i + 1;
-                                                }
-                                        }
-
+                                            transactionRecvNormalCounter++;
                                         break;
                                 }
 
-                                if (pageNumber < 1) pageNumber = 1;
-                                walletResearchElementForm.AppendText(
-                                    transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
-                            }
-                        }
+                                if (transactionObject.Value.TransactionWalletAddress == walletAddressFromContactName)
+                                {
+                                    contactTransactionFound = true;
+                                    decimal pageNumber = 1;
 
-                        foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction.ToArray()
-                        )
-                        {
-                            TotalTransactionAnonymousSend++;
-                            if (transactionObject.Value.TransactionWalletAddress == walletAddressFromContactName)
-                            {
-                                contactTransactionFound = true;
-                                decimal pageNumber = 0;
-
-                                var totalPage =
-                                    Math.Ceiling((decimal) (TotalTransactionAnonymousSend / MaxTransactionPerPage)) + 1;
-
-                                var target = TotalTransactionAnonymousSend - transactionSendAnonymousCounter;
-                                for (var i = 0; i < totalPage; i++)
-                                    if (target >= i * MaxTransactionPerPage &&
-                                        target <= (i + 1) * MaxTransactionPerPage)
+                                    switch (transactionObject.Value.TransactionType)
                                     {
+                                        case ClassWalletTransactionType.SendTransaction:
+                                            var totalPage =
+                                                Math.Ceiling(
+                                                    (decimal)(TotalTransactionNormalSend / MaxTransactionPerPage)) + 1;
+
+                                            var target = TotalTransactionNormalSend - transactionSendNormalCounter;
+                                            for (var i = 0; i < totalPage; i++)
+                                                if (target >= i * MaxTransactionPerPage &&
+                                                    target <= (i + 1) * MaxTransactionPerPage)
+                                                {
+#if DEBUG
+                                            Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                        pageNumber = i + 1;
+                                                }
+
+                                            break;
+                                        case ClassWalletTransactionType.ReceiveTransaction:
+                                            if (transactionObject.Value.TransactionWalletAddress.Contains(
+                                                ClassWalletTransactionType.BlockchainTransaction))
+                                            {
+                                                totalPage = Math.Ceiling(
+                                                                (decimal)(TotalTransactionBlockReward /
+                                                                           MaxTransactionPerPage)) + 1;
+
+                                                target = TotalTransactionBlockReward - transactionBlockRewardCounter;
+                                                for (var i = 0; i < totalPage; i++)
+                                                    if (target >= i * MaxTransactionPerPage &&
+                                                        target <= (i + 1) * MaxTransactionPerPage)
+                                                    {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                            pageNumber = i + 1;
+                                                    }
+                                            }
+                                            else if (transactionObject.Value.TransactionWalletAddress ==
+                                                     ClassWalletTransactionType.AnonymousTransaction)
+                                            {
+                                                totalPage = Math.Ceiling(
+                                                                (decimal)(TotalTransactionAnonymousReceived /
+                                                                           MaxTransactionPerPage)) + 1;
+
+                                                target = TotalTransactionAnonymousReceived -
+                                                         transactionRecvAnonymousCounter;
+                                                for (var i = 0; i < totalPage; i++)
+                                                    if (target >= i * MaxTransactionPerPage &&
+                                                        target <= (i + 1) * MaxTransactionPerPage)
+                                                    {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                            pageNumber = i + 1;
+                                                    }
+                                            }
+                                            else
+                                            {
+                                                totalPage = Math.Ceiling(
+                                                                (decimal)(TotalTransactionNormalReceived /
+                                                                           MaxTransactionPerPage)) + 1;
+
+                                                target = TotalTransactionNormalReceived - transactionRecvNormalCounter;
+                                                for (var i = 0; i < totalPage; i++)
+                                                    if (target >= i * MaxTransactionPerPage &&
+                                                        target <= (i + 1) * MaxTransactionPerPage)
+                                                    {
+#if DEBUG
+                                                Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
+#endif
+                                                            pageNumber = i + 1;
+                                                    }
+                                            }
+
+                                            break;
+                                    }
+
+                                    if (pageNumber < 1) pageNumber = 1;
+                                    walletResearchElementForm.AppendText(
+                                        transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
+                                }
+                            }
+
+                            foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction.ToArray()
+                            )
+                            {
+                                TotalTransactionAnonymousSend++;
+                                if (transactionObject.Value.TransactionWalletAddress == walletAddressFromContactName)
+                                {
+                                    contactTransactionFound = true;
+                                    decimal pageNumber = 0;
+
+                                    var totalPage =
+                                        Math.Ceiling((decimal)(TotalTransactionAnonymousSend / MaxTransactionPerPage)) + 1;
+
+                                    var target = TotalTransactionAnonymousSend - transactionSendAnonymousCounter;
+                                    for (var i = 0; i < totalPage; i++)
+                                        if (target >= i * MaxTransactionPerPage &&
+                                            target <= (i + 1) * MaxTransactionPerPage)
+                                        {
 #if DEBUG
                                         Console.WriteLine(target + " between: "+ (i * MaxTransactionPerPage) + "/" + ((i + 1) * MaxTransactionPerPage));
 #endif
-                                        pageNumber = i + 1;
-                                    }
+                                                pageNumber = i + 1;
+                                        }
 
-                                if (pageNumber < 1) pageNumber = 1;
-                                walletResearchElementForm.AppendText(
-                                    transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
+                                    if (pageNumber < 1) pageNumber = 1;
+                                    walletResearchElementForm.AppendText(
+                                        transactionObject.Value.ConcatTransactionElement(pageNumber.ToString()));
+                                }
                             }
-                        }
-                        if (!contactTransactionFound)
-                        {
+                            if (!contactTransactionFound)
+                            {
 #if WINDOWS
-                            ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                    ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #endif
 #if LINUX
                             MessageBox.Show(this, elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #endif
-                            walletResearchElementForm.Dispose();
+                                    walletResearchElementForm.Dispose();
+                            }
+                            else
+                            {
+                                walletResearchElementForm.ShowDialog(this);
+                            }
                         }
                         else
                         {
-                            walletResearchElementForm.ShowDialog(this);
-                        }
-                    }
-                    else
-                    {
 
 #if WINDOWS
-                        ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                ClassFormPhase.MessageBoxInterface(elementToSearch + " not found.", "Not found",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #endif
 #if LINUX
                         MessageBox.Show(this, elementToSearch + " not found.", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 #endif
+                            }
                     }
+
+                    UpdateStyles();
+
                 }
-            }
-            catch
-            {
-            }
-        }
-
-        /// <summary>
-        ///     Do rearch of wallet address from transaction hash.
-        /// </summary>
-        /// <param name="elementToSearch"></param>
-        private string SearchWalletAddressFromHashTransactionHistory(string elementToSearch)
-        {
-            try
-            {
-                foreach (var transactionObject in ClassWalletTransactionCache.ListTransaction)
-                    if (transactionObject.Value.TransactionHash.Contains(elementToSearch))
-                    {
-                        return transactionObject.Value.TransactionWalletAddress;
+                catch
+                {
+                        // Ignored.
                     }
+            };
+            BeginInvoke(invokeResearch);
 
-                foreach (var transactionObject in ClassWalletTransactionAnonymityCache.ListTransaction)
-                    if (transactionObject.Value.TransactionHash.Contains(elementToSearch))
-                    {
-                        return transactionObject.Value.TransactionWalletAddress;
-                    }
-            }
-            catch
-            {
-            }
-
-
-            return "NOT FOUND";
         }
 
         /// <summary>
@@ -4067,11 +4052,15 @@ namespace Xiropht_Wallet
                         csvPath = saveFileDialogWallet.FileName;
 
 
+
                         if (ClassWalletTransactionCache.ListTransaction != null &&
                             ClassWalletTransactionAnonymityCache.ListTransaction != null)
                         {
-                            var totalTransaction = ClassWalletTransactionCache.ListTransaction.Count +
-                                                   ClassWalletTransactionAnonymityCache.ListTransaction.Count;
+                            var totalNormalTransaction = ClassWalletTransactionCache.ListTransaction.Count;
+
+                            var totalAnonymousTransaction = ClassWalletTransactionAnonymityCache.ListTransaction.Count;
+
+                            var totalTransaction = totalNormalTransaction + totalAnonymousTransaction;
 
                             if (totalTransaction > 0)
                             {
@@ -4116,64 +4105,88 @@ namespace Xiropht_Wallet
                                                 "TRANSACTION_HISTORY_WALLET_COLUMN_DATE_RECEIVED"));
 
                                         if (ClassWalletTransactionCache.ListTransaction.Count > 0)
-                                            foreach (var transactionObject in ClassWalletTransactionCache
-                                                .ListTransaction.ToArray())
+                                        {
+
+                                            for(int i = 0; i < totalNormalTransaction; i++)
                                             {
-                                                var dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                dateTimeSend =
-                                                    dateTimeSend.AddSeconds(transactionObject.Value
-                                                        .TransactionTimestampSend);
-                                                dateTimeSend = dateTimeSend.ToLocalTime();
-                                                var dateTimeRecv = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                dateTimeRecv =
-                                                    dateTimeRecv.AddSeconds(transactionObject.Value
-                                                        .TransactionTimestampRecv);
-                                                dateTimeRecv = dateTimeRecv.ToLocalTime();
+                                                if (i < ClassWalletTransactionCache.ListTransactionIndex.Count)
+                                                {
+                                                    if (ClassWalletTransactionCache.ListTransactionIndex.ContainsKey(i))
+                                                    {
+                                                        if (ClassWalletTransactionCache.ListTransaction.ContainsKey(ClassWalletTransactionCache.ListTransactionIndex[i]))
+                                                        {
+                                                            ClassWalletTransactionObject transactionObject = ClassWalletTransactionCache.ListTransaction[ClassWalletTransactionCache.ListTransactionIndex[i]];
 
-                                                var transactionResult = string.Format(
-                                                    "\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\"",
-                                                    transactionObject.Value.TransactionType,
-                                                    transactionObject.Value.TransactionHash,
-                                                    transactionObject.Value.TransactionWalletAddress,
-                                                    transactionObject.Value.TransactionAmount,
-                                                    transactionObject.Value.TransactionFee,
-                                                    transactionObject.Value.TransactionBlockchainHeight,
-                                                    dateTimeSend.ToString(CultureInfo.InvariantCulture),
-                                                    dateTimeRecv.ToString(CultureInfo.InvariantCulture)
-                                                );
+                                                            if (transactionObject != null)
+                                                            {
+                                                                var dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                                dateTimeSend = dateTimeSend.AddSeconds(transactionObject.TransactionTimestampSend);
+                                                                dateTimeSend = dateTimeSend.ToLocalTime();
+                                                                var dateTimeRecv = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                                dateTimeRecv = dateTimeRecv.AddSeconds(transactionObject.TransactionTimestampRecv);
+                                                                dateTimeRecv = dateTimeRecv.ToLocalTime();
 
-                                                writer.WriteLine(transactionResult);
+                                                                var transactionResult = string.Format(
+                                                                    "\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\"",
+                                                                    transactionObject.TransactionType,
+                                                                    transactionObject.TransactionHash,
+                                                                    transactionObject.TransactionWalletAddress,
+                                                                    transactionObject.TransactionAmount,
+                                                                    transactionObject.TransactionFee,
+                                                                    transactionObject.TransactionBlockchainHeight,
+                                                                    dateTimeSend.ToString(CultureInfo.InvariantCulture),
+                                                                    dateTimeRecv.ToString(CultureInfo.InvariantCulture)
+                                                                );
+
+                                                                writer.WriteLine(transactionResult);
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
+
+                                        }
 
                                         if (ClassWalletTransactionAnonymityCache.ListTransaction.Count > 0)
-                                            foreach (var transactionObject in ClassWalletTransactionAnonymityCache
-                                                .ListTransaction.ToArray())
+                                        {
+                                            for (int i = 0; i < totalAnonymousTransaction; i++)
                                             {
-                                                var dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                dateTimeSend =
-                                                    dateTimeSend.AddSeconds(transactionObject.Value
-                                                        .TransactionTimestampSend);
-                                                dateTimeSend = dateTimeSend.ToLocalTime();
-                                                var dateTimeRecv = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                                dateTimeRecv =
-                                                    dateTimeRecv.AddSeconds(transactionObject.Value
-                                                        .TransactionTimestampRecv);
-                                                dateTimeRecv = dateTimeRecv.ToLocalTime();
+                                                if (i < ClassWalletTransactionAnonymityCache.ListTransactionIndex.Count)
+                                                {
+                                                    if (ClassWalletTransactionAnonymityCache.ListTransactionIndex.ContainsKey(i))
+                                                    {
+                                                        if (ClassWalletTransactionAnonymityCache.ListTransaction.ContainsKey(ClassWalletTransactionAnonymityCache.ListTransactionIndex[i]))
+                                                        {
+                                                            ClassWalletTransactionObject transactionObject = ClassWalletTransactionAnonymityCache.ListTransaction[ClassWalletTransactionAnonymityCache.ListTransactionIndex[i]];
 
-                                                var transactionResult = string.Format(
-                                                    "\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\"",
-                                                    transactionObject.Value.TransactionType,
-                                                    transactionObject.Value.TransactionHash,
-                                                    transactionObject.Value.TransactionWalletAddress,
-                                                    transactionObject.Value.TransactionAmount,
-                                                    transactionObject.Value.TransactionFee,
-                                                    transactionObject.Value.TransactionBlockchainHeight,
-                                                    dateTimeSend.ToString(CultureInfo.InvariantCulture),
-                                                    dateTimeRecv.ToString(CultureInfo.InvariantCulture)
-                                                );
+                                                            if (transactionObject != null)
+                                                            {
+                                                                var dateTimeSend = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                                dateTimeSend = dateTimeSend.AddSeconds(transactionObject.TransactionTimestampSend);
+                                                                dateTimeSend = dateTimeSend.ToLocalTime();
+                                                                var dateTimeRecv = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                                dateTimeRecv = dateTimeRecv.AddSeconds(transactionObject.TransactionTimestampRecv);
+                                                                dateTimeRecv = dateTimeRecv.ToLocalTime();
 
-                                                writer.WriteLine(transactionResult);
+                                                                var transactionResult = string.Format(
+                                                                    "\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\"",
+                                                                    transactionObject.TransactionType,
+                                                                    transactionObject.TransactionHash,
+                                                                    transactionObject.TransactionWalletAddress,
+                                                                    transactionObject.TransactionAmount,
+                                                                    transactionObject.TransactionFee,
+                                                                    transactionObject.TransactionBlockchainHeight,
+                                                                    dateTimeSend.ToString(CultureInfo.InvariantCulture),
+                                                                    dateTimeRecv.ToString(CultureInfo.InvariantCulture)
+                                                                );
+
+                                                                writer.WriteLine(transactionResult);
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
+                                        }
                                     }
 
 #if WINDOWS

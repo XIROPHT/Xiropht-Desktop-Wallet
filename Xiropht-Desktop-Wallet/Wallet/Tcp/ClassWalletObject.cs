@@ -869,6 +869,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
             {
                 if (ClassBlockCache.ListBlock != null)
                 {
+                    ClassBlockCache.ListBlockIndex.Clear();
                     ClassBlockCache.ListBlock.Clear();
                 }
             }
@@ -2262,7 +2263,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                 ClassBlockCache.RemoveWalletBlockCache();
             }
 
-            Program.WalletXiropht.TransactionHistoryWalletForm.StartUpdateTransactionHistory(Program.WalletXiropht);
+            Program.WalletXiropht.TransactionHistoryWalletForm.ExecuteShowTransactionHistory(Program.WalletXiropht);
 
             if (!Program.WalletXiropht.EnableUpdateBlockWallet)
                 Program.WalletXiropht.BlockWalletForm.StartUpdateBlockSync(Program.WalletXiropht);
@@ -4596,6 +4597,7 @@ namespace Xiropht_Wallet.Wallet.Tcp
                                             BlockReward = blockLine[6]
                                         };
                                         ClassBlockCache.ListBlock.Add(blockLine[1], blockObject);
+                                        ClassBlockCache.ListBlockIndex.Add(ClassBlockCache.ListBlockIndex.Count, blockLine[1]);
                                         await ClassBlockCache.SaveWalletBlockCache(splitPacket[1]
                                             .Replace(
                                                 ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration

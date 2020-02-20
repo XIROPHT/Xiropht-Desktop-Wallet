@@ -23,6 +23,7 @@ namespace Xiropht_Wallet.Wallet.Sync
         private static bool _inClearCache;
 
         public static Dictionary<string, ClassWalletTransactionObject> ListTransaction = new Dictionary<string, ClassWalletTransactionObject>(); // hash, transaction object
+        public static Dictionary<int, string> ListTransactionIndex = new Dictionary<int, string>(); // index, hash.
 
         public static bool OnLoad;
 
@@ -120,6 +121,7 @@ namespace Xiropht_Wallet.Wallet.Sync
                                                             splitBlockchainHeight[0].Replace("{", "")
                                                     };
                                                     ListTransaction.Add(splitTransaction[1], transactionObject);
+                                                    ListTransactionIndex.Add(ListTransactionIndex.Count, splitTransaction[1]);
 
                                                     Program.WalletXiropht.UpdateLabelSyncInformation(
                                                         "On load transaction database - total transactions loaded and decrypted: " +
@@ -144,10 +146,10 @@ namespace Xiropht_Wallet.Wallet.Sync
                                     }
 
                                     listTransactionEncrypted.Clear();
-                                    Program.WalletXiropht.ClassWalletObject.TotalTransactionInSync =
-                                        ListTransaction.Count;
-                                    AesKeyIv = null;
-                                    AesSalt = null;
+                                    Program.WalletXiropht.ClassWalletObject.TotalTransactionInSync = ListTransaction.Count;
+
+                                    Array.Clear(AesKeyIv, 0, AesKeyIv.Length);
+                                    Array.Clear(AesSalt, 0, AesSalt.Length);
                                 }
                                 else
                                 {
@@ -173,12 +175,12 @@ namespace Xiropht_Wallet.Wallet.Sync
 
                             Program.WalletXiropht.ClassWalletObject.TotalTransactionInSync = ListTransaction.Count;
                             OnLoad = false;
-                        }, Program.WalletXiropht.WalletCancellationToken.Token,
-                        TaskCreationOptions.DenyChildAttach, TaskScheduler.Current).ConfigureAwait(false);
+                        }, Program.WalletXiropht.WalletCancellationToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(false);
                 }
                 catch
                 {
                     Program.WalletXiropht.ClassWalletObject.TotalTransactionInSync = 0;
+                    ListTransactionIndex.Clear();
                     ListTransaction.Clear();
                     OnLoad = false;
                 }
@@ -262,6 +264,7 @@ namespace Xiropht_Wallet.Wallet.Sync
                                                                        walletAddress));
                 }
 
+                ListTransactionIndex.Clear();
                 ListTransaction.Clear();
             }
 
@@ -274,6 +277,14 @@ namespace Xiropht_Wallet.Wallet.Sync
         /// </summary>
         public static void ClearWalletCache()
         {
+            try
+            {
+                ListTransactionIndex.Clear();
+            }
+            catch
+            {
+
+            }
             try
             {
                 ListTransaction.Clear();
@@ -300,9 +311,7 @@ namespace Xiropht_Wallet.Wallet.Sync
 
             if (!OnLoad)
             {
-                var splitTransaction = transaction
-                    .Replace(ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletTransactionPerId,
-                        string.Empty).Split(new[] { "#" }, StringSplitOptions.None);
+                var splitTransaction = transaction.Replace(ClassRemoteNodeCommandForWallet.RemoteNodeRecvPacketEnumeration.WalletTransactionPerId, string.Empty).Split(new[] { "#" }, StringSplitOptions.None);
                 var hashTransaction = splitTransaction[4]; // Transaction Hash.
                 if (!ListTransaction.ContainsKey(hashTransaction))
                 {
@@ -371,7 +380,7 @@ namespace Xiropht_Wallet.Wallet.Sync
                             };
 
                             ListTransaction.Add(hashTransaction, transactionObject);
-
+                            ListTransactionIndex.Add(ListTransactionIndex.Count, hashTransaction);
 
                             await SaveWalletCache(Program.WalletXiropht.ClassWalletObject.WalletConnect.WalletAddress, finalTransactionEncrypted);
 

@@ -94,9 +94,9 @@ namespace Xiropht_Wallet
             this.fileToolStripMenuItem,
             this.languageToolStripMenuItem,
             this.settingToolStripMenuItem,
-            this.helpToolStripMenuItem,
             this.themeToolStripMenuItem,
-            this.exportToolStripMenuItem});
+            this.exportToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStripMenu.Location = new System.Drawing.Point(20, 60);
             this.menuStripMenu.Name = "menuStripMenu";
             this.menuStripMenu.Size = new System.Drawing.Size(992, 24);

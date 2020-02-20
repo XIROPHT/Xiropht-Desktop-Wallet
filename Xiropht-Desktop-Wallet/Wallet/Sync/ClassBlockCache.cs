@@ -15,6 +15,8 @@ namespace Xiropht_Wallet.Wallet.Sync
         private const string WalletBlockCacheDirectory = "/Blockchain/";
         private const string WalletBlockCacheFileExtension = ".xirblock";
         public static Dictionary<string, ClassBlockObject> ListBlock;
+        public static Dictionary<int, string> ListBlockIndex;
+
         public static bool OnLoad;
 
         /// <summary>
@@ -24,10 +26,15 @@ namespace Xiropht_Wallet.Wallet.Sync
         public static void LoadBlockchainCache()
         {
             if (ListBlock != null)
+            {
                 ListBlock.Clear();
+                ListBlockIndex.Clear();
+            }
             else
+            {
                 ListBlock = new Dictionary<string, ClassBlockObject>();
-            ListBlock.Clear();
+                ListBlockIndex = new Dictionary<int, string>();
+            }
             OnLoad = true;
             try
             {
@@ -70,6 +77,7 @@ namespace Xiropht_Wallet.Wallet.Sync
                                             };
 
                                             ListBlock.Add(blockLine[1], blockObject);
+                                            ListBlockIndex.Add(ListBlockIndex.Count, blockLine[1]);
                                             counter++;
                                         }
 #if DEBUG
@@ -106,6 +114,7 @@ namespace Xiropht_Wallet.Wallet.Sync
             {
                 Program.WalletXiropht.ClassWalletObject.TotalBlockInSync = 0;
                 ListBlock.Clear();
+                ListBlockIndex.Clear();
                 OnLoad = false;
             }
         }
@@ -181,7 +190,14 @@ namespace Xiropht_Wallet.Wallet.Sync
             {
                 //
             }
+            try
+            {
+                ListBlockIndex.Clear();
+            }
+            catch
+            {
 
+            }
             try
             {
                 ListBlock.Clear();

@@ -11,16 +11,9 @@ namespace Xiropht_Wallet.FormPhase.ParallelForm
             InitializeComponent();
         }
 
-
-        private void buttonClose_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
         private void SearchWalletExplorer_Load(object sender, EventArgs e)
         {
             AddContextMenu(richTextBoxResearchResult);
-            UpdateStyles();
         }
 
         /// <summary>

@@ -270,61 +270,66 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
                             for (var i = minShow; i < maxShow; i++)
                             {
-                                if (i < ClassBlockCache.ListBlock.Count)
+                                if (i < ClassBlockCache.ListBlockIndex.Count)
                                 {
                                     var blockTarget = ClassBlockCache.ListBlock.Count - 1 - i;
-                                    var blockObject = ClassBlockCache.ListBlock
-                                        .ElementAt(blockTarget)
-                                        .Value;
-                                    var blockId = int.Parse(blockObject.BlockHeight);
-                                    if (!walletXiropht.ListBlockHashShowed.ContainsKey(blockId))
+
+                                    if (ClassBlockCache.ListBlockIndex.ContainsKey(blockTarget))
                                     {
-                                        walletXiropht.ListBlockHashShowed.Add(blockId, blockObject.BlockHash);
-
-                                        var dateTimeCreate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                        dateTimeCreate =
-                                            dateTimeCreate.AddSeconds(
-                                                int.Parse(blockObject.BlockTimestampCreate));
-                                        dateTimeCreate = dateTimeCreate.ToLocalTime();
-                                        var dateTimeFound = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                        dateTimeFound =
-                                            dateTimeFound.AddSeconds(
-                                                int.Parse(blockObject.BlockTimestampFound));
-                                        dateTimeFound = dateTimeFound.ToLocalTime();
-
-                                        string[] row =
+                                        if (ClassBlockCache.ListBlock.ContainsKey(ClassBlockCache.ListBlockIndex[blockTarget]))
                                         {
+                                            var blockObject = ClassBlockCache.ListBlock[ClassBlockCache.ListBlockIndex[blockTarget]];
+                                            var blockId = int.Parse(blockObject.BlockHeight);
+                                            if (!walletXiropht.ListBlockHashShowed.ContainsKey(blockId))
+                                            {
+                                                walletXiropht.ListBlockHashShowed.Add(blockId, blockObject.BlockHash);
+
+                                                var dateTimeCreate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                dateTimeCreate =
+                                                    dateTimeCreate.AddSeconds(
+                                                        int.Parse(blockObject.BlockTimestampCreate));
+                                                dateTimeCreate = dateTimeCreate.ToLocalTime();
+                                                var dateTimeFound = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                                dateTimeFound =
+                                                    dateTimeFound.AddSeconds(
+                                                        int.Parse(blockObject.BlockTimestampFound));
+                                                dateTimeFound = dateTimeFound.ToLocalTime();
+
+                                                string[] row =
+                                                {
                                                                 blockObject.BlockHeight, blockObject.BlockHash,
                                                                 blockObject.BlockReward, blockObject.BlockDifficulty,
                                                                 dateTimeCreate.ToString(CultureInfo.InvariantCulture),
                                                                 dateTimeFound.ToString(CultureInfo.InvariantCulture),
                                                                 blockObject.BlockTransactionHash
                                                             };
-                                        var listViewItem = new ListViewItem(row);
+                                                var listViewItem = new ListViewItem(row);
 
 
-                                        if (walletXiropht.TotalBlockRead < maxShow)
-                                        {
-                                            void Invoker()
-                                            {
-                                                this.listViewBlockExplorer.Items.Add(
-                                                    listViewItem);
+                                                if (walletXiropht.TotalBlockRead < maxShow)
+                                                {
+                                                    void Invoker()
+                                                    {
+                                                        this.listViewBlockExplorer.Items.Add(
+                                                            listViewItem);
+                                                    }
+
+                                                    BeginInvoke((MethodInvoker)Invoker);
+                                                    walletXiropht.TotalBlockRead++;
+                                                }
+                                                else
+                                                {
+                                                    void Invoker()
+                                                    {
+                                                        this.listViewBlockExplorer.Items.Insert(
+                                                            0,
+                                                            listViewItem);
+                                                    }
+
+                                                    BeginInvoke((MethodInvoker)Invoker);
+                                                    walletXiropht.TotalBlockRead++;
+                                                }
                                             }
-
-                                            BeginInvoke((MethodInvoker)Invoker);
-                                            walletXiropht.TotalBlockRead++;
-                                        }
-                                        else
-                                        {
-                                            void Invoker()
-                                            {
-                                                this.listViewBlockExplorer.Items.Insert(
-                                                    0,
-                                                    listViewItem);
-                                            }
-
-                                            BeginInvoke((MethodInvoker)Invoker);
-                                            walletXiropht.TotalBlockRead++;
                                         }
                                     }
                                 }
