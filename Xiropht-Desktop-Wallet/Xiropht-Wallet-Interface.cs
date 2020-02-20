@@ -2152,6 +2152,8 @@ namespace Xiropht_Wallet
                 CurrentTransactionHistoryPageBlockReward = 1;
                 _normalTransactionLoaded = false;
                 _anonymousTransactionLoaded = false;
+                NormalTransactionLoaded = false;
+                AnonymousTransactionLoaded = false;
                 MethodInvoker invoke = () =>
                 {
                     TransactionHistoryWalletForm.listViewNormalSendTransactionHistory.Items.Clear();
@@ -2179,6 +2181,8 @@ namespace Xiropht_Wallet
                 TotalAnonymityTransactionRead = 0;
                 _normalTransactionLoaded = false;
                 _anonymousTransactionLoaded = false;
+                NormalTransactionLoaded = false;
+                AnonymousTransactionLoaded = false;
 
                 // Transaction normal
                 MethodInvoker invoke = () =>
@@ -2206,6 +2210,8 @@ namespace Xiropht_Wallet
                 TotalAnonymityTransactionRead = 0;
                 _normalTransactionLoaded = false;
                 _anonymousTransactionLoaded = false;
+                NormalTransactionLoaded = false;
+                AnonymousTransactionLoaded = false;
 
                 // Transaction normal
                 MethodInvoker invoke = () =>
