@@ -814,7 +814,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
             {
                 if (CancellationTokenSourceTransactionHistory != null)
                 {
-                    if(!CancellationTokenSourceTransactionHistory.IsCancellationRequested)
+                    if (!CancellationTokenSourceTransactionHistory.IsCancellationRequested)
                     {
                         CancellationTokenSourceTransactionHistory.Cancel();
                     }
@@ -990,13 +990,11 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
                                                                                         if (ClassUtils.DateUnixTimeNowSecondConvertDate(dateTimeRecv) >= ClassUtils.DateUnixTimeNowSecond())
                                                                                         {
-                                                                                            invoke = () => listViewAnonymityReceivedTransactionHistory.Items[listViewAnonymityReceivedTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(255, 153, 102);
-                                                                                            BeginInvoke(invoke);
+                                                                                             listViewAnonymityReceivedTransactionHistory.Items[listViewAnonymityReceivedTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(255, 153, 102);
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            invoke = () => listViewAnonymityReceivedTransactionHistory.Items[listViewAnonymityReceivedTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(0, 255, 153);
-                                                                                            BeginInvoke(invoke);
+                                                                                            listViewAnonymityReceivedTransactionHistory.Items[listViewAnonymityReceivedTransactionHistory.Items.Count - 1].BackColor = Color.FromArgb(0, 255, 153);
                                                                                         }
                                                                                     }
                                                                                 }
@@ -1426,19 +1424,25 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                                             }
                                             #region Cleanup "normal" transaction received/sent showed pending the sync.
 
-                                            listViewNormalSendTransactionHistory.Items.Clear();
-                                            listViewAnonymityReceivedTransactionHistory.Items.Clear();
-                                            listViewBlockRewardTransactionHistory.Items.Clear();
-                                            listViewNormalReceivedTransactionHistory.Items.Clear();
-                                            walletXiropht.TotalTransactionRead = 0;
-
+                                            if (walletXiropht.TotalTransactionRead > ClassWalletTransactionCache.ListTransactionIndex.Count)
+                                            {
+                                                listViewNormalSendTransactionHistory.Items.Clear();
+                                                listViewAnonymityReceivedTransactionHistory.Items.Clear();
+                                                listViewBlockRewardTransactionHistory.Items.Clear();
+                                                listViewNormalReceivedTransactionHistory.Items.Clear();
+                                                walletXiropht.TotalTransactionRead = 0;
+                                                walletXiropht.NormalTransactionLoaded = false;
+                                            }
                                             #endregion
 
                                             #region Cleanup transaction anonymously sent showed pending the sync.
 
-                                            listViewAnonymitySendTransactionHistory.Items.Clear();
-                                            walletXiropht.TotalAnonymityTransactionRead = 0;
-
+                                            if (walletXiropht.TotalAnonymityTransactionRead > ClassWalletTransactionAnonymityCache.ListTransactionIndex.Count)
+                                            {
+                                                listViewAnonymitySendTransactionHistory.Items.Clear();
+                                                walletXiropht.TotalAnonymityTransactionRead = 0;
+                                                walletXiropht.AnonymousTransactionLoaded = false;
+                                            }
                                             #endregion
                                         }
                                         else
@@ -1742,9 +1746,9 @@ namespace Xiropht_Wallet.FormPhase.MainForm
 
                                     #endregion
                                 }
-                                catch(Exception error)
+                                catch (Exception error)
                                 {
-                                    Console.WriteLine("Erreur transaction explorer: "+error.Message);
+                                    Console.WriteLine("Erreur transaction explorer: " + error.Message);
                                     listViewNormalSendTransactionHistory.Items.Clear();
                                     listViewAnonymityReceivedTransactionHistory.Items.Clear();
                                     listViewBlockRewardTransactionHistory.Items.Clear();

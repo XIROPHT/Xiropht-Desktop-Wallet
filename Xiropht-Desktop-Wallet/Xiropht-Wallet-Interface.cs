@@ -21,7 +21,6 @@ using Xiropht_Wallet.FormPhase.MainForm;
 using Xiropht_Wallet.FormPhase.ParallelForm;
 using Xiropht_Wallet.Properties;
 using Xiropht_Wallet.Utility;
-using Xiropht_Wallet.Wallet;
 using Xiropht_Wallet.Wallet.Setting;
 using Xiropht_Wallet.Wallet.Sync;
 using Xiropht_Wallet.Wallet.Sync.Object;
@@ -110,8 +109,6 @@ namespace Xiropht_Wallet
         /// </summary>
         public Dictionary<int, string> ListBlockHashShowed = new Dictionary<int, string>();
 
-        public Dictionary<string, int> ListTransactionShowed = new Dictionary<string, int>();
-
         public int TotalTransactionRead;
         public int TotalAnonymityTransactionRead;
         public int TotalBlockRead;
@@ -126,8 +123,8 @@ namespace Xiropht_Wallet
         public int TotalTransactionNormalReceived;
         public int TotalTransactionNormalSend;
         public int TotalTransactionBlockReward;
-        private bool _normalTransactionLoaded;
-        private bool _anonymousTransactionLoaded;
+        public bool NormalTransactionLoaded;
+        public bool AnonymousTransactionLoaded;
         private bool _firstStart;
 
 
@@ -176,19 +173,6 @@ namespace Xiropht_Wallet
                 cp.ExStyle |= 0x02000000; // Turn on WS_EX_COMPOSITED
                 return cp;
             }
-        }
-
-
-        public bool NormalTransactionLoaded
-        {
-            set { _normalTransactionLoaded = value; }
-            get { return _normalTransactionLoaded; }
-        }
-
-        public bool AnonymousTransactionLoaded
-        {
-            set { _anonymousTransactionLoaded = value; }
-            get { return _anonymousTransactionLoaded; }
         }
 
         #region About Form Phase
