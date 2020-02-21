@@ -24,6 +24,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         private ClassPanel _panelWaitingSync;
         public bool IsShowed;
         public bool IsShowedWaitingTransaction;
+        public CancellationTokenSource CancellationTokenSourceTransactionHistory;
 
         public TransactionHistoryWallet()
         {
@@ -811,16 +812,45 @@ namespace Xiropht_Wallet.FormPhase.MainForm
         {
             try
             {
+                if (CancellationTokenSourceTransactionHistory != null)
+                {
+                    if(!CancellationTokenSourceTransactionHistory.IsCancellationRequested)
+                    {
+                        CancellationTokenSourceTransactionHistory.Cancel();
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+            CancellationTokenSourceTransactionHistory = new CancellationTokenSource();
+            try
+            {
                 Task.Factory.StartNew(async () =>
                 {
                     while (true)
                     {
+                        try
+                        {
+
+                            if (walletXiropht.ClassWalletObject.WalletClosed)
+                            {
+                                break;
+                            }
+                        }
+                        catch
+                        {
+
+                        }
                         if (IsShowed)
                         {
                             MethodInvoker invoke = () =>
                             {
                                 try
                                 {
+
+
                                     #region Show transactions synced into the history.
                                     if (IsShowed)
                                     {
@@ -1730,7 +1760,7 @@ namespace Xiropht_Wallet.FormPhase.MainForm
                         }
                         await Task.Delay(1000);
                     }
-                }, walletXiropht.WalletSyncCancellationToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(false);
+                }, CancellationTokenSourceTransactionHistory.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(false);
             }
             catch
             {

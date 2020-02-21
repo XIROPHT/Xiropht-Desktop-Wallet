@@ -562,6 +562,23 @@ namespace Xiropht_Wallet.Wallet.Tcp
         /// </summary>
         public async Task<bool> FullDisconnection(bool manualDisconnection, bool obsolete = false)
         {
+            
+
+            try
+            {
+                if (Program.WalletXiropht.TransactionHistoryWalletForm.CancellationTokenSourceTransactionHistory != null)
+                {
+                    if (!Program.WalletXiropht.TransactionHistoryWalletForm.CancellationTokenSourceTransactionHistory.IsCancellationRequested)
+                    {
+                        Program.WalletXiropht.TransactionHistoryWalletForm.CancellationTokenSourceTransactionHistory.Cancel();
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+
             if (WalletConnect != null && SeedNodeConnectorWallet != null)
             {
                 Program.WalletXiropht.HideWalletAddressQrCode();
