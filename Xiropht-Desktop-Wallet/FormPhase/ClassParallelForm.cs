@@ -191,22 +191,28 @@ namespace Xiropht_Wallet.FormPhase
         {
             await Task.Factory.StartNew(() =>
                 {
-                    if (WaitingFormReconnect != null)
+                    try
+                    {
                         if (WaitingFormReconnectShowed)
                         {
                             WaitingFormReconnectShowed = false;
                             try
                             {
-                                WaitingFormReconnect.Invoke((MethodInvoker) delegate
-                                {
-                                    WaitingFormReconnect.Hide();
-                                    WaitingFormReconnect.Refresh();
-                                });
+                                WaitingFormReconnect.Invoke((MethodInvoker)delegate
+                               {
+                                   WaitingFormReconnect.Hide();
+                                   WaitingFormReconnect.Refresh();
+                               });
                             }
                             catch
                             {
                             }
                         }
+                    }
+                    catch
+                    {
+
+                    }
                 }, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Current)
                 .ConfigureAwait(false);
         }
